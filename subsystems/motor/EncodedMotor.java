@@ -13,7 +13,7 @@ public class EncodedMotor extends PIDSubsystem implements SpeedController {
 		super(name, P, I, D);
 		this.motor = motor;
 		this.encoder = encoder;
-		getPIDController().setOutputRange(-1, 1);
+		setOutputRange(-1, 1);
 		getPIDController().setContinuous(false);
 	}
 	
@@ -32,7 +32,7 @@ public class EncodedMotor extends PIDSubsystem implements SpeedController {
 	}
 	
 	public void pidWrite(double speed) {
-		setSetpoint(speed);
+		set(speed);
 	}
 	
 	public double get() {
