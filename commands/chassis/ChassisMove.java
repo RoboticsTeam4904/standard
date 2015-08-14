@@ -1,7 +1,7 @@
 package org.usfirst.frc4904.cmdbased.commands.chassis;
 
 
-import org.usfirst.frc4904.cmdbased.commands.MotorSpin;
+import org.usfirst.frc4904.cmdbased.commands.motor.MotorOutPipe;
 import org.usfirst.frc4904.cmdbased.custom.controllers.Controller;
 import org.usfirst.frc4904.cmdbased.subsystems.Motor;
 import org.usfirst.frc4904.cmdbased.subsystems.chassis.Chassis;
@@ -10,7 +10,7 @@ import org.usfirst.frc4904.robot.RobotMap;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
 public class ChassisMove extends CommandGroup {
-	private final MotorSpin[] motorSpins;
+	private final MotorOutPipe[] motorSpins;
 	private double[] motorSpeeds;
 	private final Chassis chassis;
 	private final Controller controller;
@@ -27,9 +27,9 @@ public class ChassisMove extends CommandGroup {
 		this.chassis = chassis;
 		this.controller = controller;
 		Motor[] motors = this.chassis.getMotors();
-		this.motorSpins = new MotorSpin[4];
+		this.motorSpins = new MotorOutPipe[4];
 		for (int i = 0; i < motors.length; i++) {
-			motorSpins[i] = new MotorSpin(motors[i]);
+			motorSpins[i] = new MotorOutPipe(motors[i]);
 			addParallel(motorSpins[i]);
 		}
 		this.xScale = xScale;

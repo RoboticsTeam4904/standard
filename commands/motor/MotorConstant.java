@@ -1,4 +1,4 @@
-package org.usfirst.frc4904.cmdbased.commands;
+package org.usfirst.frc4904.cmdbased.commands.motor;
 
 
 import edu.wpi.first.wpilibj.SpeedController;

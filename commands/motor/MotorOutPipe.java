@@ -1,4 +1,4 @@
-package org.usfirst.frc4904.cmdbased.commands;
+package org.usfirst.frc4904.cmdbased.commands.motor;
 
 
 import org.usfirst.frc4904.cmdbased.OutPipable;
@@ -7,7 +7,7 @@ import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
-public class MotorSpin extends Command implements OutPipable {
+public class MotorOutPipe extends Command implements OutPipable {
 	private final SpeedController motor;
 	private double speed;
 	private final LogKitten logger;
@@ -17,7 +17,7 @@ public class MotorSpin extends Command implements OutPipable {
 	 * 
 	 * @param motor
 	 */
-	public <A extends Subsystem & SpeedController> MotorSpin(A motor) {
+	public <A extends Subsystem & SpeedController> MotorOutPipe(A motor) {
 		super("WheelSpin");
 		this.motor = motor;
 		speed = 0;
