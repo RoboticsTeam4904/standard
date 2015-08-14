@@ -47,9 +47,9 @@ public abstract class Chassis extends Subsystem implements InPipable {
 	/**
 	 * The Chassis always returns the motor speeds
 	 */
-	public void setPipe(int mode) {}
+	public void setPipe(Enum mode) {}
 	
-	public abstract int getControllerMode();
+	public abstract Enum getControllerMode();
 	
 	public abstract void move2dp(double speed, double angle, double turnSpeed);
 	

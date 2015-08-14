@@ -32,6 +32,15 @@ public class MotorOutPipe extends Command implements OutPipable {
 	}
 	
 	/**
+	 * Enums for the pipe
+	 * 
+	 *
+	 */
+	public enum PipeModes {
+		SPIN;
+	}
+	
+	/**
 	 * The motor pipe is set to control the speed of the motor
 	 */
 	public void writePipe(double[] data) {
@@ -42,7 +51,7 @@ public class MotorOutPipe extends Command implements OutPipable {
 	/**
 	 * Motors can only spin, so there are no modes
 	 */
-	public void setPipe(int mode) {}
+	public void setPipe(Enum mode) {}
 	
 	/**
 	 * Spins the motor at the speed set by writePipe

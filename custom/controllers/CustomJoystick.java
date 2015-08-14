@@ -13,6 +13,7 @@ public class CustomJoystick extends Joystick implements InPipable, Controller {
 	private static final int NUM_BUTTONS = 12;
 	private static final double moveThreshold = 0.05;
 	private final int port;
+	private PipeModes mode;
 	// Buttons
 	public final Button button1;
 	public final Button button2;
@@ -42,6 +43,7 @@ public class CustomJoystick extends Joystick implements InPipable, Controller {
 		button10 = new JoystickButton(this, 10);
 		button11 = new JoystickButton(this, 11);
 		button12 = new JoystickButton(this, 12);
+		mode = PipeModes.XYTwist;
 	}
 	
 	public boolean active(int axis) {
@@ -62,11 +64,23 @@ public class CustomJoystick extends Joystick implements InPipable, Controller {
 	 * Read values from Joystick
 	 */
 	public double[] readPipe() {
-		return new double[] {this.getX(), this.getY(), this.getTwist()};
+		switch (mode) {
+			case All:
+			case XYTwist:
+				return new double[] {this.getX(), this.getY(), this.getTwist()};
+			case X:
+				return new double[] {this.getX()};
+			case Y:
+				return new double[] {this.getY()};
+			case Twist:
+				return new double[] {this.getTwist()};
+			case Fourth:
+			default:
+				return new double[] {this.getX(), this.getY(), this.getTwist()};
+		}
 	}
 	
-	/**
-	 * CustomJoystick always returns X, Y, twist
-	 */
-	public void setPipe(int mode) {}
+	public void setPipe(Enum mode) {
+		this.mode = (PipeModes) mode;
+	}
 }

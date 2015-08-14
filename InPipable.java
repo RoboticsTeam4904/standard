@@ -15,5 +15,5 @@ public interface InPipable {
 	 * 
 	 * @param mode
 	 */
-	public void setPipe(int mode);
+	public void setPipe(Enum mode);
 }

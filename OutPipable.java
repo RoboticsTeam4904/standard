@@ -4,7 +4,7 @@ package org.usfirst.frc4904.cmdbased;
 public interface OutPipable {
 	/**
 	 * This should do something with the data.
-	 * It should be the most obvious and useful thing, or should be changable
+	 * It should be the most obvious and useful thing, or should be changeable
 	 * 
 	 * @param data
 	 */
@@ -14,6 +14,8 @@ public interface OutPipable {
 	 * This should set the mode of the pipe
 	 * 
 	 * @param mode
+	 *        should be an Enum that the class using the OutPipe defines to set the mode
+	 * @return
 	 */
-	public void setPipe(int mode);
+	public void setPipe(Enum mode);
 }

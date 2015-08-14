@@ -1,6 +1,7 @@
 package org.usfirst.frc4904.cmdbased.subsystems.chassis;
 
 
+import org.usfirst.frc4904.cmdbased.custom.controllers.Controller;
 import org.usfirst.frc4904.cmdbased.subsystems.motor.Motor;
 
 public class TankDrive extends Chassis {
@@ -26,8 +27,8 @@ public class TankDrive extends Chassis {
 		super(name, leftWheel, rightWheel);
 	}
 	
-	public int getControllerMode() {
-		return 0;
+	public Enum getControllerMode() {
+		return Controller.PipeModes.XYTwist;
 	}
 	
 	/**

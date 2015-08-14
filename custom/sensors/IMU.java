@@ -68,9 +68,13 @@ public class IMU extends NavX implements PIDSource, InPipable {
 		return angles[0];
 	}
 	
+	public enum PipeModes {
+		Euler;
+	}
+	
 	public double[] readPipe() {
 		return angles;
 	}
 	
-	public void setPipe(int mode) {}
+	public void setPipe(Enum mode) {}
 }
