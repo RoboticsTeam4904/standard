@@ -9,9 +9,18 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 public abstract class Chassis extends Subsystem implements InPipable {
 	protected int numberWheels;
 	protected double[] motorSpeeds;
+	private Motor[] motors;
 	
-	public Chassis(String name) {
+	/**
+	 * 
+	 * @param name
+	 * @param motors
+	 *        :
+	 *        all the motors that are part of this chassis. Pass from front to back, left to right
+	 */
+	public Chassis(String name, Motor... motors) {
 		super(name);
+		this.motors = motors;
 	}
 	
 	protected void initDefaultCommand() {
@@ -22,7 +31,14 @@ public abstract class Chassis extends Subsystem implements InPipable {
 		return numberWheels;
 	}
 	
-	public abstract Motor[] getMotors();
+	/**
+	 * returns an array of motors of the size getNumberWheels in the order that they were passed to the constructor
+	 * 
+	 * @return
+	 */
+	public Motor[] getMotors() {
+		return motors;
+	}
 	
 	public double[] readPipe() {
 		return motorSpeeds;
@@ -32,6 +48,8 @@ public abstract class Chassis extends Subsystem implements InPipable {
 	 * The Chassis always returns the motor speeds
 	 */
 	public void setPipe(int mode) {}
+	
+	public abstract int getControllerMode();
 	
 	public abstract void move2dp(double speed, double angle, double turnSpeed);
 	

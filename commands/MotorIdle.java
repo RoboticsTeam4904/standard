@@ -1,24 +1,25 @@
 package org.usfirst.frc4904.cmdbased.commands;
 
 
-import org.usfirst.frc4904.cmdbased.subsystems.Motor;
 import org.usfirst.frc4904.logkitten.LogKitten;
+import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.command.Subsystem;
 
 public class MotorIdle extends Command {
-	private final Motor motor;
+	private final SpeedController motor;
 	private final LogKitten logger;
 	
-	public MotorIdle(Motor motor) {
+	public <A extends Subsystem & SpeedController> MotorIdle(A motor) {
 		super("MotorIdle");
 		this.motor = motor;
+		requires(motor);
+		setInterruptible(true); // default command
 		logger = new LogKitten(LogKitten.LEVEL_VERBOSE, LogKitten.LEVEL_ERROR);
 		logger.v("MotorIdle created");
 	}
 	
 	protected void initialize() {
-		requires(motor);
-		setInterruptible(true); // default command
 		motor.set(0);
 		logger.v("MotorIdle initialized");
 	}

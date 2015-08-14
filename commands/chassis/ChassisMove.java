@@ -6,6 +6,7 @@ import org.usfirst.frc4904.cmdbased.custom.controllers.Controller;
 import org.usfirst.frc4904.cmdbased.subsystems.Motor;
 import org.usfirst.frc4904.cmdbased.subsystems.chassis.Chassis;
 import org.usfirst.frc4904.logkitten.LogKitten;
+import org.usfirst.frc4904.robot.RobotMap;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
 public class ChassisMove extends CommandGroup {
@@ -18,11 +19,15 @@ public class ChassisMove extends CommandGroup {
 	private final double turnScale;
 	private final LogKitten logger;
 	
-	public ChassisMove(Motor[] motors, Chassis chassis, Controller controller, double xScale, double yScale, double turnScale) {
-		this.motorSpins = new MotorSpin[motors.length];
+	// private final LogKitten logger;
+	public ChassisMove(Chassis chassis, Controller controller, double xScale, double yScale, double turnScale) {
+		super("ChassisMove");
+		requires(RobotMap.chassis);
+		logger = new LogKitten(LogKitten.LEVEL_VERBOSE, LogKitten.LEVEL_VERBOSE);
 		this.chassis = chassis;
 		this.controller = controller;
-		logger = new LogKitten(LogKitten.LEVEL_WARN, LogKitten.LEVEL_ERROR);
+		Motor[] motors = this.chassis.getMotors();
+		this.motorSpins = new MotorSpin[4];
 		for (int i = 0; i < motors.length; i++) {
 			motorSpins[i] = new MotorSpin(motors[i]);
 			addParallel(motorSpins[i]);
@@ -33,13 +38,13 @@ public class ChassisMove extends CommandGroup {
 		logger.v("ChassisMove created for " + Integer.toString(chassis.getNumberWheels()) + " wheels");
 	}
 	
-	public ChassisMove(Motor[] motors, Chassis chassis, Controller controller) {
-		this(motors, chassis, controller, 1.0, 1.0, 1.0);
+	public ChassisMove(Chassis chassis, Controller controller) {
+		this(chassis, controller, 1.0, 1.0, 1.0);
 	}
 	
 	protected void initialize() {
-		requires(chassis);
-		logger.v("ChassisMove initialized");
+		// logger.v("ChassisMove initialized");
+		controller.setPipe(chassis.getControllerMode());
 	}
 	
 	protected void execute() {
@@ -56,11 +61,11 @@ public class ChassisMove extends CommandGroup {
 	}
 	
 	protected void end() {
-		logger.v("ChassisMove ended");
+		// logger.v("ChassisMove ended");
 	}
 	
 	protected void interrupted() {
-		logger.w("ChassisMove interrupted");
+		// logger.w("ChassisMove interrupted");
 	}
 	
 	protected boolean isFinished() {

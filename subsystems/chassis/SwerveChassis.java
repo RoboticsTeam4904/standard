@@ -3,12 +3,25 @@ package org.usfirst.frc4904.cmdbased.subsystems.chassis;
 
 import org.usfirst.frc4904.cmdbased.subsystems.Motor;
 
-public class SwerveChassis extends FourWheelChassis {
+public class SwerveChassis extends Chassis {
 	public final Motor frontLeftWheelSwerve;
 	public final Motor frontRightWheelSwerve;
 	public final Motor backLeftWheelSwerve;
 	public final Motor backRightWheelSwerve;
 	
+	/**
+	 * Constructs a swerve drive chassis
+	 * 
+	 * @param name
+	 * @param frontLeftWheel
+	 * @param frontRightWheel
+	 * @param backLeftWheel
+	 * @param backRightWheel
+	 * @param frontLeftWheelSwerve
+	 * @param frontRightWheelSwerve
+	 * @param backLeftWheelSwerve
+	 * @param backRightWheelSwerve
+	 */
 	public SwerveChassis(String name, Motor frontLeftWheel, Motor frontRightWheel, Motor backLeftWheel, Motor backRightWheel, Motor frontLeftWheelSwerve, Motor frontRightWheelSwerve, Motor backLeftWheelSwerve, Motor backRightWheelSwerve) {
 		super(name, frontLeftWheel, frontRightWheel, backLeftWheel, backRightWheel);
 		this.frontLeftWheelSwerve = frontLeftWheelSwerve;
@@ -23,5 +36,12 @@ public class SwerveChassis extends FourWheelChassis {
 	
 	public void move2dc(double speed, double angle, double turnSpeed) {
 		// TODO Auto-generated method stub
+	}
+	
+	public void move(double speed, double turnSpeed) {}
+	
+	public int getControllerMode() {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 }

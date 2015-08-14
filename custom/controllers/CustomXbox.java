@@ -1,6 +1,8 @@
 package org.usfirst.frc4904.cmdbased.custom.controllers;
 
 
+import edu.wpi.first.wpilibj.buttons.Button;
+
 public class CustomXbox extends XboxController implements Controller {
 	private int pipeMode;
 	
@@ -30,5 +32,9 @@ public class CustomXbox extends XboxController implements Controller {
 	 */
 	public void setPipe(int mode) {
 		pipeMode = mode;
+	}
+	
+	public Button[] getButtons() {
+		return new Button[] {this.a, this.b, this.x, this.y, this.lb, this.rb, this.back, this.start, this.dPad.up, this.dPad.upRight, this.dPad.right, this.dPad.downRight, this.dPad.down, this.dPad.downLeft, this.dPad.left, this.dPad.upLeft};
 	}
 }
