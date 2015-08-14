@@ -1,7 +1,7 @@
 package org.usfirst.frc4904.cmdbased.subsystems.chassis;
 
 
-import org.usfirst.frc4904.cmdbased.subsystems.Motor;
+import org.usfirst.frc4904.cmdbased.subsystems.motor.Motor;
 
 public abstract class FourWheelChassis extends Chassis {
 	public final Motor frontLeftWheel;

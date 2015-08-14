@@ -1,4 +1,4 @@
-package org.usfirst.frc4904.cmdbased.subsystems;
+package org.usfirst.frc4904.cmdbased.subsystems.motor;
 
 
 import org.usfirst.frc4904.cmdbased.commands.motor.MotorIdle;
@@ -6,7 +6,7 @@ import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 public class Motor extends Subsystem implements SpeedController {
-	private final SpeedController motor;
+	protected final SpeedController motor;
 	
 	public Motor(String name, SpeedController motor) {
 		this.motor = motor;

@@ -1,7 +1,7 @@
 package org.usfirst.frc4904.cmdbased.subsystems.chassis;
 
 
-import org.usfirst.frc4904.cmdbased.subsystems.Motor;
+import org.usfirst.frc4904.cmdbased.subsystems.motor.Motor;
 
 public class TankDriveFourMotor extends FourWheelChassis {
 	public TankDriveFourMotor(String name, Motor frontLeftWheel, Motor frontRightWheel, Motor backLeftWheel, Motor backRightWheel) {

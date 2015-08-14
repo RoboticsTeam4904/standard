@@ -3,8 +3,8 @@ package org.usfirst.frc4904.cmdbased.commands.chassis;
 
 import org.usfirst.frc4904.cmdbased.commands.motor.MotorOutPipe;
 import org.usfirst.frc4904.cmdbased.custom.controllers.Controller;
-import org.usfirst.frc4904.cmdbased.subsystems.Motor;
 import org.usfirst.frc4904.cmdbased.subsystems.chassis.Chassis;
+import org.usfirst.frc4904.cmdbased.subsystems.motor.Motor;
 import org.usfirst.frc4904.logkitten.LogKitten;
 import org.usfirst.frc4904.robot.RobotMap;
 import edu.wpi.first.wpilibj.command.CommandGroup;

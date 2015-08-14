@@ -1,4 +1,4 @@
-package org.usfirst.frc4904.cmdbased.subsystems;
+package org.usfirst.frc4904.cmdbased.subsystems.motor;
 
 
 import edu.wpi.first.wpilibj.Encoder;

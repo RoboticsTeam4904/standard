@@ -1,7 +1,7 @@
 package org.usfirst.frc4904.cmdbased.subsystems.chassis;
 
 
-import org.usfirst.frc4904.cmdbased.subsystems.Motor;
+import org.usfirst.frc4904.cmdbased.subsystems.motor.Motor;
 import edu.wpi.first.wpilibj.Solenoid;
 
 public class TankDriveFourMotorShifting extends TankDriveFourMotor implements ShiftingChassis {
