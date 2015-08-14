@@ -14,18 +14,18 @@ public class CustomJoystick extends Joystick implements InPipable, Controller {
 	private static final double moveThreshold = 0.05;
 	private final int port;
 	// Buttons
-	public static Button button1;
-	public static Button button2;
-	public static Button button3;
-	public static Button button4;
-	public static Button button5;
-	public static Button button6;
-	public static Button button7;
-	public static Button button8;
-	public static Button button9;
-	public static Button button10;
-	public static Button button11;
-	public static Button button12;
+	public final Button button1;
+	public final Button button2;
+	public final Button button3;
+	public final Button button4;
+	public final Button button5;
+	public final Button button6;
+	public final Button button7;
+	public final Button button8;
+	public final Button button9;
+	public final Button button10;
+	public final Button button11;
+	public final Button button12;
 	
 	public CustomJoystick(int port) {
 		super(port);
@@ -63,10 +63,6 @@ public class CustomJoystick extends Joystick implements InPipable, Controller {
 	 */
 	public double[] readPipe() {
 		return new double[] {this.getX(), this.getY(), this.getTwist()};
-	}
-	
-	public Button[] getButtons() {
-		return new Button[] {button1, button2, button3, button4, button5, button6, button7, button8, button9, button10, button11, button12};
 	}
 	
 	/**
