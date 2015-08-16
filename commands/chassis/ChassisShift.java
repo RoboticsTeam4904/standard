@@ -6,16 +6,35 @@ import edu.wpi.first.wpilibj.command.Command;
 
 public class ChassisShift extends Command {
 	private SolenoidShifters solenoids;
+	private SolenoidShifters.ShiftState state;
 	
-	public ChassisShift(String name, SolenoidShifters solenoids) {
-		super(name);
+	public ChassisShift(SolenoidShifters solenoids) {
+		super("ChassisShift");
 		this.solenoids = solenoids;
 		requires(solenoids);
 		setInterruptible(false);
+		state = null;
+	}
+	
+	public ChassisShift(SolenoidShifters solenoids, SolenoidShifters.ShiftState state) {
+		super("ChassisShift");
+		this.solenoids = solenoids;
+		requires(solenoids);
+		setInterruptible(false);
+		this.state = state;
 	}
 	
 	protected void initialize() {
-		solenoids.shift();
+		switch (state) {
+			case UP:
+				solenoids.shift(SolenoidShifters.ShiftState.UP);
+				return;
+			case DOWN:
+				solenoids.shift(SolenoidShifters.ShiftState.DOWN);
+				return;
+			default:
+				solenoids.shift();
+		}
 	}
 	
 	protected void execute() {}
