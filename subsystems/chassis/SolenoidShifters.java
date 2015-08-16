@@ -16,6 +16,17 @@ public class SolenoidShifters extends Subsystem {
 		UP, DOWN;
 	}
 	
+	/**
+	 * Creates a shiting subsystem
+	 * @param leftUp:
+	 * 		The solenoid port to activate to shift up the left gearbox
+	 * @param leftDown:
+	 * 		The solenoid port to activate to shift down the left gearbox
+	 * @param rightUp:
+	 * 		The solenoid port to activate to shift up the right gearbox
+	 * @param rightDown:
+	 * 		The solenoid port to activate to shift down the right gearbox
+	 */
 	public SolenoidShifters(Solenoid leftUp, Solenoid leftDown, Solenoid rightUp, Solenoid rightDown) {
 		super("SolenoidShifters");
 		this.leftSolenoidUp = leftUp;
@@ -37,6 +48,10 @@ public class SolenoidShifters extends Subsystem {
 		return state;
 	}
 	
+	/**
+	 * Shifts both gearboxes to up state or down state
+	 * @param state
+	 */
 	public void shift(ShiftState state) {
 		switch (state) {
 			case UP:
@@ -56,6 +71,9 @@ public class SolenoidShifters extends Subsystem {
 		}
 	}
 	
+	/**
+	 * Toggles current shift state for both gearboxes
+	 */
 	public void shift() {
 		switch (state) {
 			case UP:
