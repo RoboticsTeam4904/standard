@@ -8,13 +8,13 @@ public class TankDrive extends Chassis {
 	/**
 	 * 
 	 * @param name
-	 * @param frontLeftWheel
-	 * @param frontRightWheel
-	 * @param backLeftWheel
-	 * @param backRightWheel
+	 * @param leftWheelA
+	 * @param leftWheelB
+	 * @param rightWheelA
+	 * @param rightWheelB
 	 */
-	public TankDrive(String name, Motor frontLeftWheel, Motor frontRightWheel, Motor backLeftWheel, Motor backRightWheel) {
-		super(name, frontLeftWheel, frontRightWheel, backLeftWheel, backRightWheel);
+	public TankDrive(String name, Motor leftWheelA, Motor leftWheelB, Motor rightWheelA, Motor rightWheelB) {
+		super(name, leftWheelA, leftWheelB, rightWheelA, rightWheelB);
 	}
 	
 	/**
