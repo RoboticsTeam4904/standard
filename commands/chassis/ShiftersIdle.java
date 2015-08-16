@@ -5,7 +5,10 @@ import org.usfirst.frc4904.cmdbased.subsystems.chassis.SolenoidShifters;
 import edu.wpi.first.wpilibj.command.Command;
 
 public class ShiftersIdle extends Command {
-	// GNDN, but lets the shifters idle
+	/**
+	 * GNDN, just a default command for shifters
+	 * @param shifter: the shifter to idle
+	 */
 	public ShiftersIdle(SolenoidShifters shifter) {
 		requires(shifter);
 		setInterruptible(true);
