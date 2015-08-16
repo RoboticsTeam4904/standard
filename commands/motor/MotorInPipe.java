@@ -17,7 +17,7 @@ public class MotorInPipe extends Command {
 		this.motor = motor;
 		this.source = source;
 		logger = new LogKitten(LogKitten.LEVEL_VERBOSE, LogKitten.LEVEL_VERBOSE);
-		logger.v("MotorInPipe created");
+		logger.v("MotorInPipe created for " + motor.getName());
 	}
 	
 	protected void initialize() {

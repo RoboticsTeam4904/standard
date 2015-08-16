@@ -22,7 +22,7 @@ public class MotorOutPipe extends Command implements OutPipable {
 		this.motor = motor;
 		speed = 0;
 		logger = new LogKitten(LogKitten.LEVEL_VERBOSE, LogKitten.LEVEL_VERBOSE);
-		logger.v("MotorSpin created");
+		logger.v("MotorOutPipe created for " + motor.getName());
 		requires(motor);
 		setInterruptible(true);
 	}

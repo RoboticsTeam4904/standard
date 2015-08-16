@@ -8,6 +8,11 @@ public class ChassisShift extends Command {
 	private SolenoidShifters solenoids;
 	private SolenoidShifters.ShiftState state;
 	
+	/**
+	 * Shifts the solenoids to the opposite state
+	 * 
+	 * @param solenoids
+	 */
 	public ChassisShift(SolenoidShifters solenoids) {
 		super("ChassisShift");
 		this.solenoids = solenoids;
@@ -16,6 +21,12 @@ public class ChassisShift extends Command {
 		state = null;
 	}
 	
+	/**
+	 * Shifts the solenoids to the state state
+	 * 
+	 * @param solenoids
+	 * @param state
+	 */
 	public ChassisShift(SolenoidShifters solenoids, SolenoidShifters.ShiftState state) {
 		super("ChassisShift");
 		this.solenoids = solenoids;
