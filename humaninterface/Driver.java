@@ -1,4 +1,4 @@
-package org.usfirst.frc4904.cmdbased;
+package org.usfirst.frc4904.cmdbased.humaninterface;
 
 
 import org.usfirst.frc4904.cmdbased.custom.Named;
