@@ -27,7 +27,7 @@ public class EncodedMotor extends PIDSubsystem implements SpeedController {
 	}
 	
 	protected void usePIDOutput(double speed) {
-		logger.d(Double.toString(speed), true);
+		logger.d(Double.toString(speed));
 		motor.set(speed);
 	}
 	
@@ -55,5 +55,9 @@ public class EncodedMotor extends PIDSubsystem implements SpeedController {
 	 */
 	public Motor getMotor() {
 		return motor;
+	}
+	
+	public boolean isPID() {
+		return getPIDController().isEnable();
 	}
 }

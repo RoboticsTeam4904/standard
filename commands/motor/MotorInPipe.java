@@ -19,20 +19,24 @@ public class MotorInPipe extends Command {
 		requires(motor);
 		setInterruptible(true);
 		logger = new LogKitten(LogKitten.LEVEL_VERBOSE, LogKitten.LEVEL_VERBOSE);
-		logger.v("MotorInPipe created for " + motor.getName());
+		logger.v("MotorInPipe created for " + motor.getName(), true);
 	}
 	
 	protected void initialize() {
-		logger.v("MotorInPipe initialized");
+		logger.v("MotorInPipe initialized", true);
+		System.out.println("MotorInPipe initlialized");
 	}
 	
 	protected void execute() {
+		System.out.println("Motor: " + source.readPipe()[0]);
 		motor.set(source.readPipe()[0]);
 	}
 	
 	protected void end() {}
 	
-	protected void interrupted() {}
+	protected void interrupted() {
+		logger.w("MotorInPipe interrupted", true);
+	}
 	
 	protected boolean isFinished() {
 		return false;
