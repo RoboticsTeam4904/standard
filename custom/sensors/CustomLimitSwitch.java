@@ -16,6 +16,6 @@ public class CustomLimitSwitch extends Button {
 	}
 	
 	public boolean get() {
-		return limitSwitch.get();
+		return !limitSwitch.get();
 	}
 }

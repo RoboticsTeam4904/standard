@@ -5,4 +5,6 @@ import edu.wpi.first.wpilibj.PowerDistributionPanel;
 
 public class PDP extends PowerDistributionPanel {
 	public PDP() {}
+	
+	public void addLiveWindow(int port) {}
 }
