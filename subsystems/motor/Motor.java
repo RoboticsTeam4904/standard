@@ -1,7 +1,7 @@
-package org.usfirst.frc4904.cmdbased.subsystems.motor;
+package org.usfirst.frc4904.standard.subsystems.motor;
 
 
-import org.usfirst.frc4904.cmdbased.commands.motor.MotorIdle;
+import org.usfirst.frc4904.standard.commands.motor.MotorIdle;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.command.Subsystem;
 

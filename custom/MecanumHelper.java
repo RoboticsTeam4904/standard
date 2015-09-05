@@ -1,4 +1,4 @@
-package org.usfirst.frc4904.cmdbased.custom;
+package org.usfirst.frc4904.standard.custom;
 
 
 public class MecanumHelper {
@@ -18,7 +18,7 @@ public class MecanumHelper {
 		backRight /= scaleFactor;
 		return new double[] {frontLeft, frontRight, backLeft, backRight};
 	}
-
+	
 	public static double[] cartesianToPolar(double x, double y) {
 		double speed = Math.sqrt(x * x + y * y);
 		double angle = Math.atan2(y, x);

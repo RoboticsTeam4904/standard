@@ -1,9 +1,9 @@
-package org.usfirst.frc4904.cmdbased.subsystems.chassis;
+package org.usfirst.frc4904.standard.subsystems.chassis;
 
 
-import org.usfirst.frc4904.cmdbased.InPipable;
-import org.usfirst.frc4904.cmdbased.commands.chassis.ChassisIdle;
-import org.usfirst.frc4904.cmdbased.subsystems.motor.Motor;
+import org.usfirst.frc4904.standard.InPipable;
+import org.usfirst.frc4904.standard.commands.chassis.ChassisIdle;
+import org.usfirst.frc4904.standard.subsystems.motor.Motor;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 public abstract class Chassis extends Subsystem implements InPipable {

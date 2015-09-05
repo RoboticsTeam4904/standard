@@ -1,7 +1,7 @@
-package org.usfirst.frc4904.cmdbased.custom.controllers;
+package org.usfirst.frc4904.standard.custom.controllers;
 
 
-import org.usfirst.frc4904.cmdbased.InPipable;
+import org.usfirst.frc4904.standard.InPipable;
 
 public interface Controller extends InPipable {
 	/**

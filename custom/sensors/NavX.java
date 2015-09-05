@@ -1,4 +1,4 @@
-package org.usfirst.frc4904.cmdbased.custom.sensors;
+package org.usfirst.frc4904.standard.custom.sensors;
 
 
 import com.kauailabs.navx_mxp.AHRS;

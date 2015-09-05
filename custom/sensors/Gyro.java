@@ -1,7 +1,7 @@
-package org.usfirst.frc4904.cmdbased.custom.sensors;
+package org.usfirst.frc4904.standard.custom.sensors;
 
 
-import org.usfirst.frc4904.cmdbased.InPipable;
+import org.usfirst.frc4904.standard.InPipable;
 import edu.wpi.first.wpilibj.PIDSource;
 
 public interface Gyro extends PIDSource, InPipable {

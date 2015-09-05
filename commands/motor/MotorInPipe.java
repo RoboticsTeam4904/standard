@@ -1,8 +1,8 @@
-package org.usfirst.frc4904.cmdbased.commands.motor;
+package org.usfirst.frc4904.standard.commands.motor;
 
 
-import org.usfirst.frc4904.cmdbased.InPipable;
 import org.usfirst.frc4904.logkitten.LogKitten;
+import org.usfirst.frc4904.standard.InPipable;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Subsystem;

@@ -1,10 +1,10 @@
-package org.usfirst.frc4904.cmdbased.commands.chassis;
+package org.usfirst.frc4904.standard.commands.chassis;
 
 
-import org.usfirst.frc4904.cmdbased.commands.motor.MotorIdle;
-import org.usfirst.frc4904.cmdbased.subsystems.chassis.Chassis;
-import org.usfirst.frc4904.cmdbased.subsystems.motor.Motor;
 import org.usfirst.frc4904.logkitten.LogKitten;
+import org.usfirst.frc4904.standard.commands.motor.MotorIdle;
+import org.usfirst.frc4904.standard.subsystems.chassis.Chassis;
+import org.usfirst.frc4904.standard.subsystems.motor.Motor;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
 public class ChassisIdle extends CommandGroup {

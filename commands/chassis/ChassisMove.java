@@ -1,12 +1,12 @@
-package org.usfirst.frc4904.cmdbased.commands.chassis;
+package org.usfirst.frc4904.standard.commands.chassis;
 
 
-import org.usfirst.frc4904.cmdbased.commands.motor.MotorOutPipe;
-import org.usfirst.frc4904.cmdbased.custom.controllers.Controller;
-import org.usfirst.frc4904.cmdbased.subsystems.chassis.Chassis;
-import org.usfirst.frc4904.cmdbased.subsystems.motor.Motor;
 import org.usfirst.frc4904.logkitten.LogKitten;
 import org.usfirst.frc4904.robot.RobotMap;
+import org.usfirst.frc4904.standard.commands.motor.MotorOutPipe;
+import org.usfirst.frc4904.standard.custom.controllers.Controller;
+import org.usfirst.frc4904.standard.subsystems.chassis.Chassis;
+import org.usfirst.frc4904.standard.subsystems.motor.Motor;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
 public class ChassisMove extends CommandGroup {
@@ -22,7 +22,7 @@ public class ChassisMove extends CommandGroup {
 	// private final LogKitten logger;
 	public ChassisMove(Chassis chassis, Controller controller, double xScale, double yScale, double turnScale) {
 		super("ChassisMove");
-		requires(RobotMap.chassis);
+		requires(chassis);
 		logger = new LogKitten(LogKitten.LEVEL_VERBOSE, LogKitten.LEVEL_VERBOSE);
 		this.chassis = chassis;
 		this.controller = controller;

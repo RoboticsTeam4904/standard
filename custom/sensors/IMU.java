@@ -1,8 +1,8 @@
-package org.usfirst.frc4904.cmdbased.custom.sensors;
+package org.usfirst.frc4904.standard.custom.sensors;
 
 
 import java.util.Arrays;
-import org.usfirst.frc4904.cmdbased.InPipable;
+import org.usfirst.frc4904.standard.InPipable;
 import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 

@@ -1,4 +1,4 @@
-package org.usfirst.frc4904.cmdbased.subsystems.motor;
+package org.usfirst.frc4904.standard.subsystems.motor;
 
 
 import org.usfirst.frc4904.logkitten.LogKitten;

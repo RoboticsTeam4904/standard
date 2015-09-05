@@ -1,7 +1,7 @@
-package org.usfirst.frc4904.cmdbased.subsystems.chassis;
+package org.usfirst.frc4904.standard.subsystems.chassis;
 
 
-import org.usfirst.frc4904.cmdbased.subsystems.motor.Motor;
+import org.usfirst.frc4904.standard.subsystems.motor.Motor;
 
 public class TankDriveShifting extends TankDrive implements ShiftingChassis {
 	private final SolenoidShifters shifter;

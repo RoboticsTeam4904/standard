@@ -1,9 +1,9 @@
-package org.usfirst.frc4904.cmdbased.commands;
+package org.usfirst.frc4904.standard.commands;
 
 
-import org.usfirst.frc4904.cmdbased.InPipable;
-import org.usfirst.frc4904.cmdbased.OutPipable;
 import org.usfirst.frc4904.logkitten.LogKitten;
+import org.usfirst.frc4904.standard.InPipable;
+import org.usfirst.frc4904.standard.OutPipable;
 import edu.wpi.first.wpilibj.command.Command;
 
 public class CommandPipe extends Command {

@@ -1,4 +1,6 @@
-package org.usfirst.frc4904.cmdbased.custom.controllers;
+package org.usfirst.frc4904.standard.custom.controllers;
+
+
 /* Imports */
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.Button;
@@ -6,36 +8,37 @@ import edu.wpi.first.wpilibj.buttons.JoystickButton;
 
 /**
  * [class] XboxController
+ * 
  * @author AJ Granowski & 4624 Owatonna Robotics
  * @version 2015
  * 
- * This class wraps around the Joystick class in order to make
- *     working with Xbox360 controllers less of a pain.
+ *          This class wraps around the Joystick class in order to make
+ *          working with Xbox360 controllers less of a pain.
  * 
- * The values from this class can be used in two ways. One could
- *     either check each Button every cycle with .get(), or they
- *     could call commands directly from the Buttons with .whenPressed()
+ *          The values from this class can be used in two ways. One could
+ *          either check each Button every cycle with .get(), or they
+ *          could call commands directly from the Buttons with .whenPressed()
  * 
- * USAGE:
- *     // Initialization
- *     myXboxController = new XboxController( <port the controller is on (starts at 0)> );
- *     myXboxController.leftStick.setThumbstickDeadZone( .2 );  // Optional. See code below for defaults.
- *     
- *     // Using buttons
- *     myXboxController.a.whenPressed( new MyCommand() );
- *     myXboxController.lb.toggleWhenPressed( new MyCommand() );
- *     myXboxController.rightStick.whenPressed( new MyCommand() );
- *     
- *     // Getting values directly
- *     if( myXboxController.leftStick.getY() > .4 ) ...
- *     
- *     // Support of legacy methods (NOTE: These values are straight from the Joystick class. No deadzone stuff or anything)
- *     if( xboxController.getX() > .4 ) ...
+ *          USAGE:
+ *          // Initialization
+ *          myXboxController = new XboxController( <port the controller is on (starts at 0)> );
+ *          myXboxController.leftStick.setThumbstickDeadZone( .2 ); // Optional. See code below for defaults.
  * 
- * NOTES:
- *     Although I have confidence that this will work, not everything has been tested.
- *     This should work for the 2015 WPILib. The mappings of axis's and buttons may change in later years.
- *     I am not a good Java programmer.
+ *          // Using buttons
+ *          myXboxController.a.whenPressed( new MyCommand() );
+ *          myXboxController.lb.toggleWhenPressed( new MyCommand() );
+ *          myXboxController.rightStick.whenPressed( new MyCommand() );
+ * 
+ *          // Getting values directly
+ *          if( myXboxController.leftStick.getY() > .4 ) ...
+ * 
+ *          // Support of legacy methods (NOTE: These values are straight from the Joystick class. No deadzone stuff or anything)
+ *          if( xboxController.getX() > .4 ) ...
+ * 
+ *          NOTES:
+ *          Although I have confidence that this will work, not everything has been tested.
+ *          This should work for the 2015 WPILib. The mappings of axis's and buttons may change in later years.
+ *          I am not a good Java programmer.
  */
 public class XboxController extends Joystick {
 	/* Default Values */
@@ -81,6 +84,7 @@ public class XboxController extends Joystick {
 	 * (Constructor #1)
 	 * There are two ways to make an XboxController. With this constructor,
 	 * you can specify which port you expect the controller to be on.
+	 * 
 	 * @param port
 	 */
 	public XboxController(final int port) {
@@ -131,6 +135,7 @@ public class XboxController extends Joystick {
 		
 		/**
 		 * Constructor
+		 * 
 		 * @param value
 		 */
 		DPAD(final int value) {
@@ -139,6 +144,7 @@ public class XboxController extends Joystick {
 		
 		/**
 		 * Convert integers to DPAD values
+		 * 
 		 * @param value
 		 * @return DPAD with matching angle
 		 */
@@ -175,6 +181,7 @@ public class XboxController extends Joystick {
 		
 		/**
 		 * Constructor
+		 * 
 		 * @param parent
 		 * @param hand
 		 */
@@ -198,6 +205,7 @@ public class XboxController extends Joystick {
 		/**
 		 * + = right
 		 * - = left
+		 * 
 		 * @return X but with a deadzone
 		 */
 		private double rawX() {
@@ -208,6 +216,7 @@ public class XboxController extends Joystick {
 		/**
 		 * + = up
 		 * - = down
+		 * 
 		 * @return Y but with a deadzone
 		 */
 		private double rawY() {
@@ -217,6 +226,7 @@ public class XboxController extends Joystick {
 		
 		/**
 		 * magnitude
+		 * 
 		 * @param x
 		 * @param y
 		 * @return Magnitude of thing
@@ -229,6 +239,7 @@ public class XboxController extends Joystick {
 		
 		/**
 		 * angleToSquareSpace
+		 * 
 		 * @param angle
 		 * @return Number between 0 and PI/4
 		 */
@@ -242,9 +253,10 @@ public class XboxController extends Joystick {
 		
 		/**
 		 * scaleMagnitude
+		 * 
 		 * @param x
 		 * @param y
-		 * @return 
+		 * @return
 		 */
 		private double scaleMagnitude(double x, double y) {
 			final double magnitude = magnitude(x, y);
@@ -263,6 +275,7 @@ public class XboxController extends Joystick {
 		/* Get Methods */
 		/**
 		 * Used to see which side of the controller this thumbstick is
+		 * 
 		 * @return Thumbstick hand
 		 */
 		public HAND getHand() {
@@ -271,6 +284,7 @@ public class XboxController extends Joystick {
 		
 		/**
 		 * getRawX
+		 * 
 		 * @return X with a deadzone
 		 */
 		public double getX() {
@@ -279,6 +293,7 @@ public class XboxController extends Joystick {
 		
 		/**
 		 * getRawY
+		 * 
 		 * @return Y with a deadzone
 		 */
 		public double getY() {
@@ -286,9 +301,10 @@ public class XboxController extends Joystick {
 		}
 		
 		/**
-		 * 0    = Up;
-		 * 90   = Right;
+		 * 0 = Up;
+		 * 90 = Right;
 		 * ...
+		 * 
 		 * @return Angle the thumbstick is pointing
 		 */
 		public double getAngle() {
@@ -298,6 +314,7 @@ public class XboxController extends Joystick {
 		
 		/**
 		 * getMagnitude
+		 * 
 		 * @return A number between 0 and 1
 		 */
 		public double getMagnitude() {
@@ -310,6 +327,7 @@ public class XboxController extends Joystick {
 		
 		/**
 		 * Get the adjusted thumbstick position (Magnitude <= 1)
+		 * 
 		 * @return True thumbstick position
 		 */
 		public double getTrueX() {
@@ -321,6 +339,7 @@ public class XboxController extends Joystick {
 		
 		/**
 		 * Get the adjusted thumbstick position (Magnitude <= 1)
+		 * 
 		 * @return True thumbstick position
 		 */
 		public double getTrueY() {
@@ -333,6 +352,7 @@ public class XboxController extends Joystick {
 		/* Set Methods */
 		/**
 		 * Set the X axis deadzone of this thumbstick
+		 * 
 		 * @param number
 		 */
 		public void setXDeadZone(double number) {
@@ -341,6 +361,7 @@ public class XboxController extends Joystick {
 		
 		/**
 		 * Set the Y axis deadzone of this thumbstick
+		 * 
 		 * @param number
 		 */
 		public void setYDeadZone(double number) {
@@ -361,6 +382,7 @@ public class XboxController extends Joystick {
 		
 		/**
 		 * Constructor
+		 * 
 		 * @param joystick
 		 * @param hand
 		 */
@@ -381,9 +403,10 @@ public class XboxController extends Joystick {
 		/* Get Methods */
 		/**
 		 * getHand
+		 * 
 		 * @return Trigger hand
 		 * 
-		 * See which side of the controller this trigger is
+		 *         See which side of the controller this trigger is
 		 */
 		public HAND getHand() {
 			return hand;
@@ -392,6 +415,7 @@ public class XboxController extends Joystick {
 		/**
 		 * 0 = Not pressed
 		 * 1 = Completely pressed
+		 * 
 		 * @return How far its pressed
 		 */
 		public double getX() {
@@ -411,6 +435,7 @@ public class XboxController extends Joystick {
 		/* Set Methods */
 		/**
 		 * Set the deadzone of this trigger
+		 * 
 		 * @param number
 		 */
 		public void setTriggerDeadZone(double number) {
@@ -419,6 +444,7 @@ public class XboxController extends Joystick {
 		
 		/**
 		 * How far you need to press this trigger to activate a button press
+		 * 
 		 * @param number
 		 */
 		public void setTriggerSensitivity(double number) {
@@ -443,6 +469,7 @@ public class XboxController extends Joystick {
 		
 		/**
 		 * Constructor
+		 * 
 		 * @param parent
 		 */
 		DirectionalPad(final Joystick parent) {
@@ -469,6 +496,7 @@ public class XboxController extends Joystick {
 			
 			/**
 			 * Constructor
+			 * 
 			 * @param parent
 			 * @param dPad
 			 */
@@ -497,14 +525,15 @@ public class XboxController extends Joystick {
 		
 		/* Get Methods */
 		/**
-		 * UP          0;
-		 * UP_RIGHT    45;
-		 * RIGHT       90;
-		 * DOWN_RIGHT  135;
-		 * DOWN        180;
-		 * DOWN_LEFT   225;
-		 * LEFT        270;
-		 * UP_LEFT     315;
+		 * UP 0;
+		 * UP_RIGHT 45;
+		 * RIGHT 90;
+		 * DOWN_RIGHT 135;
+		 * DOWN 180;
+		 * DOWN_LEFT 225;
+		 * LEFT 270;
+		 * UP_LEFT 315;
+		 * 
 		 * @return A number between 0 and 315 indicating direction
 		 */
 		public int getAngle() {
@@ -513,6 +542,7 @@ public class XboxController extends Joystick {
 		
 		/**
 		 * Just like getAngle, but returns a direction instead of an angle
+		 * 
 		 * @return A DPAD direction
 		 */
 		public DPAD getDirection() {
@@ -526,6 +556,7 @@ public class XboxController extends Joystick {
 	 * |--1--2--3--4--5--|
 	 * into this
 	 * ______|-1-2-3-4-5-|
+	 * 
 	 * @param input
 	 * @param deadZoneSize
 	 * @return adjusted_input
@@ -562,8 +593,11 @@ public class XboxController extends Joystick {
 	/* Set Methods */
 	/**
 	 * Make the controller vibrate
-	 * @param hand The side of the controller to rumble
-	 * @param intensity How strong the rumble is
+	 * 
+	 * @param hand
+	 *        The side of the controller to rumble
+	 * @param intensity
+	 *        How strong the rumble is
 	 */
 	public void setRumble(HAND hand, double intensity) {
 		final float amount = new Float(intensity);
@@ -576,7 +610,9 @@ public class XboxController extends Joystick {
 	
 	/**
 	 * Make the controller vibrate
-	 * @param intensity How strong the rumble is
+	 * 
+	 * @param intensity
+	 *        How strong the rumble is
 	 */
 	public void setRumble(double intensity) {
 		final float amount = new Float(intensity);

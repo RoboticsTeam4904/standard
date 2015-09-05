@@ -1,7 +1,7 @@
-package org.usfirst.frc4904.cmdbased.commands.chassis;
+package org.usfirst.frc4904.standard.commands.chassis;
 
 
-import org.usfirst.frc4904.cmdbased.subsystems.chassis.SolenoidShifters;
+import org.usfirst.frc4904.standard.subsystems.chassis.SolenoidShifters;
 import edu.wpi.first.wpilibj.command.Command;
 
 public class ChassisShift extends Command {

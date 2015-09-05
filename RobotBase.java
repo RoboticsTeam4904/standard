@@ -1,10 +1,10 @@
-package org.usfirst.frc4904.cmdbased;
+package org.usfirst.frc4904.standard;
 
 
-import org.usfirst.frc4904.cmdbased.custom.CommandSendableChooser;
-import org.usfirst.frc4904.cmdbased.custom.TypedNamedSendableChooser;
-import org.usfirst.frc4904.cmdbased.humaninterface.Driver;
-import org.usfirst.frc4904.cmdbased.humaninterface.Operator;
+import org.usfirst.frc4904.standard.custom.CommandSendableChooser;
+import org.usfirst.frc4904.standard.custom.TypedNamedSendableChooser;
+import org.usfirst.frc4904.standard.humaninterface.Driver;
+import org.usfirst.frc4904.standard.humaninterface.Operator;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;

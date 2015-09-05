@@ -1,4 +1,4 @@
-package org.usfirst.frc4904.cmdbased.custom.controllers;
+package org.usfirst.frc4904.standard.custom.controllers;
 
 
 import edu.wpi.first.wpilibj.GenericHID;
@@ -21,7 +21,7 @@ public class SuperButton extends JoystickButton {
 		}
 		return false;
 	}
-
+	
 	public boolean getRaw() {
 		return super.get();
 	}

@@ -1,7 +1,7 @@
-package org.usfirst.frc4904.cmdbased.subsystems.chassis;
+package org.usfirst.frc4904.standard.subsystems.chassis;
 
 
-import org.usfirst.frc4904.cmdbased.commands.chassis.ShiftersIdle;
+import org.usfirst.frc4904.standard.commands.chassis.ShiftersIdle;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
@@ -18,14 +18,19 @@ public class SolenoidShifters extends Subsystem {
 	
 	/**
 	 * Creates a shiting subsystem
-	 * @param leftUp:
-	 * 		The solenoid port to activate to shift up the left gearbox
-	 * @param leftDown:
-	 * 		The solenoid port to activate to shift down the left gearbox
-	 * @param rightUp:
-	 * 		The solenoid port to activate to shift up the right gearbox
-	 * @param rightDown:
-	 * 		The solenoid port to activate to shift down the right gearbox
+	 * 
+	 * @param leftUp
+	 *        :
+	 *        The solenoid port to activate to shift up the left gearbox
+	 * @param leftDown
+	 *        :
+	 *        The solenoid port to activate to shift down the left gearbox
+	 * @param rightUp
+	 *        :
+	 *        The solenoid port to activate to shift up the right gearbox
+	 * @param rightDown
+	 *        :
+	 *        The solenoid port to activate to shift down the right gearbox
 	 */
 	public SolenoidShifters(Solenoid leftUp, Solenoid leftDown, Solenoid rightUp, Solenoid rightDown) {
 		super("SolenoidShifters");
@@ -50,6 +55,7 @@ public class SolenoidShifters extends Subsystem {
 	
 	/**
 	 * Shifts both gearboxes to up state or down state
+	 * 
 	 * @param state
 	 */
 	public void shift(ShiftState state) {

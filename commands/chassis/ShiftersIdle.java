@@ -1,13 +1,15 @@
-package org.usfirst.frc4904.cmdbased.commands.chassis;
+package org.usfirst.frc4904.standard.commands.chassis;
 
 
-import org.usfirst.frc4904.cmdbased.subsystems.chassis.SolenoidShifters;
+import org.usfirst.frc4904.standard.subsystems.chassis.SolenoidShifters;
 import edu.wpi.first.wpilibj.command.Command;
 
 public class ShiftersIdle extends Command {
 	/**
 	 * GNDN, just a default command for shifters
-	 * @param shifter: the shifter to idle
+	 * 
+	 * @param shifter
+	 *        : the shifter to idle
 	 */
 	public ShiftersIdle(SolenoidShifters shifter) {
 		requires(shifter);

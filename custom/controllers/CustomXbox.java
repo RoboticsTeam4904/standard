@@ -1,4 +1,4 @@
-package org.usfirst.frc4904.cmdbased.custom.controllers;
+package org.usfirst.frc4904.standard.custom.controllers;
 
 
 public class CustomXbox extends XboxController implements Controller {
