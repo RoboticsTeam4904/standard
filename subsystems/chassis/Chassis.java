@@ -1,12 +1,11 @@
 package org.usfirst.frc4904.standard.subsystems.chassis;
 
 
-import org.usfirst.frc4904.standard.InPipable;
 import org.usfirst.frc4904.standard.commands.chassis.ChassisIdle;
 import org.usfirst.frc4904.standard.subsystems.motor.Motor;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
-public abstract class Chassis extends Subsystem implements InPipable {
+public abstract class Chassis extends Subsystem {
 	protected int numberWheels;
 	protected double[] motorSpeeds;
 	private Motor[] motors;
@@ -40,16 +39,9 @@ public abstract class Chassis extends Subsystem implements InPipable {
 		return motors;
 	}
 	
-	public double[] readPipe() {
+	public double[] getMotorSpeeds() {
 		return motorSpeeds;
 	}
-	
-	/**
-	 * The Chassis always returns the motor speeds
-	 */
-	public void setPipe(Enum mode) {}
-	
-	public abstract Enum getControllerMode();
 	
 	public abstract void move2dp(double speed, double angle, double turnSpeed);
 	

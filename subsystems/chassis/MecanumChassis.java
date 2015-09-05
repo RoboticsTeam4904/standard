@@ -1,7 +1,6 @@
 package org.usfirst.frc4904.standard.subsystems.chassis;
 
 
-import org.usfirst.frc4904.standard.custom.controllers.Controller;
 import org.usfirst.frc4904.standard.subsystems.motor.Motor;
 
 public class MecanumChassis extends Chassis {
@@ -16,10 +15,6 @@ public class MecanumChassis extends Chassis {
 	 */
 	public MecanumChassis(String name, Motor frontLeftWheel, Motor frontRightWheel, Motor backLeftWheel, Motor backRightWheel) {
 		super(name, frontLeftWheel, frontRightWheel, backLeftWheel, backRightWheel);
-	}
-	
-	public Enum getControllerMode() {
-		return Controller.PipeModes.XYTwist;
 	}
 	
 	/**

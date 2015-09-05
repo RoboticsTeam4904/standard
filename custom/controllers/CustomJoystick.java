@@ -1,19 +1,17 @@
 package org.usfirst.frc4904.standard.custom.controllers;
 
 
-import org.usfirst.frc4904.standard.InPipable;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.Button;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 
-public class CustomJoystick extends Joystick implements InPipable, Controller {
+public class CustomJoystick extends Joystick implements Controller {
 	public static final int X_AXIS = 0;
 	public static final int Y_AXIS = 1;
 	private static final int NUM_BUTTONS = 12;
 	private static final double moveThreshold = 0.05;
 	private final int port;
-	private PipeModes mode;
 	// Buttons
 	public final Button button1;
 	public final Button button2;
@@ -43,7 +41,6 @@ public class CustomJoystick extends Joystick implements InPipable, Controller {
 		button10 = new JoystickButton(this, 10);
 		button11 = new JoystickButton(this, 11);
 		button12 = new JoystickButton(this, 12);
-		mode = PipeModes.XYTwist;
 	}
 	
 	public boolean active(int axis) {
@@ -60,27 +57,7 @@ public class CustomJoystick extends Joystick implements InPipable, Controller {
 		return DriverStation.getInstance().getStickButtonCount(port) > 0;
 	}
 	
-	/**
-	 * Read values from Joystick
-	 */
-	public double[] readPipe() {
-		switch (mode) {
-			case All:
-			case XYTwist:
-				return new double[] {this.getX(), this.getY(), this.getTwist()};
-			case X:
-				return new double[] {this.getX()};
-			case Y:
-				return new double[] {this.getY()};
-			case Twist:
-				return new double[] {this.getTwist()};
-			case Fourth:
-			default:
-				return new double[] {this.getX(), this.getY(), this.getTwist()};
-		}
-	}
-	
-	public void setPipe(Enum mode) {
-		this.mode = (PipeModes) mode;
+	public double getAxis(int axis) {
+		return super.getRawAxis(axis);
 	}
 }

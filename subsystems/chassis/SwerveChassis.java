@@ -1,7 +1,6 @@
 package org.usfirst.frc4904.standard.subsystems.chassis;
 
 
-import org.usfirst.frc4904.standard.custom.controllers.Controller;
 import org.usfirst.frc4904.standard.subsystems.motor.Motor;
 
 public class SwerveChassis extends Chassis {
@@ -40,8 +39,4 @@ public class SwerveChassis extends Chassis {
 	}
 	
 	public void move(double speed, double turnSpeed) {}
-	
-	public Enum getControllerMode() {
-		return Controller.PipeModes.XYTwist;
-	}
 }

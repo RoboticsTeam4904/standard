@@ -2,15 +2,14 @@ package org.usfirst.frc4904.standard.commands.chassis;
 
 
 import org.usfirst.frc4904.logkitten.LogKitten;
-import org.usfirst.frc4904.robot.RobotMap;
-import org.usfirst.frc4904.standard.commands.motor.MotorOutPipe;
+import org.usfirst.frc4904.standard.commands.motor.MotorSet;
 import org.usfirst.frc4904.standard.custom.controllers.Controller;
 import org.usfirst.frc4904.standard.subsystems.chassis.Chassis;
 import org.usfirst.frc4904.standard.subsystems.motor.Motor;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
 public class ChassisMove extends CommandGroup {
-	private final MotorOutPipe[] motorSpins;
+	private final MotorSet[] motorSpins;
 	private double[] motorSpeeds;
 	private final Chassis chassis;
 	private final Controller controller;
@@ -27,9 +26,9 @@ public class ChassisMove extends CommandGroup {
 		this.chassis = chassis;
 		this.controller = controller;
 		Motor[] motors = this.chassis.getMotors();
-		this.motorSpins = new MotorOutPipe[4];
+		this.motorSpins = new MotorSet[4];
 		for (int i = 0; i < motors.length; i++) {
-			motorSpins[i] = new MotorOutPipe(motors[i]);
+			motorSpins[i] = new MotorSet(motors[i]);
 			addParallel(motorSpins[i]);
 		}
 		this.xScale = xScale;
@@ -43,17 +42,15 @@ public class ChassisMove extends CommandGroup {
 	}
 	
 	protected void initialize() {
-		// logger.v("ChassisMove initialized");
-		controller.setPipe(chassis.getControllerMode());
+		logger.v("ChassisMove initialized");
 	}
 	
 	protected void execute() {
-		double[] desiredMovement = controller.readPipe();
-		chassis.move2dc(desiredMovement[0] * xScale, desiredMovement[1] * yScale, desiredMovement[2] * turnScale);
-		motorSpeeds = chassis.readPipe();
+		chassis.move2dc(controller.getAxis(Controller.X_AXIS) * xScale, controller.getAxis(Controller.Y_AXIS) * yScale, controller.getAxis(Controller.TWIST_AXIS) * turnScale);
+		motorSpeeds = chassis.getMotorSpeeds();
 		String motorSpeedsString = "";
 		for (int i = 0; i < motorSpins.length; i++) {
-			motorSpins[i].writePipe(new double[] {motorSpeeds[i]});
+			motorSpins[i].set(motorSpeeds[i]);
 			motorSpeedsString += Double.toString(motorSpeeds[i]) + " ";
 		}
 		logger.d("ChassisMove executing");
