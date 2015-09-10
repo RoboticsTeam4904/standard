@@ -9,11 +9,11 @@ public class CustomXbox extends XboxController implements Controller {
 	public double getAxis(int axis) {
 		switch (axis) {
 			case 0:
-				return super.getRawAxis(0);
+				return this.leftStick.getX();
 			case 1:
-				return super.getRawAxis(1);
+				return this.leftStick.getY();
 			case 2:
-				return super.getRawAxis(4);
+				return this.rightStick.getX();
 			default:
 				return super.getRawAxis(axis);
 		}
