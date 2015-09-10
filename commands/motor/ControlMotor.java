@@ -21,23 +21,22 @@ public class ControlMotor extends Command {
 		requires(motor);
 		setInterruptible(true);
 		logger = new LogKitten(LogKitten.LEVEL_VERBOSE, LogKitten.LEVEL_VERBOSE);
-		logger.v("MotorInPipe created for " + motor.getName(), true);
+		logger.v("ControlMotor created for " + motor.getName(), true);
 	}
 	
 	protected void initialize() {
 		logger.v("MotorInPipe initialized", true);
-		System.out.println("MotorInPipe initlialized");
+		System.out.println("ControlMotor initlialized");
 	}
 	
 	protected void execute() {
-		System.out.println("Motor: " + controller.getAxis(axis));
 		motor.set(controller.getAxis(axis));
 	}
 	
 	protected void end() {}
 	
 	protected void interrupted() {
-		logger.w("MotorInPipe interrupted", true);
+		logger.w("ControlMotor interrupted", true);
 	}
 	
 	protected boolean isFinished() {
