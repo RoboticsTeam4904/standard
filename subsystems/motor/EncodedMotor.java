@@ -14,7 +14,7 @@ public class EncodedMotor extends PIDSubsystem implements SpeedController {
 	public EncodedMotor(String name, double P, double I, double D, Motor motor, Encoder encoder) {
 		super(name, P, I, D);
 		this.motor = motor;
-		logger = new LogKitten(LogKitten.LEVEL_DEBUG, LogKitten.LEVEL_DEBUG);
+		logger = new LogKitten(LogKitten.LEVEL_WARN, LogKitten.LEVEL_WARN);
 		this.encoder = encoder;
 		setOutputRange(-1, 1);
 		getPIDController().setContinuous(false);

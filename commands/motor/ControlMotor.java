@@ -20,7 +20,7 @@ public class ControlMotor extends Command {
 		this.axis = axis;
 		requires(motor);
 		setInterruptible(true);
-		logger = new LogKitten(LogKitten.LEVEL_DEBUG, LogKitten.LEVEL_DEBUG);
+		logger = new LogKitten(LogKitten.LEVEL_WARN, LogKitten.LEVEL_WARN);
 		logger.v("ControlMotor created for " + motor.getName());
 	}
 	
@@ -30,7 +30,7 @@ public class ControlMotor extends Command {
 	}
 	
 	protected void execute() {
-		logger.d("ControlMotor executing: " + controller.getAxis(axis), true);
+		logger.d("ControlMotor executing: " + controller.getAxis(axis));
 		motor.set(controller.getAxis(axis));
 	}
 	
