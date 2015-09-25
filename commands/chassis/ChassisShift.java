@@ -55,6 +55,6 @@ public class ChassisShift extends Command {
 	protected void end() {}
 	
 	protected boolean isFinished() {
-		return false;
+		return true;
 	}
 }
