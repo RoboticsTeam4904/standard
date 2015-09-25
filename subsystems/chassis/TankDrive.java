@@ -38,7 +38,7 @@ public class TankDrive extends Chassis {
 	 *        : rate of rotation around center
 	 */
 	public void move2dp(double speed, double angle, double turnSpeed) {
-		double normalize = Math.max(Math.abs(speed + turnSpeed), Math.abs(speed - turnSpeed));
+		double normalize = Math.max(Math.max(Math.abs(speed + turnSpeed), Math.abs(speed - turnSpeed)), 1);
 		double leftSpeed = (speed + turnSpeed) / normalize;
 		double rightSpeed = (speed - turnSpeed) / normalize;
 		motorSpeeds = new double[] {leftSpeed, leftSpeed, rightSpeed, rightSpeed};
@@ -54,7 +54,7 @@ public class TankDrive extends Chassis {
 	 *        rate of rotation around center
 	 */
 	public void move2dc(double xSpeed, double ySpeed, double turnSpeed) {
-		move2dp(xSpeed, 0.0, turnSpeed);
+		move2dp(ySpeed, 0.0, turnSpeed);
 	}
 	
 	/**
