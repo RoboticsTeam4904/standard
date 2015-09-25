@@ -14,13 +14,13 @@ public class ChassisIdle extends CommandGroup {
 	public ChassisIdle(Chassis chassis) {
 		super("ChassisIdle");
 		this.chassis = chassis;
+		requires(chassis);
 		logger = new LogKitten(LogKitten.LEVEL_VERBOSE, LogKitten.LEVEL_ERROR);
 		logger.v("ChassisIdle created for " + Integer.toString(chassis.getNumberWheels()) + " wheels");
 		setInterruptible(true); // default command
 	}
 	
 	protected void initialize() {
-		requires(chassis);
 		logger.v("ChassisIdle initialized");
 	}
 	
