@@ -20,7 +20,9 @@ public class MotorConstant extends Command {
 		motor.set(motorSpeed);
 	}
 	
-	protected void execute() {}
+	protected void execute() {
+		motor.set(motorSpeed);
+	}
 	
 	protected void interrupted() {}
 	
