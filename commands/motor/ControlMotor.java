@@ -20,12 +20,12 @@ public class ControlMotor extends Command {
 		this.axis = axis;
 		requires(motor);
 		setInterruptible(true);
-		logger = new LogKitten(LogKitten.LEVEL_WARN, LogKitten.LEVEL_WARN);
+		logger = new LogKitten(LogKitten.LEVEL_DEBUG, LogKitten.LEVEL_DEBUG);
 		logger.v("ControlMotor created for " + motor.getName());
 	}
 	
 	protected void initialize() {
-		logger.v("MotorInPipe initialized");
+		logger.v("ControlMotor initialized");
 		System.out.println("ControlMotor initlialized");
 	}
 	
