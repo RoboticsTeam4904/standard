@@ -12,12 +12,14 @@ public class ControlMotor extends Command {
 	private final LogKitten logger;
 	private final Controller controller;
 	private final int axis;
+	private final boolean invert;
 	
-	public <A extends Subsystem & SpeedController> ControlMotor(A motor, Controller controller, int axis) {
+	public <A extends Subsystem & SpeedController> ControlMotor(A motor, Controller controller, int axis, boolean invert) {
 		super("MotorInPipe");
 		this.motor = motor;
 		this.controller = controller;
 		this.axis = axis;
+		this.invert = invert;
 		requires(motor);
 		setInterruptible(true);
 		logger = new LogKitten(LogKitten.LEVEL_DEBUG, LogKitten.LEVEL_DEBUG);
@@ -31,7 +33,11 @@ public class ControlMotor extends Command {
 	
 	protected void execute() {
 		logger.d("ControlMotor executing: " + controller.getAxis(axis));
-		motor.set(controller.getAxis(axis));
+		if (!invert) {
+			motor.set(controller.getAxis(axis));
+		} else {
+			motor.set(-1.0f * controller.getAxis(axis));
+		}
 	}
 	
 	protected void end() {}
