@@ -10,18 +10,27 @@ public class TankDriveShifting extends TankDrive implements ShiftingChassis {
 	 * A tank drive with shifting solenoids (only two solenoids supported)
 	 * 
 	 * @param name
-	 * @param frontLeftWheel
-	 * @param frontRightWheel
-	 * @param backLeftWheel
-	 * @param backRightWheel
-	 * @param leftSolenoid
-	 * @param rightSolenoid
+	 * @param leftWheelA
+	 * @param leftWheelB
+	 * @param rightWheelA
+	 * @param rightWheelB
+	 * @param SolenoidShifters
+	 *        object
 	 */
 	public TankDriveShifting(String name, Motor leftWheelA, Motor leftWheelB, Motor rightWheelA, Motor rightWheelB, SolenoidShifters shifter) {
 		super(name, leftWheelA, leftWheelB, rightWheelA, rightWheelB);
 		this.shifter = shifter;
 	}
 	
+	/**
+	 * A tank drive with shifting solenoids (only two solenoids supported)
+	 * 
+	 * @param name
+	 * @param leftWheel
+	 * @param rightWheel
+	 * @param SolenoidShifters
+	 *        object
+	 */
 	public TankDriveShifting(String name, Motor leftWheel, Motor rightWheel, SolenoidShifters shifter) {
 		super(name, leftWheel, rightWheel);
 		this.shifter = shifter;
