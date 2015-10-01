@@ -29,7 +29,7 @@ public class MecanumChassis extends Chassis {
 	 *        : rate of rotation around center
 	 */
 	public void move2dp(double speed, double angle, double turnSpeed) {
-		motorSpeeds = MecanumHelper.calculateWheels(speed, angle, turnSpeed);
+		motorSpeeds = calculateWheels(speed, angle, turnSpeed);
 	}
 	
 	/**
@@ -39,7 +39,7 @@ public class MecanumChassis extends Chassis {
 	 *        : speed in y direction
 	 */
 	public void move2dc(double xSpeed, double ySpeed, double turnSpeed) {
-		double[] polar = MecanumHelper.cartesianToPolar(xSpeed, ySpeed);
+		double[] polar = cartesianToPolar(xSpeed, ySpeed);
 		move2dp(polar[0], polar[1], turnSpeed);
 	}
 	
@@ -53,8 +53,6 @@ public class MecanumChassis extends Chassis {
 		move2dc(0.0, speed, turnSpeed);
 	}
 	
-	// At the moment, I see no reason that
-	private static class MecanumHelper {
 		public static double[] calculateWheels(double speed, double angle, double turnSpeed) {
 			// System.out.println("Angle: " + angle);
 			// System.out.println("Speed: " + speed);
@@ -81,5 +79,5 @@ public class MecanumChassis extends Chassis {
 			double angle = Math.atan2(y, x);
 			return new double[] {speed, angle};
 		}
-	}
+	
 }
