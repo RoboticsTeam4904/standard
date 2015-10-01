@@ -56,15 +56,15 @@ public class MecanumChassis extends Chassis {
 	// At the moment, I see no reason that
 	private static class MecanumHelper {
 		public static double[] calculateWheels(double speed, double angle, double turnSpeed) {
-			System.out.println("Angle: " + angle);
-			System.out.println("Speed: " + speed);
-			System.out.println("Turnspeed: " + turnSpeed);
-			angle += Math.PI / 4.0; // Shift axes to work with mecanum
+			// System.out.println("Angle: " + angle);
+			// System.out.println("Speed: " + speed);
+			// System.out.println("Turnspeed: " + turnSpeed);
+			angle -= Math.PI / 4.0; // Shift axes to work with mecanum
 			angle = angle % (Math.PI * 2); // make sure angle makes sense
 			double frontLeft = speed * Math.sin(angle) + turnSpeed;
-			double frontRight = speed * Math.cos(angle) - turnSpeed;
-			double backLeft = speed * Math.cos(angle) - turnSpeed;
-			double backRight = speed * Math.sin(angle) + turnSpeed;
+			double frontRight = -1 * speed * Math.cos(angle) + turnSpeed;
+			double backLeft = speed * Math.cos(angle) + turnSpeed;
+			double backRight = -1 * speed * Math.sin(angle) + turnSpeed;
 			double scaleFactor = Math.max(Math.max(Math.max(Math.abs(frontLeft), Math.abs(frontRight)), Math.abs(backLeft)), Math.abs(backRight));
 			if (scaleFactor < 1) {
 				scaleFactor = 1;
