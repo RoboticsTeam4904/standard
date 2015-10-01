@@ -26,7 +26,7 @@ public class ChassisMove extends CommandGroup {
 		this.chassis = chassis;
 		this.controller = controller;
 		Motor[] motors = this.chassis.getMotors();
-		this.motorSpins = new MotorSet[4];
+		this.motorSpins = new MotorSet[motors.length];
 		for (int i = 0; i < motors.length; i++) {
 			motorSpins[i] = new MotorSet(motors[i]);
 			addParallel(motorSpins[i]);
