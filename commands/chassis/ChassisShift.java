@@ -39,10 +39,10 @@ public class ChassisShift extends Command {
 		switch (state) {
 			case UP:
 				solenoids.shift(SolenoidShifters.ShiftState.UP);
-				return;
+				break;
 			case DOWN:
 				solenoids.shift(SolenoidShifters.ShiftState.DOWN);
-				return;
+				break;
 			default:
 				solenoids.shift();
 		}
