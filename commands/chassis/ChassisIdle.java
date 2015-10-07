@@ -18,6 +18,10 @@ public class ChassisIdle extends CommandGroup {
 		logger = new LogKitten(LogKitten.LEVEL_VERBOSE, LogKitten.LEVEL_ERROR);
 		logger.v("ChassisIdle created for " + Integer.toString(chassis.getNumberWheels()) + " wheels");
 		setInterruptible(true); // default command
+		Motor[] motors = chassis.getMotors();
+		for (Motor motor : motors) {
+			addParallel(new MotorIdle(motor));
+		}
 	}
 	
 	protected void initialize() {
@@ -25,12 +29,7 @@ public class ChassisIdle extends CommandGroup {
 	}
 	
 	protected void execute() {
-		Motor[] motors = chassis.getMotors();
-		for (Motor motor : motors) {
-			addParallel(new MotorIdle(motor));
-		}
 		logger.d("ChassisIdle executing");
-		logger.d("Chassis has " + Integer.toString(motors.length) + " motors");
 	}
 	
 	protected void end() {
