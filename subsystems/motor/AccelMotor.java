@@ -1,31 +1,40 @@
 package org.usfirst.frc4904.standard.subsystems.motor;
 
 
+import org.usfirst.frc4904.standard.custom.sensors.PDP;
 import edu.wpi.first.wpilibj.SpeedController;
 
 public class AccelMotor extends Motor {
-	private final double maxAccel;
+	private double currentSpeed;
+	private final PDP pdp;
 	
-	public AccelMotor(String name, SpeedController motor, double maxAccel) {
+	public AccelMotor(String name, SpeedController motor, PDP pdp) {
 		super(name, motor);
-		this.maxAccel = maxAccel;
+		this.pdp = pdp;
+		currentSpeed = 0;
 	}
 	
-	public AccelMotor(String name, SpeedController motor, boolean inverted, double maxAccel) {
+	public AccelMotor(String name, SpeedController motor, boolean inverted, PDP pdp) {
 		super(name, motor, inverted);
-		this.maxAccel = maxAccel;
+		this.pdp = pdp;
+		currentSpeed = 0;
 	}
 	
 	private double capAccel(double speed) {
-		// This should reduce the acceleration to maxAccel units
-		if (Math.abs(super.get() - speed) > maxAccel) {
-			speed = Math.signum(speed) * -1.0 * maxAccel;
+		if (Math.abs(speed) > Math.abs(currentSpeed) && pdp.getVoltage() < 11.0) {
+			System.out.println("Throttling " + super.getName() + " at " + pdp.getVoltage() + " from " + Math.abs(speed) + " to " + Math.abs(currentSpeed));
+			speed = currentSpeed;
+		}
+		if (pdp.getVoltage() < 10.0) {
+			speed = currentSpeed - 0.3 * currentSpeed;
 		}
 		return speed;
 	}
 	
 	public void set(double speed) {
-		super.set(capAccel(speed));
+		speed = capAccel(speed);
+		currentSpeed = speed;
+		super.set(speed);
 	}
 	
 	public void set(double arg0, byte arg1) {
