@@ -9,7 +9,6 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 
 public class ControlMotor extends Command {
 	private final SpeedController motor;
-	private final LogKitten logger;
 	private final Controller controller;
 	private final int axis;
 	private final boolean invert;
@@ -22,17 +21,16 @@ public class ControlMotor extends Command {
 		this.invert = invert;
 		requires(motor);
 		setInterruptible(true);
-		logger = new LogKitten(LogKitten.LEVEL_DEBUG, LogKitten.LEVEL_DEBUG);
-		logger.v("ControlMotor created for " + motor.getName());
+		LogKitten.v("ControlMotor created for " + motor.getName());
 	}
 	
 	protected void initialize() {
-		logger.v("ControlMotor initialized");
+		LogKitten.v("ControlMotor initialized");
 		System.out.println("ControlMotor initlialized");
 	}
 	
 	protected void execute() {
-		logger.d("ControlMotor executing: " + controller.getAxis(axis));
+		LogKitten.d("ControlMotor executing: " + controller.getAxis(axis));
 		if (!invert) {
 			motor.set(controller.getAxis(axis));
 		} else {
@@ -43,7 +41,7 @@ public class ControlMotor extends Command {
 	protected void end() {}
 	
 	protected void interrupted() {
-		logger.w("ControlMotor interrupted");
+		LogKitten.w("ControlMotor interrupted");
 	}
 	
 	protected boolean isFinished() {

@@ -9,12 +9,10 @@ import edu.wpi.first.wpilibj.command.PIDSubsystem;
 public class EncodedMotor extends PIDSubsystem implements SpeedController {
 	protected final Motor motor;
 	protected final Encoder encoder;
-	private final LogKitten logger;
 	
 	public EncodedMotor(String name, double P, double I, double D, Motor motor, Encoder encoder) {
 		super(name, P, I, D);
 		this.motor = motor;
-		logger = new LogKitten(LogKitten.LEVEL_WARN, LogKitten.LEVEL_WARN);
 		this.encoder = encoder;
 		setOutputRange(-1, 1);
 		getPIDController().setContinuous(false);
@@ -27,7 +25,7 @@ public class EncodedMotor extends PIDSubsystem implements SpeedController {
 	}
 	
 	protected void usePIDOutput(double speed) {
-		logger.d(Double.toString(speed));
+		LogKitten.d(Double.toString(speed));
 		motor.set(speed);
 	}
 	
