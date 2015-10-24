@@ -16,13 +16,11 @@ public class ChassisMove extends CommandGroup {
 	private final double xScale;
 	private final double yScale;
 	private final double turnScale;
-	private final LogKitten logger;
 	
 	// private final LogKitten logger;
 	public ChassisMove(Chassis chassis, Driver driver, double xScale, double yScale, double turnScale) {
 		super("ChassisMove");
 		requires(chassis);
-		logger = new LogKitten(LogKitten.LEVEL_VERBOSE, LogKitten.LEVEL_VERBOSE);
 		this.chassis = chassis;
 		this.driver = driver;
 		Motor[] motors = this.chassis.getMotors();
@@ -34,7 +32,7 @@ public class ChassisMove extends CommandGroup {
 		this.xScale = xScale;
 		this.yScale = yScale;
 		this.turnScale = turnScale;
-		logger.v("ChassisMove created for " + Integer.toString(chassis.getNumberWheels()) + " wheels");
+		LogKitten.v("ChassisMove created for " + Integer.toString(chassis.getNumberWheels()) + " wheels");
 	}
 	
 	public ChassisMove(Chassis chassis, Driver driver) {
@@ -42,7 +40,7 @@ public class ChassisMove extends CommandGroup {
 	}
 	
 	protected void initialize() {
-		logger.v("ChassisMove initialized");
+		LogKitten.v("ChassisMove initialized");
 	}
 	
 	protected void execute() {
@@ -53,16 +51,16 @@ public class ChassisMove extends CommandGroup {
 			motorSpins[i].set(motorSpeeds[i]);
 			motorSpeedsString += Double.toString(motorSpeeds[i]) + " ";
 		}
-		logger.d("ChassisMove executing");
-		logger.d("Motor speeds: " + motorSpeedsString);
+		LogKitten.d("ChassisMove executing");
+		LogKitten.d("Motor speeds: " + motorSpeedsString);
 	}
 	
 	protected void end() {
-		// logger.v("ChassisMove ended");
+		LogKitten.v("ChassisMove ended");
 	}
 	
 	protected void interrupted() {
-		// logger.w("ChassisMove interrupted");
+		LogKitten.w("ChassisMove interrupted");
 	}
 	
 	protected boolean isFinished() {
