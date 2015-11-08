@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 public abstract class Chassis extends Subsystem {
 	protected int numberWheels;
 	protected double[] motorSpeeds;
-	private Motor[] motors;
+	protected Motor[] motors;
 	
 	/**
 	 * 
