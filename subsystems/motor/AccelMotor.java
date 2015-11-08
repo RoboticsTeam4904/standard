@@ -1,6 +1,7 @@
 package org.usfirst.frc4904.standard.subsystems.motor;
 
 
+import org.usfirst.frc4904.logkitten.LogKitten;
 import org.usfirst.frc4904.standard.custom.sensors.PDP;
 import edu.wpi.first.wpilibj.SpeedController;
 
@@ -22,7 +23,7 @@ public class AccelMotor extends Motor {
 	
 	private double capAccel(double speed) {
 		if (Math.abs(speed) > Math.abs(currentSpeed) && pdp.getVoltage() < 11.0) {
-			System.out.println("Throttling " + super.getName() + " at " + pdp.getVoltage() + " from " + Math.abs(speed) + " to " + Math.abs(currentSpeed));
+			LogKitten.v("Throttling " + super.getName() + " at " + pdp.getVoltage() + " from " + Math.abs(speed) + " to " + Math.abs(currentSpeed));
 			speed = currentSpeed;
 		}
 		if (pdp.getVoltage() < 10.0) {
