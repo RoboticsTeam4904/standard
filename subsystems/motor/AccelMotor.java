@@ -23,7 +23,7 @@ public class AccelMotor extends Motor {
 	
 	private double capAccel(double speed) {
 		if (Math.abs(speed) > Math.abs(currentSpeed) && pdp.getVoltage() < 11.0) {
-			LogKitten.v("Throttling " + super.getName() + " at " + pdp.getVoltage() + " from " + Math.abs(speed) + " to " + Math.abs(currentSpeed));
+			LogKitten.v("Throttling " + super.getName() + " at " + pdp.getVoltage() + " from " + Math.abs(speed) + " to " + Math.abs(currentSpeed), true);
 			speed = currentSpeed;
 		}
 		if (pdp.getVoltage() < 10.0) {

@@ -1,48 +1,55 @@
 package org.usfirst.frc4904.standard.subsystems.motor;
 
 
+import org.usfirst.frc4904.standard.commands.motor.MotorSet;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 public class MotorGroup extends Subsystem implements SpeedController {
-	protected Motor[] motors;
+	protected MotorSet[] motorSets;
+	protected double currentSpeed;
 	
 	public MotorGroup(String name, Motor... motors) {
 		super(name);
-		this.motors = motors;
+		motorSets = new MotorSet[motors.length];
+		for (int i = 0; i < motors.length; i++) {
+			motorSets[i] = new MotorSet(motors[i]);
+			motorSets[i].start();
+		}
+		currentSpeed = 0.0;
 	}
 	
-	protected void initDefaultCommand() {
-		for (Motor motor : motors) {
-			motor.initDefaultCommand();
-		}
-	}
+	protected void initDefaultCommand() {}
 	
 	public void pidWrite(double arg0) {
-		for (Motor motor : motors) {
-			motor.pidWrite(arg0);
+		for (MotorSet motorSet : motorSets) {
+			motorSet.set(arg0);
 		}
 	}
 	
-	public void disable() {
-		for (Motor motor : motors) {
-			motor.disable();
-		}
-	}
+	public void disable() {}
 	
 	public double get() {
-		return motors[0].get();
+		return currentSpeed;
 	}
 	
 	public void set(double arg0) {
-		for (Motor motor : motors) {
-			motor.set(arg0);
+		for (MotorSet motorSet : motorSets) {
+			if (!motorSet.isRunning()) {
+				motorSet.start();
+			}
+			motorSet.set(arg0);
 		}
+		currentSpeed = arg0;
 	}
 	
 	public void set(double arg0, byte arg1) {
-		for (Motor motor : motors) {
-			motor.set(arg0, arg1);
+		for (MotorSet motorSet : motorSets) {
+			if (!motorSet.isRunning()) {
+				motorSet.start();
+			}
+			motorSet.set(arg0);
 		}
+		currentSpeed = arg0;
 	}
 }
