@@ -41,7 +41,11 @@ public class TankDrive extends Chassis {
 		double normalize = Math.max(Math.max(Math.abs(speed + turnSpeed), Math.abs(speed - turnSpeed)), 1);
 		double leftSpeed = (speed + turnSpeed) / normalize;
 		double rightSpeed = (speed - turnSpeed) / normalize;
-		motorSpeeds = new double[] {leftSpeed, leftSpeed, rightSpeed, rightSpeed};
+		if (motors.length == 2) {
+			motorSpeeds = new double[] {leftSpeed, rightSpeed};
+		} else {
+			motorSpeeds = new double[] {leftSpeed, leftSpeed, rightSpeed, rightSpeed};
+		}
 	}
 	
 	/**

@@ -9,14 +9,12 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 
 public class ChassisIdle extends CommandGroup {
 	private final Chassis chassis;
-	private final LogKitten logger;
 	
 	public ChassisIdle(Chassis chassis) {
 		super("ChassisIdle");
 		this.chassis = chassis;
 		requires(chassis);
-		logger = new LogKitten(LogKitten.LEVEL_VERBOSE, LogKitten.LEVEL_ERROR);
-		logger.v("ChassisIdle created for " + Integer.toString(chassis.getNumberWheels()) + " wheels");
+		LogKitten.v("ChassisIdle created for " + Integer.toString(chassis.getNumberWheels()) + " wheels");
 		setInterruptible(true); // default command
 		Motor[] motors = chassis.getMotors();
 		for (Motor motor : motors) {
@@ -25,19 +23,19 @@ public class ChassisIdle extends CommandGroup {
 	}
 	
 	protected void initialize() {
-		logger.v("ChassisIdle initialized");
+		LogKitten.v("ChassisIdle initialized");
 	}
 	
 	protected void execute() {
-		logger.d("ChassisIdle executing");
+		LogKitten.d("ChassisIdle executing");
 	}
 	
 	protected void end() {
-		logger.v("ChassisIdle ended");
+		LogKitten.v("ChassisIdle ended");
 	}
 	
 	protected void interrupted() {
-		logger.w("ChassisIdle interrupted");
+		LogKitten.w("ChassisIdle interrupted");
 	}
 	
 	protected boolean isFinished() {
