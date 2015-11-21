@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj.PIDOutput;
  */
 public class MotorEncoderSet extends MotorSet implements PIDOutput {
 	protected Encoder encoder;
-	PIDController pid;
+	protected PIDController pid;
 	
 	public MotorEncoderSet(Motor motor, Encoder encoder, double P, double I, double D) {
 		super(motor); // Calls requires (so we don't need to recall)
@@ -28,10 +28,5 @@ public class MotorEncoderSet extends MotorSet implements PIDOutput {
 	
 	public void set(double speed) {
 		pid.setSetpoint(speed);
-	}
-	
-	// Make this return true when this Command no longer needs to run execute()
-	protected boolean isFinished() {
-		return false;
 	}
 }
