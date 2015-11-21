@@ -9,17 +9,22 @@ public class EncodedMotor extends Motor {
 	protected double P;
 	protected double I;
 	protected double D;
+	protected double maximum;
+	protected double minimum;
 	
-	public EncodedMotor(String name, SpeedController motor, Encoder encoder, double P, double I, double D, boolean inverted) {
+	public EncodedMotor(String name, SpeedController motor, Encoder encoder, double P, double I, double D, double maximum, double minimum, double distancePerPulse, boolean inverted) {
 		super(name, motor, inverted);
 		this.encoder = encoder;
 		this.P = P;
 		this.I = I;
 		this.D = D;
+		this.maximum = maximum;
+		this.minimum = minimum;
+		encoder.setDistancePerPulse(distancePerPulse);
 	}
 	
-	public EncodedMotor(String name, SpeedController motor, Encoder encoder, double P, double I, double D) {
-		this(name, motor, encoder, P, I, D, false);
+	public EncodedMotor(String name, SpeedController motor, Encoder encoder, double P, double I, double D, double maximum, double minimum, double distancePerPulse) {
+		this(name, motor, encoder, P, I, D, maximum, minimum, distancePerPulse, false);
 	}
 	
 	public Encoder getEncoder() {
@@ -36,5 +41,17 @@ public class EncodedMotor extends Motor {
 	
 	public double getD() {
 		return D;
+	}
+	
+	public double getMinimum() {
+		return minimum;
+	}
+	
+	public double getMaximum() {
+		return maximum;
+	}
+	
+	public void setDistancePerPulse(double distancePerPulse) {
+		encoder.setDistancePerPulse(distancePerPulse);
 	}
 }
