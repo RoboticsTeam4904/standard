@@ -6,8 +6,8 @@ import org.usfirst.frc4904.standard.commands.motor.MotorEncoderSet;
 import org.usfirst.frc4904.standard.commands.motor.MotorSet;
 import org.usfirst.frc4904.standard.humaninterface.Driver;
 import org.usfirst.frc4904.standard.subsystems.chassis.Chassis;
+import org.usfirst.frc4904.standard.subsystems.motor.EncodedMotor;
 import org.usfirst.frc4904.standard.subsystems.motor.Motor;
-import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
 public class ChassisMove extends CommandGroup {
@@ -41,7 +41,7 @@ public class ChassisMove extends CommandGroup {
 		this(chassis, driver, 1.0, 1.0, 1.0);
 	}
 	
-	public ChassisMove(Chassis chassis, Driver driver, Encoder[] encoders, double xScale, double yScale, double turnScale, double[] Ps, double[] Is, double[] Ds) {
+	public ChassisMove(Chassis chassis, Driver driver, double xScale, double yScale, double turnScale, boolean encode) {
 		super("ChassisMoveEncodeded");
 		requires(chassis);
 		this.chassis = chassis;
@@ -49,7 +49,12 @@ public class ChassisMove extends CommandGroup {
 		Motor[] motors = this.chassis.getMotors();
 		this.motorSpins = new MotorEncoderSet[motors.length];
 		for (int i = 0; i < motors.length; i++) {
-			motorSpins[i] = new MotorEncoderSet(motors[i], encoders[i], Ps[i], Is[i], Ds[i]);
+			if (motors[i] instanceof EncodedMotor && encode) {
+				EncodedMotor motor = (EncodedMotor) motors[i];
+				motorSpins[i] = new MotorEncoderSet(motor);
+			} else {
+				motorSpins[i] = new MotorSet(motors[i]);
+			}
 			addParallel(motorSpins[i]);
 		}
 		this.xScale = xScale;
@@ -58,8 +63,8 @@ public class ChassisMove extends CommandGroup {
 		LogKitten.v("ChassisMove created for " + Integer.toString(chassis.getNumberWheels()) + " wheels");
 	}
 	
-	public ChassisMove(Chassis chassis, Driver driver, Encoder[] encoders, double[] Ps, double[] Is, double[] Ds) {
-		this(chassis, driver, encoders, 1.0, 1.0, 1.0, Ps, Is, Ds);
+	public ChassisMove(Chassis chassis, Driver driver, boolean encode) {
+		this(chassis, driver, 1.0, 1.0, 1.0, encode);
 	}
 	
 	protected void initialize() {
