@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.SpeedController;
 
 public class AccelMotor extends Motor {
 	private double currentSpeed;
+	private long lastUpdate;
 	private final PDP pdp;
 	
 	public AccelMotor(String name, SpeedController motor, PDP pdp) {
@@ -25,9 +26,13 @@ public class AccelMotor extends Motor {
 		if (Math.abs(speed) > Math.abs(currentSpeed) && pdp.getVoltage() < 11.0) {
 			LogKitten.v("Throttling " + super.getName() + " at " + pdp.getVoltage() + " from " + Math.abs(speed) + " to " + Math.abs(currentSpeed), true);
 			speed = currentSpeed;
-		}
-		if (pdp.getVoltage() < 10.0) {
-			speed = currentSpeed - 0.3 * currentSpeed;
+			if (pdp.getVoltage() < 10.0) {
+				speed = currentSpeed - 0.3 * currentSpeed;
+			}
+		} else {
+			long deltaT = System.currentTimeMillis() - lastUpdate;
+			speed = currentSpeed + ((double) deltaT / (double) 125) * (speed - currentSpeed);
+			lastUpdate = System.currentTimeMillis();
 		}
 		return speed;
 	}
