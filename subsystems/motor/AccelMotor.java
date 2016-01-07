@@ -29,9 +29,9 @@ public class AccelMotor extends Motor {
 			if (pdp.getVoltage() < 10.0) {
 				speed = currentSpeed - 0.3 * currentSpeed;
 			}
-		} else {
+		} else if (Math.abs(speed) > Math.abs(currentSpeed)) {
 			long deltaT = System.currentTimeMillis() - lastUpdate;
-			speed = currentSpeed + ((double) deltaT / (double) 125) * (speed - currentSpeed);
+			speed = currentSpeed + ((double) deltaT / (double) 64) * (speed - currentSpeed);
 			lastUpdate = System.currentTimeMillis();
 		}
 		return speed;
