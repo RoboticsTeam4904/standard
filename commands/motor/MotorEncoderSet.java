@@ -6,6 +6,7 @@ import org.usfirst.frc4904.standard.subsystems.motor.Motor;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDOutput;
+import edu.wpi.first.wpilibj.PIDSourceType;
 
 /**
  * This class handles speed based PID in a similar way to motor set.
@@ -33,7 +34,7 @@ public class MotorEncoderSet extends MotorSet implements PIDOutput {
 		pid.setInputRange(-1.0, 1.0);
 		pid.setOutputRange(-1.0, 1.0);
 		pid.setContinuous(false); // Make sure this line is here. Otherwise gearboxes will die.
-		encoder.setPIDSourceParameter(Encoder.PIDSourceParameter.kRate);
+		encoder.setPIDSourceType(PIDSourceType.kRate);
 	}
 	
 	/**

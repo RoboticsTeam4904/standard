@@ -6,6 +6,7 @@ import org.usfirst.frc4904.standard.subsystems.motor.Motor;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDOutput;
+import edu.wpi.first.wpilibj.PIDSourceType;
 
 /*
  * This class holds a motor to a position from an input
@@ -30,7 +31,7 @@ public class MotorEncoderHold extends MotorSet implements PIDOutput {
 		pid = new PIDController(P, I, D, encoder, this);
 		pid.setInputRange(minimum, maximum);
 		pid.setOutputRange(-1.0, 1.0);
-		encoder.setPIDSourceParameter(Encoder.PIDSourceParameter.kDistance);
+		encoder.setPIDSourceType(PIDSourceType.kDisplacement);
 	}
 	
 	public MotorEncoderHold(EncodedMotor motor) {
