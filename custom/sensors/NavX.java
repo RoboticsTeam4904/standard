@@ -1,23 +1,13 @@
 package org.usfirst.frc4904.standard.custom.sensors;
 
 
-import com.kauailabs.navx_mxp.AHRS;
+import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.SerialPort;
 
 public class NavX extends AHRS {
 	public NavX() {
-		super(constructSerialPortSafely());
+		super(SerialPort.Port.kUSB);
 		super.zeroYaw();
-	}
-	
-	private static SerialPort constructSerialPortSafely() {
-		try {
-			return new SerialPort(57600, SerialPort.Port.kUSB);
-		}
-		catch (Error e) {
-			System.out.println("FATAL: Could not connect to NavX");
-			throw e;
-		}
 	}
 	
 	public float getYaw() {
