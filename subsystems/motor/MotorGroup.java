@@ -52,4 +52,15 @@ public class MotorGroup extends Subsystem implements SpeedController {
 		}
 		currentSpeed = arg0;
 	}
+
+	public boolean getInverted() {
+		return false;
+	}
+
+	/**
+	 * An entire motor group can not be inverted.
+	 * Do not use this function.
+	 */
+	public void setInverted(boolean arg) {
+	}
 }

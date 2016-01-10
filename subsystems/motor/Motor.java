@@ -58,4 +58,12 @@ public class Motor extends Subsystem implements SpeedController {
 			motor.set(-1 * arg0, arg1);
 		}
 	}
+
+	public boolean getInverted() {
+		return inverted;
+	}
+
+	public void setInverted(boolean arg) {
+		inverted = arg;
+	}
 }
