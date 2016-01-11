@@ -5,13 +5,27 @@ import java.nio.IntBuffer;
 
 import edu.wpi.first.wpilibj.can.CANJNI;
 
-public class CustomCAN {
+public class CustomCAN implements Named{
 	// Because CANJNI is basically static, we do not extend it.
 	
 	private final int messageID;
+	private final String name;
 	
-	public CustomCAN(int id){
+	/**
+	 * Constructor for a CustomCAN device.
+	 * The name is local and for your convenience only.
+	 * The id should be the same as the id programmed into the CAN device
+	 * 
+	 * @param name
+	 * @param id
+	 */
+	public CustomCAN(String name, int id){
+		this.name = name;
 		this.messageID = id;
+	}
+	
+	public String getName(){
+		return name;
 	}
 	
 	/**
@@ -29,14 +43,18 @@ public class CustomCAN {
 		CANJNI.FRCNetworkCommunicationCANSessionMuxSendMessage(messageID, canData, CANJNI.CAN_SEND_PERIOD_NO_REPEAT);
 	}
 	
-	public byte[] read(){
+	protected ByteBuffer readBuffer(){
 		IntBuffer idBuffer = ByteBuffer.allocateDirect(4).asIntBuffer();
 		idBuffer.clear();
 		idBuffer.put(0, messageID);
 		
 		ByteBuffer timestamp = ByteBuffer.allocate(4);
 		
-		ByteBuffer dataBuffer = CANJNI.FRCNetworkCommunicationCANSessionMuxReceiveMessage(idBuffer, CANJNI.CAN_MSGID_FULL_M, timestamp);
+		return CANJNI.FRCNetworkCommunicationCANSessionMuxReceiveMessage(idBuffer, CANJNI.CAN_MSGID_FULL_M, timestamp);
+	}
+	
+	public byte[] read(){
+		ByteBuffer dataBuffer = readBuffer();
 		
 		dataBuffer.rewind();
 		if(dataBuffer != null && dataBuffer.remaining() > 0){
