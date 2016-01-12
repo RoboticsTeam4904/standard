@@ -4,6 +4,7 @@ import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 
 import edu.wpi.first.wpilibj.can.CANJNI;
+import edu.wpi.first.wpilibj.can.CANMessageNotFoundException;
 
 public class CustomCAN implements Named{
 	// Because CANJNI is basically static, we do not extend it.
@@ -50,25 +51,34 @@ public class CustomCAN implements Named{
 		
 		ByteBuffer timestamp = ByteBuffer.allocate(4);
 		
-		return CANJNI.FRCNetworkCommunicationCANSessionMuxReceiveMessage(idBuffer, CANJNI.CAN_MSGID_FULL_M, timestamp);
+		try {
+			return CANJNI.FRCNetworkCommunicationCANSessionMuxReceiveMessage(idBuffer, CANJNI.CAN_MSGID_FULL_M, timestamp); 
+		}
+		catch(CANMessageNotFoundException e){
+			return null;
+		}
 	}
 	
+	/**
+	 * 
+	 * @return byte[] (8 long)
+	 */
 	public byte[] read(){
 		ByteBuffer dataBuffer = readBuffer();
 		
-		dataBuffer.rewind();
-		if(dataBuffer != null && dataBuffer.remaining() > 0){
-			byte[] data = new byte[dataBuffer.remaining()];
-			
-			for(int i = 0; i < dataBuffer.remaining(); i++){
-				data[i] = dataBuffer.get(i);
+		if(dataBuffer != null){
+			if (dataBuffer.remaining() > 0){
+				dataBuffer.rewind();
+				byte[] data = new byte[dataBuffer.remaining()];
+				
+				for(int i = 0; i < dataBuffer.remaining(); i++){
+					data[i] = dataBuffer.get(i);
+				}
+				
+				return data;
 			}
-			
-			return data;
 		}
-		else{
-			return null;
-		}
+		return null;
 	}
 
 }
