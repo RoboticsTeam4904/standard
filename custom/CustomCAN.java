@@ -23,7 +23,7 @@ public class CustomCAN implements Named{
 	 */
 	public CustomCAN(String name, int id){
 		this.name = name;
-		this.messageID = id;
+		this.messageID = 0x00000000 + id;
 	}
 	
 	public String getName(){
@@ -48,7 +48,7 @@ public class CustomCAN implements Named{
 	protected ByteBuffer readBuffer(){
 		IntBuffer idBuffer = ByteBuffer.allocateDirect(4).asIntBuffer();
 		idBuffer.clear();
-		idBuffer.put(0, messageID);
+		idBuffer.put(0, Integer.reverseBytes(messageID));
 		
 		ByteBuffer timestamp = ByteBuffer.allocate(4);
 		
