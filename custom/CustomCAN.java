@@ -18,10 +18,11 @@ public class CustomCAN implements Named {
 	 * 
 	 * @param name
 	 * @param id
+	 *        ID of CAN device (0x400 to 0x500, corresponds to a Teensy)
 	 */
 	public CustomCAN(String name, int id) {
 		this.name = name;
-		this.messageID = 0x00000000 + id;
+		this.messageID = id;
 	}
 	
 	public String getName() {
@@ -29,14 +30,17 @@ public class CustomCAN implements Named {
 	}
 	
 	/**
-	 * Used to send a message with the message id and data data.
-	 * Data should be 8 bytes ONLY.
+	 * Used to write data to the device.
 	 * 
 	 * @param data
+	 *        Data to be written. Should be EXACTLY 8 bytes long ONLY.
+	 * @throws IllegalArgumentException
 	 */
-	public void write(byte[] data) {
+	public void write(byte[] data) throws IllegalArgumentException {
+		if (data.length != 8) {
+			throw new IllegalArgumentException();
+		}
 		ByteBuffer canData = ByteBuffer.allocateDirect(8);
-		canData.clear();
 		for (int i = 0; i < 8; i++) {
 			canData.put(i, data[i]);
 		}
@@ -57,6 +61,7 @@ public class CustomCAN implements Named {
 	}
 	
 	/**
+	 * Reads data
 	 * 
 	 * @return byte[] (8 long)
 	 */
