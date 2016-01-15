@@ -36,10 +36,7 @@ public class CustomCAN implements Named {
 	 *        Data to be written. Should be EXACTLY 8 bytes long ONLY.
 	 * @throws IllegalArgumentException
 	 */
-	public void write(byte[] data) throws IllegalArgumentException {
-		if (data.length != 8) {
-			throw new IllegalArgumentException();
-		}
+	public void write(byte[] data) {
 		ByteBuffer canData = ByteBuffer.allocateDirect(8);
 		for (int i = 0; i < 8; i++) {
 			canData.put(i, data[i]);

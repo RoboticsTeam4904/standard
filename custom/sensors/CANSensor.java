@@ -45,14 +45,17 @@ public class CANSensor extends CustomCAN {
 	 * @return
 	 */
 	public int read(int mode, int retryMax) {
-		super.write(new byte[] {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}); // Write to trigger read
+		super.write(new byte[] {0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01}); // Write to trigger read
 		for (int i = 0; i < retryMax; i++) {
 			ByteBuffer rawData = super.readBuffer();
 			if (rawData != null && rawData.remaining() > 7) {
 				rawData.rewind();
-				int msgMode = rawData.getInt(0);
-				int value = rawData.getInt(1);
-				cachedValues[msgMode] = value;
+				long data = Long.reverseBytes(rawData.getLong());
+				int value = (int) (data & 0x0000FFFF);
+				int msgMode = (int) (data >> 32);
+				if (msgMode <= cachedValues.length) {
+					cachedValues[msgMode] = value;
+				}
 				if (msgMode == mode) {
 					return value;
 				}
