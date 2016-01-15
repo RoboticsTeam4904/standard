@@ -2,45 +2,33 @@ package org.usfirst.frc4904.standard.commands.healthchecks;
 
 
 import org.usfirst.frc4904.logkitten.LogKitten;
+import org.usfirst.frc4904.standard.commands.TimedCommand;
 import edu.wpi.first.wpilibj.command.Command;
 
-public abstract class AbstractHealthcheck extends Command {
+public abstract class AbstractHealthcheck extends TimedCommand { // Many of our healthchecks will use timing, so a TimedCommand is needed
 	protected Command dangerCommand;
-	protected Command cautionCommand;
-	protected Command safeCommand; // I am not sure if we will need this
-	protected Command uncertainCommand; // I am not sure if we will need this,
-										// it may be better to just log on the ERROR or WARNING channel
 	protected HealthStatus status;
 	
-	public AbstractHealthcheck(String name) {
+	public AbstractHealthcheck(String name, Command dangerCommand) {
 		super(name);
 		status = HealthStatus.UNCERTAIN;
+		this.dangerCommand = dangerCommand;
 	}
 	
 	protected void initialize() {}
 	
-	protected void Dangerous() {
+	private void Dangerous() {
 		if (!dangerCommand.isRunning()) {
 			dangerCommand.start();
 		}
 	}
 	
-	protected void Caution() {
-		if (!cautionCommand.isRunning()) {
-			cautionCommand.start();
-		}
+	private void Caution() { // By the time we should be taking action, the situation should be considered dangerous
+		LogKitten.wtf(getName() + " health status approaching dangerous"); // This is highest level because we need people to see the error
 	}
 	
-	protected void Safe() {
-		if (!safeCommand.isRunning()) {
-			safeCommand.start();
-		}
-	}
-	
-	protected void Uncertain() {
-		if (!uncertainCommand.isRunning()) {
-			uncertainCommand.start();
-		}
+	private void Uncertain() {
+		LogKitten.wtf(getName() + " health status uncertain"); // This is higherst level because we need people to see the error
 	}
 	
 	protected abstract HealthStatus getStatus();
@@ -53,9 +41,6 @@ public abstract class AbstractHealthcheck extends Command {
 				return;
 			case CAUTION:
 				Caution();
-				return;
-			case SAFE:
-				Safe();
 				return;
 			default:
 				Uncertain();
@@ -71,20 +56,11 @@ public abstract class AbstractHealthcheck extends Command {
 		if (dangerCommand.isRunning()) {
 			dangerCommand.cancel();
 		}
-		if (cautionCommand.isRunning()) {
-			cautionCommand.cancel();
-		}
-		if (safeCommand.isRunning()) {
-			safeCommand.cancel();
-		}
-		if (uncertainCommand.isRunning()) {
-			uncertainCommand.cancel();
-		}
 	}
 	
 	protected abstract boolean finished();
 	
 	protected boolean isFinished() {
-		return finished() && !dangerCommand.isRunning() && !cautionCommand.isRunning();
+		return finished() && !dangerCommand.isRunning();
 	}
 }
