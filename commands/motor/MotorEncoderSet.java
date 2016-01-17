@@ -1,9 +1,9 @@
 package org.usfirst.frc4904.standard.commands.motor;
 
 
+import org.usfirst.frc4904.standard.custom.sensors.CustomEncoder;
 import org.usfirst.frc4904.standard.subsystems.motor.EncodedMotor;
 import org.usfirst.frc4904.standard.subsystems.motor.Motor;
-import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.PIDSourceType;
@@ -12,12 +12,13 @@ import edu.wpi.first.wpilibj.PIDSourceType;
  * This class handles speed based PID in a similar way to motor set.
  */
 public class MotorEncoderSet extends MotorSet implements PIDOutput {
-	protected Encoder encoder;
+	protected CustomEncoder encoder;
 	protected PIDController pid;
 	
 	/**
 	 * Constructs a (speed) encoded motor setting command. It tries to maintain the set speed
 	 * using PID from the encoder.
+	 * 
 	 * @param motor
 	 * @param encoder
 	 * @param P
@@ -27,7 +28,7 @@ public class MotorEncoderSet extends MotorSet implements PIDOutput {
 	 * @param minimum
 	 * @param maximum
 	 */
-	public MotorEncoderSet(Motor motor, Encoder encoder, double P, double I, double D) {
+	public MotorEncoderSet(Motor motor, CustomEncoder encoder, double P, double I, double D) {
 		super(motor); // Calls requires (so we don't need to recall)
 		this.encoder = encoder;
 		pid = new PIDController(P, I, D, encoder, this);
@@ -39,7 +40,8 @@ public class MotorEncoderSet extends MotorSet implements PIDOutput {
 	
 	/**
 	 * 
-	 * @param motor: An encoded motor (if you don't know if the motor is encoded, try a "tryCastMotor"
+	 * @param motor:
+	 *        An encoded motor (if you don't know if the motor is encoded, try a "tryCastMotor"
 	 * @param defaultDistancePerPulse
 	 */
 	public MotorEncoderSet(EncodedMotor motor) {

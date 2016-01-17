@@ -1,18 +1,18 @@
 package org.usfirst.frc4904.standard.subsystems.motor;
 
 
-import edu.wpi.first.wpilibj.Encoder;
+import org.usfirst.frc4904.standard.custom.sensors.CustomEncoder;
 import edu.wpi.first.wpilibj.SpeedController;
 
 public class EncodedMotor extends Motor {
-	protected Encoder encoder;
+	protected CustomEncoder encoder;
 	protected double P;
 	protected double I;
 	protected double D;
 	protected double maximum;
 	protected double minimum;
 	
-	public EncodedMotor(String name, SpeedController motor, Encoder encoder, double P, double I, double D, double maximum, double minimum, double distancePerPulse, boolean inverted) {
+	public EncodedMotor(String name, SpeedController motor, CustomEncoder encoder, double P, double I, double D, double maximum, double minimum, double distancePerPulse, boolean inverted) {
 		super(name, motor, inverted);
 		this.encoder = encoder;
 		this.P = P;
@@ -23,11 +23,11 @@ public class EncodedMotor extends Motor {
 		encoder.setDistancePerPulse(distancePerPulse);
 	}
 	
-	public EncodedMotor(String name, SpeedController motor, Encoder encoder, double P, double I, double D, double maximum, double minimum, double distancePerPulse) {
+	public EncodedMotor(String name, SpeedController motor, CustomEncoder encoder, double P, double I, double D, double maximum, double minimum, double distancePerPulse) {
 		this(name, motor, encoder, P, I, D, maximum, minimum, distancePerPulse, false);
 	}
 	
-	public Encoder getEncoder() {
+	public CustomEncoder getEncoder() {
 		return encoder;
 	}
 	
