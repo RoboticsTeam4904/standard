@@ -9,7 +9,7 @@ public class PressureReleaseValve extends AbstractHealthcheck {
 	private final Compressor compressor;
 	private final Solenoid solenoid;
 	private boolean valveClosed;
-	private byte solenoidsInitialValue;
+	private byte solenoidsLastValue;
 	private double cylinderFillTime;
 	
 	/**
@@ -26,7 +26,7 @@ public class PressureReleaseValve extends AbstractHealthcheck {
 		this.compressor = compressor;
 		this.solenoid = solenoid;
 		valveClosed = false;
-		solenoidsInitialValue = solenoid.getAll();
+		solenoidsLastValue = solenoid.getAll();
 		this.cylinderFillTime = cylinderFillTime;
 	}
 	
@@ -36,6 +36,14 @@ public class PressureReleaseValve extends AbstractHealthcheck {
 	}
 	
 	protected HealthStatus getStatus() {
+		if ((byte) solenoid.getAll() != (byte) solenoidsLastValue) {
+			solenoidsLastValue = solenoid.getAll();
+			resetTimer();
+			return HealthStatus.UNCERTAIN;
+		}
+		if (valveClosed == true) {
+			return HealthStatus.SAFE;
+		}
 		if (compressor.getPressureSwitchValue()) {
 			valveClosed = true;
 			return HealthStatus.SAFE;
@@ -43,11 +51,7 @@ public class PressureReleaseValve extends AbstractHealthcheck {
 		if (!getTimed()) {
 			return HealthStatus.SAFE; // If the compressor is running for less than 15 seconds, we are safe, not uncertain
 		}
-		if ((byte) solenoid.getAll() == (byte) solenoidsInitialValue) {
-			return HealthStatus.DANGEROUS; // This means the compressor has been running for 15 seconds and we have had no decrease in pressure (and no solenoids have been pressed)
-		}
-		solenoidsInitialValue = solenoid.getAll();
-		return HealthStatus.UNCERTAIN;
+		return HealthStatus.DANGEROUS;
 	}
 	
 	protected boolean finished() {

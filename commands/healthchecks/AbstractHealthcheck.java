@@ -23,9 +23,11 @@ public abstract class AbstractHealthcheck extends TimedCommand { // Many of our 
 		dangerCommand.reset();
 		status = HealthStatus.UNCERTAIN;
 		resetTimer();
-		LogKitten.v(Boolean.toString(getTimed()), true);
 	}
 	
+	/**
+	 * These commands are handled automatically, and should not be messed with
+	 */
 	private void Dangerous() {
 		if (!dangerCommand.isRunning()) {
 			dangerCommand.start();
