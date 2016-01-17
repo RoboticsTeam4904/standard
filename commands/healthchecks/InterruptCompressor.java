@@ -2,9 +2,8 @@ package org.usfirst.frc4904.standard.commands.healthchecks;
 
 
 import edu.wpi.first.wpilibj.Compressor;
-import edu.wpi.first.wpilibj.command.Command;
 
-public class InterruptCompressor extends Command {
+public class InterruptCompressor extends HealthProtectCommand {
 	private final Compressor compressor;
 	
 	public InterruptCompressor(Compressor compressor) {
@@ -13,6 +12,10 @@ public class InterruptCompressor extends Command {
 	
 	protected void initialize() {
 		compressor.stop();
+	}
+	
+	public void reset() {
+		compressor.start();
 	}
 	
 	protected void execute() {}

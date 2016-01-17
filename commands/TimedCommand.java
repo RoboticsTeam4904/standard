@@ -1,6 +1,7 @@
 package org.usfirst.frc4904.standard.commands;
 
 
+import org.usfirst.frc4904.logkitten.LogKitten;
 import edu.wpi.first.wpilibj.command.Command;
 
 public abstract class TimedCommand extends Command {
@@ -28,10 +29,8 @@ public abstract class TimedCommand extends Command {
 	 * @return
 	 */
 	protected boolean getTimed() {
-		if (lastReset + interval > timeSinceInitialized()) {
-			return true;
-		}
-		return false;
+		LogKitten.d(Boolean.toString(lastReset + interval > timeSinceInitialized()));
+		return !(lastReset + interval > timeSinceInitialized());
 	}
 	
 	/**

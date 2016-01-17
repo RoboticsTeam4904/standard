@@ -3,13 +3,12 @@ package org.usfirst.frc4904.standard.commands.healthchecks;
 
 import org.usfirst.frc4904.logkitten.LogKitten;
 import org.usfirst.frc4904.standard.commands.TimedCommand;
-import edu.wpi.first.wpilibj.command.Command;
 
 public abstract class AbstractHealthcheck extends TimedCommand { // Many of our healthchecks will use timing, so a TimedCommand is needed
-	protected Command dangerCommand;
+	protected HealthProtectCommand dangerCommand;
 	protected HealthStatus status;
 	
-	public AbstractHealthcheck(String name, Command dangerCommand) {
+	public AbstractHealthcheck(String name, HealthProtectCommand dangerCommand) {
 		super(name);
 		status = HealthStatus.UNCERTAIN;
 		this.dangerCommand = dangerCommand;
@@ -17,10 +16,21 @@ public abstract class AbstractHealthcheck extends TimedCommand { // Many of our 
 	
 	protected void initialize() {}
 	
+	public void reset() {
+		if (dangerCommand.isRunning()) {
+			dangerCommand.cancel();
+		}
+		dangerCommand.reset();
+		status = HealthStatus.UNCERTAIN;
+		resetTimer();
+		LogKitten.v(Boolean.toString(getTimed()), true);
+	}
+	
 	private void Dangerous() {
 		if (!dangerCommand.isRunning()) {
 			dangerCommand.start();
 		}
+		LogKitten.wtf(getName() + " health status dangerous", true); // This is highest level because we need people to see the error
 	}
 	
 	private void Caution() { // By the time we should be taking action, the situation should be considered dangerous
@@ -28,13 +38,14 @@ public abstract class AbstractHealthcheck extends TimedCommand { // Many of our 
 	}
 	
 	private void Uncertain() {
-		LogKitten.wtf(getName() + " health status uncertain"); // This is higherst level because we need people to see the error
+		LogKitten.wtf(getName() + " health status uncertain"); // This is highest level because we need people to see the error
 	}
 	
 	protected abstract HealthStatus getStatus();
 	
 	protected final void execute() { // It should not be possible to override this
 		status = getStatus();
+		LogKitten.v("HealthCheck: " + status);
 		switch (status) {
 			case DANGEROUS:
 				Dangerous();
