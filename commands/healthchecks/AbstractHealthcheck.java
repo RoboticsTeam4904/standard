@@ -32,7 +32,7 @@ public abstract class AbstractHealthcheck extends TimedCommand { // Many of our 
 		if (!dangerCommand.isRunning()) {
 			dangerCommand.start();
 		}
-		LogKitten.wtf(getName() + " health status dangerous", true); // This is highest level because we need people to see the error
+		LogKitten.wtf(getName() + " health status dangerous"); // This is highest level because we need people to see the error
 	}
 	
 	private void Caution() { // By the time we should be taking action, the situation should be considered dangerous
