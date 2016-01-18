@@ -12,6 +12,7 @@ public abstract class AbstractHealthcheck extends TimedCommand { // Many of our 
 		super(name);
 		status = HealthStatus.UNCERTAIN;
 		this.dangerCommand = dangerCommand;
+		setRunWhenDisabled(true);
 	}
 	
 	protected void initialize() {}

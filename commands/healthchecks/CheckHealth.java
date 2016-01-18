@@ -12,6 +12,7 @@ public class CheckHealth extends CommandGroup {
 		for (Command c : commands) {
 			addParallel(c);
 		}
+		setRunWhenDisabled(true);
 	}
 	
 	public void reset() {
