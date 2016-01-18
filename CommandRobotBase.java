@@ -1,7 +1,6 @@
 package org.usfirst.frc4904.standard;
 
 
-import org.usfirst.frc4904.logkitten.LogKitten;
 import org.usfirst.frc4904.standard.commands.healthchecks.AbstractHealthcheck;
 import org.usfirst.frc4904.standard.commands.healthchecks.CheckHealth;
 import org.usfirst.frc4904.standard.custom.CommandSendableChooser;
@@ -27,11 +26,8 @@ public abstract class CommandRobotBase extends IterativeRobot {
 		SmartDashboard.putData("Operator control scheme chooser", operatorChooser);
 	}
 	
-	public void createHealthChecks(AbstractHealthcheck... commands) {
-		healthcheckCommand = new CheckHealth(commands);
-	}
-	
-	public void robotInit() {
+	public void robotInit(AbstractHealthcheck... healthchecks) {
+		healthcheckCommand = new CheckHealth(healthchecks);
 		// Initialize choosers
 		autoChooser = new CommandSendableChooser();
 		driverChooser = new TypedNamedSendableChooser<Driver>();
@@ -39,7 +35,6 @@ public abstract class CommandRobotBase extends IterativeRobot {
 		if (healthcheckCommand != null) {
 			healthcheckCommand.start();
 		}
-		LogKitten.f("RobotInit", true);
 	}
 	
 	public boolean isEnabledOperatorControl() {

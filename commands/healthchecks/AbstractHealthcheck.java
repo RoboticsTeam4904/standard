@@ -33,22 +33,22 @@ public abstract class AbstractHealthcheck extends TimedCommand { // Many of our 
 		if (!dangerCommand.isRunning()) {
 			dangerCommand.start();
 		}
-		LogKitten.wtf(getName() + " health status dangerous", true); // This is highest level because we need people to see the error
+		LogKitten.f(getName() + " health status dangerous", true); // This is highest level because we need people to see the error
 	}
 	
 	private void Caution() { // By the time we should be taking action, the situation should be considered dangerous
-		LogKitten.wtf(getName() + " health status approaching dangerous"); // This is highest level because we need people to see the error
+		LogKitten.f(getName() + " health status approaching dangerous"); // This is highest level because we need people to see the error
 	}
 	
 	private void Uncertain() {
-		LogKitten.wtf(getName() + " health status uncertain"); // This is highest level because we need people to see the error
+		LogKitten.f(getName() + " health status uncertain"); // This is highest level because we need people to see the error
 	}
 	
 	protected abstract HealthStatus getStatus();
 	
 	protected final void execute() { // It should not be possible to override this
 		status = getStatus();
-		LogKitten.v("HealthCheck: " + status);
+		LogKitten.v(getName() + " healthCheck: " + status);
 		switch (status) {
 			case DANGEROUS:
 				Dangerous();

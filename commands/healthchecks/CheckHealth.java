@@ -20,4 +20,14 @@ public class CheckHealth extends CommandGroup {
 			c.reset();
 		}
 	}
+	
+	public HealthStatus getStatus() {
+		HealthStatus status = HealthStatus.UNCERTAIN;
+		for (AbstractHealthcheck c : commands) {
+			if (c.getStatus().compareTo(status) > 0) {
+				status = c.getStatus();
+			}
+		}
+		return status;
+	}
 }
