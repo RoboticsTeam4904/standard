@@ -28,10 +28,7 @@ public class ChassisShift extends Command {
 	 * @param state
 	 */
 	public ChassisShift(SolenoidShifters solenoids, SolenoidShifters.ShiftState state) {
-		super("ChassisShift");
-		this.solenoids = solenoids;
-		requires(solenoids);
-		setInterruptible(false);
+		this(solenoids);
 		this.state = state;
 	}
 	
