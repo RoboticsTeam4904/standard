@@ -22,12 +22,13 @@ public class PressureReleaseValve extends AbstractHealthCheck {
 	 *        Any solenoid on that pressure release valve.
 	 */
 	public PressureReleaseValve(String name, Compressor compressor, Solenoid solenoid, double cylinderFillTime) {
-		super(name, new InterruptCompressor(compressor));
+		super(name);
 		this.compressor = compressor;
 		this.solenoid = solenoid;
 		valveClosed = false;
 		solenoidsLastValue = solenoid.getAll();
 		this.cylinderFillTime = cylinderFillTime;
+		runCommandOnState(HealthLevel.DANGEROUS, new InterruptCompressor(compressor));
 	}
 	
 	@Override

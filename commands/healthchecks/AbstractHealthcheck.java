@@ -1,53 +1,40 @@
 package org.usfirst.frc4904.standard.commands.healthchecks;
 
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import org.usfirst.frc4904.logkitten.LogKitten;
 import org.usfirst.frc4904.standard.commands.TimedCommand;
 
 public abstract class AbstractHealthCheck extends TimedCommand { // Many of our healthchecks will use timing, so a TimedCommand is needed
-	protected final HealthProtectCommand dangerCommand;
+	protected HashMap<HealthLevel, ArrayList<HealthProtectCommand>> commands;
 	protected volatile HealthLevel status;
 	
 	public AbstractHealthCheck(String name) {
-		this(name, null);
-	}
-	
-	public AbstractHealthCheck(String name, HealthProtectCommand dangerCommand) {
 		super(name);
 		status = HealthLevel.UNKNOWN;
-		this.dangerCommand = dangerCommand;
 		setRunWhenDisabled(true);
 	}
 	
-	public void reset() {
-		if (dangerCommand.isRunning()) {
-			dangerCommand.cancel();
+	public void runCommandOnState(HealthLevel level, HealthProtectCommand toRun) {
+		if (commands.get(level) == null) {
+			commands.put(level, new ArrayList<>());
 		}
-		dangerCommand.reset();
+		commands.get(level).add(toRun);
+	}
+	
+	public void reset() {
+		for (HealthLevel level : commands.keySet()) {
+			if (commands.get(level) != null) {
+				for (HealthProtectCommand hpc : commands.get(level)) {
+					if (hpc.isRunning()) {
+						hpc.reset();
+					}
+				}
+			}
+		}
 		status = HealthLevel.UNKNOWN;
 		resetTimer();
-	}
-	
-	/**
-	 * These commands are handled automatically, and should not be messed with
-	 */
-	private void dangerous() {
-		if (!dangerCommand.isRunning()) {
-			dangerCommand.start();
-		}
-		LogKitten.wtf(getName() + " health status dangerous"); // This is highest level because we need people to see the error
-	}
-	
-	private void unsafe() { // By the time we should be taking action, the situation should be considered dangerous
-		LogKitten.f(getName() + " health status approaching dangerous"); // This is highest level because we need people to see the error
-	}
-	
-	private void safe() {}
-	
-	private void perfect() {}
-	
-	private void unknown() {
-		LogKitten.f(getName() + " health status uncertain"); // This is highest level because we need people to see the error
 	}
 	
 	protected abstract HealthLevel getStatus();
@@ -56,25 +43,22 @@ public abstract class AbstractHealthCheck extends TimedCommand { // Many of our 
 	protected final void execute() { // It should not be possible to override this
 		status = getStatus();
 		LogKitten.v(getName() + " healthCheck: " + status);
-		switch (status) {
-			case DANGEROUS:
-				dangerous();
-				return;
-			case SAFE:
-				safe();
-				return;
-			case UNSAFE:
-				unsafe();
-				return;
-			case PERFECT:
-				perfect();
-				return;
-			case UNKNOWN:
-				unknown();
-				return;
-			default:
-				unknown();
-				return;
+		for (HealthLevel other : commands.keySet()) {
+			if (other != status) {
+				for (HealthProtectCommand hpc : commands.get(other)) {
+					if (hpc.isRunning()) {
+						hpc.cancel();// stop all the ones for other states
+					}
+				}
+			}
+		}
+		ArrayList<HealthProtectCommand> commandsToRun = commands.get(status);
+		if (commandsToRun != null) {
+			for (HealthProtectCommand hpc : commandsToRun) {
+				if (!hpc.isRunning()) {
+					hpc.start();// start all the ones for this state
+				}
+			}
 		}
 	}
 	
@@ -85,8 +69,14 @@ public abstract class AbstractHealthCheck extends TimedCommand { // Many of our 
 	
 	@Override
 	protected final void end() {
-		if (dangerCommand.isRunning()) {
-			dangerCommand.cancel();
+		for (HealthLevel level : commands.keySet()) {
+			if (commands.get(level) != null) {
+				for (HealthProtectCommand hpc : commands.get(level)) {
+					if (hpc.isRunning()) {
+						hpc.cancel();
+					}
+				}
+			}
 		}
 	}
 	
@@ -94,6 +84,18 @@ public abstract class AbstractHealthCheck extends TimedCommand { // Many of our 
 	
 	@Override
 	protected final boolean isFinished() {
-		return finished() && !dangerCommand.isRunning();
+		if (!finished()) {
+			return false;
+		}
+		for (HealthLevel level : commands.keySet()) {
+			if (commands.get(level) != null) {
+				for (HealthProtectCommand hpc : commands.get(level)) {
+					if (hpc.isRunning()) {
+						return false;
+					}
+				}
+			}
+		}
+		return true;
 	}
 }
