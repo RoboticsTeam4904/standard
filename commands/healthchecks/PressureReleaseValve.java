@@ -41,6 +41,9 @@ public class PressureReleaseValve extends AbstractHealthcheck {
 			resetTimer();
 			return HealthStatus.UNCERTAIN;
 		}
+		if (!compressor.enabled()) {
+			resetTimer(); /// If the compressor is not running, do not try to time it.
+		}
 		if (valveClosed == true) {
 			return HealthStatus.SAFE;
 		}

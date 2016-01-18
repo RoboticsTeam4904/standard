@@ -1,6 +1,6 @@
 package org.usfirst.frc4904.standard.commands.healthchecks;
 
 
-public enum HealthStatus {
-	UNCERTAIN, SAFE, CAUTION, DANGEROUS;
+public enum HealthStatus implements Comparable<HealthStatus> {
+	SAFE, UNCERTAIN, CAUTION, DANGEROUS;
 }

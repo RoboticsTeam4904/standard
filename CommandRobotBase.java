@@ -1,6 +1,8 @@
 package org.usfirst.frc4904.standard;
 
 
+import org.usfirst.frc4904.standard.commands.healthchecks.AbstractHealthcheck;
+import org.usfirst.frc4904.standard.commands.healthchecks.CheckHealth;
 import org.usfirst.frc4904.standard.custom.CommandSendableChooser;
 import org.usfirst.frc4904.standard.custom.TypedNamedSendableChooser;
 import org.usfirst.frc4904.standard.humaninterface.Driver;
@@ -12,6 +14,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public abstract class CommandRobotBase extends IterativeRobot {
 	protected Command teleopCommand;
 	protected Command autonomousCommand;
+	protected CheckHealth healthcheckCommand;
 	protected CommandSendableChooser autoChooser;
 	protected TypedNamedSendableChooser<Driver> driverChooser;
 	protected TypedNamedSendableChooser<Operator> operatorChooser;
@@ -23,11 +26,15 @@ public abstract class CommandRobotBase extends IterativeRobot {
 		SmartDashboard.putData("Operator control scheme chooser", operatorChooser);
 	}
 	
-	public void robotInit() {
+	public void robotInit(AbstractHealthcheck... healthchecks) {
+		healthcheckCommand = new CheckHealth(healthchecks);
 		// Initialize choosers
 		autoChooser = new CommandSendableChooser();
 		driverChooser = new TypedNamedSendableChooser<Driver>();
 		operatorChooser = new TypedNamedSendableChooser<Operator>();
+		if (healthcheckCommand != null) {
+			healthcheckCommand.start();
+		}
 	}
 	
 	public boolean isEnabledOperatorControl() {
@@ -36,5 +43,9 @@ public abstract class CommandRobotBase extends IterativeRobot {
 	
 	public boolean isEnabledAutonomous() {
 		return isEnabled() && isAutonomous();
+	}
+	
+	public void disabledInit() {
+		healthcheckCommand.reset();
 	}
 }
