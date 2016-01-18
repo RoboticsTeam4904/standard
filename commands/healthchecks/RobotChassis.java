@@ -1,4 +1,4 @@
-package org.usfirst.frc4904.standard.commands.safety;
+package org.usfirst.frc4904.standard.commands.healthchecks;
 
 import java.util.ArrayList;
 import java.util.Collection;

@@ -1,4 +1,4 @@
-package org.usfirst.frc4904.standard.commands.safety;
+package org.usfirst.frc4904.standard.commands.healthchecks;
 
 public class PartHealthCheck extends HealthCheck {
 	public final Part part;

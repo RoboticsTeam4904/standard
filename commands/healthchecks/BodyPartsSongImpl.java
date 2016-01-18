@@ -1,4 +1,4 @@
-package org.usfirst.frc4904.standard.commands.safety;
+package org.usfirst.frc4904.standard.commands.healthchecks;
 
 public class BodyPartsSongImpl extends BodyPartsSong {
 	private final String string;
