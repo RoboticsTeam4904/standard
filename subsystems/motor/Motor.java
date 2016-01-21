@@ -5,6 +5,11 @@ import org.usfirst.frc4904.standard.commands.motor.MotorIdle;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
+/**
+ * A speed controller that
+ * is also a subsystem.
+ *
+ */
 public class Motor extends Subsystem implements SpeedController {
 	protected final SpeedController motor;
 	protected boolean inverted;
@@ -58,11 +63,11 @@ public class Motor extends Subsystem implements SpeedController {
 			motor.set(-1 * arg0, arg1);
 		}
 	}
-
+	
 	public boolean getInverted() {
 		return inverted;
 	}
-
+	
 	public void setInverted(boolean arg) {
 		inverted = arg;
 	}

@@ -5,6 +5,17 @@ import org.usfirst.frc4904.standard.commands.motor.MotorSet;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
+/**
+ * A Motor Group is several motors
+ * that are coordinated in their
+ * rotation. This is helpful
+ * for motors that would be mechanically
+ * linked (e.g. in a single gearbox).
+ * A Motor Group can be the input
+ * to an encoded motor or an
+ * accel motor.
+ *
+ */
 public class MotorGroup extends Subsystem implements SpeedController {
 	protected MotorSet[] motorSets;
 	protected double currentSpeed;
@@ -52,15 +63,14 @@ public class MotorGroup extends Subsystem implements SpeedController {
 		}
 		currentSpeed = arg0;
 	}
-
+	
 	public boolean getInverted() {
 		return false;
 	}
-
+	
 	/**
 	 * An entire motor group can not be inverted.
 	 * Do not use this function.
 	 */
-	public void setInverted(boolean arg) {
-	}
+	public void setInverted(boolean arg) {}
 }
