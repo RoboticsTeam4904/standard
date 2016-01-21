@@ -4,6 +4,10 @@ package org.usfirst.frc4904.standard.commands.chassis;
 import org.usfirst.frc4904.standard.subsystems.chassis.SolenoidShifters;
 import edu.wpi.first.wpilibj.command.Command;
 
+/**
+ * GNDN, just a default command for shifters.
+ *
+ */
 public class ShiftersIdle extends Command {
 	/**
 	 * GNDN, just a default command for shifters
