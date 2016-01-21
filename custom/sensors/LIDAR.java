@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.SerialPort;
  * that reads from a physical Neato XV-11 LIDAR. It needs to be updated
  * to receive new data. It provides methods to read raw data, find
  * distances, and find lines (totes) via a Hough transform.
+ * This is probably obsolete by now.
  */
 public class LIDAR {
 	private final LogKitten logger;
@@ -22,6 +23,7 @@ public class LIDAR {
 	public static final boolean DISABLED = false;
 	private static final double[] sinCache = new double[360];
 	private static final double[] cosCache = new double[360];
+	
 	// Cache values
 	static {
 		for (int i = 0; i < 360; i++) {

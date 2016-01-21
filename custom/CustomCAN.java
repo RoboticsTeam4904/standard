@@ -6,6 +6,11 @@ import java.nio.IntBuffer;
 import edu.wpi.first.wpilibj.can.CANJNI;
 import edu.wpi.first.wpilibj.can.CANMessageNotFoundException;
 
+/**
+ * This class allows sending and receiving
+ * of messages over CAN to a specific ID.
+ *
+ */
 public class CustomCAN implements Named {
 	// Because CANJNI is basically static, we do not extend it.
 	private final int messageID;

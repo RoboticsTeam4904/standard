@@ -4,6 +4,10 @@ package org.usfirst.frc4904.standard.custom.sensors;
 import java.nio.ByteBuffer;
 import org.usfirst.frc4904.standard.custom.CustomCAN;
 
+/**
+ * A sensor over CAN
+ *
+ */
 public class CANSensor extends CustomCAN {
 	private int[] cachedValues;
 	

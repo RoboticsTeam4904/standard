@@ -3,6 +3,11 @@ package org.usfirst.frc4904.standard.subsystems.chassis;
 
 import org.usfirst.frc4904.standard.subsystems.motor.Motor;
 
+/**
+ * Mecanum Chassis. Has one wheel for
+ * each corner. Can move in all directions.
+ *
+ */
 public class MecanumChassis extends Chassis {
 	/**
 	 * Constructs a mecanum chassis
@@ -53,31 +58,30 @@ public class MecanumChassis extends Chassis {
 		move2dc(0.0, speed, turnSpeed);
 	}
 	
-		public static double[] calculateWheels(double speed, double angle, double turnSpeed) {
-			// System.out.println("Angle: " + angle);
-			// System.out.println("Speed: " + speed);
-			// System.out.println("Turnspeed: " + turnSpeed);
-			angle -= Math.PI / 4.0; // Shift axes to work with mecanum
-			angle = angle % (Math.PI * 2); // make sure angle makes sense
-			double frontLeft = speed * Math.sin(angle) + turnSpeed;
-			double frontRight = -1 * speed * Math.cos(angle) + turnSpeed;
-			double backLeft = speed * Math.cos(angle) + turnSpeed;
-			double backRight = -1 * speed * Math.sin(angle) + turnSpeed;
-			double scaleFactor = Math.max(Math.max(Math.max(Math.abs(frontLeft), Math.abs(frontRight)), Math.abs(backLeft)), Math.abs(backRight));
-			if (scaleFactor < 1) {
-				scaleFactor = 1;
-			}
-			frontLeft /= scaleFactor;
-			frontRight /= scaleFactor;
-			backLeft /= scaleFactor;
-			backRight /= scaleFactor;
-			return new double[] {frontLeft, frontRight, backLeft, backRight};
+	public static double[] calculateWheels(double speed, double angle, double turnSpeed) {
+		// System.out.println("Angle: " + angle);
+		// System.out.println("Speed: " + speed);
+		// System.out.println("Turnspeed: " + turnSpeed);
+		angle -= Math.PI / 4.0; // Shift axes to work with mecanum
+		angle = angle % (Math.PI * 2); // make sure angle makes sense
+		double frontLeft = speed * Math.sin(angle) + turnSpeed;
+		double frontRight = -1 * speed * Math.cos(angle) + turnSpeed;
+		double backLeft = speed * Math.cos(angle) + turnSpeed;
+		double backRight = -1 * speed * Math.sin(angle) + turnSpeed;
+		double scaleFactor = Math.max(Math.max(Math.max(Math.abs(frontLeft), Math.abs(frontRight)), Math.abs(backLeft)), Math.abs(backRight));
+		if (scaleFactor < 1) {
+			scaleFactor = 1;
 		}
-		
-		public static double[] cartesianToPolar(double x, double y) {
-			double speed = Math.sqrt(x * x + y * y);
-			double angle = Math.atan2(y, x);
-			return new double[] {speed, angle};
-		}
+		frontLeft /= scaleFactor;
+		frontRight /= scaleFactor;
+		backLeft /= scaleFactor;
+		backRight /= scaleFactor;
+		return new double[] {frontLeft, frontRight, backLeft, backRight};
+	}
 	
+	public static double[] cartesianToPolar(double x, double y) {
+		double speed = Math.sqrt(x * x + y * y);
+		double angle = Math.atan2(y, x);
+		return new double[] {speed, angle};
+	}
 }

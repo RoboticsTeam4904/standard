@@ -3,6 +3,11 @@ package org.usfirst.frc4904.standard.custom.sensors;
 
 import edu.wpi.first.wpilibj.PIDSourceType;
 
+/**
+ * Encoder over CAN
+ * implements CustomEncoder generic encoder class
+ *
+ */
 public class CANEncoder extends CANSensor implements CustomEncoder {
 	private PIDSourceType pidSource;
 	private double distancePerPulse;
@@ -38,6 +43,11 @@ public class CANEncoder extends CANSensor implements CustomEncoder {
 		this("CANEncoder", id, false, 1.0);
 	}
 	
+	/**
+	 * Sets PID mode
+	 * PIDSourceType is either PIDSourceType.kDisplacement
+	 * or PIDSourceType.kRate.
+	 */
 	public void setPIDSourceType(PIDSourceType pidSource) {
 		this.pidSource = pidSource;
 	}
@@ -63,6 +73,9 @@ public class CANEncoder extends CANSensor implements CustomEncoder {
 		return 0.0;
 	}
 	
+	/**
+	 * Returns the raw number of ticks
+	 */
 	public int get() {
 		return super.read(0); // TODO: what mode numbers will be position and direction?
 	}
@@ -75,10 +88,17 @@ public class CANEncoder extends CANSensor implements CustomEncoder {
 		}
 	}
 	
+	/**
+	 * Returns the most recent direction
+	 * of movement (based on the speed)
+	 */
 	public boolean getDirection() {
 		return !reverseDirection == (super.read(1) >= 0);
 	}
 	
+	/**
+	 * Returns the rate of rotation
+	 */
 	public double getRate() {
 		if (reverseDirection) {
 			return super.read(1) * -1.0;

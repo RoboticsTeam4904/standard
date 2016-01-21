@@ -5,6 +5,11 @@ import java.util.Arrays;
 import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
+/**
+ * An extension of the NavX that supports PID.
+ * I think this is obsolete.
+ *
+ */
 public class IMU extends NavX implements PIDSource {
 	private double[] angles; // Angle 0 is perpendicular (yaw), Angle 1 is lateral (pitch), Angle 2 is longitudinal (roll)
 	private double[] lastAngles;
@@ -24,10 +29,18 @@ public class IMU extends NavX implements PIDSource {
 		zero();
 	}
 	
+	/**
+	 * 
+	 * @return
+	 * 		3 doubles describing the rotation in the order yaw, roll, pitch
+	 */
 	public double[] readRate() {
 		return rate;
 	}
 	
+	/**
+	 * Zeros the yaw axis
+	 */
 	public void zero() {
 		super.zeroYaw();
 	}
