@@ -6,9 +6,18 @@ import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
+/**
+ * Idles the motor (sets speed 0)
+ *
+ */
 public class MotorIdle extends Command {
 	private final SpeedController motor;
 	
+	/**
+	 * Constructor.
+	 * 
+	 * @param motor
+	 */
 	public <A extends Subsystem & SpeedController> MotorIdle(A motor) {
 		super("MotorIdle");
 		this.motor = motor;

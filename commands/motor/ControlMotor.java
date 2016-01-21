@@ -7,12 +7,31 @@ import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
+/**
+ * Controls a motor (or AccelMotor or MotorGroup)
+ * from a single controller (e.g. Joystick or Xbox)
+ * 
+ * 
+ */
 public class ControlMotor extends Command {
 	private final SpeedController motor;
 	private final Controller controller;
 	private final int axis;
 	private final boolean invert;
 	
+	/**
+	 * Constructor.
+	 * This command controls a motor based on
+	 * the axis axis of the controller
+	 * controller. This can allow an
+	 * operator to easily control a single
+	 * motor from an axis of the controller.
+	 * 
+	 * @param motor
+	 * @param controller
+	 * @param axis
+	 * @param invert
+	 */
 	public <A extends Subsystem & SpeedController> ControlMotor(A motor, Controller controller, int axis, boolean invert) {
 		super("MotorInPipe");
 		this.motor = motor;
