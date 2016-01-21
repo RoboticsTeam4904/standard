@@ -3,6 +3,12 @@ package org.usfirst.frc4904.standard.subsystems.chassis;
 
 import org.usfirst.frc4904.standard.subsystems.motor.Motor;
 
+/**
+ * A tank drive chassis with the shifting system.
+ * This effectively adds a solenoid shifter to
+ * the chassis as a contained object.
+ *
+ */
 public class TankDriveShifting extends TankDrive implements ShiftingChassis {
 	private final SolenoidShifters shifter;
 	
