@@ -14,6 +14,7 @@ public abstract class AbstractHealthCheck extends TimedCommand { // Many of our 
 		super(name);
 		status = HealthLevel.UNKNOWN;
 		setRunWhenDisabled(true);
+		commands = new HashMap<HealthLevel, ArrayList<HealthProtectCommand>>();
 	}
 	
 	public void runCommandOnState(HealthLevel level, HealthProtectCommand toRun) {
