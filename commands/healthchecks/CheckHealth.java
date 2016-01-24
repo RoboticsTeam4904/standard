@@ -5,9 +5,9 @@ import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
 public class CheckHealth extends CommandGroup {
-	private final AbstractHealthcheck[] commands;
+	private final AbstractHealthCheck[] commands;
 	
-	public CheckHealth(AbstractHealthcheck... command) {
+	public CheckHealth(AbstractHealthCheck... command) {
 		commands = command;
 		for (Command c : commands) {
 			addParallel(c);
@@ -16,14 +16,14 @@ public class CheckHealth extends CommandGroup {
 	}
 	
 	public void reset() {
-		for (AbstractHealthcheck c : commands) {
+		for (AbstractHealthCheck c : commands) {
 			c.reset();
 		}
 	}
 	
-	public HealthStatus getStatus() {
-		HealthStatus status = HealthStatus.UNCERTAIN;
-		for (AbstractHealthcheck c : commands) {
+	public HealthLevel getStatus() {
+		HealthLevel status = HealthLevel.UNKNOWN;
+		for (AbstractHealthCheck c : commands) {
 			if (c.getStatus().compareTo(status) > 0) {
 				status = c.getStatus();
 			}

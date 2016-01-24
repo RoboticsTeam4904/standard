@@ -1,7 +1,7 @@
 package org.usfirst.frc4904.standard;
 
 
-import org.usfirst.frc4904.standard.commands.healthchecks.AbstractHealthcheck;
+import org.usfirst.frc4904.standard.commands.healthchecks.AbstractHealthCheck;
 import org.usfirst.frc4904.standard.commands.healthchecks.CheckHealth;
 import org.usfirst.frc4904.standard.custom.CommandSendableChooser;
 import org.usfirst.frc4904.standard.custom.TypedNamedSendableChooser;
@@ -26,7 +26,7 @@ public abstract class CommandRobotBase extends IterativeRobot {
 		SmartDashboard.putData("Operator control scheme chooser", operatorChooser);
 	}
 	
-	public void robotInit(AbstractHealthcheck... healthchecks) {
+	public void robotInit(AbstractHealthCheck... healthchecks) {
 		healthcheckCommand = new CheckHealth(healthchecks);
 		// Initialize choosers
 		autoChooser = new CommandSendableChooser();
