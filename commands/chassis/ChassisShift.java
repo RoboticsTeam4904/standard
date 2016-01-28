@@ -4,6 +4,10 @@ package org.usfirst.frc4904.standard.commands.chassis;
 import org.usfirst.frc4904.standard.subsystems.chassis.SolenoidShifters;
 import edu.wpi.first.wpilibj.command.Command;
 
+/**
+ * This command shifts a set of solenoids.
+ *
+ */
 public class ChassisShift extends Command {
 	private SolenoidShifters solenoids;
 	private SolenoidShifters.ShiftState state;

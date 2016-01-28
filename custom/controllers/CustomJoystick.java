@@ -6,6 +6,15 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.Button;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 
+/**
+ * A joystick that implements the generic
+ * controller interface.
+ * This allows us to use a joystick as a
+ * controller.
+ * This contains 12 buttons to reflect
+ * the joysticks we are typically using.
+ *
+ */
 public class CustomJoystick extends Joystick implements Controller {
 	public static final int X_AXIS = 0;
 	public static final int Y_AXIS = 1;
@@ -43,6 +52,13 @@ public class CustomJoystick extends Joystick implements Controller {
 		button12 = new JoystickButton(this, 12);
 	}
 	
+	/**
+	 * Returns true if a given axis is
+	 * above the move threshold.
+	 * 
+	 * @param axis
+	 * @return
+	 */
 	public boolean active(int axis) {
 		if (axis == X_AXIS) {
 			return super.getX() > moveThreshold;
@@ -53,10 +69,24 @@ public class CustomJoystick extends Joystick implements Controller {
 		}
 	}
 	
+	/**
+	 * Returns true if the joystick
+	 * is actually connected. It
+	 * determines this by counting
+	 * the number of buttons (> 0
+	 * means the joystick is
+	 * connected).
+	 * 
+	 * @return
+	 */
 	public boolean connected() {
 		return DriverStation.getInstance().getStickButtonCount(port) > 0;
 	}
 	
+	/**
+	 * Returns the value of the
+	 * given axis.
+	 */
 	public double getAxis(int axis) {
 		return super.getRawAxis(axis);
 	}

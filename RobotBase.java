@@ -9,6 +9,10 @@ import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
+/**
+ * I think this is obsolete.
+ *
+ */
 public abstract class RobotBase extends IterativeRobot {
 	protected Command teleopCommand;
 	protected Command autonomousCommand;

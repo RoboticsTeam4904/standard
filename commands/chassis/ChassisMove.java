@@ -10,6 +10,19 @@ import org.usfirst.frc4904.standard.subsystems.motor.EncodedMotor;
 import org.usfirst.frc4904.standard.subsystems.motor.Motor;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
+/**
+ * This command moves the chassis.
+ * It move based on the driver class.
+ * Note that it supports all types
+ * of chassis. The chassis is used
+ * to calculate the motor movement.
+ * The command works by creating
+ * a movement command for each
+ * motor. This is the best way to
+ * handle this because it allows
+ * each motor to be a full subsystem.
+ *
+ */
 public class ChassisMove extends CommandGroup {
 	private final MotorSet[] motorSpins;
 	private double[] motorSpeeds;
@@ -20,6 +33,20 @@ public class ChassisMove extends CommandGroup {
 	private final double turnScale;
 	
 	// private final LogKitten logger;
+	/**
+	 * Constructor.
+	 * 
+	 * @param chassis
+	 *        The robot's chassis.
+	 * @param driver
+	 *        The currently selected driver.
+	 * @param xScale
+	 *        The scale factor for the x axis.
+	 * @param yScale
+	 *        The scale factor for the y axis.
+	 * @param turnScale
+	 *        The scale factor for the turning.
+	 */
 	public ChassisMove(Chassis chassis, Driver driver, double xScale, double yScale, double turnScale) {
 		super("ChassisMove");
 		requires(chassis);
@@ -41,6 +68,24 @@ public class ChassisMove extends CommandGroup {
 		this(chassis, driver, 1.0, 1.0, 1.0);
 	}
 	
+	/**
+	 * Constructor supporting encoded motors.
+	 * If this is done, the motors will be
+	 * controlled as encoded motors, i.e.
+	 * they will try to maintain a more
+	 * precise speed.
+	 * If motors do not have encoders,
+	 * they will simply be treated as
+	 * normal motors.
+	 * 
+	 * @param chassis
+	 * @param driver
+	 * @param xScale
+	 * @param yScale
+	 * @param turnScale
+	 * @param encode
+	 *        True to enable encoders, false to disable.
+	 */
 	public ChassisMove(Chassis chassis, Driver driver, double xScale, double yScale, double turnScale, boolean encode) {
 		super("ChassisMoveEncodeded");
 		requires(chassis);

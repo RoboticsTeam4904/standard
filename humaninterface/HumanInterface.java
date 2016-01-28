@@ -3,6 +3,14 @@ package org.usfirst.frc4904.standard.humaninterface;
 
 import org.usfirst.frc4904.standard.custom.Named;
 
+/**
+ * A generic human interface class.
+ * This is designed to be used to
+ * bind commands to controllers.
+ * bindCommands should only be called
+ * during teleop init.
+ *
+ */
 public abstract class HumanInterface implements Named {
 	protected final String name;
 	

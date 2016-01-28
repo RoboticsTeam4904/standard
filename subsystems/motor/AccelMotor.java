@@ -5,6 +5,23 @@ import org.usfirst.frc4904.logkitten.LogKitten;
 import org.usfirst.frc4904.standard.custom.sensors.PDP;
 import edu.wpi.first.wpilibj.SpeedController;
 
+/**
+ * An accel motor is a motor that is acceleration limited
+ * to prevent brownouts. This is done by generally creating
+ * an acceleration curve over 1/16th of a second (e.g.
+ * increasing the speed by 1/16th of the requested increase
+ * per 1/16th of a second). In addition, if the battery
+ * voltage as measured by the PDP decreases below 11.0
+ * volts, the motor will begin to throttle its speed.
+ * Once the voltage is below 10.0 volts, the motor will
+ * start actively slowing down.
+ * 
+ * If you are considering having multiple mechanically
+ * connected motors being acceleration limited, it is
+ * recommended that you put the motors into a motor
+ * group first.
+ *
+ */
 public class AccelMotor extends Motor {
 	private double currentSpeed;
 	private long lastUpdate;
@@ -37,6 +54,9 @@ public class AccelMotor extends Motor {
 		return speed;
 	}
 	
+	/**
+	 * Sets motor speed with throttling.
+	 */
 	public void set(double speed) {
 		speed = capAccel(speed);
 		currentSpeed = speed;

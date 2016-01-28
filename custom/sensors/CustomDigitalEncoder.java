@@ -5,6 +5,11 @@ import edu.wpi.first.wpilibj.CounterBase;
 import edu.wpi.first.wpilibj.DigitalSource;
 import edu.wpi.first.wpilibj.Encoder;
 
+/**
+ * A RoboRIO encoder that implements
+ * the generic encoder class.
+ *
+ */
 public class CustomDigitalEncoder extends Encoder implements CustomEncoder {
 	public CustomDigitalEncoder(DigitalSource aSource, DigitalSource bSource) {
 		super(aSource, bSource);

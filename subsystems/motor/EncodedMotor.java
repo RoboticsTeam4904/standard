@@ -4,6 +4,14 @@ package org.usfirst.frc4904.standard.subsystems.motor;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.SpeedController;
 
+/**
+ * An encoded motor is a motor with a set
+ * of variables relevant to controlling
+ * a motor with an encoder. It contains
+ * an Encoder, PID constants, and range
+ * information.
+ *
+ */
 public class EncodedMotor extends Motor {
 	protected Encoder encoder;
 	protected double P;
