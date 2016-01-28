@@ -106,4 +106,19 @@ public class CANEncoder extends CANSensor implements CustomEncoder {
 			return super.read(1);
 		}
 	}
+	
+	/**
+	 * Returns true when stopped
+	 */
+	public boolean getStopped() {
+		return Math.abs(this.getRate()) <= 0.0001;
+	}
+	
+	/**
+	 * Resets the distance traveled for the encoder
+	 */
+	public void reset() {
+		super.write(new byte[] {0x72, 0x65, 0x73, 0x65, 0x74, 0x65, 0x6e, 63}); // resetenc
+		super.read();
+	}
 }

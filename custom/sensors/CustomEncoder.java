@@ -16,9 +16,19 @@ public interface CustomEncoder extends PIDSource {
 	int get();
 	
 	/**
+	 * Gets current distance
+	 */
+	double getDistance();
+	
+	/**
 	 * Gets direction of most recent movement
 	 */
 	boolean getDirection();
+	
+	/**
+	 * Returns true when stopped
+	 */
+	boolean getStopped();
 	
 	/**
 	 * Gets rate
@@ -34,4 +44,9 @@ public interface CustomEncoder extends PIDSource {
 	 * To the surprise of everyone, enables and disables reverse direction
 	 */
 	void setReverseDirection(boolean reverseDirection);
+	
+	/**
+	 * Resets the encoder
+	 */
+	void reset();
 }
