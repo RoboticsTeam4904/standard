@@ -1,6 +1,5 @@
 package org.usfirst.frc4904.standard.custom;
 
-
 /**
  * Class for interfacing with a Teensy running
  * TeensyNeoPixelCAN code.
