@@ -16,7 +16,7 @@ public class CANSensor extends CustomCAN {
 	 * @param name
 	 *        Name of CAN sensor (not really needed)
 	 * @param id
-	 *        ID of CAN sensor (0x400 to 0x500, must correspond to a Teensy or similar)
+	 *        ID of CAN sensor (0x600 to 0x700, must correspond to a Teensy or similar)
 	 * @param modes
 	 *        Number of modes for the CAN sensor
 	 */
@@ -49,7 +49,7 @@ public class CANSensor extends CustomCAN {
 	 * @return
 	 */
 	public int read(int mode, int retryMax) {
-		super.write(new byte[] {0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01}); // Write to trigger read
+		super.write(new byte[] {0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, (byte) ((byte) mode & 0xFF)}); // Write to trigger read
 		for (int i = 0; i < retryMax; i++) {
 			ByteBuffer rawData = super.readBuffer();
 			if (rawData != null && rawData.remaining() > 7) {
