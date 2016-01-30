@@ -1,7 +1,7 @@
 package org.usfirst.frc4904.standard.subsystems.motor;
 
 
-import org.usfirst.frc4904.logkitten.LogKitten;
+import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.custom.sensors.PDP;
 import edu.wpi.first.wpilibj.SpeedController;
 

@@ -1,7 +1,7 @@
 package org.usfirst.frc4904.standard.commands.chassis;
 
 
-import org.usfirst.frc4904.logkitten.LogKitten;
+import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.commands.motor.MotorIdle;
 import org.usfirst.frc4904.standard.subsystems.chassis.Chassis;
 import org.usfirst.frc4904.standard.subsystems.motor.Motor;
