@@ -1,7 +1,7 @@
 package org.usfirst.frc4904.standard.commands.chassis;
 
 
-import org.usfirst.frc4904.logkitten.LogKitten;
+import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.commands.motor.MotorEncoderSet;
 import org.usfirst.frc4904.standard.commands.motor.MotorSet;
 import org.usfirst.frc4904.standard.humaninterface.Driver;
