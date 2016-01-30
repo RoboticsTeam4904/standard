@@ -1,0 +1,21 @@
+<project name="4904Standard" basedir=".">
+  <description>
+  A simple buildfile to satisfy travis
+  </description>
+
+  <!-- version, team number; version is requuired for filepath below -->
+  <property file="${user.home}/wpilib/wpilib.properties"/> 
+  <property file="${user.home}/wpilib/java/${version}/ant/build.properties"/>
+
+  <target name="clean">
+    <delete dir="build"/>
+  </target>
+
+  <target name="compile">
+    <mkdir dir="build/classes"/>
+    <javac srcdir="${basedir}" destdir="build/classes" includeantruntime="false" >
+      <classpath path="${classpath}"/> <!-- classpath var is set in wpilib.properties -->
+    </javac>
+  </target>
+
+</project>
