@@ -1,9 +1,9 @@
 package org.usfirst.frc4904.standard.commands.motor;
 
 
+import org.usfirst.frc4904.standard.custom.sensors.CustomEncoder;
 import org.usfirst.frc4904.standard.subsystems.motor.EncodedMotor;
 import org.usfirst.frc4904.standard.subsystems.motor.Motor;
-import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.PIDSourceType;
@@ -14,7 +14,7 @@ import edu.wpi.first.wpilibj.PIDSourceType;
  *
  */
 public class MotorEncoderHold extends MotorSet implements PIDOutput {
-	protected Encoder encoder;
+	protected CustomEncoder encoder;
 	protected PIDController pid;
 	
 	/**
@@ -30,7 +30,7 @@ public class MotorEncoderHold extends MotorSet implements PIDOutput {
 	 * @param minimum
 	 * @param maximum
 	 */
-	public MotorEncoderHold(Motor motor, Encoder encoder, double P, double I, double D, double minimum, double maximum) {
+	public MotorEncoderHold(Motor motor, CustomEncoder encoder, double P, double I, double D, double minimum, double maximum) {
 		super(motor);
 		this.encoder = encoder;
 		pid = new PIDController(P, I, D, encoder, this);
