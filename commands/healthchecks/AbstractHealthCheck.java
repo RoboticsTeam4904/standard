@@ -19,7 +19,7 @@ public abstract class AbstractHealthCheck extends TimedCommand { // Many of our 
 	
 	public void runCommandOnState(HealthLevel level, HealthProtectCommand toRun) {
 		if (commands.get(level) == null) {
-			commands.put(level, new ArrayList<>());
+			commands.put(level, new ArrayList<HealthProtectCommand>());
 		}
 		commands.get(level).add(toRun);
 	}
