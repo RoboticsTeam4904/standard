@@ -38,7 +38,7 @@ public class ChassisMove extends CommandGroup {
 	 * 
 	 * @param chassis
 	 *        The robot's chassis.
-	 * @param driver
+	 * @param controller
 	 *        The currently selected driver.
 	 * @param xScale
 	 *        The scale factor for the x axis.
@@ -47,11 +47,11 @@ public class ChassisMove extends CommandGroup {
 	 * @param turnScale
 	 *        The scale factor for the turning.
 	 */
-	public ChassisMove(Chassis chassis, ChassisController driver, double xScale, double yScale, double turnScale) {
+	public ChassisMove(Chassis chassis, ChassisController controller, double xScale, double yScale, double turnScale) {
 		super("ChassisMove");
 		requires(chassis);
 		this.chassis = chassis;
-		this.controller = driver;
+		this.controller = controller;
 		Motor[] motors = this.chassis.getMotors();
 		this.motorSpins = new MotorSet[motors.length];
 		for (int i = 0; i < motors.length; i++) {
@@ -64,8 +64,8 @@ public class ChassisMove extends CommandGroup {
 		LogKitten.v("ChassisMove created for " + Integer.toString(chassis.getNumberWheels()) + " wheels");
 	}
 	
-	public ChassisMove(Chassis chassis, ChassisController driver) {
-		this(chassis, driver, 1.0, 1.0, 1.0);
+	public ChassisMove(Chassis chassis, ChassisController controller) {
+		this(chassis, controller, 1.0, 1.0, 1.0);
 	}
 	
 	/**
@@ -79,18 +79,18 @@ public class ChassisMove extends CommandGroup {
 	 * normal motors.
 	 * 
 	 * @param chassis
-	 * @param driver
+	 * @param controller
 	 * @param xScale
 	 * @param yScale
 	 * @param turnScale
 	 * @param encode
 	 *        True to enable encoders, false to disable.
 	 */
-	public ChassisMove(Chassis chassis, ChassisController driver, double xScale, double yScale, double turnScale, boolean encode) {
+	public ChassisMove(Chassis chassis, ChassisController controller, double xScale, double yScale, double turnScale, boolean encode) {
 		super("ChassisMoveEncodeded");
 		requires(chassis);
 		this.chassis = chassis;
-		this.controller = driver;
+		this.controller = controller;
 		Motor[] motors = this.chassis.getMotors();
 		this.motorSpins = new MotorEncoderSet[motors.length];
 		for (int i = 0; i < motors.length; i++) {
@@ -108,8 +108,8 @@ public class ChassisMove extends CommandGroup {
 		LogKitten.v("ChassisMove created for " + Integer.toString(chassis.getNumberWheels()) + " wheels");
 	}
 	
-	public ChassisMove(Chassis chassis, ChassisController driver, boolean encode) {
-		this(chassis, driver, 1.0, 1.0, 1.0, encode);
+	public ChassisMove(Chassis chassis, ChassisController controller, boolean encode) {
+		this(chassis, controller, 1.0, 1.0, 1.0, encode);
 	}
 	
 	protected void initialize() {

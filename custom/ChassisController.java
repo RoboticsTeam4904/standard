@@ -5,21 +5,21 @@ public interface ChassisController {
 	/**
 	 * 
 	 * @return
-	 * 		X value that the Driver wants
+	 * 		X value that the Controller wants
 	 */
 	public double getX();
 	
 	/**
 	 * 
 	 * @return
-	 * 		Y value that the Driver wants
+	 * 		Y value that the Controller wants
 	 */
 	public double getY();
 	
 	/**
 	 * 
 	 * @return
-	 * 		Turn speed that the Driver wants
+	 * 		Turn speed that the Controller wants
 	 */
 	public double getTurnSpeed();
 }
