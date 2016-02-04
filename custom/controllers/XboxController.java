@@ -367,6 +367,16 @@ public class XboxController extends Joystick {
 		public void setYDeadZone(double number) {
 			yDeadZone = number;
 		}
+		
+		/**
+		 * Set both axis deadzones of this thumbstick
+		 * 
+		 * @param number
+		 */
+		public void setDeadZone(double number) {
+			xDeadZone = number;
+			yDeadZone = number;
+		}
 	}
 	
 	/**
@@ -618,5 +628,14 @@ public class XboxController extends Joystick {
 		final float amount = new Float(intensity);
 		controller.setRumble(RumbleType.kLeftRumble, amount);
 		controller.setRumble(RumbleType.kRightRumble, amount);
+	}
+	
+	/*
+	 * Set both axis deadzones of both thumbsticks
+	 * @param number
+	 */
+	public void setDeadZone(double number) {
+		leftStick.setDeadZone(number);
+		rightStick.setDeadZone(number);
 	}
 }
