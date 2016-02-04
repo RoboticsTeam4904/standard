@@ -130,4 +130,102 @@ public class MotorFactory {
 		}
 		return new AccelMotor(name, new MotorGroup(name, motors), inverted, pdp);
 	}
+	
+	/**
+	 * Makes a motor group that is encoded.
+	 * 
+	 * @param name
+	 * @param encoder
+	 * @param P
+	 * @param I
+	 * @param D
+	 * @param maximum
+	 * @param minimum
+	 * @param distancePerPulse
+	 * @param inverted
+	 * @param controllers
+	 * @return
+	 */
+	public static EncodedMotor getEncodedMotorGroup(String name, CustomEncoder encoder, double P, double I, double D, double maximum, double minimum, double distancePerPulse, boolean inverted, SpeedController... controllers) {
+		Motor[] motors = new Motor[controllers.length];
+		for (int i = 0; i < controllers.length; i++) {
+			motors[i] = tryCastMotor(controllers[i]);
+		}
+		return new EncodedMotor(name, new MotorGroup(name, motors), encoder, P, I, D, maximum, minimum, distancePerPulse, inverted);
+	}
+	
+	/**
+	 * Makes a motor group that is encoded.
+	 * 
+	 * @param name
+	 * @param encoder
+	 * @param P
+	 * @param I
+	 * @param D
+	 * @param maximum
+	 * @param minimum
+	 * @param distancePerPulse
+	 * @param controllers
+	 * @return
+	 */
+	public static EncodedMotor getEncodedMotorGroup(String name, CustomEncoder encoder, double P, double I, double D, double maximum, double minimum, double distancePerPulse, SpeedController... controllers) {
+		Motor[] motors = new Motor[controllers.length];
+		for (int i = 0; i < controllers.length; i++) {
+			motors[i] = tryCastMotor(controllers[i]);
+		}
+		return new EncodedMotor(name, new MotorGroup(name, motors), encoder, P, I, D, maximum, minimum, distancePerPulse);
+	}
+	
+	/**
+	 * Makes an acceleration limited motor
+	 * group controlled with an encoder.
+	 * This is basically why the motor
+	 * factory exists.
+	 * 
+	 * @param name
+	 * @param inverted
+	 * @param pdp
+	 * @param encoder
+	 * @param P
+	 * @param I
+	 * @param D
+	 * @param maximum
+	 * @param minimum
+	 * @param distancePerPulse
+	 * @param controllers
+	 * @return
+	 */
+	public static EncodedMotor getEncodedAccelMotorGroup(String name, boolean inverted, PDP pdp, CustomEncoder encoder, double P, double I, double D, double maximum, double minimum, double distancePerPulse, SpeedController... controllers) {
+		Motor[] motors = new Motor[controllers.length];
+		for (int i = 0; i < controllers.length; i++) {
+			motors[i] = tryCastMotor(controllers[i]);
+		}
+		return new EncodedMotor(name, new AccelMotor(name, new MotorGroup(name, motors), inverted, pdp), encoder, P, I, D, maximum, minimum, distancePerPulse);
+	}
+	
+	/**
+	 * Makes an acceleration limited motor
+	 * group controlled with an encoder.
+	 * This is basically why the motor
+	 * factory exists.
+	 * 
+	 * @param name
+	 * @param pdp
+	 * @param encoder
+	 * @param P
+	 * @param I
+	 * @param D
+	 * @param maximum
+	 * @param minimum
+	 * @param distancePerPulse
+	 * @param controllers
+	 * @return
+	 */
+	public static EncodedMotor getEncodedAccelMotorGroup(String name, PDP pdp, CustomEncoder encoder, double P, double I, double D, double maximum, double minimum, double distancePerPulse, SpeedController... controllers) {
+		Motor[] motors = new Motor[controllers.length];
+		for (int i = 0; i < controllers.length; i++) {
+			motors[i] = tryCastMotor(controllers[i]);
+		}
+		return new EncodedMotor(name, new AccelMotor(name, new MotorGroup(name, motors), pdp), encoder, P, I, D, maximum, minimum, distancePerPulse);
+	}
 }
