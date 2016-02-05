@@ -6,23 +6,29 @@ import org.usfirst.frc4904.standard.subsystems.chassis.Chassis;
 import edu.wpi.first.wpilibj.command.Command;
 
 public class ChassisSet extends Command implements ChassisController {
-	ChassisMove move;
+	private ChassisMove move;
+	private double x;
+	private double y;
+	private double turn;
 	
-	public ChassisSet(Chassis chassis) {
+	public ChassisSet(Chassis chassis, double x, double y, double turn) {
 		move = new ChassisMove(chassis, this);
+		this.x = x;
+		this.y = y;
+		this.turn = turn;
 	}
 	
 	public double getX() {
-		return 0;
+		return x;
 	}
 	
 	@Override
 	public double getY() {
-		return 1.0;
+		return y;
 	}
 	
 	public double getTurnSpeed() {
-		return 0;
+		return turn;
 	}
 	
 	protected void initialize() {}
