@@ -16,7 +16,6 @@ public class ChassisSet extends Command implements ChassisController {
 		this.x = x;
 		this.y = y;
 		this.turn = turn;
-		requires(chassis);
 	}
 	
 	public double getX() {
@@ -32,7 +31,9 @@ public class ChassisSet extends Command implements ChassisController {
 		return turn;
 	}
 	
-	protected void initialize() {}
+	protected void initialize() {
+		move.start();
+	}
 	
 	protected void execute() {}
 	
@@ -40,7 +41,11 @@ public class ChassisSet extends Command implements ChassisController {
 		return false;
 	}
 	
-	protected void end() {}
+	protected void end() {
+		move.cancel();
+	}
 	
-	protected void interrupted() {}
+	protected void interrupted() {
+		move.cancel();
+	}
 }
