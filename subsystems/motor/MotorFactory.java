@@ -132,6 +132,21 @@ public class MotorFactory {
 	}
 	
 	/**
+	 * Makes a motor group that is acceleration limited.
+	 * The acceleration limits are applied outside of the
+	 * motor group in order to ensure that the
+	 * underlying motors spin at the same speed.
+	 * 
+	 * @param name
+	 * @param pdp
+	 * @param controllers
+	 * @return
+	 */
+	public static AccelMotor getAccelMotorGroup(String name, PDP pdp, SpeedController... controllers) {
+		return getAccelMotorGroup(name, true, pdp, controllers);
+	}
+	
+	/**
 	 * Makes a motor group that is encoded.
 	 * 
 	 * @param name
