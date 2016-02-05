@@ -3,7 +3,7 @@ package org.usfirst.frc4904.standard.commands.healthchecks;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import org.usfirst.frc4904.logkitten.LogKitten;
+import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.commands.TimedCommand;
 
 public abstract class AbstractHealthCheck extends TimedCommand { // Many of our healthchecks will use timing, so a TimedCommand is needed
@@ -19,7 +19,7 @@ public abstract class AbstractHealthCheck extends TimedCommand { // Many of our 
 	
 	public void runCommandOnState(HealthLevel level, HealthProtectCommand toRun) {
 		if (commands.get(level) == null) {
-			commands.put(level, new ArrayList<>());
+			commands.put(level, new ArrayList<HealthProtectCommand>());
 		}
 		commands.get(level).add(toRun);
 	}
