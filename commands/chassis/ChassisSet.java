@@ -16,6 +16,7 @@ public class ChassisSet extends Command implements ChassisController {
 		this.x = x;
 		this.y = y;
 		this.turn = turn;
+		requires(chassis);
 	}
 	
 	public double getX() {
