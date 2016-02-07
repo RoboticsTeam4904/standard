@@ -2,12 +2,12 @@ package org.usfirst.frc4904.standard.commands.chassis;
 
 
 import org.usfirst.frc4904.standard.LogKitten;
-import org.usfirst.frc4904.standard.commands.motor.MotorEncoderSet;
+import org.usfirst.frc4904.standard.commands.motor.MotorSensorSet;
 import org.usfirst.frc4904.standard.commands.motor.MotorSet;
 import org.usfirst.frc4904.standard.custom.ChassisController;
 import org.usfirst.frc4904.standard.subsystems.chassis.Chassis;
-import org.usfirst.frc4904.standard.subsystems.motor.EncodedMotor;
 import org.usfirst.frc4904.standard.subsystems.motor.Motor;
+import org.usfirst.frc4904.standard.subsystems.motor.sensormotor.EncodedMotor;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
 /**
@@ -92,11 +92,11 @@ public class ChassisMove extends CommandGroup {
 		this.chassis = chassis;
 		this.controller = controller;
 		Motor[] motors = this.chassis.getMotors();
-		this.motorSpins = new MotorEncoderSet[motors.length];
+		this.motorSpins = new MotorSensorSet[motors.length];
 		for (int i = 0; i < motors.length; i++) {
 			if (motors[i] instanceof EncodedMotor && encode) {
 				EncodedMotor motor = (EncodedMotor) motors[i];
-				motorSpins[i] = new MotorEncoderSet(motor);
+				motorSpins[i] = new MotorSensorSet(motor);
 			} else {
 				motorSpins[i] = new MotorSet(motors[i]);
 			}
