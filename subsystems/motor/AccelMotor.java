@@ -40,20 +40,20 @@ public class AccelMotor extends Motor {
 	}
 	
 	private double capAccel(double speed) {
-		LogKitten.w("Inits:  " + Double.toString(speed));
+		LogKitten.d("Inits:  " + Double.toString(speed));
 		if (Math.abs(speed) > Math.abs(currentSpeed) && pdp.getVoltage() < 11.0) {
-			LogKitten.w("Throttling " + super.getName() + " at " + pdp.getVoltage() + " from " + Math.abs(speed) + " to " + Math.abs(currentSpeed));
+			LogKitten.d("Throttling " + super.getName() + " at " + pdp.getVoltage() + " from " + Math.abs(speed) + " to " + Math.abs(currentSpeed));
 			speed = currentSpeed;
 			if (pdp.getVoltage() < 10.0) {
 				speed = currentSpeed - 0.3 * currentSpeed;
 			}
 		} else if (Math.abs(speed) > Math.abs(currentSpeed)) {
 			long deltaT = System.currentTimeMillis() - lastUpdate;
-			LogKitten.w("Delta T " + Long.toString(deltaT));
+			LogKitten.d("Delta T " + Long.toString(deltaT));
 			speed = currentSpeed + ((double) deltaT / (double) 64) * (speed - currentSpeed);
 			lastUpdate = System.currentTimeMillis();
 		}
-		LogKitten.w("Speed:  " + Double.toString(speed));
+		LogKitten.d("Speed:  " + Double.toString(speed));
 		return speed;
 	}
 	
@@ -61,8 +61,8 @@ public class AccelMotor extends Motor {
 	 * Sets motor speed with throttling.
 	 */
 	public void set(double speed) {
-		// speed = capAccel(speed);
-		// currentSpeed = speed;
+		speed = capAccel(speed);
+		currentSpeed = speed;
 		super.set(speed);
 	}
 	
