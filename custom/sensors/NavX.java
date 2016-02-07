@@ -12,6 +12,7 @@ public class NavX extends AHRS {
 	private float lastYaw;
 	private float lastPitch;
 	private float lastRoll;
+	private double lastYawRate;
 	
 	public NavX(SerialPort.Port port) {
 		super(port);
@@ -21,21 +22,29 @@ public class NavX extends AHRS {
 		lastRoll = 0.0f;
 	}
 	
+	public double pidGet() {
+		return getYaw();
+	}
+	
+	public double getRate() {
+		double rate = super.getRate();
+		if (Math.abs(rate) > Math.abs(lastYawRate * 2) + 1) {
+			return lastYawRate;
+		}
+		lastYawRate = rate;
+		return rate;
+	}
+	
 	/**
 	 * Returns an always positive yaw
 	 */
 	public float getYaw() {
 		float yaw = super.getYaw();
-		if (Math.abs(yaw) > Math.abs(lastYaw * 2)) { // Smoothing
+		if (Math.abs(yaw) > Math.abs(lastYaw * 2) + 1) { // Smoothing
 			return lastYaw;
 		}
-		if (yaw < 0) {
-			lastYaw = 360 + yaw;
-			return 360 + yaw;
-		} else {
-			lastYaw = yaw;
-			return yaw;
-		}
+		lastYaw = yaw;
+		return yaw;
 	}
 	
 	/**
@@ -43,7 +52,7 @@ public class NavX extends AHRS {
 	 */
 	public float getPitch() {
 		float pitch = super.getPitch();
-		if (Math.abs(pitch) > Math.abs(lastPitch * 2)) {
+		if (Math.abs(pitch) > Math.abs(lastPitch * 2) + 1) {
 			return lastPitch;
 		}
 		if (pitch < 0) {
@@ -60,7 +69,7 @@ public class NavX extends AHRS {
 	 */
 	public float getRoll() {
 		float roll = super.getRoll();
-		if (Math.abs(roll) > Math.abs(lastRoll) * 2) {
+		if (Math.abs(roll) > Math.abs(lastRoll * 2) + 1) {
 			return lastRoll;
 		}
 		if (roll < 0) {
