@@ -2,8 +2,8 @@ package org.usfirst.frc4904.standard.subsystems.motor;
 
 
 import org.usfirst.frc4904.standard.commands.motor.MotorIdle;
-import org.usfirst.frc4904.standard.subsystems.motor.slopecontrollers.Linear;
-import org.usfirst.frc4904.standard.subsystems.motor.slopecontrollers.SlopeController;
+import org.usfirst.frc4904.standard.subsystems.motor.speedmodifiers.Linear;
+import org.usfirst.frc4904.standard.subsystems.motor.speedmodifiers.SpeedModifier;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
@@ -14,12 +14,12 @@ import edu.wpi.first.wpilibj.command.Subsystem;
  */
 public class Motor extends Subsystem implements SpeedController {
 	protected final SpeedController[] motors;
-	protected final SlopeController slopeController;
+	protected final SpeedModifier speedModifier;
 	
-	public Motor(String name, boolean inverted, SlopeController slopeController, SpeedController... motors) {
+	public Motor(String name, boolean inverted, SpeedModifier slopeController, SpeedController... motors) {
 		super(name);
 		this.motors = motors;
-		this.slopeController = slopeController;
+		this.speedModifier = slopeController;
 		for (SpeedController motor : motors) {
 			motor.setInverted(inverted);
 		}
@@ -29,7 +29,7 @@ public class Motor extends Subsystem implements SpeedController {
 		this(name, inverted, new Linear(), motors);
 	}
 	
-	public Motor(String name, SlopeController slopeController, SpeedController... motors) {
+	public Motor(String name, SpeedModifier slopeController, SpeedController... motors) {
 		this(name, false, slopeController, motors);
 	}
 	
@@ -56,7 +56,7 @@ public class Motor extends Subsystem implements SpeedController {
 	}
 	
 	public void set(double speed) {
-		speed = slopeController.reslope(speed);
+		speed = speedModifier.modify(speed);
 		for (SpeedController motor : motors) {
 			motor.set(speed);
 		}
