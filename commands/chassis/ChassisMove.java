@@ -117,7 +117,7 @@ public class ChassisMove extends CommandGroup {
 	}
 	
 	protected void execute() {
-		chassis.move2dc(controller.getX(), controller.getY(), controller.getTurnSpeed());
+		chassis.move2dc(controller.getX() * xScale, controller.getY() * yScale, controller.getTurnSpeed() * turnScale);
 		motorSpeeds = chassis.getMotorSpeeds();
 		String motorSpeedsString = "";
 		for (int i = 0; i < motorSpins.length; i++) {
