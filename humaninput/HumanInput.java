@@ -1,4 +1,4 @@
-package org.usfirst.frc4904.standard.humaninterface;
+package org.usfirst.frc4904.standard.humaninput;
 
 
 import org.usfirst.frc4904.standard.custom.Named;
@@ -11,10 +11,10 @@ import org.usfirst.frc4904.standard.custom.Named;
  * during teleop init.
  *
  */
-public abstract class HumanInterface implements Named {
+public abstract class HumanInput implements Named {
 	protected final String name;
 	
-	public HumanInterface(String name) {
+	public HumanInput(String name) {
 		this.name = name;
 	}
 	

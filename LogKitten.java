@@ -167,7 +167,7 @@ public class LogKitten {
 	 *        the message to log
 	 */
 	public static void wtf(String message) { // Log WTF message
-		wtf(message, false);
+		logMessage(message, LEVEL_WTF, false);
 	}
 	
 	/**
@@ -187,7 +187,7 @@ public class LogKitten {
 	 *        the message to log
 	 */
 	public static void f(String message) { // Log fatal message
-		f(message, false);
+		logMessage(message, LEVEL_FATAL, false);
 	}
 	
 	/**
@@ -207,7 +207,7 @@ public class LogKitten {
 	 *        the message to log
 	 */
 	public static void e(String message) { // Log error message
-		e(message, false);
+		logMessage(message, LEVEL_ERROR, false);
 	}
 	
 	/**
@@ -227,7 +227,7 @@ public class LogKitten {
 	 *        the message to log
 	 */
 	public static void w(String message) { // Log warn message
-		w(message, false);
+		logMessage(message, LEVEL_WARN, false);
 	}
 	
 	/**
@@ -247,7 +247,7 @@ public class LogKitten {
 	 *        the message to log
 	 */
 	public static void v(String message) { // Log verbose message
-		v(message, false);
+		logMessage(message, LEVEL_VERBOSE, false);
 	}
 	
 	/**
@@ -266,7 +266,7 @@ public class LogKitten {
 	 * @param message
 	 */
 	public static void i(String message) {
-		i(message, false);
+		logMessage(message, LEVEL_VERBOSE, false);
 	}
 	
 	/**
@@ -286,7 +286,7 @@ public class LogKitten {
 	 *        the message to log
 	 */
 	public static void d(String message) { // Log debug message
-		d(message, false);
+		logMessage(message, LEVEL_DEBUG, false);
 	}
 	
 	/**
