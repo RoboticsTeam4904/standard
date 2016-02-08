@@ -1,6 +1,7 @@
 package org.usfirst.frc4904.standard.subsystems.motor.speedmodifiers;
 
 
+import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.custom.sensors.PDP;
 
 public class AccelerationCap implements SpeedModifier {
@@ -21,19 +22,23 @@ public class AccelerationCap implements SpeedModifier {
 	}
 	
 	public double modify(double inputSpeed) {
+		LogKitten.d("AccelerationCap input: " + Double.toString(inputSpeed));
 		double outputSpeed;
 		if (Math.abs(inputSpeed) > Math.abs(currentSpeed) && pdp.getVoltage() < softStopVoltage) {
+			LogKitten.d("AccelerationCap brownout protecting");
 			if (pdp.getVoltage() < hardStopVoltage) {
 				outputSpeed = currentSpeed - 0.3 * currentSpeed;
 			} else {
 				outputSpeed = currentSpeed;
 			}
 		} else if (Math.abs(inputSpeed) > Math.abs(currentSpeed)) {
+			LogKitten.d("AccelerationCap voltage ramping");
 			outputSpeed = currentSpeed + ((double) (System.currentTimeMillis() - lastUpdate) / (double) 64) * (inputSpeed - currentSpeed);
 			lastUpdate = System.currentTimeMillis();
 		} else {
 			outputSpeed = inputSpeed;
 		}
+		LogKitten.d("AccelerationCap output: " + Double.toString(inputSpeed));
 		return outputSpeed;
 	}
 }
