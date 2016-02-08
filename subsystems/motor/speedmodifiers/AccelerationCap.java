@@ -20,18 +20,20 @@ public class AccelerationCap implements SpeedModifier {
 		this(pdp, 11.0, 10.0);
 	}
 	
-	public double modify(double speed) {
-		if (Math.abs(speed) > Math.abs(currentSpeed) && pdp.getVoltage() < softStopVoltage) {
-			speed = currentSpeed;
+	public double modify(double inputSpeed) {
+		double outputSpeed;
+		if (Math.abs(inputSpeed) > Math.abs(currentSpeed) && pdp.getVoltage() < softStopVoltage) {
 			if (pdp.getVoltage() < hardStopVoltage) {
-				speed = currentSpeed - 0.3 * currentSpeed;
+				outputSpeed = currentSpeed - 0.3 * currentSpeed;
+			} else {
+				outputSpeed = currentSpeed;
 			}
-		} else if (Math.abs(speed) > Math.abs(currentSpeed)) {
-			long deltaT = System.currentTimeMillis() - lastUpdate;
-			speed = currentSpeed + ((double) deltaT / (double) 64) * (speed - currentSpeed);
+		} else if (Math.abs(inputSpeed) > Math.abs(currentSpeed)) {
+			outputSpeed = currentSpeed + ((double) (System.currentTimeMillis() - lastUpdate) / (double) 64) * (inputSpeed - currentSpeed);
 			lastUpdate = System.currentTimeMillis();
+		} else {
+			outputSpeed = inputSpeed;
 		}
-		currentSpeed = speed;
-		return speed;
+		return outputSpeed;
 	}
 }
