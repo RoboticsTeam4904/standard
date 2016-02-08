@@ -11,6 +11,7 @@ public class SensorMotor extends Motor implements PIDOutput {
 	private final PIDController pid;
 	private boolean enablePID;
 	private double position;
+	private long lastUpdate;
 	
 	public SensorMotor(String name, boolean inverted, SpeedModifier slopeController, PIDSource sensor, SpeedController[] motors) {
 		super(name, inverted, slopeController, motors);
@@ -43,7 +44,8 @@ public class SensorMotor extends Motor implements PIDOutput {
 	}
 	
 	public void set(double speed) {
-		position += speed;
+		position += speed * (System.currentTimeMillis() - lastUpdate);
+		lastUpdate = System.currentTimeMillis();
 		pid.setSetpoint(position);
 		if (enablePID) {
 			super.set(pid.get());

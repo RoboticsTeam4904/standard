@@ -27,8 +27,7 @@ public class AccelerationCap implements SpeedModifier {
 				speed = currentSpeed - 0.3 * currentSpeed;
 			}
 		} else if (Math.abs(speed) > Math.abs(currentSpeed)) {
-			long deltaT = System.currentTimeMillis() - lastUpdate;
-			speed = currentSpeed + ((double) deltaT / (double) 64) * (speed - currentSpeed);
+			speed = currentSpeed + ((double) (System.currentTimeMillis() - lastUpdate) / (double) 64) * (speed - currentSpeed);
 			lastUpdate = System.currentTimeMillis();
 		}
 		currentSpeed = speed;
