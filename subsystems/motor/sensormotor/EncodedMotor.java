@@ -17,5 +17,6 @@ import edu.wpi.first.wpilibj.SpeedController;
 public class EncodedMotor extends SensorMotor {
 	public EncodedMotor(String name, boolean inverted, SpeedModifier speedModifier, CustomEncoder encoder, SpeedController... motor) {
 		super(name, inverted, speedModifier, encoder, motor);
+		super.pid.setInputRange(-2147483648, 2147483647);
 	}
 }
