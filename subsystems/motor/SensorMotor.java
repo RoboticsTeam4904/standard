@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.SpeedController;
 
 public class SensorMotor extends Motor implements PIDOutput {
-	private final PIDController pid;
+	protected final PIDController pid;
 	private boolean enablePID;
 	private double position;
 	private long lastUpdate;
