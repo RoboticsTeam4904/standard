@@ -2,12 +2,11 @@ package org.usfirst.frc4904.standard.commands.chassis;
 
 
 import org.usfirst.frc4904.standard.LogKitten;
-import org.usfirst.frc4904.standard.commands.motor.MotorSensorSet;
 import org.usfirst.frc4904.standard.commands.motor.MotorSet;
 import org.usfirst.frc4904.standard.custom.ChassisController;
 import org.usfirst.frc4904.standard.subsystems.chassis.Chassis;
 import org.usfirst.frc4904.standard.subsystems.motor.Motor;
-import org.usfirst.frc4904.standard.subsystems.motor.sensormotor.EncodedMotor;
+import org.usfirst.frc4904.standard.subsystems.motor.SensorMotor;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
 /**
@@ -47,7 +46,7 @@ public class ChassisMove extends CommandGroup {
 	 * @param turnScale
 	 *        The scale factor for the turning.
 	 */
-	public ChassisMove(Chassis chassis, ChassisController controller, double xScale, double yScale, double turnScale) {
+	public ChassisMove(Chassis chassis, ChassisController controller, double xScale, double yScale, double turnScale, boolean encode) {
 		super("ChassisMove");
 		requires(chassis);
 		this.chassis = chassis;
@@ -55,6 +54,13 @@ public class ChassisMove extends CommandGroup {
 		Motor[] motors = this.chassis.getMotors();
 		this.motorSpins = new MotorSet[motors.length];
 		for (int i = 0; i < motors.length; i++) {
+			if (motors[i] instanceof SensorMotor) {
+				if (encode) {
+					((SensorMotor) motors[i]).enablePID();
+				} else {
+					((SensorMotor) motors[i]).disablePID();
+				}
+			}
 			motorSpins[i] = new MotorSet(motors[i]);
 			addParallel(motorSpins[i]);
 		}
@@ -64,52 +70,35 @@ public class ChassisMove extends CommandGroup {
 		LogKitten.v("ChassisMove created for " + Integer.toString(chassis.getNumberWheels()) + " wheels");
 	}
 	
-	public ChassisMove(Chassis chassis, ChassisController controller) {
-		this(chassis, controller, 1.0, 1.0, 1.0);
-	}
-	
 	/**
-	 * Constructor supporting encoded motors.
-	 * If this is done, the motors will be
-	 * controlled as encoded motors, i.e.
-	 * they will try to maintain a more
-	 * precise speed.
-	 * If motors do not have encoders,
-	 * they will simply be treated as
-	 * normal motors.
 	 * 
 	 * @param chassis
 	 * @param controller
 	 * @param xScale
 	 * @param yScale
 	 * @param turnScale
-	 * @param encode
-	 *        True to enable encoders, false to disable.
 	 */
-	public ChassisMove(Chassis chassis, ChassisController controller, double xScale, double yScale, double turnScale, boolean encode) {
-		super("ChassisMoveEncodeded");
-		requires(chassis);
-		this.chassis = chassis;
-		this.controller = controller;
-		Motor[] motors = this.chassis.getMotors();
-		this.motorSpins = new MotorSensorSet[motors.length];
-		for (int i = 0; i < motors.length; i++) {
-			if (motors[i] instanceof EncodedMotor && encode) {
-				EncodedMotor motor = (EncodedMotor) motors[i];
-				motorSpins[i] = new MotorSensorSet(motor);
-			} else {
-				motorSpins[i] = new MotorSet(motors[i]);
-			}
-			addParallel(motorSpins[i]);
-		}
-		this.xScale = xScale;
-		this.yScale = yScale;
-		this.turnScale = turnScale;
-		LogKitten.v("ChassisMove created for " + Integer.toString(chassis.getNumberWheels()) + " wheels");
+	public ChassisMove(Chassis chassis, ChassisController controller, double xScale, double yScale, double turnScale) {
+		this(chassis, controller, xScale, yScale, turnScale, false);
 	}
 	
+	/**
+	 * 
+	 * @param chassis
+	 * @param controller
+	 * @param encode
+	 */
 	public ChassisMove(Chassis chassis, ChassisController controller, boolean encode) {
 		this(chassis, controller, 1.0, 1.0, 1.0, encode);
+	}
+	
+	/**
+	 * 
+	 * @param chassis
+	 * @param controller
+	 */
+	public ChassisMove(Chassis chassis, ChassisController controller) {
+		this(chassis, controller, 1.0, 1.0, 1.0, false);
 	}
 	
 	protected void initialize() {
@@ -117,7 +106,7 @@ public class ChassisMove extends CommandGroup {
 	}
 	
 	protected void execute() {
-		chassis.move2dc(controller.getX(), controller.getY(), controller.getTurnSpeed());
+		chassis.move2dc(controller.getX() * xScale, controller.getY() * yScale, controller.getTurnSpeed() * turnScale);
 		motorSpeeds = chassis.getMotorSpeeds();
 		String motorSpeedsString = "";
 		for (int i = 0; i < motorSpins.length; i++) {

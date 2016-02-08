@@ -2,8 +2,8 @@ package org.usfirst.frc4904.standard.subsystems.motor.sensormotor;
 
 
 import org.usfirst.frc4904.standard.custom.sensors.CustomEncoder;
-import org.usfirst.frc4904.standard.subsystems.motor.Motor;
-import edu.wpi.first.wpilibj.PIDController;
+import org.usfirst.frc4904.standard.subsystems.motor.SensorMotor;
+import org.usfirst.frc4904.standard.subsystems.motor.speedmodifiers.SpeedModifier;
 import edu.wpi.first.wpilibj.SpeedController;
 
 /**
@@ -14,53 +14,8 @@ import edu.wpi.first.wpilibj.SpeedController;
  * information.
  *
  */
-public class EncodedMotor extends Motor implements PositionSensorMotor, SpeedSensorMotor {
-	protected CustomEncoder encoder;
-	protected PIDController ratePID;
-	protected PIDController positionPID;
-	
-	public EncodedMotor(String name, boolean inverted, CustomEncoder encoder, PIDController ratePID, PIDController positionPID, SpeedController... motor) {
-		super(name, inverted, motor);
-		this.encoder = encoder;
-		this.ratePID = ratePID;
-		this.positionPID = positionPID;
-	}
-	
-	/**
-	 * Returns the rate of rotation
-	 * of the motor.
-	 */
-	public double getRate() {
-		return encoder.getRate();
-	}
-	
-	/**
-	 * Returns position of the motor
-	 */
-	public double getPosition() {
-		return encoder.getDistance();
-	}
-	
-	/**
-	 * Returns the encoder
-	 * 
-	 * @return
-	 */
-	public CustomEncoder getEncoder() {
-		return encoder;
-	}
-	
-	/**
-	 * Returns rate PIDController
-	 */
-	public PIDController getRatePID() {
-		return ratePID;
-	}
-	
-	/**
-	 * Returns position PIDController
-	 */
-	public PIDController getPositionPID() {
-		return positionPID;
+public class EncodedMotor extends SensorMotor {
+	public EncodedMotor(String name, boolean inverted, SpeedModifier speedModifier, CustomEncoder encoder, SpeedController... motor) {
+		super(name, inverted, speedModifier, encoder, motor);
 	}
 }

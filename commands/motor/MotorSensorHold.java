@@ -1,8 +1,7 @@
 package org.usfirst.frc4904.standard.commands.motor;
 
 
-import org.usfirst.frc4904.standard.subsystems.motor.Motor;
-import org.usfirst.frc4904.standard.subsystems.motor.sensormotor.PositionSensorMotor;
+import org.usfirst.frc4904.standard.subsystems.motor.SensorMotor;
 
 /**
  * Sets a motor to a position and keeps it there
@@ -10,7 +9,7 @@ import org.usfirst.frc4904.standard.subsystems.motor.sensormotor.PositionSensorM
  *
  */
 public class MotorSensorHold extends MotorSet {
-	protected PositionSensorMotor motor;
+	protected SensorMotor motor;
 	
 	/**
 	 * Constructor.
@@ -20,26 +19,9 @@ public class MotorSensorHold extends MotorSet {
 	 * @param motor
 	 *        A Motor that also implements PositionSensorMotor
 	 */
-	public <A extends Motor & PositionSensorMotor> MotorSensorHold(A motor) {
+	public MotorSensorHold(SensorMotor motor) {
 		super(motor);
 		this.motor = motor;
-	}
-	
-	/**
-	 * This will attempt to return a constructed MotorSensorHold
-	 * from a motor you are not sure of.
-	 * Please make sure you check null after using this
-	 * function. There will not be an error if the motor
-	 * is not a PositionSensorMotor.
-	 * 
-	 * @param motor
-	 * @return
-	 */
-	public static <A extends Motor & PositionSensorMotor> MotorSensorHold tryCastMotor(Motor motor) {
-		if (motor instanceof PositionSensorMotor) {
-			return new MotorSensorHold((A) motor);
-		}
-		return null;
 	}
 	
 	/**
@@ -48,7 +30,6 @@ public class MotorSensorHold extends MotorSet {
 	 * @param position
 	 */
 	public void setPosition(double position) {
-		motor.getPositionPID().setSetpoint(position);
-		super.set(motor.getPositionPID().get());
+		motor.setPosition(position);
 	}
 }
