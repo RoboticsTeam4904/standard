@@ -15,12 +15,14 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 public class Motor extends Subsystem implements SpeedController {
 	protected final SpeedController[] motors;
 	protected final SpeedModifier speedModifier;
+	protected boolean inverted;
 	
 	public Motor(String name, boolean inverted, SpeedModifier slopeController, SpeedController... motors) {
 		super(name);
 		this.motors = motors;
 		this.speedModifier = slopeController;
 		setInverted(inverted);
+		this.inverted = inverted;
 	}
 	
 	public Motor(String name, boolean inverted, SpeedController... motors) {
@@ -70,8 +72,9 @@ public class Motor extends Subsystem implements SpeedController {
 	
 	public void setInverted(boolean inverted) {
 		for (SpeedController motor : motors) {
-			if (inverted) {
+			if (this.inverted != inverted) {
 				motor.setInverted(!motor.getInverted());
+				this.inverted = inverted;
 			}
 		}
 	}
