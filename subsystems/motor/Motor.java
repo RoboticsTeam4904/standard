@@ -20,9 +20,7 @@ public class Motor extends Subsystem implements SpeedController {
 		super(name);
 		this.motors = motors;
 		this.speedModifier = slopeController;
-		for (SpeedController motor : motors) {
-			motor.setInverted(inverted);
-		}
+		setInverted(inverted);
 	}
 	
 	public Motor(String name, boolean inverted, SpeedController... motors) {
@@ -72,7 +70,9 @@ public class Motor extends Subsystem implements SpeedController {
 	
 	public void setInverted(boolean inverted) {
 		for (SpeedController motor : motors) {
-			motor.setInverted(inverted);
+			if (inverted) {
+				motor.setInverted(!motor.getInverted());
+			}
 		}
 	}
 }
