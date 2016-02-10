@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 
 public class RunFor extends CommandGroup {
 	protected final double duration;
+	protected final Command command;
 	
 	/**
 	 * Run a command for a given amount of time, in seconds. The command will be cancelled at the end.
@@ -22,15 +23,13 @@ public class RunFor extends CommandGroup {
 	public RunFor(Command command, double duration) {
 		super("RunFor[" + command.getName() + "]");
 		this.duration = duration;
+		this.command = command;
 		setTimeout(duration);
 		addSequential(command);
 	}
 	
 	@Override
-	protected void initialize() {}
-	
-	@Override
 	protected boolean isFinished() {
-		return isTimedOut();
+		return isTimedOut() || !command.isRunning();
 	}
 }
