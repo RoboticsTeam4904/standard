@@ -27,7 +27,7 @@ public class RunFor extends CommandGroup {
 	}
 	
 	@Override
-	public void initialize() {}
+	protected void initialize() {}
 	
 	@Override
 	protected boolean isFinished() {
