@@ -16,9 +16,9 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 public class Motor extends Subsystem implements SpeedController {
 	protected final SpeedController[] motors;
 	protected final SpeedModifier speedModifier;
-	protected boolean inverted;
+	protected boolean isInverted;
 	
-	public Motor(String name, boolean inverted, SpeedModifier slopeController, SpeedController... motors) {
+	public Motor(String name, boolean isInverted, SpeedModifier speedModifier, SpeedController... motors) {
 		super(name);
 		this.motors = motors;
 		for (SpeedController motor : motors) {
@@ -26,9 +26,9 @@ public class Motor extends Subsystem implements SpeedController {
 				((CANSpeedController) motor).setControlMode(0); // PercentVBus mode, closest to raw
 			}
 		}
-		this.speedModifier = slopeController;
-		setInverted(inverted);
-		this.inverted = inverted;
+		this.speedModifier = speedModifier;
+		setInverted(isInverted);
+		this.isInverted = isInverted;
 	}
 	
 	public Motor(String name, boolean inverted, SpeedController... motors) {
@@ -115,16 +115,31 @@ public class Motor extends Subsystem implements SpeedController {
 		}
 	}
 	
+	/**
+	 * Get whether this entire motor is inverted.
+	 *
+	 * @return isInverted
+	 *         The state of inversion, true is inverted.
+	 * 		
+	 */
 	public boolean getInverted() {
-		return motors[0].getInverted();
+		return isInverted;
 	}
 	
-	public void setInverted(boolean inverted) {
-		for (SpeedController motor : motors) {
-			if (this.inverted != inverted) {
+	/**
+	 * Sets the direction inversion of all motor substituents.
+	 * This respects the original inversion state of each SpeedController when constructed, and will only
+	 * invert SpeedControllers if this.getInverted() != the input.
+	 *
+	 * @param isInverted
+	 *        The state of inversion, true is inverted.
+	 */
+	public void setInverted(boolean isInverted) {
+		if (getInverted() != isInverted) {
+			for (SpeedController motor : motors) {
 				motor.setInverted(!motor.getInverted());
-				this.inverted = inverted;
 			}
 		}
+		this.isInverted = isInverted;
 	}
 }
