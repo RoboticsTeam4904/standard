@@ -37,10 +37,12 @@ public class Motor extends Subsystem implements SpeedController {
 		this(name, false, new Linear(), motors);
 	}
 	
+	@Override
 	protected void initDefaultCommand() {
 		setDefaultCommand(new MotorIdle(this));
 	}
 	
+	@Override
 	public void pidWrite(double speed) {
 		double newSpeed = speedModifier.modify(speed);
 		for (SpeedController motor : motors) {
@@ -48,12 +50,21 @@ public class Motor extends Subsystem implements SpeedController {
 		}
 	}
 	
+	@Override
 	public void disable() {
 		for (SpeedController motor : motors) {
 			motor.disable();
 		}
 	}
 	
+	/**
+	 * Get the value returned by the underlying motors.
+	 * For most motors, this is the most recently set speed.
+	 * For some (like CANTalon) it may vary based on the mode.
+	 *
+	 * @return For most motors, the most recently set speed between -1.0 and 1.0.
+	 */
+	@Override
 	public double get() {
 		double value = motors[0].get();
 		for (SpeedController motor : motors) {
@@ -64,6 +75,13 @@ public class Motor extends Subsystem implements SpeedController {
 		return value;
 	}
 	
+	/**
+	 * Set the motor speed. Passes through SpeedModifier.
+	 *
+	 * @param speed
+	 *        The speed to set. Value should be between -1.0 and 1.0.
+	 */
+	@Override
 	public void set(double speed) {
 		double newSpeed = speedModifier.modify(speed);
 		for (SpeedController motor : motors) {
