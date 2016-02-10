@@ -17,10 +17,12 @@ public class Motor extends Subsystem implements SpeedController {
 	protected final SpeedController[] motors;
 	protected final SpeedModifier speedModifier;
 	protected boolean isInverted;
+	protected double lastSpeed;
 	
 	public Motor(String name, boolean isInverted, SpeedModifier speedModifier, SpeedController... motors) {
 		super(name);
 		this.motors = motors;
+		this.lastSpeed = 0;
 		for (SpeedController motor : motors) {
 			if (motor instanceof CANSpeedController) {
 				((CANSpeedController) motor).setControlMode(0); // PercentVBus mode, closest to raw
@@ -66,6 +68,7 @@ public class Motor extends Subsystem implements SpeedController {
 	@Override
 	public void pidWrite(double speed) {
 		ensureSafety();
+		lastSpeed = speed;
 		double newSpeed = speedModifier.modify(speed);
 		for (SpeedController motor : motors) {
 			motor.pidWrite(newSpeed);
@@ -80,22 +83,14 @@ public class Motor extends Subsystem implements SpeedController {
 	}
 	
 	/**
-	 * Get the value returned by the underlying motors.
-	 * For most motors, this is the most recently set speed.
-	 * For some (like CANTalon) it may vary based on the mode.
+	 * Get the most recently set speed.
 	 *
-	 * @return For most motors, the most recently set speed between -1.0 and 1.0.
+	 * @return The most recently set speed between -1.0 and 1.0.
 	 */
 	@Override
 	public double get() {
-		double value = motors[0].get();
-		for (SpeedController motor : motors) {
-			if (value != motor.get()) {
-				throw new Error("Motors not getting at the same speed: " + getName());
-			}
-		}
-		return value;
 		ensureSafety();
+		return lastSpeed;
 	}
 	
 	/**
@@ -107,6 +102,7 @@ public class Motor extends Subsystem implements SpeedController {
 	@Override
 	public void set(double speed) {
 		ensureSafety();
+		lastSpeed = speed;
 		double newSpeed = speedModifier.modify(speed);
 		for (SpeedController motor : motors) {
 			motor.set(newSpeed);
@@ -128,6 +124,7 @@ public class Motor extends Subsystem implements SpeedController {
 	@Override
 	public void set(double speed, byte syncGroup) {
 		ensureSafety();
+		lastSpeed = speed;
 		double newSpeed = speedModifier.modify(speed);
 		for (SpeedController motor : motors) {
 			motor.set(newSpeed, syncGroup);
