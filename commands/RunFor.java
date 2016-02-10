@@ -24,13 +24,12 @@ public class RunFor extends CommandGroup {
 		super("RunFor[" + command.getName() + "]");
 		this.command = command;
 		this.duration = duration;
-	}
-	
-	@Override
-	public void initialize() {
 		setTimeout(duration);
 		addSequential(command);
 	}
+	
+	@Override
+	public void initialize() {}
 	
 	@Override
 	protected boolean isFinished() {

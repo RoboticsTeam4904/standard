@@ -24,6 +24,7 @@ public class RunUnless extends CommandGroup {
 		super("RunUnless[" + command.getName() + "]");
 		this.command = command;
 		this.booleanInterfaces = booleanInterfaces;
+		addSequential(command);
 	}
 	
 	@Override
@@ -33,6 +34,5 @@ public class RunUnless extends CommandGroup {
 				return;
 			}
 		}
-		addSequential(command);
 	}
 }

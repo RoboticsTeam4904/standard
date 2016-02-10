@@ -24,6 +24,7 @@ public class RunIf extends CommandGroup {
 		super("RunIf[" + command.getName() + "]");
 		this.command = command;
 		this.booleanInterfaces = booleanInterfaces;
+		addSequential(command);
 	}
 	
 	@Override
@@ -33,6 +34,5 @@ public class RunIf extends CommandGroup {
 				return;
 			}
 		}
-		addSequential(command);
 	}
 }
