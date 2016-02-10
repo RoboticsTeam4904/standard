@@ -21,6 +21,8 @@ public class Motor extends Subsystem implements SpeedController {
 	
 	public Motor(String name, boolean isInverted, SpeedModifier speedModifier, SpeedController... motors) {
 		super(name);
+		this.isInverted = isInverted;
+		this.speedModifier = speedModifier;
 		this.motors = motors;
 		this.lastSpeed = 0;
 		for (SpeedController motor : motors) {
@@ -28,9 +30,7 @@ public class Motor extends Subsystem implements SpeedController {
 				((CANSpeedController) motor).setControlMode(0); // PercentVBus mode, closest to raw
 			}
 		}
-		this.speedModifier = speedModifier;
 		setInverted(isInverted);
-		this.isInverted = isInverted;
 	}
 	
 	public Motor(String name, boolean inverted, SpeedController... motors) {
