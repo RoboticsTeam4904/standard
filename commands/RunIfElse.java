@@ -2,17 +2,23 @@ package org.usfirst.frc4904.standard.commands;
 
 
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.command.Subsystem;
 
-public class BranchCommand extends Command {
+public class RunIfElse extends Command {
 	private final Command ifCommand;
 	private final Command elseCommand;
 	private final BooleanInterface condition;
 	
-	public BranchCommand(Command ifCommand, Command elseCommand, BooleanInterface condition) {
+	public RunIfElse(Command ifCommand, Command elseCommand, BooleanInterface condition) {
 		super("BranchIf[" + ifCommand.getName() + "]Else[" + elseCommand.getName() + "]");
 		this.ifCommand = ifCommand;
 		this.elseCommand = elseCommand;
 		this.condition = condition;
+	}
+	
+	@Override
+	public boolean doesRequire(Subsystem subsystem) {
+		return ifCommand.doesRequire(subsystem) || elseCommand.doesRequire(subsystem);
 	}
 	
 	@Override
