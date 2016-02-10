@@ -33,8 +33,8 @@ public class Motor extends Subsystem implements SpeedController {
 		setInverted(isInverted);
 	}
 	
-	public Motor(String name, boolean inverted, SpeedController... motors) {
-		this(name, inverted, new LinearModifier(), motors);
+	public Motor(String name, boolean isInverted, SpeedController... motors) {
+		this(name, isInverted, new LinearModifier(), motors);
 	}
 	
 	public Motor(String name, SpeedModifier slopeController, SpeedController... motors) {
