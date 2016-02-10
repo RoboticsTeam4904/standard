@@ -3,6 +3,7 @@ package org.usfirst.frc4904.standard.commands;
 
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.CommandGroup;
+import edu.wpi.first.wpilibj.command.Subsystem;
 
 public class RunUnless extends CommandGroup {
 	protected final Command command;
@@ -24,6 +25,11 @@ public class RunUnless extends CommandGroup {
 		super("RunUnless[" + command.getName() + "]");
 		this.command = command;
 		this.booleanInterfaces = booleanInterfaces;
+	}
+	
+	@Override
+	public boolean doesRequire(Subsystem subsystem) {
+		return command.doesRequire(subsystem);
 	}
 	
 	@Override
