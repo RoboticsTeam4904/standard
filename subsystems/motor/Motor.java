@@ -45,6 +45,22 @@ public class Motor extends Subsystem implements SpeedController {
 		this(name, false, new LinearModifier(), motors);
 	}
 	
+	public Motor(boolean isInverted, SpeedModifier speedModifier, SpeedController... motors) {
+		this("Motor", isInverted, speedModifier, motors);
+	}
+	
+	public Motor(boolean isInverted, SpeedController... motors) {
+		this("Motor", isInverted, motors);
+	}
+	
+	public Motor(SpeedModifier slopeController, SpeedController... motors) {
+		this("Motor", slopeController, motors);
+	}
+	
+	public Motor(SpeedController... motors) {
+		this("Motor", motors);
+	}
+	
 	@Override
 	protected void initDefaultCommand() {
 		setDefaultCommand(new MotorIdle(this));
