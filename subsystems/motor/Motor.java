@@ -42,7 +42,10 @@ public class Motor extends Subsystem implements SpeedController {
 	}
 	
 	public void pidWrite(double speed) {
-		set(speed);
+		double newSpeed = speedModifier.modify(speed);
+		for (SpeedController motor : motors) {
+			motor.pidWrite(newSpeed);
+		}
 	}
 	
 	public void disable() {
