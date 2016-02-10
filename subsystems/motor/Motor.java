@@ -48,8 +48,24 @@ public class Motor extends Subsystem implements SpeedController {
 		setDefaultCommand(new MotorIdle(this));
 	}
 	
+	/**
+	 * Ensure that all SpeedController objects report the same speed from motor.get().
+	 * Otherwise, throw an UnsynchronizedSpeedControllerRuntimeException.
+	 * This will fail if you mix CANTalons in weird modes with normal motor controllers, so don't.
+	 */
+	protected void ensureSafety() {
+		double value = motors[0].get();
+		for (SpeedController motor : motors) {
+			if (value != motor.get()) {
+				disable();
+				throw new UnsynchronizedSpeedControllerRuntimeException(this);
+			}
+		}
+	}
+	
 	@Override
 	public void pidWrite(double speed) {
+		ensureSafety();
 		double newSpeed = speedModifier.modify(speed);
 		for (SpeedController motor : motors) {
 			motor.pidWrite(newSpeed);
@@ -79,6 +95,7 @@ public class Motor extends Subsystem implements SpeedController {
 			}
 		}
 		return value;
+		ensureSafety();
 	}
 	
 	/**
@@ -89,6 +106,7 @@ public class Motor extends Subsystem implements SpeedController {
 	 */
 	@Override
 	public void set(double speed) {
+		ensureSafety();
 		double newSpeed = speedModifier.modify(speed);
 		for (SpeedController motor : motors) {
 			motor.set(newSpeed);
@@ -109,6 +127,7 @@ public class Motor extends Subsystem implements SpeedController {
 	@Deprecated
 	@Override
 	public void set(double speed, byte syncGroup) {
+		ensureSafety();
 		double newSpeed = speedModifier.modify(speed);
 		for (SpeedController motor : motors) {
 			motor.set(newSpeed, syncGroup);
