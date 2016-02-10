@@ -4,6 +4,7 @@ package org.usfirst.frc4904.standard.subsystems.motor;
 import org.usfirst.frc4904.standard.commands.motor.MotorIdle;
 import org.usfirst.frc4904.standard.subsystems.motor.speedmodifiers.Linear;
 import org.usfirst.frc4904.standard.subsystems.motor.speedmodifiers.SpeedModifier;
+import edu.wpi.first.wpilibj.CANSpeedController;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
@@ -20,6 +21,11 @@ public class Motor extends Subsystem implements SpeedController {
 	public Motor(String name, boolean inverted, SpeedModifier slopeController, SpeedController... motors) {
 		super(name);
 		this.motors = motors;
+		for (SpeedController motor : motors) {
+			if (motor instanceof CANSpeedController) {
+				((CANSpeedController) motor).setControlMode(0); // PercentVBus mode, closest to raw
+			}
+		}
 		this.speedModifier = slopeController;
 		setInverted(inverted);
 		this.inverted = inverted;
