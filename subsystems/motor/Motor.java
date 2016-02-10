@@ -9,9 +9,9 @@ import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 /**
- * A speed controller that
- * is also a subsystem.
- *
+ * A class that wraps around a variable number of SpeedController objects to give them Subsystem functionality.
+ * Keeps the substituent SpeedController objects in sync.
+ * Can also modify their speed with a SpeedModifier for things like scaling or brownout protection.
  */
 public class Motor extends Subsystem implements SpeedController {
 	protected final SpeedController[] motors;
