@@ -5,7 +5,6 @@ import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
 public class RunFor extends CommandGroup {
-	protected final Command command;
 	protected final double duration;
 	
 	/**
@@ -22,7 +21,6 @@ public class RunFor extends CommandGroup {
 	 */
 	public RunFor(Command command, double duration) {
 		super("RunFor[" + command.getName() + "]");
-		this.command = command;
 		this.duration = duration;
 		setTimeout(duration);
 		addSequential(command);
@@ -37,12 +35,8 @@ public class RunFor extends CommandGroup {
 	}
 	
 	@Override
-	protected void end() {
-		command.cancel();
-	}
+	protected void end() {}
 	
 	@Override
-	protected void interrupted() {
-		command.cancel();
-	}
+	protected void interrupted() {}
 }
