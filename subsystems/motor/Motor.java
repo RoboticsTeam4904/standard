@@ -62,9 +62,9 @@ public class Motor extends Subsystem implements SpeedController {
 	}
 	
 	public void set(double speed) {
-		speed = speedModifier.modify(speed);
+		double newSpeed = speedModifier.modify(speed);
 		for (SpeedController motor : motors) {
-			motor.set(speed);
+			motor.set(newSpeed);
 		}
 	}
 	
