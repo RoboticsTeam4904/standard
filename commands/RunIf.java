@@ -24,15 +24,20 @@ public class RunIf extends CommandGroup {
 		super("RunIf[" + command.getName() + "]");
 		this.command = command;
 		this.booleanInterfaces = booleanInterfaces;
-		addSequential(command);
 	}
 	
 	@Override
-	public void initialize() {
+	protected void initialize() {
 		for (BooleanInterface booleanInterface : booleanInterfaces) {
 			if (!booleanInterface.evaluate()) {
 				return;
 			}
 		}
+		command.start();
+	}
+	
+	@Override
+	protected boolean isFinished() {
+		return !command.isRunning();
 	}
 }
