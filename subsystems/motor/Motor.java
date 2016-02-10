@@ -2,7 +2,7 @@ package org.usfirst.frc4904.standard.subsystems.motor;
 
 
 import org.usfirst.frc4904.standard.commands.motor.MotorIdle;
-import org.usfirst.frc4904.standard.subsystems.motor.speedmodifiers.LinearModifier;
+import org.usfirst.frc4904.standard.subsystems.motor.speedmodifiers.IdentityModifier;
 import org.usfirst.frc4904.standard.subsystems.motor.speedmodifiers.SpeedModifier;
 import edu.wpi.first.wpilibj.CANSpeedController;
 import edu.wpi.first.wpilibj.SpeedController;
@@ -34,7 +34,7 @@ public class Motor extends Subsystem implements SpeedController {
 	}
 	
 	public Motor(String name, boolean isInverted, SpeedController... motors) {
-		this(name, isInverted, new LinearModifier(), motors);
+		this(name, isInverted, new IdentityModifier(), motors);
 	}
 	
 	public Motor(String name, SpeedModifier slopeController, SpeedController... motors) {
@@ -42,7 +42,7 @@ public class Motor extends Subsystem implements SpeedController {
 	}
 	
 	public Motor(String name, SpeedController... motors) {
-		this(name, false, new LinearModifier(), motors);
+		this(name, false, new IdentityModifier(), motors);
 	}
 	
 	public Motor(boolean isInverted, SpeedModifier speedModifier, SpeedController... motors) {
