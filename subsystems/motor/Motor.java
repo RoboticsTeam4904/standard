@@ -52,7 +52,13 @@ public class Motor extends Subsystem implements SpeedController {
 	}
 	
 	public double get() {
-		return motors[0].get();
+		double value = motors[0].get();
+		for (SpeedController motor : motors) {
+			if (value != motor.get()) {
+				throw new Error("Motors not getting at the same speed: " + getName());
+			}
+		}
+		return value;
 	}
 	
 	public void set(double speed) {
