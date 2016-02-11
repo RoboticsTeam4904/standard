@@ -58,6 +58,19 @@ public class MecanumChassis extends Chassis {
 		move2dc(0.0, speed, turnSpeed);
 	}
 	
+	/**
+	 * Calculates the speeds for each motor
+	 * given polar coordinates.
+	 * 
+	 * @param speed
+	 *        The overall speed
+	 * @param angle
+	 *        The angle to travel at
+	 * @param turnSpeed
+	 *        The rate of rotation
+	 * @return
+	 * 		An array {frontLeftSpeed, frontRightSpeed, backLeftSpeed, backRightSpeed}
+	 */
 	public static double[] calculateWheels(double speed, double angle, double turnSpeed) {
 		// System.out.println("Angle: " + angle);
 		// System.out.println("Speed: " + speed);
@@ -79,6 +92,17 @@ public class MecanumChassis extends Chassis {
 		return new double[] {frontLeft, frontRight, backLeft, backRight};
 	}
 	
+	/**
+	 * Converts an x and y coordinate
+	 * into an array of speed, angle
+	 * 
+	 * @param x
+	 *        The x coordinate
+	 * @param y
+	 *        The y coordinate
+	 * @return
+	 * 		An array {speed, angle}
+	 */
 	public static double[] cartesianToPolar(double x, double y) {
 		double speed = Math.sqrt(x * x + y * y);
 		double angle = Math.atan2(y, x);
