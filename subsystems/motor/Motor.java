@@ -29,6 +29,7 @@ public class Motor extends Subsystem implements SpeedController {
 			if (motor instanceof CANSpeedController && ((CANSpeedController) motor).getControlMode().getValue() != 0) { // 0 is hopefully normal motor controller mode (Like CANTalon's PercentVBus mode)
 				throw new StrangeCANSpeedControllerModeRuntimeException(this);
 			}
+			motor.set(0); // Start all motors with 0 speed.
 		}
 		setInverted(isInverted);
 	}
@@ -66,26 +67,10 @@ public class Motor extends Subsystem implements SpeedController {
 		setDefaultCommand(new MotorIdle(this));
 	}
 	
-	/**
-	 * Ensure that all SpeedController objects report the same speed from motor.get().
-	 * Otherwise, throw an UnsynchronizedSpeedControllerRuntimeException.
-	 * This will fail if you mix CANTalons in weird modes with normal motor controllers, so don't.
-	 */
-	protected void ensureSafety() {
-		double value = motors[0].get();
-		for (SpeedController motor : motors) {
-			if (value != motor.get()) {
-				disable();
-				throw new UnsynchronizedSpeedControllerRuntimeException(this);
-			}
-		}
-	}
-	
 	@Override
 	public void pidWrite(double speed) {
-		ensureSafety();
-		lastSpeed = speed;
 		double newSpeed = speedModifier.modify(speed);
+		lastSpeed = newSpeed;
 		for (SpeedController motor : motors) {
 			motor.pidWrite(newSpeed);
 		}
@@ -105,7 +90,6 @@ public class Motor extends Subsystem implements SpeedController {
 	 */
 	@Override
 	public double get() {
-		ensureSafety();
 		return lastSpeed;
 	}
 	
@@ -117,9 +101,8 @@ public class Motor extends Subsystem implements SpeedController {
 	 */
 	@Override
 	public void set(double speed) {
-		ensureSafety();
-		lastSpeed = speed;
 		double newSpeed = speedModifier.modify(speed);
+		lastSpeed = newSpeed;
 		for (SpeedController motor : motors) {
 			motor.set(newSpeed);
 		}
@@ -139,9 +122,8 @@ public class Motor extends Subsystem implements SpeedController {
 	@Deprecated
 	@Override
 	public void set(double speed, byte syncGroup) {
-		ensureSafety();
-		lastSpeed = speed;
 		double newSpeed = speedModifier.modify(speed);
+		lastSpeed = newSpeed;
 		for (SpeedController motor : motors) {
 			motor.set(newSpeed, syncGroup);
 		}
