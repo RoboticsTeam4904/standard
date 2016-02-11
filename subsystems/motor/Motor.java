@@ -21,7 +21,7 @@ public class Motor extends Subsystem implements SpeedController {
 	
 	public Motor(String name, boolean isInverted, SpeedModifier speedModifier, SpeedController... motors) {
 		super(name);
-		this.isInverted = isInverted;
+		this.isInverted = false;
 		this.speedModifier = speedModifier;
 		this.motors = motors;
 		this.lastSpeed = 0;
