@@ -33,6 +33,11 @@ public abstract class Chassis extends Subsystem {
 		setDefaultCommand(new ChassisIdle(this));
 	}
 	
+	/**
+	 * returns the number of wheels
+	 * 
+	 * @return
+	 */
 	public int getNumberWheels() {
 		return numberWheels;
 	}
