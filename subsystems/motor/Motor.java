@@ -2,19 +2,22 @@ package org.usfirst.frc4904.standard.subsystems.motor;
 
 
 import org.usfirst.frc4904.standard.commands.motor.MotorIdle;
-import org.usfirst.frc4904.standard.subsystems.motor.speedmodifiers.Linear;
+import org.usfirst.frc4904.standard.subsystems.motor.speedmodifiers.IdentityModifier;
 import org.usfirst.frc4904.standard.subsystems.motor.speedmodifiers.SpeedModifier;
+import edu.wpi.first.wpilibj.CANSpeedController;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 /**
- * A speed controller that
- * is also a subsystem.
- *
+ * A class that wraps around a variable number of SpeedController objects to give them Subsystem functionality.
+ * Keeps the substituent SpeedController objects in sync.
+ * Can also modify their speed with a SpeedModifier for things like scaling or brownout protection.
  */
 public class Motor extends Subsystem implements SpeedController {
 	protected final SpeedController[] motors;
 	protected final SpeedModifier speedModifier;
+	protected boolean isInverted;
+	protected double lastSpeed;
 	
 	/**
 	 * A SpeedController Subsystem.
@@ -28,22 +31,23 @@ public class Motor extends Subsystem implements SpeedController {
 	 *        brownouts.
 	 * @param motors
 	 */
-	public Motor(String name, boolean inverted, SpeedModifier slopeController, SpeedController... motors) {
+	public Motor(String name, boolean inverted, SpeedModifier speedModifier, SpeedController... motors) {
 		super(name);
+		this.isInverted = false;
+		this.speedModifier = speedModifier;
 		this.motors = motors;
-		this.speedModifier = slopeController;
-		setInverted(inverted);
+		this.lastSpeed = 0;
+		for (SpeedController motor : motors) {
+			if (motor instanceof CANSpeedController && ((CANSpeedController) motor).getControlMode().getValue() != 0) { // 0 is hopefully normal motor controller mode (Like CANTalon's PercentVBus mode)
+				throw new StrangeCANSpeedControllerModeRuntimeException(this);
+			}
+			motor.set(0); // Start all motors with 0 speed.
+		}
+		setInverted(isInverted);
 	}
 	
-	/**
-	 * A SpeedController Subsystem.
-	 * 
-	 * @param name
-	 * @param inverted
-	 * @param motors
-	 */
-	public Motor(String name, boolean inverted, SpeedController... motors) {
-		this(name, inverted, new Linear(), motors);
+	public Motor(String name, boolean isInverted, SpeedController... motors) {
+		this(name, isInverted, new IdentityModifier(), motors);
 	}
 	
 	/**
@@ -68,20 +72,39 @@ public class Motor extends Subsystem implements SpeedController {
 	 * @param motors
 	 */
 	public Motor(String name, SpeedController... motors) {
-		this(name, false, new Linear(), motors);
+		this(name, false, new IdentityModifier(), motors);
 	}
 	
+	public Motor(boolean isInverted, SpeedModifier speedModifier, SpeedController... motors) {
+		this("Motor", isInverted, speedModifier, motors);
+	}
+	
+	public Motor(boolean isInverted, SpeedController... motors) {
+		this("Motor", isInverted, motors);
+	}
+	
+	public Motor(SpeedModifier slopeController, SpeedController... motors) {
+		this("Motor", slopeController, motors);
+	}
+	
+	public Motor(SpeedController... motors) {
+		this("Motor", motors);
+	}
+	
+	@Override
 	protected void initDefaultCommand() {
 		setDefaultCommand(new MotorIdle(this));
 	}
 	
+	@Override
 	public void pidWrite(double speed) {
-		set(speed);
+		double newSpeed = speedModifier.modify(speed);
+		lastSpeed = newSpeed;
+		for (SpeedController motor : motors) {
+			motor.pidWrite(newSpeed);
+		}
 	}
 	
-	/**
-	 * Disables motors
-	 */
 	public void disable() {
 		for (SpeedController motor : motors) {
 			motor.disable();
@@ -89,49 +112,92 @@ public class Motor extends Subsystem implements SpeedController {
 	}
 	
 	/**
-	 * Gets speed of motors
+	 * Get the most recently set speed.
+	 * 
+	 * @return The most recently set speed between-1.0 and 1.0.
 	 */
+	@Override
 	public double get() {
-		return motors[0].get();
+		return lastSpeed;
 	}
 	
 	/**
-	 * Sets speed of motors
+	 * Set the motor speed.
+	 * Passes through SpeedModifier.
+	 * 
+	 * @param speed
+	 *        The speed to set. Value should be between -1.0 and 1.0.
 	 */
+	@Override
 	public void set(double speed) {
-		speed = speedModifier.modify(speed);
+		double newSpeed = speedModifier.modify(speed);
+		lastSpeed = newSpeed;
 		for (SpeedController motor : motors) {
-			motor.set(speed);
+			motor.set(newSpeed);
 		}
 	}
 	
 	/**
-	 * @deprecated
+	 * Set the motor speed. Passes through SpeedModifier.
+	 *
+	 * @deprecated For compatibility with CANJaguar. Use set(double speed)
+	 * 			
+	 * @param speed
+	 *        The speed to set. Value should be between -1.0 and 1.0.
+	 * @param syncGroup
+	 *        On CANJaguar, the update group to add this Set() to, pending
+	 *        UpdateSyncGroup(). If 0, update immediately.
 	 */
-	public void set(double speed, byte arg1) {
-		set(speed);
+	@Deprecated
+	@Override
+	public void set(double speed, byte syncGroup) {
+		double newSpeed = speedModifier.modify(speed);
+		lastSpeed = newSpeed;
+		for (SpeedController motor : motors) {
+			motor.set(newSpeed, syncGroup);
+		}
 	}
 	
 	/**
-	 * Are the motors inverted?
+	 * Get whether this entire motor is inverted.
+	 *
+	 * @return isInverted
+	 *         The state of inversion, true is inverted.
 	 */
 	public boolean getInverted() {
-		return motors[0].getInverted();
+		return isInverted;
 	}
 	
 	/**
-	 * Inverts the motors
-	 * 
-	 * If true, inverts each motor individually
-	 * If false, does not change motors
-	 * This is necessary for gearboxes with
-	 * opposite turning motors.
+	 * Sets the direction inversion of all motor substituents.
+	 * This respects the original inversion state of each SpeedController when constructed, and will only
+	 * invert SpeedControllers if this.getInverted() != the input.
+	 *
+	 * @param isInverted
+	 *        The state of inversion, true is inverted.
 	 */
-	public void setInverted(boolean inverted) {
-		for (SpeedController motor : motors) {
-			if (inverted) {
+	public void setInverted(boolean isInverted) {
+		if (getInverted() != isInverted) {
+			for (SpeedController motor : motors) {
 				motor.setInverted(!motor.getInverted());
 			}
+		}
+		this.isInverted = isInverted;
+	}
+	
+	protected class UnsynchronizedSpeedControllerRuntimeException extends RuntimeException {
+		private static final long serialVersionUID = 8688590919561059584L;
+		
+		public UnsynchronizedSpeedControllerRuntimeException(Motor motor) {
+			super(motor.getName() + "'s SpeedControllers report different speeds");
+		}
+	}
+	
+	protected class StrangeCANSpeedControllerModeRuntimeException extends RuntimeException {
+		private static final long serialVersionUID = -539917227288371271L;
+		
+		public StrangeCANSpeedControllerModeRuntimeException(Motor motor) {
+			super("One of " + motor.getName() + "'s SpeedControllers is a CANSpeedController with a non-zero mode. This might mess up it's .get(), so Motor cannot verify safety.");
 		}
 	}
 }

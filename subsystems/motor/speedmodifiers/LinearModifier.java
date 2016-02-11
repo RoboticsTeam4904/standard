@@ -1,14 +1,14 @@
 package org.usfirst.frc4904.standard.subsystems.motor.speedmodifiers;
 
 
-public class Linear implements SpeedModifier {
-	private final double scale;
+public class LinearModifier implements SpeedModifier {
+	protected final double scale;
 	
-	public Linear(double scale) {
+	public LinearModifier(double scale) {
 		this.scale = scale;
 	}
 	
-	public Linear() {
+	public LinearModifier() {
 		this(1.0);
 	}
 	
