@@ -80,6 +80,10 @@ public class CANEncoder extends CANSensor implements CustomEncoder {
 		return super.read(0); // TODO: what mode numbers will be position and direction?
 	}
 	
+	/**
+	 * Returns the scaled distance
+	 * rotated by the encoder.
+	 */
 	public double getDistance() {
 		if (reverseDirection) {
 			return distancePerPulse * (double) super.read(0) * -1.0;
