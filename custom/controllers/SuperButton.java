@@ -17,24 +17,16 @@ public class SuperButton extends JoystickButton {
 	}
 	
 	/**
-	 * Returns true the first time
-	 * the button is pressed and
-	 * the function is called.
+	 * Returns true the first time the button is pressed and the function is called.
+	 * 
+	 * @return whether the button was pressed since the last call to this function
 	 */
-	public boolean get() {
+	public boolean getFirstPressed() {
 		boolean buttonVal = super.get();
 		if (currentState != buttonVal) {
 			currentState = buttonVal;
 			return buttonVal;
 		}
 		return false;
-	}
-	
-	/**
-	 * Returns true whenever the button
-	 * is depressed.
-	 */
-	public boolean getRaw() {
-		return super.get();
 	}
 }
