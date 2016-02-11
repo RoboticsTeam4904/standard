@@ -7,7 +7,7 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 
 public class RunUnless extends CommandGroup {
 	protected final Command command;
-	protected final BooleanInterface[] booleanInterfaces;
+	protected final RunIfLazyBooleanProvider[] booleanProviders;
 	
 	/**
 	 * Run a command based on a conditional callback.
@@ -21,10 +21,10 @@ public class RunUnless extends CommandGroup {
 	 * @param bi
 	 *        A condition function using Java 8's colon syntax (will run unless the condition is true)
 	 */
-	public RunUnless(Command command, BooleanInterface... booleanInterfaces) {
+	public RunUnless(Command command, RunIfLazyBooleanProvider... booleanProviders) {
 		super("RunUnless[" + command.getName() + "]");
 		this.command = command;
-		this.booleanInterfaces = booleanInterfaces;
+		this.booleanProviders = booleanProviders;
 	}
 	
 	@Override
@@ -34,8 +34,8 @@ public class RunUnless extends CommandGroup {
 	
 	@Override
 	protected void initialize() {
-		for (BooleanInterface booleanInterface : booleanInterfaces) {
-			if (booleanInterface.evaluate()) {
+		for (RunIfLazyBooleanProvider booleanProvider : booleanProviders) {
+			if (booleanProvider.evaluate()) {
 				return;
 			}
 		}

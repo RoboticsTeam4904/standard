@@ -7,9 +7,9 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 public class RunIfElse extends Command {
 	private final Command ifCommand;
 	private final Command elseCommand;
-	private final BooleanInterface condition;
+	private final RunIfLazyBooleanProvider condition;
 	
-	public RunIfElse(Command ifCommand, Command elseCommand, BooleanInterface condition) {
+	public RunIfElse(Command ifCommand, Command elseCommand, RunIfLazyBooleanProvider condition) {
 		super("BranchIf[" + ifCommand.getName() + "]Else[" + elseCommand.getName() + "]");
 		this.ifCommand = ifCommand;
 		this.elseCommand = elseCommand;
