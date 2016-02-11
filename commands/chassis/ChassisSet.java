@@ -11,11 +11,12 @@ public class ChassisSet extends Command implements ChassisController {
 	private double y;
 	private double turn;
 	
-	public ChassisSet(Chassis chassis, double x, double y, double turn) {
+	public ChassisSet(Chassis chassis, double x, double y, double turn, double timeout) {
 		move = new ChassisMove(chassis, this);
 		this.x = x;
 		this.y = y;
 		this.turn = turn;
+		setTimeout(timeout);
 	}
 	
 	public double getX() {
@@ -38,7 +39,7 @@ public class ChassisSet extends Command implements ChassisController {
 	protected void execute() {}
 	
 	protected boolean isFinished() {
-		return false;
+		return move.isFinished() || isTimedOut();
 	}
 	
 	protected void end() {
