@@ -1,8 +1,10 @@
 package org.usfirst.frc4904.standard.custom.controllers;
 
 
+import org.usfirst.frc4904.standard.commands.Cancel;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
+import edu.wpi.first.wpilibj.command.Command;
 
 /**
  * A button with better toggle detection
@@ -28,5 +30,19 @@ public class SuperButton extends JoystickButton {
 			return buttonVal;
 		}
 		return false;
+	}
+	
+	public void cancelWhenReleased(Command command) {
+		whenReleased(new Cancel(command));
+	}
+	
+	public void onlyWhileHeld(Command command) {
+		whenPressed(command);
+		cancelWhenReleased(command);
+	}
+	
+	public void onlyWhileReleased(Command command) {
+		whenReleased(command);
+		cancelWhenPressed(command);
 	}
 }
