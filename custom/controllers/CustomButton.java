@@ -10,10 +10,10 @@ import edu.wpi.first.wpilibj.command.Command;
  * A button with better toggle detection
  *
  */
-public class SuperButton extends JoystickButton {
+public class CustomButton extends JoystickButton {
 	private boolean currentState;
 	
-	public SuperButton(GenericHID joystick, int buttonNumber) {
+	public CustomButton(GenericHID joystick, int buttonNumber) {
 		super(joystick, buttonNumber);
 		currentState = false;
 	}
