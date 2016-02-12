@@ -71,14 +71,14 @@ public class XboxController extends Joystick {
 	public final Trigger lt;
 	public final Trigger rt;
 	public final DirectionalPad dPad;
-	public final Button a;
-	public final Button b;
-	public final Button x;
-	public final Button y;
-	public final Button lb;
-	public final Button rb;
-	public final Button back;
-	public final Button start;
+	public Button a;
+	public Button b;
+	public Button x;
+	public Button y;
+	public Button lb;
+	public Button rb;
+	public Button back;
+	public Button start;
 	
 	/**
 	 * (Constructor #1)
