@@ -113,8 +113,8 @@ public class Motor extends Subsystem implements SpeedController {
 	
 	/**
 	 * Get the most recently set speed.
-	 * 
-	 * @return The most recently set speed between-1.0 and 1.0.
+	 *
+	 * @return The most recently set speed between -1.0 and 1.0.
 	 */
 	@Override
 	public double get() {
@@ -122,8 +122,7 @@ public class Motor extends Subsystem implements SpeedController {
 	}
 	
 	/**
-	 * Set the motor speed.
-	 * Passes through SpeedModifier.
+	 * Set the motor speed. Passes through SpeedModifier.
 	 * 
 	 * @param speed
 	 *        The speed to set. Value should be between -1.0 and 1.0.
