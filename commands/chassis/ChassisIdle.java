@@ -15,8 +15,6 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
  *
  */
 public class ChassisIdle extends CommandGroup {
-	private final Chassis chassis;
-	
 	/**
 	 * 
 	 * @param chassis
@@ -24,7 +22,6 @@ public class ChassisIdle extends CommandGroup {
 	 */
 	public ChassisIdle(Chassis chassis) {
 		super("ChassisIdle");
-		this.chassis = chassis;
 		requires(chassis);
 		LogKitten.v("ChassisIdle created for " + Integer.toString(chassis.getNumberWheels()) + " wheels");
 		setInterruptible(true); // default command
