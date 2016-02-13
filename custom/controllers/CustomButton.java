@@ -54,8 +54,7 @@ public class CustomButton extends JoystickButton {
 	}
 	
 	/**
-	 * Runs a command after a button is released the first
-	 * time (and every time after that).
+	 * Runs a command unless a button is held.
 	 * 
 	 * @param command
 	 *        The command to be run.
