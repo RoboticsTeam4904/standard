@@ -83,6 +83,13 @@ public class Motor extends Subsystem implements SpeedController {
 		}
 	}
 	
+	@Override
+	public void stopMotor() {
+		for (SpeedController motor : motors) {
+			motor.stopMotor();
+		}
+	}
+	
 	/**
 	 * Get the most recently set speed.
 	 *
