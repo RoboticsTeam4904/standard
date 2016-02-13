@@ -4,7 +4,6 @@ package org.usfirst.frc4904.standard.custom.controllers;
 /* Imports */
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.Button;
-import edu.wpi.first.wpilibj.buttons.JoystickButton;
 
 /**
  * [class] XboxController
@@ -71,14 +70,14 @@ public class XboxController extends Joystick {
 	public final Trigger lt;
 	public final Trigger rt;
 	public final DirectionalPad dPad;
-	public Button a;
-	public Button b;
-	public Button x;
-	public Button y;
-	public Button lb;
-	public Button rb;
-	public Button back;
-	public Button start;
+	public CustomButton a;
+	public CustomButton b;
+	public CustomButton x;
+	public CustomButton y;
+	public CustomButton lb;
+	public CustomButton rb;
+	public CustomButton back;
+	public CustomButton start;
 	
 	/**
 	 * (Constructor #1)
@@ -97,14 +96,14 @@ public class XboxController extends Joystick {
 		this.dPad = new DirectionalPad(this.controller);
 		this.lt = new Trigger(this.controller, HAND.LEFT);
 		this.rt = new Trigger(this.controller, HAND.RIGHT);
-		this.a = new JoystickButton(this.controller, A_BUTTON_ID);
-		this.b = new JoystickButton(this.controller, B_BUTTON_ID);
-		this.x = new JoystickButton(this.controller, X_BUTTON_ID);
-		this.y = new JoystickButton(this.controller, Y_BUTTON_ID);
-		this.lb = new JoystickButton(this.controller, LB_BUTTON_ID);
-		this.rb = new JoystickButton(this.controller, RB_BUTTON_ID);
-		this.back = new JoystickButton(this.controller, BACK_BUTTON_ID);
-		this.start = new JoystickButton(this.controller, START_BUTTON_ID);
+		this.a = new CustomButton(this.controller, A_BUTTON_ID);
+		this.b = new CustomButton(this.controller, B_BUTTON_ID);
+		this.x = new CustomButton(this.controller, X_BUTTON_ID);
+		this.y = new CustomButton(this.controller, Y_BUTTON_ID);
+		this.lb = new CustomButton(this.controller, LB_BUTTON_ID);
+		this.rb = new CustomButton(this.controller, RB_BUTTON_ID);
+		this.back = new CustomButton(this.controller, BACK_BUTTON_ID);
+		this.start = new CustomButton(this.controller, START_BUTTON_ID);
 	}
 	
 	/**
