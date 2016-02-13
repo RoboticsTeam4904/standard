@@ -4,37 +4,36 @@ package org.usfirst.frc4904.standard.custom.controllers;
 /* Imports */
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.Button;
-import edu.wpi.first.wpilibj.buttons.JoystickButton;
 
 /**
  * [class] XboxController
  * 
  * @author AJ Granowski & 4624 Owatonna Robotics
  * @version 2015
- * 
+ * 			
  *          This class wraps around the Joystick class in order to make
  *          working with Xbox360 controllers less of a pain.
- * 
+ * 			
  *          The values from this class can be used in two ways. One could
  *          either check each Button every cycle with .get(), or they
  *          could call commands directly from the Buttons with .whenPressed()
- * 
+ * 			
  *          USAGE:
  *          // Initialization
  *          myXboxController = new XboxController( <port the controller is on (starts at 0)> );
  *          myXboxController.leftStick.setThumbstickDeadZone( .2 ); // Optional. See code below for defaults.
- * 
+ * 			
  *          // Using buttons
  *          myXboxController.a.whenPressed( new MyCommand() );
  *          myXboxController.lb.toggleWhenPressed( new MyCommand() );
  *          myXboxController.rightStick.whenPressed( new MyCommand() );
- * 
+ * 			
  *          // Getting values directly
  *          if( myXboxController.leftStick.getY() > .4 ) ...
- * 
+ * 			
  *          // Support of legacy methods (NOTE: These values are straight from the Joystick class. No deadzone stuff or anything)
  *          if( xboxController.getX() > .4 ) ...
- * 
+ * 			
  *          NOTES:
  *          Although I have confidence that this will work, not everything has been tested.
  *          This should work for the 2015 WPILib. The mappings of axis's and buttons may change in later years.
@@ -42,43 +41,43 @@ import edu.wpi.first.wpilibj.buttons.JoystickButton;
  */
 public class XboxController extends Joystick {
 	/* Default Values */
-	private static final double DEFAULT_THUMBSTICK_DEADZONE = 0.1; // Jiggle room for the thumbsticks
-	private static final double DEFAULT_TRIGGER_DEADZONE = 0.01; // Jiggle room for the triggers
-	private static final double DEFAULT_TRIGGER_SENSITIVITY = 0.6; // If the trigger is beyond this limit, say it has been pressed
+	protected static final double DEFAULT_THUMBSTICK_DEADZONE = 0.1; // Jiggle room for the thumbsticks
+	protected static final double DEFAULT_TRIGGER_DEADZONE = 0.01; // Jiggle room for the triggers
+	protected static final double DEFAULT_TRIGGER_SENSITIVITY = 0.6; // If the trigger is beyond this limit, say it has been pressed
 	/* Button Mappings */
-	private static final int A_BUTTON_ID = 1;
-	private static final int B_BUTTON_ID = 2;
-	private static final int X_BUTTON_ID = 3;
-	private static final int Y_BUTTON_ID = 4;
-	private static final int LB_BUTTON_ID = 5;
-	private static final int RB_BUTTON_ID = 6;
-	private static final int BACK_BUTTON_ID = 7;
-	private static final int START_BUTTON_ID = 8;
-	private static final int LEFT_THUMBSTIKC_BUTTON_ID = 9;
-	private static final int RIGHT_THUMBSTICK_BUTTON_ID = 10;
+	protected static final int A_BUTTON_ID = 1;
+	protected static final int B_BUTTON_ID = 2;
+	protected static final int X_BUTTON_ID = 3;
+	protected static final int Y_BUTTON_ID = 4;
+	protected static final int LB_BUTTON_ID = 5;
+	protected static final int RB_BUTTON_ID = 6;
+	protected static final int BACK_BUTTON_ID = 7;
+	protected static final int START_BUTTON_ID = 8;
+	protected static final int LEFT_THUMBSTIKC_BUTTON_ID = 9;
+	protected static final int RIGHT_THUMBSTICK_BUTTON_ID = 10;
 	/* Axis Mappings */
-	private static final int LEFT_THUMBSTICK_X_AXIS_ID = 0;
-	private static final int LEFT_THUMBSTICK_Y_AXIS_ID = 1;
-	private static final int LEFT_TRIGGER_AXIS_ID = 2;
-	private static final int RIGHT_TRIGGER_AXIS_ID = 3;
-	private static final int RIGHT_THUMBSTICK_X_AXIS_ID = 4;
-	private static final int RIGHT_THUMBSTICK_Y_AXIS_ID = 5;
+	protected static final int LEFT_THUMBSTICK_X_AXIS_ID = 0;
+	protected static final int LEFT_THUMBSTICK_Y_AXIS_ID = 1;
+	protected static final int LEFT_TRIGGER_AXIS_ID = 2;
+	protected static final int RIGHT_TRIGGER_AXIS_ID = 3;
+	protected static final int RIGHT_THUMBSTICK_X_AXIS_ID = 4;
+	protected static final int RIGHT_THUMBSTICK_Y_AXIS_ID = 5;
 	/* Instance Values */
 	private final int port;
-	private final Joystick controller;
+	protected final Joystick controller;
 	public final Thumbstick leftStick;
 	public final Thumbstick rightStick;
 	public final Trigger lt;
 	public final Trigger rt;
 	public final DirectionalPad dPad;
-	public final Button a;
-	public final Button b;
-	public final Button x;
-	public final Button y;
-	public final Button lb;
-	public final Button rb;
-	public final Button back;
-	public final Button start;
+	public CustomButton a;
+	public CustomButton b;
+	public CustomButton x;
+	public CustomButton y;
+	public CustomButton lb;
+	public CustomButton rb;
+	public CustomButton back;
+	public CustomButton start;
 	
 	/**
 	 * (Constructor #1)
@@ -97,14 +96,14 @@ public class XboxController extends Joystick {
 		this.dPad = new DirectionalPad(this.controller);
 		this.lt = new Trigger(this.controller, HAND.LEFT);
 		this.rt = new Trigger(this.controller, HAND.RIGHT);
-		this.a = new JoystickButton(this.controller, A_BUTTON_ID);
-		this.b = new JoystickButton(this.controller, B_BUTTON_ID);
-		this.x = new JoystickButton(this.controller, X_BUTTON_ID);
-		this.y = new JoystickButton(this.controller, Y_BUTTON_ID);
-		this.lb = new JoystickButton(this.controller, LB_BUTTON_ID);
-		this.rb = new JoystickButton(this.controller, RB_BUTTON_ID);
-		this.back = new JoystickButton(this.controller, BACK_BUTTON_ID);
-		this.start = new JoystickButton(this.controller, START_BUTTON_ID);
+		this.a = new CustomButton(this.controller, A_BUTTON_ID);
+		this.b = new CustomButton(this.controller, B_BUTTON_ID);
+		this.x = new CustomButton(this.controller, X_BUTTON_ID);
+		this.y = new CustomButton(this.controller, Y_BUTTON_ID);
+		this.lb = new CustomButton(this.controller, LB_BUTTON_ID);
+		this.rb = new CustomButton(this.controller, RB_BUTTON_ID);
+		this.back = new CustomButton(this.controller, BACK_BUTTON_ID);
+		this.start = new CustomButton(this.controller, START_BUTTON_ID);
 	}
 	
 	/**
@@ -415,7 +414,7 @@ public class XboxController extends Joystick {
 		 * getHand
 		 * 
 		 * @return Trigger hand
-		 * 
+		 * 		
 		 *         See which side of the controller this trigger is
 		 */
 		public HAND getHand() {
