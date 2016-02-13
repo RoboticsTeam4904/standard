@@ -32,16 +32,36 @@ public class CustomButton extends JoystickButton {
 		return false;
 	}
 	
+	/**
+	 * Cancels a command when the button is released
+	 * 
+	 * @param command
+	 *        The command to be cancelled.
+	 */
 	public void cancelWhenReleased(Command command) {
 		whenReleased(new Cancel(command));
 	}
 	
+	/**
+	 * Run a command once when a button is held.
+	 * 
+	 * @param command
+	 *        The command to be run
+	 */
 	public void onlyWhileHeld(Command command) {
 		whenPressed(command);
 		cancelWhenReleased(command);
 	}
 	
+	/**
+	 * Runs a command after a button is released the first
+	 * time (and every time after that).
+	 * 
+	 * @param command
+	 *        The command to be run.
+	 */
 	public void onlyWhileReleased(Command command) {
+		command.start();
 		whenReleased(command);
 		cancelWhenPressed(command);
 	}
