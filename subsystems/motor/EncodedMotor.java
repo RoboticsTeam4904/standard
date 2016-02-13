@@ -1,8 +1,7 @@
-package org.usfirst.frc4904.standard.subsystems.motor.sensormotor;
+package org.usfirst.frc4904.standard.subsystems.motor;
 
 
 import org.usfirst.frc4904.standard.custom.sensors.CustomEncoder;
-import org.usfirst.frc4904.standard.subsystems.motor.SensorMotor;
 import org.usfirst.frc4904.standard.subsystems.motor.speedmodifiers.IdentityModifier;
 import org.usfirst.frc4904.standard.subsystems.motor.speedmodifiers.SpeedModifier;
 import edu.wpi.first.wpilibj.SpeedController;
