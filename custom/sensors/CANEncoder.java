@@ -17,6 +17,7 @@ public class CANEncoder extends CANSensor implements CustomEncoder {
 		super(name, id, 2);
 		this.reverseDirection = reverseDirection;
 		this.distancePerPulse = distancePerPulse;
+		setPIDSourceType(PIDSourceType.kDisplacement);
 	}
 	
 	public CANEncoder(String name, int id, boolean reverseDirection) {
