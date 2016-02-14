@@ -118,7 +118,7 @@ public class CANEncoder extends CANSensor implements CustomEncoder {
 	 * Resets the distance traveled for the encoder
 	 */
 	public void reset() {
-		super.write(new byte[] {0x72, 0x65, 0x73, 0x65, 0x74, 0x65, 0x6e, 63}); // resetenc
+		super.write(new byte[] {0x72, 0x65, 0x73, 0x65, 0x74, 0x65, 0x6e, 0x63}); // resetenc
 		super.read();
 	}
 }
