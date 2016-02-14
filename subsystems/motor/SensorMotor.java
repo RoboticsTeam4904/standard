@@ -12,6 +12,7 @@ public class SensorMotor extends Motor {
 	protected final PIDController pid;
 	private boolean enablePID;
 	protected double position;
+	protected double inputScale;
 	protected long lastUpdate;
 	protected final PIDSource sensor;
 	
@@ -20,6 +21,7 @@ public class SensorMotor extends Motor {
 		pid = new PIDController(0.0, 0.0, 0.0, sensor, this);
 		pid.setOutputRange(-1.0, 1.0);
 		this.sensor = sensor;
+		this.inputScale = inputScale;
 		enablePID = false;
 	}
 	
@@ -90,7 +92,7 @@ public class SensorMotor extends Motor {
 		position += speed * (System.currentTimeMillis() - lastUpdate);
 		lastUpdate = System.currentTimeMillis();
 		pid.setSetpoint(position);
-		LogKitten.v(Double.toString(pid.getError()) + " " + Double.toString(pid.get()) + " " + Double.toString(pid.getP()), true);
+		LogKitten.v(Double.toString(pid.getError()));
 		if (enablePID) {
 			super.set(pid.get());
 		} else {
@@ -100,7 +102,7 @@ public class SensorMotor extends Motor {
 	
 	@Override
 	public void pidWrite(double speed) {
-		LogKitten.v(Double.toString(speed), true);
+		LogKitten.v(Double.toString(speed));
 		super.set(speed);
 	}
 }
