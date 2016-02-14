@@ -9,7 +9,6 @@ import org.usfirst.frc4904.standard.custom.sensors.PDP;
  * and voltage ramping. This is designed to reduce
  * power consumption (via voltage ramping) and
  * prevent RoboRIO/Ginger brownouts.
- *
  */
 public class AccelerationCap implements SpeedModifier {
 	private double currentSpeed;

@@ -7,7 +7,6 @@ package org.usfirst.frc4904.standard.subsystems.motor.speedmodifiers;
  * constant. This can be used to
  * scale motors, but the motors'
  * range will be reduced.
- *
  */
 public class LinearModifier implements SpeedModifier {
 	protected final double scale;

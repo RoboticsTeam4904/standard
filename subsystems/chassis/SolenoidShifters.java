@@ -59,7 +59,6 @@ public class SolenoidShifters extends Subsystem {
 	 * solenoid shifters. This is based
 	 * on the set state, not a measured
 	 * state.
-	 * 
 	 */
 	public ShiftState getShiftState() {
 		return state;

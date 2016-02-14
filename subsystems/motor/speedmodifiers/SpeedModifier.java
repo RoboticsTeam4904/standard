@@ -9,7 +9,6 @@ package org.usfirst.frc4904.standard.subsystems.motor.speedmodifiers;
  * modifications, such as functions
  * or usage of omnipresent sensors
  * (e.g. the PDP).
- *
  */
 public interface SpeedModifier {
 	/**
