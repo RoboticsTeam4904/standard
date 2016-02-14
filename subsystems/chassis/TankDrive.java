@@ -4,8 +4,8 @@ package org.usfirst.frc4904.standard.subsystems.chassis;
 import org.usfirst.frc4904.standard.subsystems.motor.Motor;
 
 /**
- * Tank drive chassis. Has two sets of wheels,
- * left and right. Can only turn left or right.
+ * Tank drive chassis. Has two sets of wheels, left and right.
+ * Can only turn left or right.
  *
  */
 public class TankDrive extends Chassis {
