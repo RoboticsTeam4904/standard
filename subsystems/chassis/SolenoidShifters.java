@@ -5,6 +5,10 @@ import org.usfirst.frc4904.standard.commands.chassis.ShiftersIdle;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
+/**
+ * A subsystem for storing a set of solenoids for a two-shifter drivetrain.
+ *
+ */
 public class SolenoidShifters extends Subsystem {
 	private final Solenoid leftSolenoidUp;
 	private final Solenoid leftSolenoidDown;
@@ -49,6 +53,12 @@ public class SolenoidShifters extends Subsystem {
 		setDefaultCommand(new ShiftersIdle(this));
 	}
 	
+	/**
+	 * Returns the current state of the
+	 * solenoid shifters. This is based
+	 * on the set state, not a measured
+	 * state.
+	 */
 	public ShiftState getShiftState() {
 		return state;
 	}
