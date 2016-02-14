@@ -2,23 +2,22 @@ package org.usfirst.frc4904.standard.commands.motor;
 
 
 import org.usfirst.frc4904.standard.LogKitten;
-import edu.wpi.first.wpilibj.SpeedController;
+import org.usfirst.frc4904.standard.subsystems.motor.Motor;
 import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.command.Subsystem;
 
 /**
- * Idles the motor (sets speed 0)
+ * Idles the motor (sets speed to 0).
  *
  */
 public class MotorIdle extends Command {
-	private final SpeedController motor;
+	protected final Motor motor;
 	
 	/**
 	 * Constructor.
 	 * 
 	 * @param motor
 	 */
-	public <A extends Subsystem & SpeedController> MotorIdle(A motor) {
+	public MotorIdle(Motor motor) {
 		super("MotorIdle");
 		this.motor = motor;
 		requires(motor);
@@ -26,25 +25,30 @@ public class MotorIdle extends Command {
 		LogKitten.v("MotorIdle created");
 	}
 	
+	@Override
 	protected void initialize() {
 		motor.set(0);
 		LogKitten.v("MotorIdle initialized");
 	}
 	
+	@Override
 	protected void execute() {
 		motor.set(0);
 		LogKitten.d("MotorIdle executing");
 	}
 	
+	@Override
+	protected boolean isFinished() {
+		return false; // default command
+	}
+	
+	@Override
 	protected void end() {
 		LogKitten.v("MotorIdle ended");
 	}
 	
+	@Override
 	protected void interrupted() {
 		LogKitten.w("MotorIdle interupted");
-	}
-	
-	protected boolean isFinished() {
-		return false; // default command
 	}
 }

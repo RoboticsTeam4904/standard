@@ -21,7 +21,7 @@ public class EncodedMotor extends Motor {
 	protected double minimum;
 	
 	public EncodedMotor(String name, SpeedController motor, CustomEncoder encoder, double P, double I, double D, double maximum, double minimum, double distancePerPulse, boolean inverted) {
-		super(name, motor, inverted);
+		super(name, inverted, motor);
 		this.encoder = encoder;
 		this.P = P;
 		this.I = I;
