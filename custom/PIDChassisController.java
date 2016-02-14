@@ -5,7 +5,6 @@ import org.usfirst.frc4904.standard.custom.sensors.NavX;
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.PIDSourceType;
-import edu.wpi.first.wpilibj.SerialPort;
 
 public class PIDChassisController implements ChassisController, PIDOutput {
 	private ChassisController controller;
@@ -16,14 +15,14 @@ public class PIDChassisController implements ChassisController, PIDOutput {
 	private double pidResult;
 	public static PIDController pid;
 	
-	public PIDChassisController(ChassisController controller, double Kp, double Ki, double Kd, double maxDegreesPerSecond) {
+	public PIDChassisController(ChassisController controller, NavX ahrs, double Kp, double Ki, double Kd, double maxDegreesPerSecond) {
 		this.controller = controller;
 		this.maxDegreesPerSecond = maxDegreesPerSecond;
-		ahrs = new NavX(SerialPort.Port.kMXP);
-		ahrs.reset();
-		ahrs.resetDisplacement();
-		ahrs.setPIDSourceType(PIDSourceType.kDisplacement);
-		pid = new PIDController(Kp, Ki, Kd, ahrs, this);
+		this.ahrs = ahrs;
+		this.ahrs.reset();
+		this.ahrs.resetDisplacement();
+		this.ahrs.setPIDSourceType(PIDSourceType.kDisplacement);
+		pid = new PIDController(Kp, Ki, Kd, this.ahrs, this);
 		pid.setInputRange(-180.0f, 180.0f);
 		pid.setOutputRange(-1.0f, 1.0f);
 		pid.setContinuous(true);
