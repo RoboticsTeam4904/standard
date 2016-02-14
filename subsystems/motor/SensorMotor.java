@@ -10,14 +10,17 @@ import edu.wpi.first.wpilibj.SpeedController;
 
 public class SensorMotor extends Motor {
 	protected final PIDController pid;
-	private boolean enablePID = false;
+	private boolean enablePID;
 	protected double position;
 	protected long lastUpdate;
+	protected final PIDSource sensor;
 	
 	public SensorMotor(String name, boolean inverted, SpeedModifier slopeController, PIDSource sensor, SpeedController... motors) {
 		super(name, inverted, slopeController, motors);
 		pid = new PIDController(0.0, 0.0, 0.0, sensor, this);
 		pid.setOutputRange(-1.0, 1.0);
+		this.sensor = sensor;
+		enablePID = false;
 	}
 	
 	public SensorMotor(String name, boolean isInverted, PIDSource sensor, SpeedController... motors) {
@@ -46,6 +49,11 @@ public class SensorMotor extends Motor {
 	
 	public SensorMotor(PIDSource sensor, SpeedController... motors) {
 		this("SensorMotor", sensor, motors);
+	}
+	
+	public void reset() {
+		pid.reset();
+		position = sensor.pidGet();
 	}
 	
 	// TODO this method allows external things to enable() and disable() without our knowledge. We need an alternate solution.
