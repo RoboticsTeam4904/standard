@@ -5,7 +5,7 @@ import edu.wpi.first.wpilibj.PIDSourceType;
 
 /**
  * Encoder over CAN
- * implements CustomEncoder generic encoder class
+ * Implements CustomEncoder generic encoder class
  *
  */
 public class CANEncoder extends CANSensor implements CustomEncoder {
@@ -80,6 +80,9 @@ public class CANEncoder extends CANSensor implements CustomEncoder {
 		return super.read(0); // TODO: what mode numbers will be position and direction?
 	}
 	
+	/**
+	 * Returns the scaled distance rotated by the encoder.
+	 */
 	public double getDistance() {
 		if (reverseDirection) {
 			return distancePerPulse * (double) super.read(0) * -1.0;
@@ -89,8 +92,8 @@ public class CANEncoder extends CANSensor implements CustomEncoder {
 	}
 	
 	/**
-	 * Returns the most recent direction
-	 * of movement (based on the speed)
+	 * Returns the most recent direction of movement
+	 * (based on the speed)
 	 */
 	public boolean getDirection() {
 		return !reverseDirection == (super.read(1) >= 0);
