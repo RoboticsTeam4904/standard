@@ -1,16 +1,16 @@
 package org.usfirst.frc4904.standard.subsystems.motor;
 
 
+import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.subsystems.motor.speedmodifiers.IdentityModifier;
 import org.usfirst.frc4904.standard.subsystems.motor.speedmodifiers.SpeedModifier;
 import edu.wpi.first.wpilibj.PIDController;
-import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.SpeedController;
 
-public class SensorMotor extends Motor implements PIDOutput {
+public class SensorMotor extends Motor {
 	protected final PIDController pid;
-	private boolean enablePID;
+	private boolean enablePID = false;
 	protected double position;
 	protected long lastUpdate;
 	
@@ -77,14 +77,22 @@ public class SensorMotor extends Motor implements PIDOutput {
 		super.set(pid.get());
 	}
 	
+	@Override
 	public void set(double speed) {
 		position += speed * (System.currentTimeMillis() - lastUpdate);
 		lastUpdate = System.currentTimeMillis();
 		pid.setSetpoint(position);
+		LogKitten.v(Double.toString(pid.getError()) + " " + Double.toString(pid.get()) + " " + Double.toString(pid.getP()), true);
 		if (enablePID) {
 			super.set(pid.get());
 		} else {
 			super.set(speed);
 		}
+	}
+	
+	@Override
+	public void pidWrite(double speed) {
+		LogKitten.v(Double.toString(speed), true);
+		super.set(speed);
 	}
 }

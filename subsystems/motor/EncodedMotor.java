@@ -14,6 +14,8 @@ public class EncodedMotor extends SensorMotor {
 	public EncodedMotor(String name, boolean inverted, SpeedModifier speedModifier, CustomEncoder encoder, SpeedController... motor) {
 		super(name, inverted, speedModifier, encoder, motor);
 		pid.setInputRange(-2147483648, 2147483647);
+		pid.setContinuous(false);
+		pid.setAbsoluteTolerance(0.002);
 	}
 	
 	public EncodedMotor(String name, boolean isInverted, CustomEncoder sensor, SpeedController... motors) {
