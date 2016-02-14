@@ -101,9 +101,9 @@ public class CANEncoder extends CANSensor implements CustomEncoder {
 	 */
 	public double getRate() {
 		if (reverseDirection) {
-			return super.read(1) * -1.0;
+			return distancePerPulse * (double) super.read(1) * -1.0;
 		} else {
-			return super.read(1);
+			return distancePerPulse * (double) super.read(1);
 		}
 	}
 	
