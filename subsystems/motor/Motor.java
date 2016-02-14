@@ -181,8 +181,7 @@ public class Motor extends Subsystem implements SpeedController {
 	
 	/**
 	 * Turns off the motor.
-	 * This function uses the underlying
-	 * speed controller's disable implementation.
+	 * This function uses the underlying speed controller's disable implementation.
 	 */
 	@Override
 	public void disable() {

@@ -4,8 +4,9 @@ package org.usfirst.frc4904.standard.subsystems.chassis;
 import org.usfirst.frc4904.standard.subsystems.motor.Motor;
 
 /**
- * Mecanum Chassis. Has one wheel for
- * each corner. Can move in all directions.
+ * Mecanum Chassis.
+ * Has one wheel for each corner.
+ * Can move in all directions.
  *
  */
 public class MecanumChassis extends Chassis {
@@ -59,8 +60,7 @@ public class MecanumChassis extends Chassis {
 	}
 	
 	/**
-	 * Calculates the speeds for each motor
-	 * given polar coordinates.
+	 * Calculates the speeds for each motor given polar coordinates.
 	 * 
 	 * @param speed
 	 *        The overall speed
@@ -72,9 +72,6 @@ public class MecanumChassis extends Chassis {
 	 * 		An array {frontLeftSpeed, frontRightSpeed, backLeftSpeed, backRightSpeed}
 	 */
 	public static double[] calculateWheels(double speed, double angle, double turnSpeed) {
-		// System.out.println("Angle: " + angle);
-		// System.out.println("Speed: " + speed);
-		// System.out.println("Turnspeed: " + turnSpeed);
 		angle -= Math.PI / 4.0; // Shift axes to work with mecanum
 		angle = angle % (Math.PI * 2); // make sure angle makes sense
 		double frontLeft = speed * Math.sin(angle) + turnSpeed;
@@ -93,8 +90,7 @@ public class MecanumChassis extends Chassis {
 	}
 	
 	/**
-	 * Converts an x and y coordinate
-	 * into an array of speed, angle
+	 * Converts an x and y coordinate into an array of speed, angle
 	 * 
 	 * @param x
 	 *        The x coordinate

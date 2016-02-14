@@ -6,16 +6,14 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 
 /**
  * CheckHealth runs a series of health checks.
- * It also includes a reset for all of the
- * health checks.
+ * It also includes a reset for all of the health checks.
  */
 public class CheckHealth extends CommandGroup {
 	private final AbstractHealthCheck[] commands;
 	
 	/**
 	 * CheckHealth runs a series of health checks.
-	 * It also includes a reset for all of the
-	 * health checks.
+	 * It also includes a reset for all of the health checks.
 	 * 
 	 * @param command
 	 *        The health check commands to run

@@ -6,8 +6,7 @@ import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 /**
- * A subsystem for storing a set of solenoids
- * for a two-shifter drivetrain.
+ * A subsystem for storing a set of solenoids for a two-shifter drivetrain.
  *
  */
 public class SolenoidShifters extends Subsystem {

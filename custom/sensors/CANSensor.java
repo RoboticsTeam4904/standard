@@ -40,10 +40,8 @@ public class CANSensor extends CustomCAN {
 	}
 	
 	/**
-	 * Mode determines what signal from the
-	 * CAN node to look for. The first int
-	 * is 0 if the data was returned
-	 * correctly and -1 if no data was returned
+	 * Mode determines what signal from the CAN node to look for. The first int
+	 * is 0 if the data was returned correctly and -1 if no data was returned
 	 * 
 	 * @param mode
 	 * @return
