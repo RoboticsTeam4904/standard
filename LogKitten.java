@@ -4,6 +4,7 @@ package org.usfirst.frc4904.standard;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.Calendar;
 import java.util.Comparator;
 import edu.wpi.first.wpilibj.communication.FRCNetworkCommunicationsLibrary;
@@ -24,6 +25,7 @@ public class LogKitten {
 	private static KittenLevel printLevel = DEFAULT_PRINT_LEVEL;
 	private static KittenLevel dsLevel = DEFAULT_DS_LEVEL;
 	private static String LOG_PATH = "/home/lvuser/logs/";
+	private static String LOG_ALIAS_PATH = LOG_PATH + "recent.log";
 	private static boolean PRINT_MUTE = false;
 	
 	static {
@@ -47,6 +49,17 @@ public class LogKitten {
 		}
 		catch (IOException ioe) {
 			System.out.println("Could not open logfile");
+			ioe.printStackTrace();
+		}
+		File logAlias = new File(LOG_ALIAS_PATH);
+		try {
+			if (logAlias.exists()) {
+				logAlias.delete();
+			}
+			Files.createSymbolicLink(logAlias.toPath(), file.toPath());
+		}
+		catch (IOException ioe) {
+			System.out.println("Could not alias logfile");
 			ioe.printStackTrace();
 		}
 	}
