@@ -4,12 +4,11 @@ package org.usfirst.frc4904.standard.subsystems.motor;
 import org.usfirst.frc4904.standard.subsystems.motor.speedmodifiers.IdentityModifier;
 import org.usfirst.frc4904.standard.subsystems.motor.speedmodifiers.SpeedModifier;
 import edu.wpi.first.wpilibj.PIDSource;
-import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.SpeedController;
 
 public class PositionSensorMotor extends SensorMotor {
 	public PositionSensorMotor(String name, boolean isInverted, SpeedModifier slopeController, PIDSource sensor, SpeedController... motors) {
-		super(name, isInverted, slopeController, sensor, PIDSourceType.kRate, motors);
+		super(name, isInverted, slopeController, sensor, false, motors);
 	}
 	
 	public PositionSensorMotor(String name, boolean isInverted, PIDSource sensor, SpeedController... motors) {

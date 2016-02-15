@@ -11,46 +11,48 @@ import edu.wpi.first.wpilibj.SpeedController;
 
 public abstract class SensorMotor extends Motor {
 	protected final PIDController pid;
+	protected final boolean rateMode;
 	private boolean enablePID;
 	protected double position;
 	protected long lastUpdate;
 	protected final PIDSource sensor;
 	
-	public SensorMotor(String name, boolean inverted, SpeedModifier slopeController, PIDSource sensor, PIDSourceType type, SpeedController... motors) {
+	public SensorMotor(String name, boolean inverted, SpeedModifier slopeController, PIDSource sensor, boolean rateMode, SpeedController... motors) {
 		super(name, inverted, slopeController, motors);
-		sensor.setPIDSourceType(type);
+		sensor.setPIDSourceType(PIDSourceType.kDisplacement);
 		pid = new PIDController(0.0, 0.0, 0.0, sensor, this);
 		pid.setOutputRange(-1.0, 1.0);
 		this.sensor = sensor;
 		enablePID = false;
+		this.rateMode = rateMode;
 	}
 	
-	public SensorMotor(String name, boolean isInverted, PIDSource sensor, PIDSourceType type, SpeedController... motors) {
-		this(name, isInverted, new IdentityModifier(), sensor, type, motors);
+	public SensorMotor(String name, boolean isInverted, PIDSource sensor, boolean rateMode, SpeedController... motors) {
+		this(name, isInverted, new IdentityModifier(), sensor, rateMode, motors);
 	}
 	
-	public SensorMotor(String name, SpeedModifier slopeController, PIDSource sensor, PIDSourceType type, SpeedController... motors) {
-		this(name, false, slopeController, sensor, type, motors);
+	public SensorMotor(String name, SpeedModifier slopeController, PIDSource sensor, boolean rateMode, SpeedController... motors) {
+		this(name, false, slopeController, sensor, rateMode, motors);
 	}
 	
-	public SensorMotor(String name, PIDSource sensor, PIDSourceType type, SpeedController... motors) {
-		this(name, false, new IdentityModifier(), sensor, type, motors);
+	public SensorMotor(String name, PIDSource sensor, boolean rateMode, SpeedController... motors) {
+		this(name, false, new IdentityModifier(), sensor, rateMode, motors);
 	}
 	
-	public SensorMotor(boolean isInverted, SpeedModifier speedModifier, PIDSource sensor, PIDSourceType type, SpeedController... motors) {
-		this("SensorMotor", isInverted, speedModifier, sensor, type, motors);
+	public SensorMotor(boolean isInverted, SpeedModifier speedModifier, PIDSource sensor, boolean rateMode, SpeedController... motors) {
+		this("SensorMotor", isInverted, speedModifier, sensor, rateMode, motors);
 	}
 	
-	public SensorMotor(boolean isInverted, PIDSource sensor, PIDSourceType type, SpeedController... motors) {
-		this("SensorMotor", isInverted, sensor, type, motors);
+	public SensorMotor(boolean isInverted, PIDSource sensor, boolean rateMode, SpeedController... motors) {
+		this("SensorMotor", isInverted, sensor, rateMode, motors);
 	}
 	
-	public SensorMotor(SpeedModifier speedModifier, PIDSource sensor, PIDSourceType type, SpeedController... motors) {
-		this("SensorMotor", speedModifier, sensor, type, motors);
+	public SensorMotor(SpeedModifier speedModifier, PIDSource sensor, boolean rateMode, SpeedController... motors) {
+		this("SensorMotor", speedModifier, sensor, rateMode, motors);
 	}
 	
-	public SensorMotor(PIDSource sensor, PIDSourceType type, SpeedController... motors) {
-		this("SensorMotor", sensor, type, motors);
+	public SensorMotor(PIDSource sensor, boolean rateMode, SpeedController... motors) {
+		this("SensorMotor", sensor, rateMode, motors);
 	}
 	
 	public void reset() {
@@ -60,6 +62,10 @@ public abstract class SensorMotor extends Motor {
 	
 	public void setPID(double P, double I, double D) {
 		pid.setPID(P, I, D);
+	}
+	
+	public void setPIDF(double P, double I, double D, double F) {
+		pid.setPID(P, I, D, F);
 	}
 	
 	public void setInputRange(double minimum, double maximum) {
@@ -79,6 +85,7 @@ public abstract class SensorMotor extends Motor {
 	public void setPosition(double position) {
 		pid.setSetpoint(position);
 		pid.enable();
+		LogKitten.v(position + " " + sensor.pidGet(), true);
 		super.set(pid.get());
 	}
 	
@@ -86,9 +93,13 @@ public abstract class SensorMotor extends Motor {
 	public abstract void set(double speed);
 	
 	public void write(double speed) {
-		LogKitten.v(Double.toString(pid.getError()));
 		if (enablePID) {
-			super.set(pid.get());
+			LogKitten.v(Double.toString(pid.get()), true);
+			if (rateMode) {
+				super.set(pid.get() + speed);
+			} else {
+				super.set(pid.get());
+			}
 		} else {
 			super.set(speed);
 		}
