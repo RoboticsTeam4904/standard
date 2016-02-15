@@ -6,61 +6,56 @@ import org.usfirst.frc4904.standard.subsystems.motor.speedmodifiers.IdentityModi
 import org.usfirst.frc4904.standard.subsystems.motor.speedmodifiers.SpeedModifier;
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDSource;
+import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.SpeedController;
 
-public class SensorMotor extends Motor {
+public abstract class SensorMotor extends Motor {
 	protected final PIDController pid;
 	private boolean enablePID;
 	protected double position;
-	protected double inputScale;
 	protected long lastUpdate;
 	protected final PIDSource sensor;
 	
-	public SensorMotor(String name, boolean inverted, SpeedModifier slopeController, PIDSource sensor, SpeedController... motors) {
+	public SensorMotor(String name, boolean inverted, SpeedModifier slopeController, PIDSource sensor, PIDSourceType type, SpeedController... motors) {
 		super(name, inverted, slopeController, motors);
+		sensor.setPIDSourceType(type);
 		pid = new PIDController(0.0, 0.0, 0.0, sensor, this);
 		pid.setOutputRange(-1.0, 1.0);
 		this.sensor = sensor;
-		this.inputScale = inputScale;
 		enablePID = false;
 	}
 	
-	public SensorMotor(String name, boolean isInverted, PIDSource sensor, SpeedController... motors) {
-		this(name, isInverted, new IdentityModifier(), sensor, motors);
+	public SensorMotor(String name, boolean isInverted, PIDSource sensor, PIDSourceType type, SpeedController... motors) {
+		this(name, isInverted, new IdentityModifier(), sensor, type, motors);
 	}
 	
-	public SensorMotor(String name, SpeedModifier slopeController, PIDSource sensor, SpeedController... motors) {
-		this(name, false, slopeController, sensor, motors);
+	public SensorMotor(String name, SpeedModifier slopeController, PIDSource sensor, PIDSourceType type, SpeedController... motors) {
+		this(name, false, slopeController, sensor, type, motors);
 	}
 	
-	public SensorMotor(String name, PIDSource sensor, SpeedController... motors) {
-		this(name, false, new IdentityModifier(), sensor, motors);
+	public SensorMotor(String name, PIDSource sensor, PIDSourceType type, SpeedController... motors) {
+		this(name, false, new IdentityModifier(), sensor, type, motors);
 	}
 	
-	public SensorMotor(boolean isInverted, SpeedModifier speedModifier, PIDSource sensor, SpeedController... motors) {
-		this("SensorMotor", isInverted, speedModifier, sensor, motors);
+	public SensorMotor(boolean isInverted, SpeedModifier speedModifier, PIDSource sensor, PIDSourceType type, SpeedController... motors) {
+		this("SensorMotor", isInverted, speedModifier, sensor, type, motors);
 	}
 	
-	public SensorMotor(boolean isInverted, PIDSource sensor, SpeedController... motors) {
-		this("SensorMotor", isInverted, sensor, motors);
+	public SensorMotor(boolean isInverted, PIDSource sensor, PIDSourceType type, SpeedController... motors) {
+		this("SensorMotor", isInverted, sensor, type, motors);
 	}
 	
-	public SensorMotor(SpeedModifier speedModifier, PIDSource sensor, SpeedController... motors) {
-		this("SensorMotor", speedModifier, sensor, motors);
+	public SensorMotor(SpeedModifier speedModifier, PIDSource sensor, PIDSourceType type, SpeedController... motors) {
+		this("SensorMotor", speedModifier, sensor, type, motors);
 	}
 	
-	public SensorMotor(PIDSource sensor, SpeedController... motors) {
-		this("SensorMotor", sensor, motors);
+	public SensorMotor(PIDSource sensor, PIDSourceType type, SpeedController... motors) {
+		this("SensorMotor", sensor, type, motors);
 	}
 	
 	public void reset() {
 		pid.reset();
 		position = sensor.pidGet();
-	}
-	
-	// TODO this method allows external things to enable() and disable() without our knowledge. We need an alternate solution.
-	public PIDController getPIDController() {
-		return pid;
 	}
 	
 	public void setPID(double P, double I, double D) {
@@ -88,10 +83,9 @@ public class SensorMotor extends Motor {
 	}
 	
 	@Override
-	public void set(double speed) {
-		position += speed * (System.currentTimeMillis() - lastUpdate);
-		lastUpdate = System.currentTimeMillis();
-		pid.setSetpoint(position);
+	public abstract void set(double speed);
+	
+	public void write(double speed) {
 		LogKitten.v(Double.toString(pid.getError()));
 		if (enablePID) {
 			super.set(pid.get());
