@@ -2,15 +2,15 @@ package org.usfirst.frc4904.standard.subsystems.motor;
 
 
 import org.usfirst.frc4904.standard.LogKitten;
+import org.usfirst.frc4904.standard.custom.CustomPID;
 import org.usfirst.frc4904.standard.subsystems.motor.speedmodifiers.IdentityModifier;
 import org.usfirst.frc4904.standard.subsystems.motor.speedmodifiers.SpeedModifier;
-import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.SpeedController;
 
 public abstract class SensorMotor extends Motor {
-	protected final PIDController pid;
+	protected final CustomPID pid;
 	protected final boolean rateMode;
 	private boolean enablePID;
 	protected double position;
@@ -20,8 +20,7 @@ public abstract class SensorMotor extends Motor {
 	public SensorMotor(String name, boolean inverted, SpeedModifier slopeController, PIDSource sensor, boolean rateMode, SpeedController... motors) {
 		super(name, inverted, slopeController, motors);
 		sensor.setPIDSourceType(PIDSourceType.kDisplacement);
-		pid = new PIDController(0.0, 0.0, 0.0, sensor, this);
-		pid.setOutputRange(-1.0, 1.0);
+		pid = new CustomPID(0.0, 0.0, 0.0, sensor);
 		this.sensor = sensor;
 		enablePID = false;
 		this.rateMode = rateMode;
@@ -68,9 +67,7 @@ public abstract class SensorMotor extends Motor {
 		pid.setPID(P, I, D, F);
 	}
 	
-	public void setInputRange(double minimum, double maximum) {
-		pid.setInputRange(minimum, maximum);
-	}
+	public void setInputRange(double minimum, double maximum) {}
 	
 	public void enablePID() {
 		enablePID = true;

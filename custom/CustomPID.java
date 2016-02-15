@@ -13,6 +13,7 @@ public class CustomPID {
 	protected double totalError;
 	protected double lastError;
 	protected double lastUpdate;
+	protected boolean enable;
 	
 	public CustomPID(double P, double I, double D, double F, PIDSource source) {
 		this.P = P;
@@ -21,6 +22,7 @@ public class CustomPID {
 		this.F = F;
 		this.source = source;
 		this.setpoint = source.pidGet();
+		this.enable = true;
 	}
 	
 	public CustomPID(double P, double I, double D, PIDSource source) {
@@ -33,7 +35,35 @@ public class CustomPID {
 		this.D = D;
 	}
 	
+	public void setPID(double P, double I, double D, double F) {
+		this.P = P;
+		this.I = I;
+		this.D = D;
+		this.F = F;
+	}
+	
+	public void reset() {
+		setpoint = source.pidGet();
+		totalError = 0;
+		lastError = 0;
+	}
+	
+	public void enable() {
+		enable = true;
+	}
+	
+	public void disable() {
+		enable = false;
+	}
+	
+	public void setSetpoint(double setpoint) {
+		this.setpoint = setpoint;
+	}
+	
 	public double get() {
+		if (!enable) {
+			return F * setpoint;
+		}
 		double input = source.pidGet();
 		double error = (setpoint - input);/// ((double) ((System.currentTimeMillis() - lastUpdate)/1000));
 		totalError += error;
