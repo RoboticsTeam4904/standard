@@ -39,7 +39,7 @@ public class Motor extends Subsystem implements SpeedController {
 		this.isInverted = false;
 		this.speedModifier = speedModifier;
 		this.motors = motors;
-		this.lastSpeed = 0;
+		lastSpeed = 0;
 		for (SpeedController motor : motors) {
 			if (motor instanceof CANSpeedController && ((CANSpeedController) motor).getControlMode().getValue() != 0) { // 0 is hopefully normal motor controller mode (Like CANTalon's PercentVBus mode)
 				throw new StrangeCANSpeedControllerModeRuntimeException(this);
@@ -67,48 +67,30 @@ public class Motor extends Subsystem implements SpeedController {
 	}
 	
 	/**
-	 * <<<<<<< HEAD
-	 * A SpeedController Subsystem.
+	 * A class that wraps around a variable number of SpeedController objects to give them Subsystem functionality.
+	 * Can also modify their speed with a SpeedModifier for things like scaling or brownout protection.
 	 * 
 	 * @param name
+	 *        The name for the motor.
 	 * @param slopeController
-	 *        Modifies the relationship between
-	 *        input speed and set speed. Can also
-	 *        regulate set speed to prevent
-	 *        brownouts.
-	 * @param motors
-	 *        =======
-	 *        A class that wraps around a variable number of SpeedController objects to give them Subsystem functionality.
-	 *        Can also modify their speed with a SpeedModifier for things like scaling or brownout protection.
-	 * 		
-	 * @param name
-	 *        The name for the motor
-	 * @param speedModifier
-	 *        A SpeedModifier changes the input to every motor based on some factor. The default is an IdentityModifier,
-	 *        which does not affect anything.
+	 *        A SpeedModifier changes the input to every motor based on some factor.
+	 *        The default is an IdentityModifier, which does not affect anything.
+	 *        Can also regulate set speed to prevent brownouts (if you use AccelerationCap).
 	 * @param motors
 	 *        The SpeedControllers in this subsystem. Can be a single SpeedController or multiple SpeedControllers.
-	 *        >>>>>>> master
 	 */
 	public Motor(String name, SpeedModifier slopeController, SpeedController... motors) {
 		this(name, false, slopeController, motors);
 	}
 	
 	/**
-	 * <<<<<<< HEAD
-	 * A SpeedController Subsystem.
+	 * A class that wraps around a variable number of SpeedController objects to give them Subsystem functionality.
+	 * Can also modify their speed with a SpeedModifier for things like scaling or brownout protection.
 	 * 
 	 * @param name
-	 * @param motors
-	 *        =======
-	 *        A class that wraps around a variable number of SpeedController objects to give them Subsystem functionality.
-	 *        Can also modify their speed with a SpeedModifier for things like scaling or brownout protection.
-	 * 		
-	 * @param name
-	 *        The name for the motor
+	 *        The name for the motor.
 	 * @param motors
 	 *        The SpeedControllers in this subsystem. Can be a single SpeedController or multiple SpeedControllers.
-	 *        >>>>>>> master
 	 */
 	public Motor(String name, SpeedController... motors) {
 		this(name, false, new IdentityModifier(), motors);
@@ -117,14 +99,15 @@ public class Motor extends Subsystem implements SpeedController {
 	/**
 	 * A class that wraps around a variable number of SpeedController objects to give them Subsystem functionality.
 	 * Can also modify their speed with a SpeedModifier for things like scaling or brownout protection.
-	 * 
+	 *
 	 * @param isInverted
 	 *        Inverts the direction of all of the SpeedControllers.
 	 *        This does not override the individual inversions of the
 	 *        motors.
 	 * @param speedModifier
-	 *        A SpeedModifier changes the input to every motor based on some factor. The default is an IdentityModifier,
-	 *        which does not affect anything.
+	 *        A SpeedModifier changes the input to every motor based on some factor.
+	 *        The default is an IdentityModifier, which does not affect anything.
+	 *        Can also regulate set speed to prevent brownouts (if you use AccelerationCap).
 	 * @param motors
 	 *        The SpeedControllers in this subsystem. Can be a single SpeedController or multiple SpeedControllers.
 	 */
@@ -137,14 +120,15 @@ public class Motor extends Subsystem implements SpeedController {
 	 * Can also modify their speed with a SpeedModifier for things like scaling or brownout protection.
 	 * 
 	 * @param name
-	 *        The name for the motor
+	 *        The name for the motor.
 	 * @param isInverted
 	 *        Inverts the direction of all of the SpeedControllers.
 	 *        This does not override the individual inversions of the
 	 *        motors.
 	 * @param speedModifier
-	 *        A SpeedModifier changes the input to every motor based on some factor. The default is an IdentityModifier,
-	 *        which does not affect anything.
+	 *        A SpeedModifier changes the input to every motor based on some factor.
+	 *        The default is an IdentityModifier, which does not affect anything.
+	 *        Can also regulate set speed to prevent brownouts (if you use AccelerationCap).
 	 * @param motors
 	 *        The SpeedControllers in this subsystem. Can be a single SpeedController or multiple SpeedControllers.
 	 */
@@ -157,8 +141,9 @@ public class Motor extends Subsystem implements SpeedController {
 	 * Can also modify their speed with a SpeedModifier for things like scaling or brownout protection.
 	 * 
 	 * @param speedModifier
-	 *        A SpeedModifier changes the input to every motor based on some factor. The default is an IdentityModifier,
-	 *        which does not affect anything.
+	 *        A SpeedModifier changes the input to every motor based on some factor.
+	 *        The default is an IdentityModifier, which does not affect anything.
+	 *        Can also regulate set speed to prevent brownouts (if you use AccelerationCap).
 	 * @param motors
 	 *        The SpeedControllers in this subsystem. Can be a single SpeedController or multiple SpeedControllers.
 	 */
@@ -183,11 +168,10 @@ public class Motor extends Subsystem implements SpeedController {
 	}
 	
 	/**
-	 * Write PID the PID value.
-	 * Inherited from PIDOutput.
+	 * Get a set value from a PIDController.
 	 * 
-	 * @param speed:
-	 *        The speed returned by the PID loop
+	 * @param speed
+	 *        The speed returned by the PID loop.
 	 */
 	@Override
 	public void pidWrite(double speed) {
@@ -199,8 +183,8 @@ public class Motor extends Subsystem implements SpeedController {
 	}
 	
 	/**
-	 * Turns off the motor.
-	 * This function uses the underlying speed controller's disable implementation.
+	 * Disables the motor.
+	 * This function uses the underlying SpeedController's disable implementation.
 	 */
 	@Override
 	public void disable() {
@@ -209,6 +193,12 @@ public class Motor extends Subsystem implements SpeedController {
 		}
 	}
 	
+	/**
+	 * Stops the motor.
+	 * This function uses the underlying SpeedController's stopMotor implementation.
+	 * In theory this should stop the motor without disabling,
+	 * but wpilib seems to just call disable under the hood.
+	 */
 	@Override
 	public void stopMotor() {
 		for (SpeedController motor : motors) {
@@ -268,6 +258,7 @@ public class Motor extends Subsystem implements SpeedController {
 	 * @return isInverted
 	 *         The state of inversion, true is inverted.
 	 */
+	@Override
 	public boolean getInverted() {
 		return isInverted;
 	}
@@ -280,6 +271,7 @@ public class Motor extends Subsystem implements SpeedController {
 	 * @param isInverted
 	 *        The state of inversion, true is inverted.
 	 */
+	@Override
 	public void setInverted(boolean isInverted) {
 		if (getInverted() != isInverted) {
 			for (SpeedController motor : motors) {
