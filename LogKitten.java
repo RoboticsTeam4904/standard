@@ -74,6 +74,15 @@ public class LogKitten {
 	}
 	
 	/**
+	 * Get the name of a logger method's calling class
+	 * 
+	 * @return the caller for the callee `f`, `e`, `w`, `v`, or `d`
+	 */
+	private static String getLoggerMethodCallerClassName() {
+		return Thread.currentThread().getStackTrace()[4].getClassName(); // caller of the logger method is fifth in the stack trace
+	}
+	
+	/**
 	 * Set the default level for which logs will be streamed to a file (for all LogKitten instances)
 	 * 
 	 * @param DEFAULT_LOG_LEVEL
@@ -153,7 +162,7 @@ public class LogKitten {
 			}
 		}
 		if (!PRINT_MUTE || override) {
-			String printContent = level.getName() + ": " + getLoggerMethodCallerMethodName() + ": " + message + " \n";
+			String printContent = level.getName() + ": " + getLoggerMethodCallerClassName() + "#" + getLoggerMethodCallerMethodName() + ": " + message + " \n";
 			if (printLevel.compareTo(level) >= 0) {
 				System.out.println(printContent);
 			}
