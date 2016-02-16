@@ -81,6 +81,7 @@ public abstract class SensorMotor extends Motor {
 	}
 	
 	public void setPosition(double position) {
+		LogKitten.v(getName() + " set to position " + position);
 		pid.setSetpoint(position);
 		pid.enable();
 		super.set(pid.get());
@@ -92,18 +93,13 @@ public abstract class SensorMotor extends Motor {
 	public void write(double speed) {
 		if (enablePID) {
 			if (rateMode) {
-				super.set(pid.get() + speed);
+				LogKitten.v("Error: " + pid.getError());
+				super.set(pid.get());
 			} else {
 				super.set(pid.get());
 			}
 		} else {
 			super.set(speed);
 		}
-	}
-	
-	@Override
-	public void pidWrite(double speed) {
-		LogKitten.v(Double.toString(speed));
-		super.set(speed);
 	}
 }
