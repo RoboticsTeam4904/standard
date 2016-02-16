@@ -2,57 +2,56 @@ package org.usfirst.frc4904.standard.subsystems.motor;
 
 
 import org.usfirst.frc4904.standard.LogKitten;
+import org.usfirst.frc4904.standard.custom.CustomPID;
 import org.usfirst.frc4904.standard.subsystems.motor.speedmodifiers.IdentityModifier;
 import org.usfirst.frc4904.standard.subsystems.motor.speedmodifiers.SpeedModifier;
-import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.SpeedController;
 
 public abstract class SensorMotor extends Motor {
-	protected final PIDController pid;
-	protected final boolean rateMode;
-	private boolean enablePID;
+	protected final CustomPID pid;
+	protected final boolean isInRateMode;
+	private boolean isPIDEnabled;
 	protected double position;
 	protected long lastUpdate;
 	protected final PIDSource sensor;
 	
-	public SensorMotor(String name, boolean inverted, SpeedModifier slopeController, PIDSource sensor, boolean rateMode, SpeedController... motors) {
+	public SensorMotor(String name, boolean inverted, SpeedModifier slopeController, PIDSource sensor, boolean isInRateMode, SpeedController... motors) {
 		super(name, inverted, slopeController, motors);
 		sensor.setPIDSourceType(PIDSourceType.kDisplacement);
-		pid = new PIDController(0.0, 0.0, 0.0, sensor, this);
-		pid.setOutputRange(-1.0, 1.0);
+		pid = new CustomPID(0.0, 0.0, 0.0, sensor);
 		this.sensor = sensor;
-		enablePID = false;
-		this.rateMode = rateMode;
+		isPIDEnabled = false;
+		this.isInRateMode = isInRateMode;
 	}
 	
-	public SensorMotor(String name, boolean isInverted, PIDSource sensor, boolean rateMode, SpeedController... motors) {
-		this(name, isInverted, new IdentityModifier(), sensor, rateMode, motors);
+	public SensorMotor(String name, boolean isInverted, PIDSource sensor, boolean isInRateMode, SpeedController... motors) {
+		this(name, isInverted, new IdentityModifier(), sensor, isInRateMode, motors);
 	}
 	
-	public SensorMotor(String name, SpeedModifier slopeController, PIDSource sensor, boolean rateMode, SpeedController... motors) {
-		this(name, false, slopeController, sensor, rateMode, motors);
+	public SensorMotor(String name, SpeedModifier slopeController, PIDSource sensor, boolean isInRateMode, SpeedController... motors) {
+		this(name, false, slopeController, sensor, isInRateMode, motors);
 	}
 	
-	public SensorMotor(String name, PIDSource sensor, boolean rateMode, SpeedController... motors) {
-		this(name, false, new IdentityModifier(), sensor, rateMode, motors);
+	public SensorMotor(String name, PIDSource sensor, boolean isInRateMode, SpeedController... motors) {
+		this(name, false, new IdentityModifier(), sensor, isInRateMode, motors);
 	}
 	
-	public SensorMotor(boolean isInverted, SpeedModifier speedModifier, PIDSource sensor, boolean rateMode, SpeedController... motors) {
-		this("SensorMotor", isInverted, speedModifier, sensor, rateMode, motors);
+	public SensorMotor(boolean isInverted, SpeedModifier speedModifier, PIDSource sensor, boolean isInRateMode, SpeedController... motors) {
+		this("SensorMotor", isInverted, speedModifier, sensor, isInRateMode, motors);
 	}
 	
-	public SensorMotor(boolean isInverted, PIDSource sensor, boolean rateMode, SpeedController... motors) {
-		this("SensorMotor", isInverted, sensor, rateMode, motors);
+	public SensorMotor(boolean isInverted, PIDSource sensor, boolean isInRateMode, SpeedController... motors) {
+		this("SensorMotor", isInverted, sensor, isInRateMode, motors);
 	}
 	
-	public SensorMotor(SpeedModifier speedModifier, PIDSource sensor, boolean rateMode, SpeedController... motors) {
-		this("SensorMotor", speedModifier, sensor, rateMode, motors);
+	public SensorMotor(SpeedModifier speedModifier, PIDSource sensor, boolean isInRateMode, SpeedController... motors) {
+		this("SensorMotor", speedModifier, sensor, isInRateMode, motors);
 	}
 	
-	public SensorMotor(PIDSource sensor, boolean rateMode, SpeedController... motors) {
-		this("SensorMotor", sensor, rateMode, motors);
+	public SensorMotor(PIDSource sensor, boolean isInRateMode, SpeedController... motors) {
+		this("SensorMotor", sensor, isInRateMode, motors);
 	}
 	
 	public void reset() {
@@ -65,27 +64,26 @@ public abstract class SensorMotor extends Motor {
 	}
 	
 	public void setPIDF(double P, double I, double D, double F) {
-		pid.setPID(P, I, D, F);
+		pid.setPIDF(P, I, D, F);
+		LogKitten.d("P:" + P + "I:" + I + "D:" + D + "F:" + F);
 	}
 	
-	public void setInputRange(double minimum, double maximum) {
-		pid.setInputRange(minimum, maximum);
-	}
+	public void setInputRange(double minimum, double maximum) {}
 	
 	public void enablePID() {
-		enablePID = true;
+		isPIDEnabled = true;
 		pid.enable();
 	}
 	
 	public void disablePID() {
-		enablePID = false;
+		isPIDEnabled = false;
 		pid.disable();
 	}
 	
 	public void setPosition(double position) {
+		LogKitten.v(getName() + " set to position " + position);
 		pid.setSetpoint(position);
 		pid.enable();
-		LogKitten.v(position + " " + sensor.pidGet(), true);
 		super.set(pid.get());
 	}
 	
@@ -93,21 +91,15 @@ public abstract class SensorMotor extends Motor {
 	public abstract void set(double speed);
 	
 	public void write(double speed) {
-		if (enablePID) {
-			LogKitten.v(Double.toString(pid.get()), true);
-			if (rateMode) {
-				super.set(pid.get() + speed);
+		if (isPIDEnabled) {
+			if (isInRateMode) {
+				LogKitten.v("Error: " + pid.getError());
+				super.set(pid.get());
 			} else {
 				super.set(pid.get());
 			}
 		} else {
 			super.set(speed);
 		}
-	}
-	
-	@Override
-	public void pidWrite(double speed) {
-		LogKitten.v(Double.toString(speed));
-		super.set(speed);
 	}
 }

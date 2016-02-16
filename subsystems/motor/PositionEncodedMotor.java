@@ -13,9 +13,6 @@ import edu.wpi.first.wpilibj.SpeedController;
 public class PositionEncodedMotor extends PositionSensorMotor {
 	public PositionEncodedMotor(String name, boolean inverted, SpeedModifier speedModifier, CustomEncoder encoder, SpeedController... motor) {
 		super(name, inverted, speedModifier, encoder, motor);
-		pid.setInputRange(-2147483648, 2147483647);
-		pid.setContinuous(false);
-		pid.setAbsoluteTolerance(0.002);
 	}
 	
 	public PositionEncodedMotor(String name, boolean isInverted, CustomEncoder sensor, SpeedController... motors) {

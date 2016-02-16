@@ -1,6 +1,7 @@
 package org.usfirst.frc4904.standard.subsystems.motor;
 
 
+import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.subsystems.motor.speedmodifiers.IdentityModifier;
 import org.usfirst.frc4904.standard.subsystems.motor.speedmodifiers.SpeedModifier;
 import edu.wpi.first.wpilibj.PIDSource;
@@ -40,6 +41,7 @@ public class VelocitySensorMotor extends SensorMotor {
 	}
 	
 	public void set(double speed) {
+		LogKitten.v(speed + "");
 		pid.setSetpoint(speed);
 		super.write(speed);
 	}

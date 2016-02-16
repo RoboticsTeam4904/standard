@@ -9,9 +9,6 @@ import edu.wpi.first.wpilibj.SpeedController;
 public class VelocityEncodedMotor extends VelocitySensorMotor {
 	public VelocityEncodedMotor(String name, boolean isInverted, SpeedModifier slopeController, PIDSource sensor, SpeedController... motors) {
 		super(name, isInverted, slopeController, sensor, motors);
-		pid.setInputRange(-2147483648, 2147483647);
-		pid.setContinuous(false);
-		pid.setAbsoluteTolerance(0.002);
 	}
 	
 	public VelocityEncodedMotor(String name, boolean isInverted, PIDSource sensor, SpeedController... motors) {
