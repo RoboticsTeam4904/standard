@@ -2,26 +2,20 @@ package org.usfirst.frc4904.standard.commands.chassis;
 
 
 import org.usfirst.frc4904.standard.LogKitten;
-import org.usfirst.frc4904.standard.commands.motor.MotorEncoderSet;
 import org.usfirst.frc4904.standard.commands.motor.MotorSet;
 import org.usfirst.frc4904.standard.custom.ChassisController;
 import org.usfirst.frc4904.standard.subsystems.chassis.Chassis;
-import org.usfirst.frc4904.standard.subsystems.motor.EncodedMotor;
 import org.usfirst.frc4904.standard.subsystems.motor.Motor;
+import org.usfirst.frc4904.standard.subsystems.motor.SensorMotor;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
 /**
  * This command moves the chassis.
  * It move based on the driver class.
- * Note that it supports all types
- * of chassis. The chassis is used
- * to calculate the motor movement.
- * The command works by creating
- * a movement command for each
- * motor. This is the best way to
- * handle this because it allows
- * each motor to be a full subsystem.
- *
+ * Note that it supports all types of chassis.
+ * The chassis is used to calculate the motor movement.
+ * The command works by creating a movement command for each motor.
+ * This is the best way to handle this because it allows each motor to be a full subsystem.
  */
 public class ChassisMove extends CommandGroup {
 	private final MotorSet[] motorSpins;
@@ -32,29 +26,35 @@ public class ChassisMove extends CommandGroup {
 	private final double yScale;
 	private final double turnScale;
 	
-	// private final LogKitten logger;
 	/**
-	 * Constructor.
-	 * 
 	 * @param chassis
-	 *        The robot's chassis.
+	 *        The robot's Chassis.
 	 * @param controller
-	 *        The currently selected driver.
+	 *        A ChassisController to control the Chassis, such as a Driver or autonomous routine.
 	 * @param xScale
 	 *        The scale factor for the x axis.
 	 * @param yScale
 	 *        The scale factor for the y axis.
 	 * @param turnScale
 	 *        The scale factor for the turning.
+	 * @param usePID
+	 *        Whether to enable PID using any SensorMotors that Chassis has.
 	 */
-	public ChassisMove(Chassis chassis, ChassisController controller, double xScale, double yScale, double turnScale) {
+	public ChassisMove(Chassis chassis, ChassisController controller, double xScale, double yScale, double turnScale, boolean usePID) {
 		super("ChassisMove");
 		requires(chassis);
 		this.chassis = chassis;
 		this.controller = controller;
 		Motor[] motors = this.chassis.getMotors();
-		this.motorSpins = new MotorSet[motors.length];
+		motorSpins = new MotorSet[motors.length];
 		for (int i = 0; i < motors.length; i++) {
+			if (motors[i] instanceof SensorMotor) {
+				if (usePID) {
+					((SensorMotor) motors[i]).enablePID();
+				} else {
+					((SensorMotor) motors[i]).disablePID();
+				}
+			}
 			motorSpins[i] = new MotorSet(motors[i]);
 			addParallel(motorSpins[i]);
 		}
@@ -64,58 +64,50 @@ public class ChassisMove extends CommandGroup {
 		LogKitten.v("ChassisMove created for " + Integer.toString(chassis.getNumberWheels()) + " wheels");
 	}
 	
-	public ChassisMove(Chassis chassis, ChassisController controller) {
-		this(chassis, controller, 1.0, 1.0, 1.0);
+	/**
+	 * @param chassis
+	 *        The robot's chassis.
+	 * @param controller
+	 *        A ChassisController to control the Chassis, such as a Driver or autonomous routine.
+	 * @param xScale
+	 *        The scale factor for the x axis.
+	 * @param yScale
+	 *        The scale factor for the y axis.
+	 * @param turnScale
+	 *        The scale factor for the turning.
+	 */
+	public ChassisMove(Chassis chassis, ChassisController controller, double xScale, double yScale, double turnScale) {
+		this(chassis, controller, xScale, yScale, turnScale, false);
 	}
 	
 	/**
-	 * Constructor supporting encoded motors.
-	 * If this is done, the motors will be
-	 * controlled as encoded motors, i.e.
-	 * they will try to maintain a more
-	 * precise speed.
-	 * If motors do not have encoders,
-	 * they will simply be treated as
-	 * normal motors.
-	 * 
 	 * @param chassis
+	 *        The robot's chassis.
 	 * @param controller
-	 * @param xScale
-	 * @param yScale
-	 * @param turnScale
-	 * @param encode
-	 *        True to enable encoders, false to disable.
+	 *        A ChassisController to control the Chassis, such as a Driver or autonomous routine.
+	 * @param usePID
+	 *        Whether to enable PID using any SensorMotors that Chassis has.
 	 */
-	public ChassisMove(Chassis chassis, ChassisController controller, double xScale, double yScale, double turnScale, boolean encode) {
-		super("ChassisMoveEncodeded");
-		requires(chassis);
-		this.chassis = chassis;
-		this.controller = controller;
-		Motor[] motors = this.chassis.getMotors();
-		this.motorSpins = new MotorEncoderSet[motors.length];
-		for (int i = 0; i < motors.length; i++) {
-			if (motors[i] instanceof EncodedMotor && encode) {
-				EncodedMotor motor = (EncodedMotor) motors[i];
-				motorSpins[i] = new MotorEncoderSet(motor);
-			} else {
-				motorSpins[i] = new MotorSet(motors[i]);
-			}
-			addParallel(motorSpins[i]);
-		}
-		this.xScale = xScale;
-		this.yScale = yScale;
-		this.turnScale = turnScale;
-		LogKitten.v("ChassisMove created for " + Integer.toString(chassis.getNumberWheels()) + " wheels");
+	public ChassisMove(Chassis chassis, ChassisController controller, boolean usePID) {
+		this(chassis, controller, 1.0, 1.0, 1.0, usePID);
 	}
 	
-	public ChassisMove(Chassis chassis, ChassisController controller, boolean encode) {
-		this(chassis, controller, 1.0, 1.0, 1.0, encode);
+	/**
+	 * @param chassis
+	 *        The robot's chassis.
+	 * @param controller
+	 *        A ChassisController to control the Chassis, such as a Driver or autonomous routine.
+	 */
+	public ChassisMove(Chassis chassis, ChassisController controller) {
+		this(chassis, controller, 1.0, 1.0, 1.0, false);
 	}
 	
+	@Override
 	protected void initialize() {
 		LogKitten.v("ChassisMove initialized");
 	}
 	
+	@Override
 	protected void execute() {
 		chassis.move2dc(controller.getX() * xScale, controller.getY() * yScale, controller.getTurnSpeed() * turnScale);
 		motorSpeeds = chassis.getMotorSpeeds();
@@ -128,15 +120,18 @@ public class ChassisMove extends CommandGroup {
 		LogKitten.d("Motor speeds: " + motorSpeedsString);
 	}
 	
+	@Override
+	protected boolean isFinished() {
+		return false;
+	}
+	
+	@Override
 	protected void end() {
 		LogKitten.v("ChassisMove ended");
 	}
 	
+	@Override
 	protected void interrupted() {
 		LogKitten.w("ChassisMove interrupted");
-	}
-	
-	protected boolean isFinished() {
-		return false;
 	}
 }

@@ -58,9 +58,9 @@ public class CustomJoystick extends Joystick implements Controller {
 	 */
 	public boolean active(int axis) {
 		if (axis == X_AXIS) {
-			return super.getX() > moveThreshold;
+			return Math.abs(super.getX()) > moveThreshold;
 		} else if (axis == Y_AXIS) {
-			return super.getY() > moveThreshold;
+			return Math.abs(super.getY()) > moveThreshold;
 		} else {
 			return false;
 		}
@@ -85,6 +85,9 @@ public class CustomJoystick extends Joystick implements Controller {
 	 * given axis.
 	 */
 	public double getAxis(int axis) {
+		if (Math.abs(super.getRawAxis(axis)) < moveThreshold) {
+			return 0.0;
+		}
 		return super.getRawAxis(axis);
 	}
 }

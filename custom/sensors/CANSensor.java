@@ -53,7 +53,7 @@ public class CANSensor extends CustomCAN {
 			if (rawData != null && rawData.remaining() > 7) {
 				rawData.rewind();
 				long data = Long.reverseBytes(rawData.getLong());
-				short value = (short) (data & 0xFFFF);
+				int value = (int) (data & 0xFFFFFFFF);
 				int msgMode = (int) (data >> 32);
 				if (msgMode <= cachedValues.length) {
 					cachedValues[msgMode] = value;
