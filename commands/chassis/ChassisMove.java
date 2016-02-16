@@ -12,15 +12,10 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 /**
  * This command moves the chassis.
  * It move based on the driver class.
- * Note that it supports all types
- * of chassis. The chassis is used
- * to calculate the motor movement.
- * The command works by creating
- * a movement command for each
- * motor. This is the best way to
- * handle this because it allows
- * each motor to be a full subsystem.
- *
+ * Note that it supports all types of chassis.
+ * The chassis is used to calculate the motor movement.
+ * The command works by creating a movement command for each motor.
+ * This is the best way to handle this because it allows each motor to be a full subsystem.
  */
 public class ChassisMove extends CommandGroup {
 	private final MotorSet[] motorSpins;
@@ -31,31 +26,30 @@ public class ChassisMove extends CommandGroup {
 	private final double yScale;
 	private final double turnScale;
 	
-	// private final LogKitten logger;
 	/**
-	 * Constructor.
-	 * 
 	 * @param chassis
-	 *        The robot's chassis.
+	 *        The robot's Chassis.
 	 * @param controller
-	 *        The currently selected driver.
+	 *        A ChassisController to control the Chassis, such as a Driver or autonomous routine.
 	 * @param xScale
 	 *        The scale factor for the x axis.
 	 * @param yScale
 	 *        The scale factor for the y axis.
 	 * @param turnScale
 	 *        The scale factor for the turning.
+	 * @param usePID
+	 *        Whether to enable PID using any SensorMotors that Chassis has.
 	 */
-	public ChassisMove(Chassis chassis, ChassisController controller, double xScale, double yScale, double turnScale, boolean encode) {
+	public ChassisMove(Chassis chassis, ChassisController controller, double xScale, double yScale, double turnScale, boolean usePID) {
 		super("ChassisMove");
 		requires(chassis);
 		this.chassis = chassis;
 		this.controller = controller;
 		Motor[] motors = this.chassis.getMotors();
-		this.motorSpins = new MotorSet[motors.length];
+		motorSpins = new MotorSet[motors.length];
 		for (int i = 0; i < motors.length; i++) {
 			if (motors[i] instanceof SensorMotor) {
-				if (encode) {
+				if (usePID) {
 					((SensorMotor) motors[i]).enablePID();
 				} else {
 					((SensorMotor) motors[i]).disablePID();
@@ -71,40 +65,49 @@ public class ChassisMove extends CommandGroup {
 	}
 	
 	/**
-	 * 
 	 * @param chassis
+	 *        The robot's chassis.
 	 * @param controller
+	 *        A ChassisController to control the Chassis, such as a Driver or autonomous routine.
 	 * @param xScale
+	 *        The scale factor for the x axis.
 	 * @param yScale
+	 *        The scale factor for the y axis.
 	 * @param turnScale
+	 *        The scale factor for the turning.
 	 */
 	public ChassisMove(Chassis chassis, ChassisController controller, double xScale, double yScale, double turnScale) {
 		this(chassis, controller, xScale, yScale, turnScale, false);
 	}
 	
 	/**
-	 * 
 	 * @param chassis
+	 *        The robot's chassis.
 	 * @param controller
-	 * @param encode
+	 *        A ChassisController to control the Chassis, such as a Driver or autonomous routine.
+	 * @param usePID
+	 *        Whether to enable PID using any SensorMotors that Chassis has.
 	 */
-	public ChassisMove(Chassis chassis, ChassisController controller, boolean encode) {
-		this(chassis, controller, 1.0, 1.0, 1.0, encode);
+	public ChassisMove(Chassis chassis, ChassisController controller, boolean usePID) {
+		this(chassis, controller, 1.0, 1.0, 1.0, usePID);
 	}
 	
 	/**
-	 * 
 	 * @param chassis
+	 *        The robot's chassis.
 	 * @param controller
+	 *        A ChassisController to control the Chassis, such as a Driver or autonomous routine.
 	 */
 	public ChassisMove(Chassis chassis, ChassisController controller) {
 		this(chassis, controller, 1.0, 1.0, 1.0, false);
 	}
 	
+	@Override
 	protected void initialize() {
 		LogKitten.v("ChassisMove initialized");
 	}
 	
+	@Override
 	protected void execute() {
 		chassis.move2dc(controller.getX() * xScale, controller.getY() * yScale, controller.getTurnSpeed() * turnScale);
 		motorSpeeds = chassis.getMotorSpeeds();
@@ -117,15 +120,18 @@ public class ChassisMove extends CommandGroup {
 		LogKitten.d("Motor speeds: " + motorSpeedsString);
 	}
 	
+	@Override
+	protected boolean isFinished() {
+		return false;
+	}
+	
+	@Override
 	protected void end() {
 		LogKitten.v("ChassisMove ended");
 	}
 	
+	@Override
 	protected void interrupted() {
 		LogKitten.w("ChassisMove interrupted");
-	}
-	
-	protected boolean isFinished() {
-		return false;
 	}
 }
