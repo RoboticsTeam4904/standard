@@ -2,6 +2,7 @@ package org.usfirst.frc4904.standard.custom;
 
 
 import edu.wpi.first.wpilibj.PIDSource;
+import edu.wpi.first.wpilibj.util.BoundaryException;
 
 public class CustomPID {
 	protected double P;
@@ -15,6 +16,12 @@ public class CustomPID {
 	protected double lastUpdate;
 	protected boolean enable;
 	protected double absoluteTolerance;
+	protected boolean continuous;
+	protected double inputMax;
+	protected double inputMin;
+	protected boolean capOutput;
+	protected double outputMax;
+	protected double outputMin;
 	
 	public CustomPID(double P, double I, double D, double F, PIDSource source) {
 		this.P = P;
@@ -22,8 +29,15 @@ public class CustomPID {
 		this.D = D;
 		this.F = F;
 		this.source = source;
-		setpoint = source.pidGet();
 		enable = true;
+		absoluteTolerance = 0.0001; // Nonzero to avoid floating point errors
+		capOutput = false;
+		continuous = false;
+		inputMin = 0.0;
+		inputMax = 0.0;
+		outputMin = 0.0;
+		outputMax = 0.0;
+		reset();
 	}
 	
 	public CustomPID(double P, double I, double D, PIDSource source) {
@@ -67,7 +81,25 @@ public class CustomPID {
 		if (absoluteTolerance >= 0) {
 			this.absoluteTolerance = absoluteTolerance;
 		}
-		// ABSOLUTE TOLERANCE IS NEGATIVE. THAT'S NOT GOOD.
+		throw new BoundaryException("Absolute tolerance negative");
+	}
+	
+	public void setInputRange(double minimum, double maximum) {
+		if (minimum > maximum) {
+			throw new BoundaryException("Minimum is greater than maximum");
+		}
+		inputMin = minimum;
+		inputMax = maximum;
+	}
+	
+	public void setOutputRange(double minimum, double maximum) {
+		outputMin = minimum;
+		outputMax = maximum;
+		capOutput = true;
+	}
+	
+	public void setContinuous(boolean continuous) {
+		this.continuous = continuous;
 	}
 	
 	public void reset() {
@@ -103,9 +135,23 @@ public class CustomPID {
 		double input = source.pidGet();
 		double deltaT = (System.currentTimeMillis() - lastUpdate) / 1000.0;
 		double error = setpoint - input;
+		if (continuous) {
+			if (Math.abs(error) > (inputMax - inputMin) / 2) {
+				if (error > 0) {
+					error = error - inputMax + inputMin;
+				} else {
+					error = error + inputMax - inputMin;
+				}
+			}
+		}
 		totalError += error * deltaT;
 		double result = P * error + I * totalError + D * ((error - lastError) / deltaT) + F * setpoint;
 		lastError = error;
+		if (result > outputMax) {
+			return outputMax;
+		} else if (result < outputMin) {
+			return outputMin;
+		}
 		return result;
 	}
 	
