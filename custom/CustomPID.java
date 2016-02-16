@@ -21,12 +21,32 @@ public class CustomPID {
 		this.D = D;
 		this.F = F;
 		this.source = source;
-		this.setpoint = source.pidGet();
-		this.enable = true;
+		setpoint = source.pidGet();
+		enable = true;
 	}
 	
 	public CustomPID(double P, double I, double D, PIDSource source) {
 		this(P, I, D, 0.0, source);
+	}
+	
+	public CustomPID(PIDSource source) {
+		this(0, 0, 0, source);
+	}
+	
+	public double getP() {
+		return P;
+	}
+	
+	public double getI() {
+		return I;
+	}
+	
+	public double getD() {
+		return D;
+	}
+	
+	public double getF() {
+		return F;
 	}
 	
 	public void setPID(double P, double I, double D) {
@@ -35,7 +55,7 @@ public class CustomPID {
 		this.D = D;
 	}
 	
-	public void setPID(double P, double I, double D, double F) {
+	public void setPIDF(double P, double I, double D, double F) {
 		this.P = P;
 		this.I = I;
 		this.D = D;
@@ -60,6 +80,10 @@ public class CustomPID {
 		return lastError;
 	}
 	
+	public double getSetpoint() {
+		return setpoint;
+	}
+	
 	public void setSetpoint(double setpoint) {
 		this.setpoint = setpoint;
 	}
@@ -69,8 +93,8 @@ public class CustomPID {
 			return F * setpoint;
 		}
 		double input = source.pidGet();
-		double deltaT = ((double) ((System.currentTimeMillis() - lastUpdate) / 1000.0));
-		double error = (setpoint - input);
+		double deltaT = (System.currentTimeMillis() - lastUpdate) / 1000.0;
+		double error = setpoint - input;
 		totalError += error * deltaT;
 		double result = P * error + I * totalError + D * ((error - lastError) / deltaT) + F * setpoint;
 		lastError = error;
