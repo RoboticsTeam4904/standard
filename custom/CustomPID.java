@@ -14,6 +14,7 @@ public class CustomPID {
 	protected double lastError;
 	protected double lastUpdate;
 	protected boolean enable;
+	protected double absoluteTolerance;
 	
 	public CustomPID(double P, double I, double D, double F, PIDSource source) {
 		this.P = P;
@@ -62,6 +63,13 @@ public class CustomPID {
 		this.F = F;
 	}
 	
+	public void setAbsoluteTolerance(double absoluteTolerance) {
+		if (absoluteTolerance >= 0) {
+			this.absoluteTolerance = absoluteTolerance;
+		}
+		// ABSOLUTE TOLERANCE IS NEGATIVE. THAT'S NOT GOOD.
+	}
+	
 	public void reset() {
 		setpoint = source.pidGet();
 		totalError = 0;
@@ -99,5 +107,9 @@ public class CustomPID {
 		double result = P * error + I * totalError + D * ((error - lastError) / deltaT) + F * setpoint;
 		lastError = error;
 		return result;
+	}
+	
+	public boolean onTarget() {
+		return Math.abs(getError()) <= absoluteTolerance;
 	}
 }
