@@ -56,6 +56,10 @@ public class CustomPID {
 		enable = false;
 	}
 	
+	public double getError() {
+		return lastError;
+	}
+	
 	public void setSetpoint(double setpoint) {
 		this.setpoint = setpoint;
 	}
@@ -65,8 +69,11 @@ public class CustomPID {
 			return F * setpoint;
 		}
 		double input = source.pidGet();
-		double error = (setpoint - input);/// ((double) ((System.currentTimeMillis() - lastUpdate)/1000));
-		totalError += error;
-		return P * error + I * totalError + D * (error - lastError) + F * setpoint;
+		double deltaT = ((double) ((System.currentTimeMillis() - lastUpdate) / 1000.0));
+		double error = (setpoint - input);
+		totalError += error * deltaT;
+		double result = P * error + I * totalError + D * ((error - lastError) / deltaT) + F * setpoint;
+		lastError = error;
+		return result;
 	}
 }
