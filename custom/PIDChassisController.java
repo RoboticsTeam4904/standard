@@ -2,18 +2,16 @@ package org.usfirst.frc4904.standard.custom;
 
 
 import org.usfirst.frc4904.standard.custom.sensors.NavX;
-import edu.wpi.first.wpilibj.PIDController;
-import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.PIDSourceType;
 
-public class PIDChassisController implements ChassisController, PIDOutput {
+public class PIDChassisController implements ChassisController {
 	private ChassisController controller;
 	private double maxDegreesPerSecond;
 	private double targetYaw;
 	private double lastUpdate;
 	private NavX ahrs;
 	private double pidResult;
-	public static PIDController pid;
+	public static CustomPID pid;
 	
 	public PIDChassisController(ChassisController controller, NavX ahrs, double Kp, double Ki, double Kd, double maxDegreesPerSecond) {
 		this.controller = controller;
@@ -22,9 +20,7 @@ public class PIDChassisController implements ChassisController, PIDOutput {
 		this.ahrs.reset();
 		this.ahrs.resetDisplacement();
 		this.ahrs.setPIDSourceType(PIDSourceType.kDisplacement);
-		pid = new PIDController(Kp, Ki, Kd, this.ahrs, this);
-		pid.setInputRange(-180.0f, 180.0f);
-		pid.setOutputRange(-1.0f, 1.0f);
+		pid = new CustomPID(Kp, Ki, Kd, this.ahrs);
 		pid.setContinuous(true);
 		pid.reset();
 		pid.enable();
@@ -49,8 +45,8 @@ public class PIDChassisController implements ChassisController, PIDOutput {
 	
 	@Override
 	public double getTurnSpeed() {
-		targetYaw = targetYaw + ((controller.getTurnSpeed() * maxDegreesPerSecond) * ((System.currentTimeMillis() * 1000) - lastUpdate));
-		lastUpdate = System.currentTimeMillis() * 1000;
+		targetYaw = targetYaw + ((controller.getTurnSpeed() * maxDegreesPerSecond) * ((System.currentTimeMillis() / 1000) - lastUpdate));
+		lastUpdate = System.currentTimeMillis() / 1000;
 		if (targetYaw > 180) {
 			targetYaw = -180 + (Math.abs(targetYaw) - 180);
 		} else if (targetYaw < -180) {
@@ -58,11 +54,5 @@ public class PIDChassisController implements ChassisController, PIDOutput {
 		}
 		pid.setSetpoint(targetYaw);
 		return pidResult;
-	}
-	
-	@Override
-	public void pidWrite(double pidOut) {
-		pidResult = pidOut;
-		pidResult = Math.max(Math.min(pidResult, 1), -1);
 	}
 }
