@@ -21,7 +21,7 @@ public class ChassisShift extends Command {
 		super("ChassisShift");
 		this.solenoids = solenoids;
 		requires(solenoids);
-		setInterruptible(false);
+		setInterruptible(true);
 		state = null;
 	}
 	
@@ -56,6 +56,6 @@ public class ChassisShift extends Command {
 	protected void end() {}
 	
 	protected boolean isFinished() {
-		return true;
+		return false; // Encoders stay in whatever state until shifted elsewhere.
 	}
 }

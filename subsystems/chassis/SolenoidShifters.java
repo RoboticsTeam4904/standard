@@ -1,19 +1,17 @@
 package org.usfirst.frc4904.standard.subsystems.chassis;
 
 
-import org.usfirst.frc4904.standard.commands.chassis.ShiftersIdle;
-import edu.wpi.first.wpilibj.Solenoid;
+import org.usfirst.frc4904.standard.commands.chassis.ChassisShift;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 /**
- * A subsystem for storing a set of solenoids for a two-shifter drivetrain.
+ * A subsystem for managing a solenoid for a shifting drivetrain.
  *
  */
 public class SolenoidShifters extends Subsystem {
-	private final Solenoid leftSolenoidUp;
-	private final Solenoid leftSolenoidDown;
-	private final Solenoid rightSolenoidUp;
-	private final Solenoid rightSolenoidDown;
+	private final DoubleSolenoid solenoid;
+	private final boolean isInverted;
 	private ShiftState state;
 	
 	public enum ShiftState {
@@ -21,36 +19,62 @@ public class SolenoidShifters extends Subsystem {
 	}
 	
 	/**
-	 * Creates a shiting subsystem
+	 * A subsystem for managing a solenoid for a shifting drivetrain.
 	 * 
-	 * @param leftUp
-	 *        :
-	 *        The solenoid port to activate to shift up the left gearbox
-	 * @param leftDown
-	 *        :
-	 *        The solenoid port to activate to shift down the left gearbox
-	 * @param rightUp
-	 *        :
-	 *        The solenoid port to activate to shift up the right gearbox
-	 * @param rightDown
-	 *        :
-	 *        The solenoid port to activate to shift down the right gearbox
+	 * @param solenoid
+	 *        The DoubleSolenoid used to shift
+	 * @param isInverted
+	 *        To invert or not
 	 */
-	public SolenoidShifters(Solenoid leftUp, Solenoid leftDown, Solenoid rightUp, Solenoid rightDown) {
+	public SolenoidShifters(DoubleSolenoid solenoid, boolean isInverted) {
 		super("SolenoidShifters");
-		this.leftSolenoidUp = leftUp;
-		this.leftSolenoidDown = leftDown;
-		this.rightSolenoidUp = rightUp;
-		this.rightSolenoidDown = rightDown;
-		if (leftSolenoidUp.get()) {
+		this.solenoid = solenoid;
+		this.isInverted = isInverted;
+		if (!isInverted && solenoid.get() == DoubleSolenoid.Value.kForward) {
 			state = ShiftState.UP;
 		} else {
 			state = ShiftState.DOWN;
 		}
 	}
 	
+	/**
+	 * A subsystem for managing a solenoid for a shifting drivetrain.
+	 * 
+	 * @param solenoid
+	 *        The DoubleSolenoid used to shift
+	 */
+	public SolenoidShifters(DoubleSolenoid solenoid) {
+		this(solenoid, false);
+	}
+	
+	/**
+	 * A subsystem for managing a solenoid for a shifting drivetrain.
+	 * 
+	 * @param portUp
+	 *        The first port of the double solenoid
+	 * @param portDown
+	 *        The second port of the double solenoid
+	 */
+	public SolenoidShifters(int portUp, int portDown) {
+		this(new DoubleSolenoid(portUp, portDown), false);
+	}
+	
+	/**
+	 * A subsystem for managing a solenoid for a shifting drivetrain.
+	 * 
+	 * @param module
+	 *        The ID of the PCM for the double solenoid
+	 * @param portUp
+	 *        The first port of the double solenoid
+	 * @param portDown
+	 *        The second port of the double solenoid
+	 */
+	public SolenoidShifters(int module, int portUp, int portDown) {
+		this(new DoubleSolenoid(module, portUp, portDown), false);
+	}
+	
 	protected void initDefaultCommand() {
-		setDefaultCommand(new ShiftersIdle(this));
+		setDefaultCommand(new ChassisShift(this, SolenoidShifters.ShiftState.DOWN));
 	}
 	
 	/**
@@ -71,18 +95,19 @@ public class SolenoidShifters extends Subsystem {
 	public void shift(ShiftState state) {
 		switch (state) {
 			case UP:
-				leftSolenoidDown.set(false);
-				rightSolenoidDown.set(false);
-				leftSolenoidUp.set(true);
-				rightSolenoidUp.set(true);
+				if (!isInverted) {
+					solenoid.set(DoubleSolenoid.Value.kForward);
+				} else {
+					solenoid.set(DoubleSolenoid.Value.kReverse);
+				}
 				return;
 			case DOWN:
-				leftSolenoidUp.set(false);
-				rightSolenoidUp.set(false);
-				leftSolenoidDown.set(true);
-				rightSolenoidDown.set(true);
-				return;
 			default:
+				if (!isInverted) {
+					solenoid.set(DoubleSolenoid.Value.kReverse);
+				} else {
+					solenoid.set(DoubleSolenoid.Value.kForward);
+				}
 				return;
 		}
 	}
