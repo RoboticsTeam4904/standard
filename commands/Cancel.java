@@ -1,6 +1,7 @@
 package org.usfirst.frc4904.standard.commands;
 
 
+import org.usfirst.frc4904.standard.LogKitten;
 import edu.wpi.first.wpilibj.command.Command;
 
 public class Cancel extends Command {
@@ -14,6 +15,7 @@ public class Cancel extends Command {
 	
 	@Override
 	protected void initialize() {
+		LogKitten.v("Initializing " + getName());
 		command.cancel();
 	}
 	

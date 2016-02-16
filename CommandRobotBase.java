@@ -55,7 +55,9 @@ public abstract class CommandRobotBase extends IterativeRobot {
 	 * @param healthchecks
 	 */
 	public void robotInit(AbstractHealthCheck... healthchecks) {
-		healthcheckCommand = new CheckHealth(healthchecks);
+		if (healthchecks != null) {
+			healthcheckCommand = new CheckHealth(healthchecks);
+		}
 		// Initialize choosers
 		autoChooser = new CommandSendableChooser();
 		driverChooser = new TypedNamedSendableChooser<Driver>();
@@ -92,6 +94,8 @@ public abstract class CommandRobotBase extends IterativeRobot {
 	 * you call super.disabledInit.
 	 */
 	public void disabledInit() {
-		healthcheckCommand.reset();
+		if (healthcheckCommand != null) {
+			healthcheckCommand.reset();
+		}
 	}
 }
