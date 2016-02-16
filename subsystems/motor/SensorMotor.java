@@ -65,6 +65,7 @@ public abstract class SensorMotor extends Motor {
 	
 	public void setPIDF(double P, double I, double D, double F) {
 		pid.setPID(P, I, D, F);
+		LogKitten.d("P:" + P + "I:" + I + "D:" + D + "F:" + F);
 	}
 	
 	public void setInputRange(double minimum, double maximum) {}
@@ -82,7 +83,6 @@ public abstract class SensorMotor extends Motor {
 	public void setPosition(double position) {
 		pid.setSetpoint(position);
 		pid.enable();
-		LogKitten.v(position + " " + sensor.pidGet(), true);
 		super.set(pid.get());
 	}
 	
@@ -91,7 +91,6 @@ public abstract class SensorMotor extends Motor {
 	
 	public void write(double speed) {
 		if (enablePID) {
-			LogKitten.v(Double.toString(pid.get()), true);
 			if (rateMode) {
 				super.set(pid.get() + speed);
 			} else {
