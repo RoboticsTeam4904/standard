@@ -4,14 +4,14 @@ package org.usfirst.frc4904.standard.custom.sensors;
 import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.PIDSourceType;
 
-public class TalonEncoder implements CustomEncoder {
+public class CANTalonEncoder implements CustomEncoder {
 	protected final CANTalon talon;
 	protected PIDSourceType pidSource;
 	protected double distancePerPulse;
 	protected boolean reverseDirection;
 	protected boolean rateMode;
 	
-	public TalonEncoder(String name, CANTalon talon, boolean reverseDirection, double distancePerPulse, boolean rateMode) {
+	public CANTalonEncoder(String name, CANTalon talon, boolean reverseDirection, double distancePerPulse, boolean rateMode) {
 		this.talon = talon;
 		this.reverseDirection = reverseDirection;
 		this.distancePerPulse = distancePerPulse;
