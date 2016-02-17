@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj.PIDSource;
  * It does not differentiate between rate and distance.
  *
  */
-public class CustomPID extends MotionController {
+public class CustomPIDController extends MotionController {
 	protected double P;
 	protected double I;
 	protected double D;
@@ -32,7 +32,7 @@ public class CustomPID extends MotionController {
 	 * @param source
 	 *        The sensor linked to the output
 	 */
-	public CustomPID(double P, double I, double D, double F, PIDSource source) {
+	public CustomPIDController(double P, double I, double D, double F, PIDSource source) {
 		super(source);
 		this.P = P;
 		this.I = I;
@@ -53,7 +53,7 @@ public class CustomPID extends MotionController {
 	 * @param source
 	 *        The sensor linked to the output
 	 */
-	public CustomPID(double P, double I, double D, PIDSource source) {
+	public CustomPIDController(double P, double I, double D, PIDSource source) {
 		this(P, I, D, 0.0, source);
 	}
 	
@@ -64,7 +64,7 @@ public class CustomPID extends MotionController {
 	 * @param source
 	 *        The sensor linked to the output
 	 */
-	public CustomPID(PIDSource source) {
+	public CustomPIDController(PIDSource source) {
 		this(0, 0, 0, source);
 	}
 	
