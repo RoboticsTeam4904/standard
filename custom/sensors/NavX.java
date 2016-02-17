@@ -28,7 +28,7 @@ public class NavX extends AHRS {
 	
 	public double getRate() {
 		double rate = super.getRate();
-		if (Math.abs(rate) > Math.abs(lastYawRate * 2) + 1) {
+		if (Math.abs(rate) > Math.abs(lastYawRate) + 90.0) {
 			return lastYawRate;
 		}
 		lastYawRate = rate;
@@ -40,7 +40,7 @@ public class NavX extends AHRS {
 	 */
 	public float getYaw() {
 		float yaw = super.getYaw();
-		if (Math.abs(yaw) > Math.abs(lastYaw * 2) + 1) { // Smoothing
+		if (Math.abs(yaw) > Math.abs(lastYaw) + 90.0) { // Smoothing
 			return lastYaw;
 		}
 		lastYaw = yaw;
@@ -52,7 +52,7 @@ public class NavX extends AHRS {
 	 */
 	public float getPitch() {
 		float pitch = super.getPitch();
-		if (Math.abs(pitch) > Math.abs(lastPitch * 2) + 1) {
+		if (Math.abs(pitch) > Math.abs(lastPitch) + 90.0) {
 			return lastPitch;
 		}
 		if (pitch < 0) {
@@ -69,7 +69,7 @@ public class NavX extends AHRS {
 	 */
 	public float getRoll() {
 		float roll = super.getRoll();
-		if (Math.abs(roll) > Math.abs(lastRoll * 2) + 1) {
+		if (Math.abs(roll) > Math.abs(lastRoll) + 90.0) {
 			return lastRoll;
 		}
 		if (roll < 0) {
