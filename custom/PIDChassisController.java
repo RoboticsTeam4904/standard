@@ -22,7 +22,7 @@ public class PIDChassisController implements ChassisController {
 		this.ahrs.setPIDSourceType(PIDSourceType.kDisplacement);
 		pid = new CustomPID(Kp, Ki, Kd, this.ahrs);
 		pid.setInputRange(-180.0f, 180.0f);
-		pid.setOutputRange(-180.0f, 180.0f);
+		pid.setOutputRange(-1.0f, 1.0f);
 		pid.setContinuous(true);
 		pid.reset();
 		pid.enable();
@@ -31,6 +31,7 @@ public class PIDChassisController implements ChassisController {
 	
 	public void reset() {
 		targetYaw = ahrs.getYaw();
+		pid.disable();
 		pid.reset();
 		pid.enable();
 	}
@@ -47,15 +48,15 @@ public class PIDChassisController implements ChassisController {
 	
 	@Override
 	public double getTurnSpeed() {
-		targetYaw = targetYaw + ((controller.getTurnSpeed() * maxDegreesPerSecond) * ((System.currentTimeMillis() / 1000) - lastUpdate));
-		lastUpdate = System.currentTimeMillis() / 1000;
+		targetYaw = targetYaw + ((controller.getTurnSpeed() * maxDegreesPerSecond) * (((double) System.currentTimeMillis() / 1000.0) - lastUpdate));
+		lastUpdate = (double) System.currentTimeMillis() / 1000.0;
 		if (targetYaw > 180) {
 			targetYaw = -180 + (Math.abs(targetYaw) - 180);
 		} else if (targetYaw < -180) {
 			targetYaw = 180 - (Math.abs(targetYaw) - 180);
 		}
 		pid.setSetpoint(targetYaw);
-		LogKitten.w("Target: " + targetYaw + " PID Constants: " + "P: " + pid.getP() + " I: " + pid.getI() + " D: " + pid.getD() + " Result: " + pid.get(), true);
+		LogKitten.w("Target: " + targetYaw + " PID Constants: " + "P: " + pid.getP() + " I: " + pid.getI() + " D: " + pid.getD() + " Result: " + pid.get() + " Current position: " + ahrs.pidGet(), true);
 		return pid.get();
 	}
 }
