@@ -37,7 +37,7 @@ public class CustomPID {
 		inputMax = 0.0;
 		outputMin = 0.0;
 		outputMax = 0.0;
-		reset();
+		this.reset();
 	}
 	
 	public CustomPID(double P, double I, double D, PIDSource source) {
@@ -110,6 +110,7 @@ public class CustomPID {
 		setpoint = source.pidGet();
 		totalError = 0;
 		lastError = 0;
+		lastUpdate = System.currentTimeMillis();
 	}
 	
 	public void enable() {
@@ -158,6 +159,7 @@ public class CustomPID {
 				return outputMin;
 			}
 		}
+		lastUpdate = System.currentTimeMillis();
 		return result;
 	}
 	

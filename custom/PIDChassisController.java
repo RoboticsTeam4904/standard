@@ -27,10 +27,12 @@ public class PIDChassisController implements ChassisController {
 		pid.reset();
 		pid.enable();
 		targetYaw = ahrs.getYaw();
+		lastUpdate = (double) System.currentTimeMillis() / 1000.0;
 	}
 	
 	public void reset() {
 		targetYaw = ahrs.getYaw();
+		lastUpdate = (double) System.currentTimeMillis() / 1000.0;
 		pid.disable();
 		pid.reset();
 		pid.enable();
@@ -56,7 +58,7 @@ public class PIDChassisController implements ChassisController {
 			targetYaw = 180 - (Math.abs(targetYaw) - 180);
 		}
 		pid.setSetpoint(targetYaw);
-		LogKitten.w("Target: " + targetYaw + " PID Constants: " + "P: " + pid.getP() + " I: " + pid.getI() + " D: " + pid.getD() + " Result: " + pid.get() + " Current position: " + ahrs.pidGet(), true);
+		LogKitten.w("Total error: " + pid.totalError + ", Raw Yaw: " + ahrs.getRawYaw() + ", Error: " + pid.getError(), true);
 		return pid.get();
 	}
 }

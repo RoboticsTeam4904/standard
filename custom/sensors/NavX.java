@@ -47,6 +47,10 @@ public class NavX extends AHRS {
 		return yaw;
 	}
 	
+	public float getRawYaw() {
+		return super.getYaw();
+	}
+	
 	/**
 	 * Returns an always positive pitch
 	 */
