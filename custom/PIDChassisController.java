@@ -10,7 +10,6 @@ public class PIDChassisController implements ChassisController {
 	private double targetYaw;
 	private double lastUpdate;
 	private NavX ahrs;
-	private double pidResult;
 	public static CustomPID pid;
 	
 	public PIDChassisController(ChassisController controller, NavX ahrs, double Kp, double Ki, double Kd, double maxDegreesPerSecond) {
@@ -53,6 +52,6 @@ public class PIDChassisController implements ChassisController {
 			targetYaw = 180 - (Math.abs(targetYaw) - 180);
 		}
 		pid.setSetpoint(targetYaw);
-		return pidResult;
+		return pid.get();
 	}
 }
