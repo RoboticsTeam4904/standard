@@ -65,6 +65,7 @@ public class TalonEncoder implements CustomEncoder {
 	public double getRate() {
 		if (reverseDirection) {
 			return talon.getEncVelocity() * -10.0 * distancePerPulse;
+			// getEncVelocity must be converted from ticks to 100ms to ticks per second, so *10.
 		} else {
 			return talon.getEncVelocity() * 10.0 * distancePerPulse;
 		}
