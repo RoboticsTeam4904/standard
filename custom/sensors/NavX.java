@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj.SerialPort;
  * Local NavX interface.
  *
  */
-public class NavX extends AHRS {
+public class NavX extends AHRS implements IMU {
 	private float lastYaw;
 	private float lastPitch;
 	private float lastRoll;
