@@ -31,6 +31,7 @@ public class PIDChassisController implements ChassisController {
 	
 	public void reset() {
 		targetYaw = ahrs.getYaw();
+		pid.disable();
 		pid.reset();
 		pid.enable();
 	}
@@ -55,7 +56,7 @@ public class PIDChassisController implements ChassisController {
 			targetYaw = 180 - (Math.abs(targetYaw) - 180);
 		}
 		pid.setSetpoint(targetYaw);
-		LogKitten.w("Target: " + targetYaw + " PID Constants: " + "P: " + pid.getP() + " I: " + pid.getI() + " D: " + pid.getD() + " Result: " + pid.get(), true);
+		LogKitten.w("Target: " + targetYaw + " PID Constants: " + "P: " + pid.getP() + " I: " + pid.getI() + " D: " + pid.getD() + " Result: " + pid.get() + " Current position: " + ahrs.pidGet(), true);
 		return pid.get();
 	}
 }
