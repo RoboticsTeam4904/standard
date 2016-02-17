@@ -3,6 +3,13 @@ package org.usfirst.frc4904.standard.custom.motioncontrollers;
 
 import edu.wpi.first.wpilibj.PIDSource;
 
+/**
+ * A bang bang controller.
+ * The bang bang controller increases the value of the output
+ * if it is below the setpoint or decreases the value of the
+ * output if it is above the setpoint.
+ *
+ */
 public class BangBangController extends MotionController {
 	protected double error;
 	protected double A;
@@ -10,13 +17,20 @@ public class BangBangController extends MotionController {
 	
 	/**
 	 * BangBang controller
+	 * A bang bang controller.
+	 * The bang bang controller increases the value of the output
+	 * if it is below the setpoint or decreases the value of the
+	 * output if it is above the setpoint.
 	 * 
 	 * @param source
 	 *        Sensor
 	 * @param A
 	 *        Adjustment term
+	 *        The is the amount the setpoint is increase
+	 *        or decrease by.
 	 * @param F
 	 *        Feedforward term
+	 *        The scalar on the input.
 	 */
 	public BangBangController(PIDSource source, double A, double F) {
 		super(source);
@@ -25,12 +39,22 @@ public class BangBangController extends MotionController {
 		reset();
 	}
 	
+	/**
+	 * Sets the setpoint to the current sensor value.
+	 */
 	@Override
 	public void reset() {
 		setpoint = source.pidGet();
 		error = 0;
 	}
 	
+	/**
+	 * Get the current output of the bang bang controller.
+	 * This should be used to set the output.
+	 * 
+	 * @return
+	 * 		The current output of the bang bang controller.
+	 */
 	@Override
 	public double get() {
 		if (!enable) {
@@ -55,6 +79,10 @@ public class BangBangController extends MotionController {
 		return F * setpoint;
 	}
 	
+	/**
+	 * @return
+	 * 		The most recent error.
+	 */
 	@Override
 	public double getError() {
 		return error;

@@ -3,6 +3,11 @@ package org.usfirst.frc4904.standard.custom.motioncontrollers;
 
 import edu.wpi.first.wpilibj.PIDSource;
 
+/**
+ * An extremely basic PID controller.
+ * It does not differentiate between rate and distance.
+ *
+ */
 public class CustomPID extends MotionController {
 	protected double P;
 	protected double I;
@@ -12,6 +17,21 @@ public class CustomPID extends MotionController {
 	protected double lastError;
 	protected double lastUpdate;
 	
+	/**
+	 * An extremely basic PID controller.
+	 * It does not differentiate between rate and distance.
+	 * 
+	 * @param P
+	 *        Initial P constant
+	 * @param I
+	 *        Initial I constant
+	 * @param D
+	 *        Initial D constant
+	 * @param F
+	 *        Initial F (feed forward) constant
+	 * @param source
+	 *        The sensor linked to the output
+	 */
 	public CustomPID(double P, double I, double D, double F, PIDSource source) {
 		super(source);
 		this.P = P;
@@ -20,36 +40,100 @@ public class CustomPID extends MotionController {
 		this.F = F;
 	}
 	
+	/**
+	 * An extremely basic PID controller.
+	 * It does not differentiate between rate and distance.
+	 * 
+	 * @param P
+	 *        Initial P constant
+	 * @param I
+	 *        Initial I constant
+	 * @param D
+	 *        Initial D constant
+	 * @param source
+	 *        The sensor linked to the output
+	 */
 	public CustomPID(double P, double I, double D, PIDSource source) {
 		this(P, I, D, 0.0, source);
 	}
 	
+	/**
+	 * An extremely basic PID controller.
+	 * It does not differentiate between rate and distance.
+	 * 
+	 * @param source
+	 *        The sensor linked to the output
+	 */
 	public CustomPID(PIDSource source) {
 		this(0, 0, 0, source);
 	}
 	
+	/**
+	 * @return
+	 * 		The current P value
+	 */
 	public double getP() {
 		return P;
 	}
 	
+	/**
+	 * @return
+	 * 		The current I value
+	 */
 	public double getI() {
 		return I;
 	}
 	
+	/**
+	 * @return
+	 * 		The current D value
+	 */
 	public double getD() {
 		return D;
 	}
 	
+	/**
+	 * @return
+	 * 		The current F (feed forward) value
+	 */
 	public double getF() {
 		return F;
 	}
 	
+	/**
+	 * Sets the parameters of the PID loop
+	 * 
+	 * @param P
+	 *        Proportional
+	 * @param I
+	 *        Integral
+	 * @param D
+	 *        Derivative
+	 * 
+	 *        If you do not know what these mean, please refer
+	 *        to this link: https://en.wikipedia.org/wiki/PID_controller
+	 */
 	public void setPID(double P, double I, double D) {
 		this.P = P;
 		this.I = I;
 		this.D = D;
 	}
 	
+	/**
+	 * Sets the parameters of the PID loop
+	 * 
+	 * @param P
+	 *        Proportional
+	 * @param I
+	 *        Integral
+	 * @param D
+	 *        Derivative
+	 * @param F
+	 *        Feed forward (scalar on input added to output)
+	 * 		
+	 *        If you do not know what these mean, please refer
+	 *        to this link: https://en.wikipedia.org/wiki/PID_controller
+	 */
 	public void setPIDF(double P, double I, double D, double F) {
 		this.P = P;
 		this.I = I;
@@ -57,6 +141,12 @@ public class CustomPID extends MotionController {
 		this.F = F;
 	}
 	
+	/**
+	 * Resets the PID controller.
+	 * This sets total error and last error to 0,
+	 * as well as setting the setpoint to the current
+	 * sensor reading.
+	 */
 	@Override
 	public void reset() {
 		setpoint = source.pidGet();
