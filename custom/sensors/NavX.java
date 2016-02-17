@@ -9,10 +9,11 @@ import edu.wpi.first.wpilibj.SerialPort;
  *
  */
 public class NavX extends AHRS {
-	private float lastYaw;
-	private float lastPitch;
-	private float lastRoll;
-	private double lastYawRate;
+	protected float lastYaw;
+	protected float lastPitch;
+	protected float lastRoll;
+	protected double lastYawRate;
+	protected final double MAX_DEGREES_PER_TICK = 90.0;
 	
 	public NavX(SerialPort.Port port) {
 		super(port);
@@ -28,7 +29,7 @@ public class NavX extends AHRS {
 	
 	public double getRate() {
 		double rate = super.getRate();
-		if (Math.abs(rate) > Math.abs(lastYawRate) + 90.0) {
+		if (Math.abs(rate) > Math.abs(lastYawRate) + MAX_DEGREES_PER_TICK) {
 			return lastYawRate;
 		}
 		lastYawRate = rate;
@@ -40,7 +41,7 @@ public class NavX extends AHRS {
 	 */
 	public float getYaw() {
 		float yaw = super.getYaw();
-		if (Math.abs(yaw) > Math.abs(lastYaw) + 90.0) { // Smoothing
+		if (Math.abs(yaw) > Math.abs(lastYaw) + MAX_DEGREES_PER_TICK) { // Smoothing
 			return lastYaw;
 		}
 		lastYaw = yaw;
@@ -52,7 +53,7 @@ public class NavX extends AHRS {
 	 */
 	public float getPitch() {
 		float pitch = super.getPitch();
-		if (Math.abs(pitch) > Math.abs(lastPitch) + 90.0) {
+		if (Math.abs(pitch) > Math.abs(lastPitch) + MAX_DEGREES_PER_TICK) {
 			return lastPitch;
 		}
 		if (pitch < 0) {
@@ -69,7 +70,7 @@ public class NavX extends AHRS {
 	 */
 	public float getRoll() {
 		float roll = super.getRoll();
-		if (Math.abs(roll) > Math.abs(lastRoll) + 90.0) {
+		if (Math.abs(roll) > Math.abs(lastRoll) + MAX_DEGREES_PER_TICK) {
 			return lastRoll;
 		}
 		if (roll < 0) {
