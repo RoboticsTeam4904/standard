@@ -8,17 +8,16 @@ public class CustomPID extends MotionController {
 	protected double I;
 	protected double D;
 	protected double F;
-	protected final PIDSource source;
 	protected double totalError;
 	protected double lastError;
 	protected double lastUpdate;
 	
 	public CustomPID(double P, double I, double D, double F, PIDSource source) {
+		super(source);
 		this.P = P;
 		this.I = I;
 		this.D = D;
 		this.F = F;
-		this.source = source;
 	}
 	
 	public CustomPID(double P, double I, double D, PIDSource source) {
@@ -87,10 +86,12 @@ public class CustomPID extends MotionController {
 		totalError += error * deltaT;
 		double result = P * error + I * totalError + D * ((error - lastError) / deltaT) + F * setpoint;
 		lastError = error;
-		if (result > outputMax) {
-			return outputMax;
-		} else if (result < outputMin) {
-			return outputMin;
+		if (capOutput) {
+			if (result > outputMax) {
+				return outputMax;
+			} else if (result < outputMin) {
+				return outputMin;
+			}
 		}
 		return result;
 	}

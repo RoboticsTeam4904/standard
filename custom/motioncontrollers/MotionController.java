@@ -1,9 +1,11 @@
 package org.usfirst.frc4904.standard.custom.motioncontrollers;
 
 
+import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.util.BoundaryException;
 
 public abstract class MotionController {
+	protected final PIDSource source;
 	protected double setpoint;
 	protected double absoluteTolerance;
 	protected boolean continuous;
@@ -14,7 +16,8 @@ public abstract class MotionController {
 	protected double outputMin;
 	protected boolean enable;
 	
-	public MotionController() {
+	public MotionController(PIDSource source) {
+		this.source = source;
 		enable = true;
 		absoluteTolerance = 0.0001; // Nonzero to avoid floating point errors
 		capOutput = false;
@@ -59,6 +62,10 @@ public abstract class MotionController {
 		outputMin = minimum;
 		outputMax = maximum;
 		capOutput = true;
+	}
+	
+	public void disableOutputRange() {
+		capOutput = false;
 	}
 	
 	public void setContinuous(boolean continuous) {
