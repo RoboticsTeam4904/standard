@@ -6,10 +6,10 @@ import edu.wpi.first.wpilibj.PIDSourceType;
 
 public class TalonEncoder implements CustomEncoder {
 	protected final CANTalon talon;
-	private PIDSourceType pidSource;
-	private double distancePerPulse;
-	private boolean reverseDirection;
-	private boolean rateMode;
+	protected PIDSourceType pidSource;
+	protected double distancePerPulse;
+	protected boolean reverseDirection;
+	protected boolean rateMode;
 	
 	public TalonEncoder(String name, CANTalon talon, boolean reverseDirection, double distancePerPulse, boolean rateMode) {
 		this.talon = talon;
