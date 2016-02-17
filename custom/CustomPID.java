@@ -98,6 +98,10 @@ public class CustomPID {
 		capOutput = true;
 	}
 	
+	public void disableOutputRange() {
+		capOutput = false;
+	}
+	
 	public void setContinuous(boolean continuous) {
 		this.continuous = continuous;
 	}
@@ -147,10 +151,12 @@ public class CustomPID {
 		totalError += error * deltaT;
 		double result = P * error + I * totalError + D * ((error - lastError) / deltaT) + F * setpoint;
 		lastError = error;
-		if (result > outputMax) {
-			return outputMax;
-		} else if (result < outputMin) {
-			return outputMin;
+		if (capOutput) {
+			if (result > outputMax) {
+				return outputMax;
+			} else if (result < outputMin) {
+				return outputMin;
+			}
 		}
 		return result;
 	}
