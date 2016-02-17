@@ -12,58 +12,36 @@ public class CANEncoder extends CANSensor implements CustomEncoder {
 	private PIDSourceType pidSource;
 	private double distancePerPulse;
 	private boolean reverseDirection;
-	private boolean rateMode;
 	
-	public CANEncoder(String name, int id, boolean reverseDirection, double distancePerPulse, boolean rateMode) {
+	public CANEncoder(String name, int id, boolean reverseDirection, double distancePerPulse) {
 		super(name, id, 2);
 		this.reverseDirection = reverseDirection;
 		this.distancePerPulse = distancePerPulse;
-		this.rateMode = rateMode;
 		setPIDSourceType(PIDSourceType.kDisplacement);
 	}
 	
-	public CANEncoder(String name, int id, boolean reverseDirection, boolean rateMode) {
-		this(name, id, reverseDirection, 1.0, rateMode);
-	}
-	
 	public CANEncoder(String name, int id, boolean reverseDirection) {
-		this(name, id, reverseDirection, 1.0, false);
-	}
-	
-	public CANEncoder(String name, int id, double distancePerPulse, boolean rateMode) {
-		this(name, id, false, distancePerPulse, rateMode);
+		this(name, id, reverseDirection, 1.0);
 	}
 	
 	public CANEncoder(String name, int id, double distancePerPulse) {
-		this(name, id, false, distancePerPulse, false);
-	}
-	
-	public CANEncoder(int id, boolean reverseDirection, double distancePerPulse, boolean rateMode) {
-		this("CANEncoder", id, reverseDirection, distancePerPulse, rateMode);
+		this(name, id, false, distancePerPulse);
 	}
 	
 	public CANEncoder(int id, boolean reverseDirection, double distancePerPulse) {
-		this("CANEncoder", id, reverseDirection, distancePerPulse, false);
-	}
-	
-	public CANEncoder(int id, boolean reverseDirection, boolean rateMode) {
-		this("CANEncoder", id, reverseDirection, 1.0, rateMode);
+		this("CANEncoder", id, reverseDirection, distancePerPulse);
 	}
 	
 	public CANEncoder(int id, boolean reverseDirection) {
-		this("CANEncoder", id, reverseDirection, 1.0, false);
-	}
-	
-	public CANEncoder(int id, double distancePerPulse, boolean rateMode) {
-		this("CANEncoder", id, false, distancePerPulse, rateMode);
+		this("CANEncoder", id, reverseDirection, 1.0);
 	}
 	
 	public CANEncoder(int id, double distancePerPulse) {
-		this("CANEncoder", id, false, distancePerPulse, false);
+		this("CANEncoder", id, false, distancePerPulse);
 	}
 	
 	public CANEncoder(int id) {
-		this("CANEncoder", id, false, 1.0, false);
+		this("CANEncoder", id, false, 1.0);
 	}
 	
 	/**
@@ -88,10 +66,13 @@ public class CANEncoder extends CANSensor implements CustomEncoder {
 	}
 	
 	public double pidGet() {
-		if (rateMode) {
-			return getRate();
+		switch (pidSource) {
+			case kRate:
+				return getRate();
+			case kDisplacement:
+			default:
+				return getDistance();
 		}
-		return getDistance();
 	}
 	
 	/**
