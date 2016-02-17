@@ -1,6 +1,7 @@
 package org.usfirst.frc4904.standard.custom;
 
 
+import org.usfirst.frc4904.standard.LogKitten;
 import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.util.BoundaryException;
 
@@ -151,6 +152,7 @@ public class CustomPID {
 		}
 		totalError += error * deltaT;
 		double result = P * error + I * totalError + D * ((error - lastError) / deltaT) + F * setpoint;
+		LogKitten.w("Delta error: " + ((error - lastError) / deltaT));
 		lastError = error;
 		if (capOutput) {
 			if (result > outputMax) {
