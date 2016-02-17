@@ -5,6 +5,11 @@ import edu.wpi.first.wpilibj.PIDSource;
 
 public interface IMU extends PIDSource {
 	/**
+	 * Resets the IMU.
+	 */
+	public void reset();
+	
+	/**
 	 * @return
 	 * 		Rate of rotation about yaw axis
 	 */
