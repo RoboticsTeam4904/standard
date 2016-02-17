@@ -1,27 +1,17 @@
-package org.usfirst.frc4904.standard.custom;
+package org.usfirst.frc4904.standard.custom.motioncontrollers;
 
 
 import edu.wpi.first.wpilibj.PIDSource;
-import edu.wpi.first.wpilibj.util.BoundaryException;
 
-public class CustomPID {
+public class CustomPID extends MotionController {
 	protected double P;
 	protected double I;
 	protected double D;
 	protected double F;
 	protected final PIDSource source;
-	protected double setpoint;
 	protected double totalError;
 	protected double lastError;
 	protected double lastUpdate;
-	protected boolean enable;
-	protected double absoluteTolerance;
-	protected boolean continuous;
-	protected double inputMax;
-	protected double inputMin;
-	protected boolean capOutput;
-	protected double outputMax;
-	protected double outputMin;
 	
 	public CustomPID(double P, double I, double D, double F, PIDSource source) {
 		this.P = P;
@@ -29,15 +19,6 @@ public class CustomPID {
 		this.D = D;
 		this.F = F;
 		this.source = source;
-		enable = true;
-		absoluteTolerance = 0.0001; // Nonzero to avoid floating point errors
-		capOutput = false;
-		continuous = false;
-		inputMin = 0.0;
-		inputMax = 0.0;
-		outputMin = 0.0;
-		outputMax = 0.0;
-		reset();
 	}
 	
 	public CustomPID(double P, double I, double D, PIDSource source) {
@@ -77,55 +58,14 @@ public class CustomPID {
 		this.F = F;
 	}
 	
-	public void setAbsoluteTolerance(double absoluteTolerance) {
-		if (absoluteTolerance >= 0) {
-			this.absoluteTolerance = absoluteTolerance;
-		}
-		throw new BoundaryException("Absolute tolerance negative");
-	}
-	
-	public void setInputRange(double minimum, double maximum) {
-		if (minimum > maximum) {
-			throw new BoundaryException("Minimum is greater than maximum");
-		}
-		inputMin = minimum;
-		inputMax = maximum;
-	}
-	
-	public void setOutputRange(double minimum, double maximum) {
-		outputMin = minimum;
-		outputMax = maximum;
-		capOutput = true;
-	}
-	
-	public void setContinuous(boolean continuous) {
-		this.continuous = continuous;
-	}
-	
 	public void reset() {
 		setpoint = source.pidGet();
 		totalError = 0;
 		lastError = 0;
 	}
 	
-	public void enable() {
-		enable = true;
-	}
-	
-	public void disable() {
-		enable = false;
-	}
-	
 	public double getError() {
 		return lastError;
-	}
-	
-	public double getSetpoint() {
-		return setpoint;
-	}
-	
-	public void setSetpoint(double setpoint) {
-		this.setpoint = setpoint;
 	}
 	
 	public double get() {
@@ -153,9 +93,5 @@ public class CustomPID {
 			return outputMin;
 		}
 		return result;
-	}
-	
-	public boolean onTarget() {
-		return Math.abs(getError()) <= absoluteTolerance;
 	}
 }
