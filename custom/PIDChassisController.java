@@ -8,12 +8,12 @@ import org.usfirst.frc4904.standard.custom.sensors.IMU;
 import edu.wpi.first.wpilibj.PIDSourceType;
 
 public class PIDChassisController implements ChassisController {
-	private ChassisController controller;
-	private double maxDegreesPerSecond;
-	private double targetYaw;
-	private double lastUpdate;
-	private IMU imu;
-	public MotionController motionController;
+	protected ChassisController controller;
+	protected double maxDegreesPerSecond;
+	protected double targetYaw;
+	protected double lastUpdate;
+	protected IMU imu;
+	protected MotionController motionController;
 	
 	public PIDChassisController(ChassisController controller, IMU imu, MotionController motionController, double maxDegreesPerSecond) {
 		this.controller = controller;
@@ -21,6 +21,7 @@ public class PIDChassisController implements ChassisController {
 		this.imu = imu;
 		this.imu.reset();
 		this.imu.setPIDSourceType(PIDSourceType.kDisplacement);
+		this.motionController = motionController;
 		motionController.setInputRange(-180.0f, 180.0f);
 		motionController.setOutputRange(-1.0f, 1.0f);
 		motionController.setContinuous(true);
@@ -55,7 +56,7 @@ public class PIDChassisController implements ChassisController {
 			targetYaw = imu.getYaw();
 			return controller.getTurnSpeed();
 		}
-		LogKitten.v(motionController.getSetpoint() + " " + imu.getYaw(), true);
+		LogKitten.v(motionController.getSetpoint() + " " + imu.getYaw() + " " + motionController.get());
 		targetYaw = targetYaw + ((controller.getTurnSpeed() * maxDegreesPerSecond) * (((double) System.currentTimeMillis() / 1000.0) - lastUpdate));
 		lastUpdate = (double) System.currentTimeMillis() / 1000.0;
 		if (targetYaw > 180) {
