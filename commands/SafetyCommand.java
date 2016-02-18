@@ -12,6 +12,22 @@ import edu.wpi.first.wpilibj.command.Command;
 public abstract class SafetyCommand extends Command {
 	protected String reasonUnsafe;
 	
+	public SafetyCommand() {
+		super();
+	}
+	
+	public SafetyCommand(String name) {
+		super(name);
+	}
+	
+	public SafetyCommand(double timeout) {
+		super(timeout);
+	}
+	
+	public SafetyCommand(String name, double timeout) {
+		super(name, timeout);
+	}
+	
 	@Override
 	protected final void execute() {
 		if (isSafe()) {
