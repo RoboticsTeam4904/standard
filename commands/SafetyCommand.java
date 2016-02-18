@@ -22,7 +22,7 @@ public abstract class SafetyCommand extends Command {
 		if (reasonUnsafe == null) {
 			reasonUnsafe = "the required safety conditions haven't been met";
 		}
-		LogKitten.e("Command " + getName() + " cannot run because " + reasonUnsafe + ". Cancelling...");
+		LogKitten.e("SafetyCommand " + getName() + " cannot run because " + reasonUnsafe + ". Cancelling...");
 	}
 	
 	protected void setUnsafeReason(String reasonUnsafe) {
