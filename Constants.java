@@ -1,6 +1,14 @@
 package org.usfirst.frc4904.standard;
 
 
+/**
+ * Common constants
+ *
+ */
 public class Constants {
-	public static final double epsilon = 0.0000001; // epsilon for 0 for FPA (floating point arithmetic)
+	/**
+	 * A constant for dealing with floating point errors.
+	 * Add/subtract this from floats when doing equality comparisons.
+	 */
+	public static final double epsilon = 0.0000001;
 }
