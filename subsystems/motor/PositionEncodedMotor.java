@@ -1,7 +1,7 @@
 package org.usfirst.frc4904.standard.subsystems.motor;
 
 
-import org.usfirst.frc4904.standard.custom.sensors.CustomEncoder;
+import org.usfirst.frc4904.standard.custom.motioncontrollers.MotionController;
 import org.usfirst.frc4904.standard.subsystems.motor.speedmodifiers.IdentityModifier;
 import org.usfirst.frc4904.standard.subsystems.motor.speedmodifiers.SpeedModifier;
 import edu.wpi.first.wpilibj.SpeedController;
@@ -11,35 +11,35 @@ import edu.wpi.first.wpilibj.SpeedController;
  * It contains an Encoder, PID constants, and range information.
  */
 public class PositionEncodedMotor extends PositionSensorMotor {
-	public PositionEncodedMotor(String name, boolean inverted, SpeedModifier speedModifier, CustomEncoder encoder, SpeedController... motor) {
-		super(name, inverted, speedModifier, encoder, motor);
+	public PositionEncodedMotor(String name, boolean isInverted, SpeedModifier slopeController, MotionController motionController, SpeedController... motors) {
+		super(name, isInverted, slopeController, motionController, motors);
 	}
 	
-	public PositionEncodedMotor(String name, boolean isInverted, CustomEncoder sensor, SpeedController... motors) {
-		this(name, isInverted, new IdentityModifier(), sensor, motors);
+	public PositionEncodedMotor(String name, boolean isInverted, MotionController motionController, SpeedController... motors) {
+		this(name, isInverted, new IdentityModifier(), motionController, motors);
 	}
 	
-	public PositionEncodedMotor(String name, SpeedModifier slopeController, CustomEncoder sensor, SpeedController... motors) {
-		this(name, false, slopeController, sensor, motors);
+	public PositionEncodedMotor(String name, SpeedModifier slopeController, MotionController motionController, SpeedController... motors) {
+		this(name, false, slopeController, motionController, motors);
 	}
 	
-	public PositionEncodedMotor(String name, CustomEncoder sensor, SpeedController... motors) {
-		this(name, false, new IdentityModifier(), sensor, motors);
+	public PositionEncodedMotor(String name, MotionController motionController, SpeedController... motors) {
+		this(name, false, new IdentityModifier(), motionController, motors);
 	}
 	
-	public PositionEncodedMotor(boolean isInverted, SpeedModifier speedModifier, CustomEncoder sensor, SpeedController... motors) {
-		this("PositionEncodedMotor", isInverted, speedModifier, sensor, motors);
+	public PositionEncodedMotor(boolean isInverted, SpeedModifier speedModifier, MotionController motionController, SpeedController... motors) {
+		this("PositionEncodedMotor", isInverted, speedModifier, motionController, motors);
 	}
 	
-	public PositionEncodedMotor(boolean isInverted, CustomEncoder sensor, SpeedController... motors) {
-		this("PositionEncodedMotor", isInverted, sensor, motors);
+	public PositionEncodedMotor(boolean isInverted, MotionController motionController, SpeedController... motors) {
+		this("PositionEncodedMotor", isInverted, motionController, motors);
 	}
 	
-	public PositionEncodedMotor(SpeedModifier speedModifier, CustomEncoder sensor, SpeedController... motors) {
-		this("PositionEncodedMotor", speedModifier, sensor, motors);
+	public PositionEncodedMotor(SpeedModifier speedModifier, MotionController motionController, SpeedController... motors) {
+		this("PositionEncodedMotor", speedModifier, motionController, motors);
 	}
 	
-	public PositionEncodedMotor(CustomEncoder sensor, SpeedController... motors) {
-		this("PositionEncodedMotor", sensor, motors);
+	public PositionEncodedMotor(MotionController motionController, SpeedController... motors) {
+		this("PositionEncodedMotor", motionController, motors);
 	}
 }
