@@ -66,13 +66,10 @@ public class CANEncoder extends CANSensor implements CustomEncoder {
 	}
 	
 	public double pidGet() {
-		switch (pidSource) {
-			case kRate:
-				return getRate();
-			case kDisplacement:
-			default:
-				return getDistance();
+		if (pidSource == PIDSourceType.kDisplacement) {
+			return getDistance();
 		}
+		return getRate();
 	}
 	
 	/**
