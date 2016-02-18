@@ -79,7 +79,8 @@ public class LogKitten {
 	 * @return the caller for the callee `f`, `e`, `w`, `v`, or `d`
 	 */
 	private static String getLoggerMethodCallerClassName() {
-		String[] trace = Thread.currentThread().getStackTrace()[4].getClassName().split("."); // caller of the logger method is fifth in the stack trace
+		String[] trace = Thread.currentThread().getStackTrace()[4].getClassName().split("\\."); // caller of the logger method is fifth in the stack trace
+		if (trace.length == 0) return "";
 		return trace[trace.length - 1]; // don't include the package name
 	}
 	
