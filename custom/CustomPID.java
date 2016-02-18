@@ -139,7 +139,7 @@ public class CustomPID {
 			return F * setpoint;
 		}
 		double input = source.pidGet();
-		double deltaT = (System.currentTimeMillis() - lastUpdate) / 1000.0;
+		double deltaT = ((double) (System.currentTimeMillis() - lastUpdate)) / 1000.0;
 		double error = setpoint - input;
 		if (continuous) {
 			if (Math.abs(error) > (inputMax - inputMin) / 2) {
