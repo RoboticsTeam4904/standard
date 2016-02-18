@@ -50,6 +50,12 @@ public class PIDChassisController implements ChassisController {
 	
 	@Override
 	public double getTurnSpeed() {
+		if (Math.abs(controller.getY()) < 0.00001 && Math.abs(controller.getX()) < 0.000001) {
+			pid.setSetpoint(ahrs.getYaw());
+			targetYaw = ahrs.getYaw();
+			return controller.getTurnSpeed();
+		}
+		LogKitten.v(pid.getSetpoint() + " " + ahrs.getYaw(), true);
 		targetYaw = targetYaw + ((controller.getTurnSpeed() * maxDegreesPerSecond) * (((double) System.currentTimeMillis() / 1000.0) - lastUpdate));
 		lastUpdate = (double) System.currentTimeMillis() / 1000.0;
 		if (targetYaw > 180) {
@@ -58,7 +64,7 @@ public class PIDChassisController implements ChassisController {
 			targetYaw = 180 - (Math.abs(targetYaw) - 180);
 		}
 		pid.setSetpoint(targetYaw);
-		LogKitten.w("Total error: " + pid.totalError + ", Raw Yaw: " + ahrs.getRawYaw() + ", Error: " + pid.getError(), true);
+		// LogKitten.d("Total error: " + pid.totalError + ", Raw Yaw: " + ahrs.getRawYaw() + ", Error: " + pid.getError(), true);
 		return pid.get();
 	}
 }
