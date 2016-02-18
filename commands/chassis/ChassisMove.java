@@ -113,6 +113,7 @@ public class ChassisMove extends CommandGroup {
 		motorSpeeds = chassis.getMotorSpeeds();
 		String motorSpeedsString = "";
 		for (int i = 0; i < motorSpins.length; i++) {
+			LogKitten.d(Double.toString(motorSpeeds[i]));
 			motorSpins[i].set(motorSpeeds[i]);
 			motorSpeedsString += Double.toString(motorSpeeds[i]) + " ";
 		}
