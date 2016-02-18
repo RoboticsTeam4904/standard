@@ -83,8 +83,6 @@ public class CANTalonEncoder implements CustomEncoder {
 	
 	@Override
 	public void reset() {
-		talon.setAnalogPosition(0);
-		talon.setPosition(0.0);
 		talon.setEncPosition(0);
 	}
 }
