@@ -1,6 +1,7 @@
 package org.usfirst.frc4904.standard.custom.motioncontrollers;
 
 
+import org.usfirst.frc4904.standard.Constants;
 import edu.wpi.first.wpilibj.PIDSource;
 
 /**
@@ -14,6 +15,34 @@ public class BangBangController extends MotionController {
 	protected double error;
 	protected double A;
 	protected double F;
+	protected double threshold;
+	
+	/**
+	 * BangBang controller
+	 * A bang bang controller.
+	 * The bang bang controller increases the value of the output
+	 * if it is below the setpoint or decreases the value of the
+	 * output if it is above the setpoint.
+	 * 
+	 * @param source
+	 *        Sensor
+	 * @param A
+	 *        Adjustment term
+	 *        The is the amount the setpoint is increase
+	 *        or decrease by.
+	 * @param F
+	 *        Feedforward term
+	 *        The scalar on the input.
+	 * @param threshold
+	 *        The threshold for the bangbang to start doing something.
+	 */
+	public BangBangController(PIDSource source, double A, double F, double threshold) {
+		super(source);
+		this.A = A;
+		this.F = F;
+		this.threshold = threshold;
+		reset();
+	}
 	
 	/**
 	 * BangBang controller
@@ -33,10 +62,7 @@ public class BangBangController extends MotionController {
 	 *        The scalar on the input.
 	 */
 	public BangBangController(PIDSource source, double A, double F) {
-		super(source);
-		this.A = A;
-		this.F = F;
-		reset();
+		this(source, A, F, Constants.EPSILON);
 	}
 	
 	/**
@@ -63,18 +89,20 @@ public class BangBangController extends MotionController {
 		double input = source.pidGet();
 		double error = setpoint - input;
 		if (continuous) {
-			if (Math.abs(error) > (inputMax - inputMin) / 2) {
+			double range = inputMax - inputMin;
+			// If the error is more than half of the range, it is faster to increase the error and loop around the boundary
+			if (Math.abs(error) > range / 2) {
 				if (error > 0) {
-					error = error - inputMax + inputMin;
+					error -= range;
 				} else {
-					error = error + inputMax - inputMin;
+					error += range;
 				}
 			}
 		}
-		if (error < 0) {
+		if (error < 0.0 && Math.abs(error) > threshold) {
 			return A + F * setpoint;
-		} else if (error > 0) {
-			return -(A + F * setpoint);
+		} else if (error > 0.0 && Math.abs(error) > threshold) {
+			return -1.0 * A + F * setpoint;
 		}
 		return F * setpoint;
 	}
