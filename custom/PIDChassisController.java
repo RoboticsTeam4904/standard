@@ -2,6 +2,7 @@ package org.usfirst.frc4904.standard.custom;
 
 
 import org.usfirst.frc4904.standard.LogKitten;
+import org.usfirst.frc4904.standard.custom.motioncontrollers.CustomPIDController;
 import org.usfirst.frc4904.standard.custom.sensors.NavX;
 import edu.wpi.first.wpilibj.PIDSourceType;
 
@@ -11,7 +12,7 @@ public class PIDChassisController implements ChassisController {
 	private double targetYaw;
 	private double lastUpdate;
 	private NavX ahrs;
-	public static CustomPID pid;
+	public static CustomPIDController pid;
 	
 	public PIDChassisController(ChassisController controller, NavX ahrs, double Kp, double Ki, double Kd, double maxDegreesPerSecond) {
 		this.controller = controller;
@@ -20,7 +21,7 @@ public class PIDChassisController implements ChassisController {
 		this.ahrs.reset();
 		this.ahrs.resetDisplacement();
 		this.ahrs.setPIDSourceType(PIDSourceType.kDisplacement);
-		pid = new CustomPID(Kp, Ki, Kd, this.ahrs);
+		pid = new CustomPIDController(Kp, Ki, Kd, this.ahrs);
 		pid.setInputRange(-180.0f, 180.0f);
 		pid.setOutputRange(-1.0f, 1.0f);
 		pid.setContinuous(true);
