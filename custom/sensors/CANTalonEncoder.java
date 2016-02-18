@@ -1,6 +1,7 @@
 package org.usfirst.frc4904.standard.custom.sensors;
 
 
+import org.usfirst.frc4904.standard.Util;
 import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.PIDSourceType;
 
@@ -58,7 +59,7 @@ public class CANTalonEncoder implements CustomEncoder {
 	
 	@Override
 	public boolean getStopped() {
-		return Math.abs(getRate()) <= 0.0001;
+		return Util.isZero(getRate());
 	}
 	
 	@Override

@@ -2,6 +2,7 @@ package org.usfirst.frc4904.standard.custom;
 
 
 import org.usfirst.frc4904.standard.LogKitten;
+import org.usfirst.frc4904.standard.Util;
 import org.usfirst.frc4904.standard.custom.motioncontrollers.MotionController;
 import org.usfirst.frc4904.standard.custom.sensors.IMU;
 import edu.wpi.first.wpilibj.PIDSourceType;
@@ -14,10 +15,10 @@ public class PIDChassisController implements ChassisController {
 	private IMU imu;
 	public MotionController motionController;
 	
-	public PIDChassisController(ChassisController controller, IMU ahrs, MotionController motionController, double maxDegreesPerSecond) {
+	public PIDChassisController(ChassisController controller, IMU imu, MotionController motionController, double maxDegreesPerSecond) {
 		this.controller = controller;
 		this.maxDegreesPerSecond = maxDegreesPerSecond;
-		this.imu = ahrs;
+		this.imu = imu;
 		this.imu.reset();
 		this.imu.setPIDSourceType(PIDSourceType.kDisplacement);
 		motionController.setInputRange(-180.0f, 180.0f);
@@ -25,7 +26,7 @@ public class PIDChassisController implements ChassisController {
 		motionController.setContinuous(true);
 		motionController.reset();
 		motionController.enable();
-		targetYaw = ahrs.getYaw();
+		targetYaw = imu.getYaw();
 		lastUpdate = (double) System.currentTimeMillis() / 1000.0;
 	}
 	
@@ -49,7 +50,7 @@ public class PIDChassisController implements ChassisController {
 	
 	@Override
 	public double getTurnSpeed() {
-		if (Math.abs(controller.getY()) < 0.00001 && Math.abs(controller.getX()) < 0.000001) {
+		if (Util.isZero(controller.getY()) && Util.isZero(controller.getX())) {
 			motionController.setSetpoint(imu.getYaw());
 			targetYaw = imu.getYaw();
 			return controller.getTurnSpeed();
