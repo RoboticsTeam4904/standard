@@ -2,6 +2,7 @@ package org.usfirst.frc4904.standard.custom;
 
 
 import org.usfirst.frc4904.standard.LogKitten;
+import org.usfirst.frc4904.standard.Util;
 import org.usfirst.frc4904.standard.custom.sensors.NavX;
 import edu.wpi.first.wpilibj.PIDSourceType;
 
@@ -50,7 +51,7 @@ public class PIDChassisController implements ChassisController {
 	
 	@Override
 	public double getTurnSpeed() {
-		if (Math.abs(controller.getY()) < 0.00001 && Math.abs(controller.getX()) < 0.000001) {
+		if (Util.isZero(controller.getY()) && Util.isZero(controller.getX())) {
 			pid.setSetpoint(ahrs.getYaw());
 			targetYaw = ahrs.getYaw();
 			return controller.getTurnSpeed();
