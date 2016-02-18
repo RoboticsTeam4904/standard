@@ -48,6 +48,10 @@ public class NavX extends AHRS implements IMU {
 		return yaw;
 	}
 	
+	public float getRawYaw() {
+		return super.getYaw();
+	}
+	
 	/**
 	 * Returns an always positive pitch
 	 */

@@ -1,6 +1,7 @@
 package org.usfirst.frc4904.standard.custom;
 
 
+import org.usfirst.frc4904.standard.LogKitten;
 import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.util.BoundaryException;
 
@@ -37,7 +38,7 @@ public class CustomPID {
 		inputMax = 0.0;
 		outputMin = 0.0;
 		outputMax = 0.0;
-		reset();
+		this.reset();
 	}
 	
 	public CustomPID(double P, double I, double D, PIDSource source) {
@@ -110,6 +111,7 @@ public class CustomPID {
 		setpoint = source.pidGet();
 		totalError = 0;
 		lastError = 0;
+		lastUpdate = System.currentTimeMillis();
 	}
 	
 	public void enable() {
@@ -137,7 +139,7 @@ public class CustomPID {
 			return F * setpoint;
 		}
 		double input = source.pidGet();
-		double deltaT = (System.currentTimeMillis() - lastUpdate) / 1000.0;
+		double deltaT = ((double) (System.currentTimeMillis() - lastUpdate)) / 1000.0;
 		double error = setpoint - input;
 		if (continuous) {
 			if (Math.abs(error) > (inputMax - inputMin) / 2) {
@@ -148,8 +150,11 @@ public class CustomPID {
 				}
 			}
 		}
-		totalError += error * deltaT;
-		double result = P * error + I * totalError + D * ((error - lastError) / deltaT) + F * setpoint;
+		// totalError += error * deltaT;
+		totalError += error;
+		// double result = P * error + I * totalError + D * ((error - lastError) / deltaT) + F * setpoint;
+		double result = P * error + I * totalError + D * (error - lastError) + F * setpoint;
+		LogKitten.w("Delta error: " + ((error - lastError) / deltaT) + " Delta Time: " + deltaT);
 		lastError = error;
 		if (capOutput) {
 			if (result > outputMax) {
@@ -158,6 +163,7 @@ public class CustomPID {
 				return outputMin;
 			}
 		}
+		lastUpdate = System.currentTimeMillis();
 		return result;
 	}
 	
