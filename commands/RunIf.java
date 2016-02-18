@@ -1,13 +1,13 @@
 package org.usfirst.frc4904.standard.commands;
 
 
+import java.util.function.BooleanSupplier;
 import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.command.CommandGroup;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
-public class RunIf extends CommandGroup {
+public class RunIf extends Command {
 	protected final Command command;
-	protected final RunIfLazyBooleanProvider[] booleanProviders;
+	protected final BooleanSupplier[] booleanProviders;
 	
 	/**
 	 * Run a command based on a conditional callback.
@@ -21,10 +21,10 @@ public class RunIf extends CommandGroup {
 	 * @param bi
 	 *        A condition function using Java 8's colon syntax
 	 */
-	public RunIf(Command command, RunIfLazyBooleanProvider... booleanProviders) {
+	public RunIf(Command command, BooleanSupplier... booleanSuppliers) {
 		super("RunIf[" + command.getName() + "]");
 		this.command = command;
-		this.booleanProviders = booleanProviders;
+		this.booleanProviders = booleanSuppliers;
 	}
 	
 	@Override
@@ -34,8 +34,8 @@ public class RunIf extends CommandGroup {
 	
 	@Override
 	protected void initialize() {
-		for (RunIfLazyBooleanProvider booleanProvider : booleanProviders) {
-			if (!booleanProvider.evaluate()) {
+		for (BooleanSupplier booleanProvider : booleanProviders) {
+			if (!booleanProvider.getAsBoolean()) {
 				return;
 			}
 		}
@@ -46,4 +46,15 @@ public class RunIf extends CommandGroup {
 	protected boolean isFinished() {
 		return !command.isRunning();
 	}
+	
+	@Override
+	protected void interrupted() {
+		command.cancel();
+	}
+	
+	@Override
+	protected void execute() {}
+	
+	@Override
+	protected void end() {}
 }
