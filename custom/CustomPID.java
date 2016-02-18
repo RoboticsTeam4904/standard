@@ -1,6 +1,7 @@
 package org.usfirst.frc4904.standard.custom;
 
 
+import org.usfirst.frc4904.standard.Constants;
 import org.usfirst.frc4904.standard.LogKitten;
 import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.util.BoundaryException;
@@ -31,7 +32,7 @@ public class CustomPID {
 		this.F = F;
 		this.source = source;
 		enable = true;
-		absoluteTolerance = 0.0001; // Nonzero to avoid floating point errors
+		absoluteTolerance = Constants.epsilon; // Nonzero to avoid floating point errors
 		capOutput = false;
 		continuous = false;
 		inputMin = 0.0;

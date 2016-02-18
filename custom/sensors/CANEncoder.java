@@ -1,6 +1,7 @@
 package org.usfirst.frc4904.standard.custom.sensors;
 
 
+import org.usfirst.frc4904.standard.Util;
 import edu.wpi.first.wpilibj.PIDSourceType;
 
 /**
@@ -113,7 +114,7 @@ public class CANEncoder extends CANSensor implements CustomEncoder {
 	 * Returns true when stopped
 	 */
 	public boolean getStopped() {
-		return Math.abs(this.getRate()) <= 0.0001;
+		return Util.checkZero(getRate());
 	}
 	
 	/**
