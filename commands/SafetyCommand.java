@@ -10,14 +10,23 @@ import edu.wpi.first.wpilibj.command.Command;
  * and use initializeIfSafe() in place of the initialize() method
  */
 public abstract class SafetyCommand extends Command {
+	protected String reasonUnsafe;
+	
 	@Override
 	protected final void initialize() {
-		if (!isSafe()) {
-			this.cancel();
-			LogKitten.e("Command " + getName() + " isn't safe to run! Cancelling...");
+		if (isSafe()) {
+			initializeIfSafe();
 			return;
 		}
-		initializeIfSafe();
+		this.cancel();
+		if (reasonUnsafe == null) {
+			reasonUnsafe = "the required safety conditions haven't been met";
+		}
+		LogKitten.e("Command " + getName() + " cannot run because " + reasonUnsafe + ". Cancelling...");
+	}
+	
+	protected void setUnsafeReason(String reasonUnsafe) {
+		this.reasonUnsafe = reasonUnsafe;
 	}
 	
 	/**
@@ -28,6 +37,7 @@ public abstract class SafetyCommand extends Command {
 	
 	/**
 	 * Determines if the command is safe to run.
+	 * setUnsafeReason(String) should be called to describe a safety failure.
 	 * 
 	 * @return is the command safe to run?
 	 */
