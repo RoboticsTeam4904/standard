@@ -15,7 +15,6 @@ public class CustomPIDController extends MotionController {
 	protected double F;
 	protected double totalError;
 	protected double lastError;
-	protected double lastUpdate;
 	
 	/**
 	 * An extremely basic PID controller.
@@ -172,7 +171,6 @@ public class CustomPIDController extends MotionController {
 			return F * setpoint;
 		}
 		double input = source.pidGet();
-		double deltaT = (System.currentTimeMillis() - lastUpdate) / 1000.0;
 		double error = setpoint - input;
 		// Account for continuous input ranges
 		if (continuous) {
@@ -187,9 +185,9 @@ public class CustomPIDController extends MotionController {
 			}
 		}
 		// Calculate the approximation of the error's derivative
-		double errorDerivative = (error - lastError) / deltaT;
+		double errorDerivative = (error - lastError);
 		// Calculate the approximation of the error's integral
-		totalError += error * deltaT;
+		totalError += error;
 		// Calculate the result using the PIDF formula
 		double result = P * error + I * totalError + D * errorDerivative + F * setpoint;
 		// Limit the result to be within the output range [outputMin, outputMax]
