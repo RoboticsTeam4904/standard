@@ -7,15 +7,15 @@ import edu.wpi.first.wpilibj.command.Command;
 /**
  * A command that will only run if the isSafe() method returns safe.
  * To use, implement an isSafe() method,
- * and use initializeIfSafe() in place of the initialize() method
+ * and use executeIfSafe() in place of the execute() method
  */
 public abstract class SafetyCommand extends Command {
 	protected String reasonUnsafe;
 	
 	@Override
-	protected final void initialize() {
+	protected final void execute() {
 		if (isSafe()) {
-			initializeIfSafe();
+			executeIfSafe();
 			return;
 		}
 		this.cancel();
@@ -30,14 +30,15 @@ public abstract class SafetyCommand extends Command {
 	}
 	
 	/**
-	 * The initialize method is called the first time this Command is run after being started,
+	 * This execute method is called the first time this Command is run after being started,
 	 * on the condition that isSafe() returns true.
 	 */
-	protected abstract void initializeIfSafe();
+	protected abstract void executeIfSafe();
 	
 	/**
 	 * Determines if the command is safe to run.
 	 * setUnsafeReason(String) should be called to describe a safety failure.
+	 * (Will be called every execute iteration.)
 	 * 
 	 * @return is the command safe to run?
 	 */
