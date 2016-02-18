@@ -7,14 +7,12 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 
 public class RunIf extends Command {
 	protected final Command command;
-	protected final BooleanSupplier[] booleanProviders;
+	protected final BooleanSupplier[] booleanSuppliers;
 	
 	/**
 	 * Run a command based on a conditional callback.
 	 * For example, if you only want to shoot if a shooter is ready (based on its isReady() function), use:
 	 * new RunIf(new Shoot(), shooter::isReady)
-	 * This double-colon syntax only works in Java 8. If you must use this with an earlier version of Java, use:
-	 * new RunIf(new Shoot(), new BooleanInterface() { boolean evaluate() { return shooter.isReady(); } })
 	 * 
 	 * @param command
 	 *        The command to be run if the condition is met
@@ -24,7 +22,7 @@ public class RunIf extends Command {
 	public RunIf(Command command, BooleanSupplier... booleanSuppliers) {
 		super("RunIf[" + command.getName() + "]");
 		this.command = command;
-		this.booleanProviders = booleanSuppliers;
+		this.booleanSuppliers = booleanSuppliers;
 	}
 	
 	@Override
@@ -34,7 +32,7 @@ public class RunIf extends Command {
 	
 	@Override
 	protected void initialize() {
-		for (BooleanSupplier booleanProvider : booleanProviders) {
+		for (BooleanSupplier booleanProvider : booleanSuppliers) {
 			if (!booleanProvider.getAsBoolean()) {
 				return;
 			}

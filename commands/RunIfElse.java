@@ -11,7 +11,7 @@ public class RunIfElse extends Command {
 	private final BooleanSupplier condition;
 	
 	public RunIfElse(Command ifCommand, Command elseCommand, BooleanSupplier condition) {
-		super("BranchIf[" + ifCommand.getName() + "]Else[" + elseCommand.getName() + "]");
+		super("RunIf[" + ifCommand.getName() + "]Else[" + elseCommand.getName() + "]");
 		this.ifCommand = ifCommand;
 		this.elseCommand = elseCommand;
 		this.condition = condition;
