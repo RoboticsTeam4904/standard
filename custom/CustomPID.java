@@ -32,7 +32,7 @@ public class CustomPID {
 		this.F = F;
 		this.source = source;
 		enable = true;
-		absoluteTolerance = Constants.epsilon; // Nonzero to avoid floating point errors
+		absoluteTolerance = Constants.EPSILON; // Nonzero to avoid floating point errors
 		capOutput = false;
 		continuous = false;
 		inputMin = 0.0;

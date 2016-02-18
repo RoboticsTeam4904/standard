@@ -17,6 +17,6 @@ public class Util {
 	 * 		Whether or not it is within Constants.epsilon of zero
 	 */
 	public static boolean isZero(double var) {
-		return Math.abs(var) < Constants.epsilon;
+		return Math.abs(var) < Constants.EPSILON;
 	}
 }
