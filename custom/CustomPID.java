@@ -150,9 +150,11 @@ public class CustomPID {
 				}
 			}
 		}
-		totalError += error * deltaT;
-		double result = P * error + I * totalError + D * ((error - lastError) / deltaT) + F * setpoint;
-		LogKitten.w("Delta error: " + ((error - lastError) / deltaT));
+		// totalError += error * deltaT;
+		totalError += error;
+		// double result = P * error + I * totalError + D * ((error - lastError) / deltaT) + F * setpoint;
+		double result = P * error + I * totalError + D * (error - lastError) + F * setpoint;
+		LogKitten.w("Delta error: " + ((error - lastError) / deltaT) + " Delta Time: " + deltaT);
 		lastError = error;
 		if (capOutput) {
 			if (result > outputMax) {
