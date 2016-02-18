@@ -2,8 +2,8 @@ package org.usfirst.frc4904.standard.custom;
 
 
 import org.usfirst.frc4904.standard.LogKitten;
-import org.usfirst.frc4904.standard.custom.motioncontrollers.CustomPIDController;
-import org.usfirst.frc4904.standard.custom.sensors.NavX;
+import org.usfirst.frc4904.standard.custom.motioncontrollers.MotionController;
+import org.usfirst.frc4904.standard.custom.sensors.IMU;
 import edu.wpi.first.wpilibj.PIDSourceType;
 
 public class PIDChassisController implements ChassisController {
@@ -11,32 +11,30 @@ public class PIDChassisController implements ChassisController {
 	private double maxDegreesPerSecond;
 	private double targetYaw;
 	private double lastUpdate;
-	private NavX ahrs;
-	public static CustomPIDController pid;
+	private IMU imu;
+	public MotionController motionController;
 	
-	public PIDChassisController(ChassisController controller, NavX ahrs, double Kp, double Ki, double Kd, double maxDegreesPerSecond) {
+	public PIDChassisController(ChassisController controller, IMU ahrs, MotionController motionController, double maxDegreesPerSecond) {
 		this.controller = controller;
 		this.maxDegreesPerSecond = maxDegreesPerSecond;
-		this.ahrs = ahrs;
-		this.ahrs.reset();
-		this.ahrs.resetDisplacement();
-		this.ahrs.setPIDSourceType(PIDSourceType.kDisplacement);
-		pid = new CustomPIDController(Kp, Ki, Kd, this.ahrs);
-		pid.setInputRange(-180.0f, 180.0f);
-		pid.setOutputRange(-1.0f, 1.0f);
-		pid.setContinuous(true);
-		pid.reset();
-		pid.enable();
+		this.imu = ahrs;
+		this.imu.reset();
+		this.imu.setPIDSourceType(PIDSourceType.kDisplacement);
+		motionController.setInputRange(-180.0f, 180.0f);
+		motionController.setOutputRange(-1.0f, 1.0f);
+		motionController.setContinuous(true);
+		motionController.reset();
+		motionController.enable();
 		targetYaw = ahrs.getYaw();
 		lastUpdate = (double) System.currentTimeMillis() / 1000.0;
 	}
 	
 	public void reset() {
-		targetYaw = ahrs.getYaw();
+		targetYaw = imu.getYaw();
 		lastUpdate = (double) System.currentTimeMillis() / 1000.0;
-		pid.disable();
-		pid.reset();
-		pid.enable();
+		motionController.disable();
+		motionController.reset();
+		motionController.enable();
 	}
 	
 	@Override
@@ -52,11 +50,11 @@ public class PIDChassisController implements ChassisController {
 	@Override
 	public double getTurnSpeed() {
 		if (Math.abs(controller.getY()) < 0.00001 && Math.abs(controller.getX()) < 0.000001) {
-			pid.setSetpoint(ahrs.getYaw());
-			targetYaw = ahrs.getYaw();
+			motionController.setSetpoint(imu.getYaw());
+			targetYaw = imu.getYaw();
 			return controller.getTurnSpeed();
 		}
-		LogKitten.v(pid.getSetpoint() + " " + ahrs.getYaw(), true);
+		LogKitten.v(motionController.getSetpoint() + " " + imu.getYaw(), true);
 		targetYaw = targetYaw + ((controller.getTurnSpeed() * maxDegreesPerSecond) * (((double) System.currentTimeMillis() / 1000.0) - lastUpdate));
 		lastUpdate = (double) System.currentTimeMillis() / 1000.0;
 		if (targetYaw > 180) {
@@ -64,8 +62,8 @@ public class PIDChassisController implements ChassisController {
 		} else if (targetYaw < -180) {
 			targetYaw = 180 - (Math.abs(targetYaw) - 180);
 		}
-		pid.setSetpoint(targetYaw);
+		motionController.setSetpoint(targetYaw);
 		// LogKitten.d("Total error: " + pid.totalError + ", Raw Yaw: " + ahrs.getRawYaw() + ", Error: " + pid.getError(), true);
-		return pid.get();
+		return motionController.get();
 	}
 }
