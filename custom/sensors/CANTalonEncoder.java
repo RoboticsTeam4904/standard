@@ -59,7 +59,7 @@ public class CANTalonEncoder implements CustomEncoder {
 	
 	@Override
 	public boolean getStopped() {
-		return Util.checkZero(getRate());
+		return Util.isZero(getRate());
 	}
 	
 	@Override

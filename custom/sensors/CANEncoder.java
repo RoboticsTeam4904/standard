@@ -114,7 +114,7 @@ public class CANEncoder extends CANSensor implements CustomEncoder {
 	 * Returns true when stopped
 	 */
 	public boolean getStopped() {
-		return Util.checkZero(getRate());
+		return Util.isZero(getRate());
 	}
 	
 	/**

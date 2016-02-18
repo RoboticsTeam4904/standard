@@ -51,7 +51,7 @@ public class PIDChassisController implements ChassisController {
 	
 	@Override
 	public double getTurnSpeed() {
-		if (Util.checkZero(controller.getY()) && Util.checkZero(controller.getX())) {
+		if (Util.isZero(controller.getY()) && Util.isZero(controller.getX())) {
 			pid.setSetpoint(ahrs.getYaw());
 			targetYaw = ahrs.getYaw();
 			return controller.getTurnSpeed();
