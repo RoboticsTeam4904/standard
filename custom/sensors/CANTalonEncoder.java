@@ -10,14 +10,36 @@ public class CANTalonEncoder implements CustomEncoder {
 	protected PIDSourceType pidSource;
 	protected double distancePerPulse;
 	protected boolean reverseDirection;
-	protected boolean rateMode;
 	
-	public CANTalonEncoder(String name, CANTalon talon, boolean reverseDirection, double distancePerPulse, boolean rateMode) {
+	public CANTalonEncoder(String name, CANTalon talon, boolean reverseDirection, double distancePerPulse) {
 		this.talon = talon;
 		this.reverseDirection = reverseDirection;
 		this.distancePerPulse = distancePerPulse;
-		this.rateMode = rateMode;
 		setPIDSourceType(PIDSourceType.kDisplacement);
+	}
+	
+	public CANTalonEncoder(String name, CANTalon talon, boolean reverseDirection) {
+		this(name, talon, reverseDirection, 1.0);
+	}
+	
+	public CANTalonEncoder(String name, CANTalon talon, double distancePerPulse) {
+		this(name, talon, false, distancePerPulse);
+	}
+	
+	public CANTalonEncoder(String name, CANTalon talon) {
+		this(name, talon, false);
+	}
+	
+	public CANTalonEncoder(CANTalon talon, boolean reverseDirection, double distancePerPulse) {
+		this("CANTalonEncoder", talon, reverseDirection, distancePerPulse);
+	}
+	
+	public CANTalonEncoder(CANTalon talon, double distancePerPulse) {
+		this("CANTalonEncoder", talon, distancePerPulse);
+	}
+	
+	public CANTalonEncoder(CANTalon talon) {
+		this("CANTalonEncoder", talon);
 	}
 	
 	@Override
@@ -32,10 +54,10 @@ public class CANTalonEncoder implements CustomEncoder {
 	
 	@Override
 	public double pidGet() {
-		if (rateMode) {
-			return getRate();
+		if (pidSource == PIDSourceType.kDisplacement) {
+			return getDistance();
 		}
-		return getDistance();
+		return getRate();
 	}
 	
 	@Override
