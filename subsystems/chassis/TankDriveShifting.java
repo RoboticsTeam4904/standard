@@ -19,8 +19,7 @@ public class TankDriveShifting extends TankDrive implements ShiftingChassis {
 	 * @param leftWheelB
 	 * @param rightWheelA
 	 * @param rightWheelB
-	 * @param SolenoidShifters
-	 *        object
+	 * @param shifter
 	 */
 	public TankDriveShifting(String name, Motor leftWheelA, Motor leftWheelB, Motor rightWheelA, Motor rightWheelB, SolenoidShifters shifter) {
 		super(name, leftWheelA, leftWheelB, rightWheelA, rightWheelB);
@@ -33,8 +32,7 @@ public class TankDriveShifting extends TankDrive implements ShiftingChassis {
 	 * @param name
 	 * @param leftWheel
 	 * @param rightWheel
-	 * @param SolenoidShifters
-	 *        object
+	 * @param shifter
 	 */
 	public TankDriveShifting(String name, Motor leftWheel, Motor rightWheel, SolenoidShifters shifter) {
 		super(name, leftWheel, rightWheel);

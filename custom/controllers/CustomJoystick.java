@@ -5,13 +5,9 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 
 /**
- * A joystick that implements the generic
- * controller interface.
- * This allows us to use a joystick as a
- * controller.
- * This contains 12 buttons to reflect
- * the joysticks we are typically using.
- *
+ * A joystick that implements the generic controller interface.
+ * This allows us to use a joystick as a controller.
+ * This contains 12 buttons to reflect the joysticks we are typically using.
  */
 public class CustomJoystick extends Joystick implements Controller {
 	public static final int X_AXIS = 0;
@@ -51,8 +47,7 @@ public class CustomJoystick extends Joystick implements Controller {
 	}
 	
 	/**
-	 * Returns true if a given axis is
-	 * above the move threshold.
+	 * Returns true if a given axis is above the move threshold.
 	 *
 	 * @param axis
 	 * @return
@@ -68,12 +63,9 @@ public class CustomJoystick extends Joystick implements Controller {
 	}
 	
 	/**
-	 * Returns true if the joystick
-	 * is actually connected. It
-	 * determines this by counting
-	 * the number of buttons (> 0
-	 * means the joystick is
-	 * connected).
+	 * Returns true if the joystick is actually connected.
+	 * It determines this by counting the number of buttons
+	 * (more than 0 means the joystick is connected).
 	 *
 	 * @return
 	 */
@@ -82,8 +74,7 @@ public class CustomJoystick extends Joystick implements Controller {
 	}
 	
 	/**
-	 * Returns the value of the
-	 * given axis.
+	 * Returns the value of the given axis.
 	 */
 	@Override
 	public double getAxis(int axis) {

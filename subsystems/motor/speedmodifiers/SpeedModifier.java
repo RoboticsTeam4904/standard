@@ -9,8 +9,7 @@ package org.usfirst.frc4904.standard.subsystems.motor.speedmodifiers;
  */
 public interface SpeedModifier {
 	/**
-	 * This function actually changes the speed
-	 * that the motor should use.
+	 * This function actually changes the speed that the motor should use.
 	 *
 	 * @param speed
 	 *        The input speed of the motor
