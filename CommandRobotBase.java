@@ -152,7 +152,7 @@ public abstract class CommandRobotBase extends IterativeRobot {
 	 * function.
 	 */
 	@Override
-	public void disabledInit() {
+	public final void disabledInit() {
 		if (teleopCommand != null) {
 			teleopCommand.cancel();
 		}
@@ -171,7 +171,7 @@ public abstract class CommandRobotBase extends IterativeRobot {
 	 * function.
 	 */
 	@Override
-	public void disabledPeriodic() {
+	public final void disabledPeriodic() {
 		Scheduler.getInstance().run();
 		disabledExecute();
 	}
