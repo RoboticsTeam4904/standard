@@ -20,7 +20,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public abstract class CommandRobotBase extends IterativeRobot {
 	protected Command teleopCommand;
-	protected Command autonomousCommand;
+	private Command autonomousCommand;
 	protected CheckHealth healthcheckCommand;
 	protected CommandSendableChooser autoChooser;
 	protected TypedNamedSendableChooser<Driver> driverChooser;
@@ -30,7 +30,7 @@ public abstract class CommandRobotBase extends IterativeRobot {
 	 * This displays our choosers.
 	 * The default choosers are for autonomous type, driver control, sand operator control.
 	 */
-	protected void displayChoosers() {
+	protected final void displayChoosers() {
 		// Display choosers on SmartDashboard
 		SmartDashboard.putData("Autonomous mode chooser", autoChooser);
 		SmartDashboard.putData("Driver control scheme chooser", driverChooser);
@@ -170,14 +170,14 @@ public abstract class CommandRobotBase extends IterativeRobot {
 	 *
 	 * @param healthChecks
 	 */
-	public void setHealthChecks(AbstractHealthCheck... healthChecks) {
+	public final void setHealthChecks(AbstractHealthCheck... healthChecks) {
 		healthcheckCommand = new CheckHealth(healthChecks);
 	}
 	
 	/**
 	 * @return True if the robot is enabled and is in operator control.
 	 */
-	public boolean isEnabledOperatorControl() {
+	public final boolean isEnabledOperatorControl() {
 		return isEnabled() && isOperatorControl();
 	}
 	
@@ -185,7 +185,7 @@ public abstract class CommandRobotBase extends IterativeRobot {
 	 *
 	 * @return True if the robot is enabled and is in autonomous mode.
 	 */
-	public boolean isEnabledAutonomous() {
+	public final boolean isEnabledAutonomous() {
 		return isEnabled() && isAutonomous();
 	}
 }
