@@ -5,13 +5,13 @@ import org.usfirst.frc4904.standard.custom.ChassisController;
 import org.usfirst.frc4904.standard.subsystems.chassis.Chassis;
 import edu.wpi.first.wpilibj.command.Command;
 
-public class ChassisSet extends Command implements ChassisController {
+public class ChassisConstant extends Command implements ChassisController {
 	protected final ChassisMove move;
 	protected final double x;
 	protected final double y;
 	protected final double turn;
 	
-	public ChassisSet(Chassis chassis, double x, double y, double turn, double timeout) {
+	public ChassisConstant(Chassis chassis, double x, double y, double turn, double timeout) {
 		move = new ChassisMove(chassis, this);
 		this.x = x;
 		this.y = y;
