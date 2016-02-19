@@ -1,7 +1,7 @@
 package org.usfirst.frc4904.standard.custom.motioncontrollers;
 
 
-import org.usfirst.frc4904.standard.Constants;
+import org.usfirst.frc4904.standard.Util;
 import edu.wpi.first.wpilibj.PIDSource;
 
 /**
@@ -62,7 +62,7 @@ public class BangBangController extends MotionController {
 	 *        The scalar on the input.
 	 */
 	public BangBangController(PIDSource source, double A, double F) {
-		this(source, A, F, Constants.EPSILON);
+		this(source, A, F, Util.EPSILON);
 	}
 	
 	/**
