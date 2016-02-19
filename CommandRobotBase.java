@@ -13,12 +13,10 @@ import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
- * IterativeRobot is normally the base class for
- * CommandBased code, but we think certain features will
- * almost always be needed, so we created the
- * CommandRobotBase class. Robot should extend this
- * instead of iterative robot.
- *
+ * IterativeRobot is normally the base class for command based code,
+ * but we think certain features will almost always be needed,
+ * so we created the CommandRobotBase class.
+ * Robot should extend this instead of iterative robot.
  */
 public abstract class CommandRobotBase extends IterativeRobot {
 	protected Command teleopCommand;
@@ -27,12 +25,10 @@ public abstract class CommandRobotBase extends IterativeRobot {
 	protected CommandSendableChooser autoChooser;
 	protected TypedNamedSendableChooser<Driver> driverChooser;
 	protected TypedNamedSendableChooser<Operator> operatorChooser;
-
+	
 	/**
 	 * This displays our choosers.
-	 * The default choosers are for
-	 * autonomous type, driver control,
-	 * and operator control.
+	 * The default choosers are for autonomous type, driver control, sand operator control.
 	 */
 	protected void displayChoosers() {
 		// Display choosers on SmartDashboard
@@ -44,8 +40,7 @@ public abstract class CommandRobotBase extends IterativeRobot {
 	/**
 	 * This initializes the entire robot.
 	 * It is called by WPILib on robot code launch.
-	 * Year specific code should be written in the
-	 * initialize function.
+	 * Year specific code should be written in the initialize function.
 	 */
 	@Override
 	public final void robotInit() {
@@ -63,8 +58,7 @@ public abstract class CommandRobotBase extends IterativeRobot {
 	}
 	
 	/**
-	 * Function for year specific code to be run
-	 * on robot code launch.
+	 * Function for year specific code to be run on robot code launch.
 	 * setHealthChecks should be called here if needed.
 	 */
 	public abstract void initialize();
@@ -72,8 +66,7 @@ public abstract class CommandRobotBase extends IterativeRobot {
 	/**
 	 * This initializes the teleoperated portion of the robot code.
 	 * It is called by WPILib on teleop enable.
-	 * Year specific code should be written in the teleopInitialize()
-	 * function.
+	 * Year specific code should be written in the teleopInitialize() function.
 	 */
 	@Override
 	public final void teleopInit() {
@@ -86,15 +79,13 @@ public abstract class CommandRobotBase extends IterativeRobot {
 	}
 	
 	/**
-	 * Function for year specific code to be run
-	 * on teleoperated initialize.
+	 * Function for year specific code to be run on teleoperated initialize.
 	 */
 	public abstract void teleopInitialize();
 	
 	/**
 	 * This function is called by WPILib periodically during teleop.
-	 * Year specific code should be written in the teleopExecute()
-	 * function.
+	 * Year specific code should be written in the teleopExecute() function.
 	 */
 	@Override
 	public final void teleopPeriodic() {
@@ -103,16 +94,14 @@ public abstract class CommandRobotBase extends IterativeRobot {
 	}
 	
 	/**
-	 * Function for year specific code to be run
-	 * during teleoperated time.
+	 * Function for year specific code to be run during teleoperated time.
 	 */
 	public abstract void teleopExecute();
 	
 	/**
 	 * This initializes the autonomous portion of the robot code.
 	 * It is called by WPILib on auton enable.
-	 * Year specific code should be written in the autonomousInitialize()
-	 * function.
+	 * Year specific code should be written in the autonomousInitialize() function.
 	 */
 	@Override
 	public final void autonomousInit() {
@@ -124,15 +113,13 @@ public abstract class CommandRobotBase extends IterativeRobot {
 	}
 	
 	/**
-	 * Function for year specific code to be run
-	 * on autonomous initialize.
+	 * Function for year specific code to be run on autonomous initialize.
 	 */
 	public abstract void autonomousInitialize();
 	
 	/**
 	 * This function is called by WPILib periodically during auton.
-	 * Year specific code should be written in the autonomousExecute()
-	 * function.
+	 * Year specific code should be written in the autonomousExecute() function.
 	 */
 	@Override
 	public final void autonomousPeriodic() {
@@ -141,15 +128,13 @@ public abstract class CommandRobotBase extends IterativeRobot {
 	}
 	
 	/**
-	 * Function for year specific code to be run
-	 * during autonomous.
+	 * Function for year specific code to be run during autonomous.
 	 */
 	public abstract void autonomousExecute();
-
+	
 	/**
 	 * This function is called by WPILib when the robot is disabled.
-	 * Year specific code should be written in the disabledInitialize()
-	 * function.
+	 * Year specific code should be written in the disabledInitialize() function.
 	 */
 	@Override
 	public final void disabledInit() {
@@ -158,17 +143,15 @@ public abstract class CommandRobotBase extends IterativeRobot {
 		}
 		disabledInitialize();
 	}
-
+	
 	/**
-	 * Function for year specific code to be run
-	 * on disabled initialize.
+	 * Function for year specific code to be run on disabled initialize.
 	 */
 	public abstract void disabledInitialize();
-
+	
 	/**
 	 * This function is called by WPILib periodically while disabled.
-	 * Year specific code should be written in the disabledExecute()
-	 * function.
+	 * Year specific code should be written in the disabledExecute() function.
 	 */
 	@Override
 	public final void disabledPeriodic() {
@@ -177,11 +160,10 @@ public abstract class CommandRobotBase extends IterativeRobot {
 	}
 	
 	/**
-	 * Function for year specific code to be run
-	 * while disabled.
+	 * Function for year specific code to be run while disabled.
 	 */
 	public abstract void disabledExecute();
-
+	
 	/**
 	 * Sets the health checks for the robot.
 	 * This should be called in initialize.
@@ -191,21 +173,17 @@ public abstract class CommandRobotBase extends IterativeRobot {
 	public void setHealthChecks(AbstractHealthCheck... healthChecks) {
 		healthcheckCommand = new CheckHealth(healthChecks);
 	}
-
+	
 	/**
-	 * @return
-	 * 		True if the robot is enabled
-	 *         and is in operator control.
+	 * @return True if the robot is enabled and is in operator control.
 	 */
 	public boolean isEnabledOperatorControl() {
 		return isEnabled() && isOperatorControl();
 	}
-
+	
 	/**
 	 *
-	 * @return
-	 * 		True if the robot is enabled
-	 *         and is in autonomous mode.
+	 * @return True if the robot is enabled and is in autonomous mode.
 	 */
 	public boolean isEnabledAutonomous() {
 		return isEnabled() && isAutonomous();
