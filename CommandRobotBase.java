@@ -9,19 +9,19 @@ import org.usfirst.frc4904.standard.humaninput.Driver;
 import org.usfirst.frc4904.standard.humaninput.Operator;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.command.Scheduler;
+import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
- * IterativeRobot is normally the base class for
- * CommandBased code, but we think certain features will
- * almost always be needed, so we created the
- * CommandRobotBase class. Robot should extend this
- * instead of iterative robot.
- *
+ * IterativeRobot is normally the base class for command based code,
+ * but we think certain features will almost always be needed,
+ * so we created the CommandRobotBase class.
+ * Robot should extend this instead of iterative robot.
  */
 public abstract class CommandRobotBase extends IterativeRobot {
 	protected Command teleopCommand;
-	protected Command autonomousCommand;
+	private Command autonomousCommand;
 	protected CheckHealth healthcheckCommand;
 	protected CommandSendableChooser autoChooser;
 	protected TypedNamedSendableChooser<Driver> driverChooser;
@@ -29,11 +29,9 @@ public abstract class CommandRobotBase extends IterativeRobot {
 	
 	/**
 	 * This displays our choosers.
-	 * The default choosers are for
-	 * autonomous type, driver control,
-	 * and operator control.
+	 * The default choosers are for autonomous type, driver control, sand operator control.
 	 */
-	protected void displayChoosers() {
+	protected final void displayChoosers() {
 		// Display choosers on SmartDashboard
 		SmartDashboard.putData("Autonomous mode chooser", autoChooser);
 		SmartDashboard.putData("Driver control scheme chooser", driverChooser);
@@ -41,62 +39,187 @@ public abstract class CommandRobotBase extends IterativeRobot {
 	}
 	
 	/**
-	 *
-	 * This is some code that makes it
-	 * a little easier to initialize the robot.
-	 * It currently automatically handles
-	 * healthchecks, autonomous initialization,
-	 * driver initialization, and operator
-	 * initializations.
-	 * Note that you should still
-	 * have a robotInit, but it should
-	 * call super.robotInit.
-	 *
-	 * @param healthchecks
+	 * This initializes the entire robot.
+	 * It is called by WPILib on robot code launch.
+	 * Year specific code should be written in the initialize function.
 	 */
-	public void robotInit(AbstractHealthCheck... healthchecks) {
-		if (healthchecks != null) {
-			healthcheckCommand = new CheckHealth(healthchecks);
-		}
+	@Override
+	public final void robotInit() {
 		// Initialize choosers
 		autoChooser = new CommandSendableChooser();
 		driverChooser = new TypedNamedSendableChooser<Driver>();
 		operatorChooser = new TypedNamedSendableChooser<Operator>();
+		initialize();
 		if (healthcheckCommand != null) {
 			healthcheckCommand.start();
+		}
+		// Display choosers on SmartDashboard
+		displayChoosers();
+		SmartDashboard.putData(Scheduler.getInstance());
+	}
+	
+	/**
+	 * Function for year specific code to be run on robot code launch.
+	 * setHealthChecks should be called here if needed.
+	 */
+	public abstract void initialize();
+	
+	/**
+	 * This initializes the teleoperated portion of the robot code.
+	 * It is called by WPILib on teleop enable.
+	 * Year specific code should be written in the teleopInitialize() function.
+	 */
+	@Override
+	public final void teleopInit() {
+		if (autonomousCommand != null) {
+			autonomousCommand.cancel();
+		}
+		driverChooser.getSelected().bindCommands();
+		operatorChooser.getSelected().bindCommands();
+		teleopInitialize();
+		if (teleopCommand != null) {
+			teleopCommand.start();
 		}
 	}
 	
 	/**
-	 *
-	 * @return
-	 * 		True if the robot is enabled
-	 *         and is in operator control.
+	 * Function for year specific code to be run on teleoperated initialize.
+	 * teleopCommand should be set in this function.
 	 */
-	public boolean isEnabledOperatorControl() {
+	public abstract void teleopInitialize();
+	
+	/**
+	 * This function is called by WPILib periodically during teleop.
+	 * Year specific code should be written in the teleopExecute() function.
+	 */
+	@Override
+	public final void teleopPeriodic() {
+		Scheduler.getInstance().run();
+		teleopExecute();
+	}
+	
+	/**
+	 * Function for year specific code to be run during teleoperated time.
+	 */
+	public abstract void teleopExecute();
+	
+	/**
+	 * This initializes the autonomous portion of the robot code.
+	 * It is called by WPILib on auton enable.
+	 * Year specific code should be written in the autonomousInitialize() function.
+	 */
+	@Override
+	public final void autonomousInit() {
+		// schedule the autonomous command (example)
+		if (autonomousCommand != null) {
+			autonomousCommand.start();
+		}
+		autonomousInitialize();
+	}
+	
+	/**
+	 * Function for year specific code to be run on autonomous initialize.
+	 */
+	public abstract void autonomousInitialize();
+	
+	/**
+	 * This function is called by WPILib periodically during auton.
+	 * Year specific code should be written in the autonomousExecute() function.
+	 */
+	@Override
+	public final void autonomousPeriodic() {
+		Scheduler.getInstance().run();
+		autonomousExecute();
+	}
+	
+	/**
+	 * Function for year specific code to be run during autonomous.
+	 */
+	public abstract void autonomousExecute();
+	
+	/**
+	 * This function is called by WPILib when the robot is disabled.
+	 * Year specific code should be written in the disabledInitialize() function.
+	 */
+	@Override
+	public final void disabledInit() {
+		if (teleopCommand != null) {
+			teleopCommand.cancel();
+		}
+		disabledInitialize();
+	}
+	
+	/**
+	 * Function for year specific code to be run on disabled initialize.
+	 */
+	public abstract void disabledInitialize();
+	
+	/**
+	 * This function is called by WPILib periodically while disabled.
+	 * Year specific code should be written in the disabledExecute() function.
+	 */
+	@Override
+	public final void disabledPeriodic() {
+		Scheduler.getInstance().run();
+		disabledExecute();
+	}
+	
+	/**
+	 * Function for year specific code to be run while disabled.
+	 */
+	public abstract void disabledExecute();
+	
+	/**
+	 * This function is called by WPILib when the robot is in test mode.
+	 * Year specific code should be written in the disabledInitialize() function.
+	 */
+	@Override
+	public final void testInit() {
+		testInitialize();
+	}
+	
+	/**
+	 * Function for year specific code to be run on disabled initialize.
+	 */
+	public abstract void testInitialize();
+	
+	/**
+	 * This function is called by WPILib periodically while in test mode.
+	 * Year specific code should be written in the testExecute() function.
+	 */
+	@Override
+	public void testPeriodic() {
+		LiveWindow.run();
+		testExecute();
+	}
+	
+	/**
+	 * Function for year specific code to be run while in test mode.
+	 */
+	public abstract void testExecute();
+	
+	/**
+	 * Sets the health checks for the robot.
+	 * This should be called in initialize.
+	 *
+	 * @param healthChecks
+	 */
+	public final void setHealthChecks(AbstractHealthCheck... healthChecks) {
+		healthcheckCommand = new CheckHealth(healthChecks);
+	}
+	
+	/**
+	 * @return True if the robot is enabled and is in operator control.
+	 */
+	public final boolean isEnabledOperatorControl() {
 		return isEnabled() && isOperatorControl();
 	}
 	
 	/**
 	 *
-	 * @return
-	 * 		True if the robot is enabled
-	 *         and is in autonomous mode.
+	 * @return True if the robot is enabled and is in autonomous mode.
 	 */
-	public boolean isEnabledAutonomous() {
+	public final boolean isEnabledAutonomous() {
 		return isEnabled() && isAutonomous();
-	}
-	
-	/**
-	 * This function is called when the
-	 * robot is disabled. Please ensure
-	 * that if you decide to override
-	 * you call super.disabledInit.
-	 */
-	@Override
-	public void disabledInit() {
-		if (healthcheckCommand != null) {
-			healthcheckCommand.reset();
-		}
 	}
 }
