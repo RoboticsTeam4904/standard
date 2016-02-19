@@ -7,21 +7,17 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 
 /**
  * Generic chassis class.
- * In the 4904 standard, the Chassis is
- * treated as a container for motors and
- * as a calculator for motor speeds.
+ * In the 4904 standard, the Chassis is treated as a container for motors and as a calculator for motor speeds.
  *
  */
 public abstract class Chassis extends Subsystem {
-	protected int numberWheels;
 	protected double[] motorSpeeds;
 	protected Motor[] motors;
 	
 	/**
-	 * 
+	 *
 	 * @param name
 	 * @param motors
-	 *        :
 	 *        all the motors that are part of this chassis. Pass from front to back, left to right
 	 */
 	public Chassis(String name, Motor... motors) {
@@ -29,68 +25,71 @@ public abstract class Chassis extends Subsystem {
 		this.motors = motors;
 	}
 	
+	@Override
 	protected void initDefaultCommand() {
 		setDefaultCommand(new ChassisIdle(this));
 	}
 	
 	/**
-	 * returns the number of wheels
-	 * 
-	 * @return
+	 * Returns the number of motors
+	 *
+	 * @return number of motors
 	 */
-	public int getNumberWheels() {
-		return numberWheels;
+	public int getNumberMotors() {
+		return motors.length;
 	}
 	
 	/**
-	 * returns an array of motors of the size getNumberWheels in the order that they were passed to the constructor
-	 * 
+	 * Returns an array of motors of the size getNumberMotors in the order that they were passed to the constructor
+	 *
 	 * @return
+	 * 		all motors in the order passed to the constructor
 	 */
 	public Motor[] getMotors() {
 		return motors;
 	}
 	
 	/**
-	 * returns an array of the correct motor speeds
-	 * retrieves the speed calculated with the values
-	 * inputed using the move functions.
-	 * 
+	 * Returns an array of the correct motor speeds calculated with the values inputted using the move functions.
+	 *
 	 * @return
+	 * 		current motor speeds
 	 */
 	public double[] getMotorSpeeds() {
 		return motorSpeeds;
 	}
 	
 	/**
-	 * sets the movement to be calculated by the chassis
-	 * to be the movement producing the speed at the angle
-	 * with the turn speed.
-	 * 
+	 * Sets the movement to be calculated by the Chassis using 2d polar coordinates.
+	 *
 	 * @param speed
+	 *        The magnitude of the speed. In the range -1 to 1.
 	 * @param angle
+	 *        The direction of the speed in angles clockwise from straight ahead. In the range 0 to 2Pi.
 	 * @param turnSpeed
+	 *        The speed at which the robot will revolve around itself during the maneuver. In the range -1 to 1.
 	 */
 	public abstract void move2dp(double speed, double angle, double turnSpeed);
 	
 	/**
-	 * sets the movement to be calculated by the chassis
-	 * to be the movement producing the speed in the
-	 * X and Y directions with the turn speed
-	 * 
+	 * Sets the movement to be calculated by the Chassis using 2d cartesian coordinates.
+	 *
 	 * @param xSpeed
+	 *        The speed in the X direction (side to side, strafe). In the range -1 to 1.
 	 * @param ySpeed
+	 *        The speed in the Y direction (forward and back). In the range -1 to 1.
 	 * @param turnSpeed
+	 *        The speed at which the robot will revolve around itself during the maneuver. In the range -1 to 1.
 	 */
 	public abstract void move2dc(double xSpeed, double ySpeed, double turnSpeed);
 	
 	/**
-	 * sets the movement to be calculated by the chassis
-	 * to be the movement producing the speed
-	 * with the turn speed. Assumed to be straight forward.
-	 * 
+	 * Sets the movement to be calculated by the Chassis for moving straight ahead while turning.
+	 *
 	 * @param speed
+	 *        The speed in the Y direction (forward and back). In the range -1 to 1.
 	 * @param turnSpeed
+	 *        The speed at which the robot will revolve around itself during the maneuver. In the range -1 to 1.
 	 */
 	public abstract void move(double speed, double turnSpeed);
 }

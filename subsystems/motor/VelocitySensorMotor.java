@@ -16,8 +16,8 @@ public class VelocitySensorMotor extends SensorMotor {
 		this(name, isInverted, new IdentityModifier(), motionController, motors);
 	}
 	
-	public VelocitySensorMotor(String name, SpeedModifier slopeController, MotionController motionController, SpeedController... motors) {
-		this(name, false, slopeController, motionController, motors);
+	public VelocitySensorMotor(String name, SpeedModifier speedModifier, MotionController motionController, SpeedController... motors) {
+		this(name, false, speedModifier, motionController, motors);
 	}
 	
 	public VelocitySensorMotor(String name, MotionController motionController, SpeedController... motors) {
@@ -40,6 +40,7 @@ public class VelocitySensorMotor extends SensorMotor {
 		this("VelocitySensorMotor", motionController, motors);
 	}
 	
+	@Override
 	public void set(double speed) {
 		LogKitten.v(speed + "");
 		motionController.setSetpoint(speed);

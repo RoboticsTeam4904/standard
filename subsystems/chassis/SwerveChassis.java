@@ -11,7 +11,7 @@ public class SwerveChassis extends Chassis {
 	
 	/**
 	 * Constructs a swerve drive chassis
-	 * 
+	 *
 	 * @param name
 	 * @param frontLeftWheel
 	 * @param frontRightWheel
@@ -30,13 +30,18 @@ public class SwerveChassis extends Chassis {
 		this.backRightWheelSwerve = backRightWheelSwerve;
 	}
 	
+	@Override
 	public void move2dp(double xSpeed, double ySpeed, double turnSpeed) {
-		// TODO Auto-generated method stub
+		// TODO Implement
 	}
 	
+	@Override
 	public void move2dc(double speed, double angle, double turnSpeed) {
-		// TODO Auto-generated method stub
+		// TODO Implement
 	}
 	
-	public void move(double speed, double turnSpeed) {}
+	@Override
+	public void move(double speed, double turnSpeed) {
+		// TODO Implement
+	}
 }

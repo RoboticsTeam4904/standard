@@ -6,7 +6,7 @@ import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 
 /**
  * Local version of the PowerDistributionPanel class
- * 
+ *
  */
 public class PDP extends PowerDistributionPanel {
 	public PDP() {}

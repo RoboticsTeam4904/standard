@@ -10,7 +10,7 @@ public class CANInfraredDistanceSensor extends CANSensor implements DistanceSens
 	
 	/**
 	 * Construct a new Infrared Distance Sensor connected via CAN
-	 * 
+	 *
 	 * @param name
 	 *        name of the CAN sensor
 	 * @param id
@@ -22,6 +22,6 @@ public class CANInfraredDistanceSensor extends CANSensor implements DistanceSens
 	
 	@Override
 	public double getDistance() {
-		return this.read(CAN_SENSOR_MODE);
+		return this.read(CANInfraredDistanceSensor.CAN_SENSOR_MODE);
 	}
 }

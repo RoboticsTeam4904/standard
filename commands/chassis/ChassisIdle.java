@@ -16,14 +16,14 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
  */
 public class ChassisIdle extends CommandGroup {
 	/**
-	 * 
+	 *
 	 * @param chassis
 	 *        The robot chassis to idle.
 	 */
 	public ChassisIdle(Chassis chassis) {
 		super("ChassisIdle");
 		requires(chassis);
-		LogKitten.v("ChassisIdle created for " + Integer.toString(chassis.getNumberWheels()) + " wheels");
+		LogKitten.v("ChassisIdle created for " + Integer.toString(chassis.getNumberMotors()) + " motors");
 		setInterruptible(true); // default command
 		Motor[] motors = chassis.getMotors();
 		for (Motor motor : motors) {
@@ -31,22 +31,27 @@ public class ChassisIdle extends CommandGroup {
 		}
 	}
 	
+	@Override
 	protected void initialize() {
 		LogKitten.v("ChassisIdle initialized");
 	}
 	
+	@Override
 	protected void execute() {
 		LogKitten.d("ChassisIdle executing");
 	}
 	
+	@Override
 	protected void end() {
 		LogKitten.v("ChassisIdle ended");
 	}
 	
+	@Override
 	protected void interrupted() {
 		LogKitten.w("ChassisIdle interrupted");
 	}
 	
+	@Override
 	protected boolean isFinished() {
 		return false; // default command
 	}

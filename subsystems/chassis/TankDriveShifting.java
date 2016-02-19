@@ -9,18 +9,17 @@ import org.usfirst.frc4904.standard.subsystems.motor.Motor;
  *
  */
 public class TankDriveShifting extends TankDrive implements ShiftingChassis {
-	private final SolenoidShifters shifter;
+	protected final SolenoidShifters shifter;
 	
 	/**
 	 * A tank drive with shifting solenoids (only two solenoids supported)
-	 * 
+	 *
 	 * @param name
 	 * @param leftWheelA
 	 * @param leftWheelB
 	 * @param rightWheelA
 	 * @param rightWheelB
-	 * @param SolenoidShifters
-	 *        object
+	 * @param shifter
 	 */
 	public TankDriveShifting(String name, Motor leftWheelA, Motor leftWheelB, Motor rightWheelA, Motor rightWheelB, SolenoidShifters shifter) {
 		super(name, leftWheelA, leftWheelB, rightWheelA, rightWheelB);
@@ -29,12 +28,11 @@ public class TankDriveShifting extends TankDrive implements ShiftingChassis {
 	
 	/**
 	 * A tank drive with shifting solenoids (only two solenoids supported)
-	 * 
+	 *
 	 * @param name
 	 * @param leftWheel
 	 * @param rightWheel
-	 * @param SolenoidShifters
-	 *        object
+	 * @param shifter
 	 */
 	public TankDriveShifting(String name, Motor leftWheel, Motor rightWheel, SolenoidShifters shifter) {
 		super(name, leftWheel, rightWheel);
@@ -44,6 +42,7 @@ public class TankDriveShifting extends TankDrive implements ShiftingChassis {
 	/**
 	 * Returns an array of solenoids in the order left, right
 	 */
+	@Override
 	public SolenoidShifters getShifter() {
 		return shifter;
 	}

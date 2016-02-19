@@ -11,16 +11,16 @@ import edu.wpi.first.wpilibj.SpeedController;
  * It contains an Encoder, PID constants, and range information.
  */
 public class PositionEncodedMotor extends PositionSensorMotor {
-	public PositionEncodedMotor(String name, boolean isInverted, SpeedModifier slopeController, MotionController motionController, SpeedController... motors) {
-		super(name, isInverted, slopeController, motionController, motors);
+	public PositionEncodedMotor(String name, boolean isInverted, SpeedModifier speedModifier, MotionController motionController, SpeedController... motors) {
+		super(name, isInverted, speedModifier, motionController, motors);
 	}
 	
 	public PositionEncodedMotor(String name, boolean isInverted, MotionController motionController, SpeedController... motors) {
 		this(name, isInverted, new IdentityModifier(), motionController, motors);
 	}
 	
-	public PositionEncodedMotor(String name, SpeedModifier slopeController, MotionController motionController, SpeedController... motors) {
-		this(name, false, slopeController, motionController, motors);
+	public PositionEncodedMotor(String name, SpeedModifier speedModifier, MotionController motionController, SpeedController... motors) {
+		this(name, false, speedModifier, motionController, motors);
 	}
 	
 	public PositionEncodedMotor(String name, MotionController motionController, SpeedController... motors) {

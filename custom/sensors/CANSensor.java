@@ -9,10 +9,10 @@ import org.usfirst.frc4904.standard.custom.CustomCAN;
  *
  */
 public class CANSensor extends CustomCAN {
-	private int[] cachedValues;
+	private final int[] cachedValues;
 	
 	/**
-	 * 
+	 *
 	 * @param name
 	 *        Name of CAN sensor (not really needed)
 	 * @param id
@@ -29,7 +29,7 @@ public class CANSensor extends CustomCAN {
 	}
 	
 	/**
-	 * 
+	 *
 	 * @param name
 	 *        Name of CAN sensor
 	 * @param id
@@ -42,7 +42,7 @@ public class CANSensor extends CustomCAN {
 	/**
 	 * Mode determines what signal from the CAN node to look for. The first int
 	 * is 0 if the data was returned correctly and -1 if no data was returned
-	 * 
+	 *
 	 * @param mode
 	 * @return
 	 */
@@ -68,7 +68,7 @@ public class CANSensor extends CustomCAN {
 	
 	/**
 	 * Default read (retries 10 times)
-	 * 
+	 *
 	 * @param mode
 	 * @return
 	 */

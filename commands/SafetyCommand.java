@@ -34,7 +34,7 @@ public abstract class SafetyCommand extends Command {
 			executeIfSafe();
 			return;
 		}
-		this.cancel();
+		cancel();
 		if (reasonUnsafe == null) {
 			reasonUnsafe = "the required safety conditions haven't been met";
 		}
@@ -55,7 +55,7 @@ public abstract class SafetyCommand extends Command {
 	 * Determines if the command is safe to run.
 	 * setUnsafeReason(String) should be called to describe a safety failure.
 	 * (Will be called every execute iteration.)
-	 * 
+	 *
 	 * @return is the command safe to run?
 	 */
 	protected abstract boolean isSafe();

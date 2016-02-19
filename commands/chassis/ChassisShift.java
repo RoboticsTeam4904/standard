@@ -9,12 +9,12 @@ import edu.wpi.first.wpilibj.command.Command;
  *
  */
 public class ChassisShift extends Command {
-	private SolenoidShifters solenoids;
-	private SolenoidShifters.ShiftState state;
+	protected final SolenoidShifters solenoids;
+	protected SolenoidShifters.ShiftState state;
 	
 	/**
 	 * Shifts the solenoids to the opposite state
-	 * 
+	 *
 	 * @param solenoids
 	 */
 	public ChassisShift(SolenoidShifters solenoids) {
@@ -27,7 +27,7 @@ public class ChassisShift extends Command {
 	
 	/**
 	 * Shifts the solenoids to the state state
-	 * 
+	 *
 	 * @param solenoids
 	 * @param state
 	 */
@@ -36,6 +36,7 @@ public class ChassisShift extends Command {
 		this.state = state;
 	}
 	
+	@Override
 	protected void initialize() {
 		switch (state) {
 			case UP:
@@ -49,12 +50,16 @@ public class ChassisShift extends Command {
 		}
 	}
 	
+	@Override
 	protected void execute() {}
 	
+	@Override
 	protected void interrupted() {}
 	
+	@Override
 	protected void end() {}
 	
+	@Override
 	protected boolean isFinished() {
 		return false; // Encoders stay in whatever state until shifted elsewhere.
 	}

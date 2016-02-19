@@ -22,6 +22,7 @@ public class CustomXbox extends XboxController implements Controller {
 	 * Axis 2: right joystick x
 	 * Axis 2: right joystick y
 	 */
+	@Override
 	public double getAxis(int axis) {
 		switch (axis) {
 			case 0:

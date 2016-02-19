@@ -10,7 +10,7 @@ public class RunAllParallel extends RunAll {
 	 * For example, if you want to raise an elevator an blare an airhorn at the same time, use:
 	 * new RunAllParallel(new SetElevatorHeight(Elevator.MAX_HEIGHT), new BlareAirhorn())
 	 * If you will be using the same RunAllParallel more than once, make a new class and extend CommandGroup.
-	 * 
+	 *
 	 * @param commands
 	 *        The commands to be run in parallel
 	 */

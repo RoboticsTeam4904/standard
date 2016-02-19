@@ -12,7 +12,7 @@ import org.usfirst.frc4904.standard.subsystems.motor.Motor;
 public class MecanumChassis extends Chassis {
 	/**
 	 * Constructs a mecanum chassis
-	 * 
+	 *
 	 * @param name
 	 * @param frontLeftWheel
 	 * @param frontRightWheel
@@ -24,50 +24,59 @@ public class MecanumChassis extends Chassis {
 	}
 	
 	/**
+	 * Sets the movement to be calculated by the MecanumChassis using 2d polar coordinates.
+	 *
 	 * @param speed
-	 *        (-1 to 1)
-	 *        : speed in all directions
+	 *        The magnitude of the speed. In the range -1 to 1.
 	 * @param angle
-	 *        (0 to 2pi)
-	 *        : angle of movement
+	 *        The direction of the speed in angles clockwise from straight ahead. In the range 0 to 2Pi.
 	 * @param turnSpeed
-	 *        (-1 to 1)
-	 *        : rate of rotation around center
+	 *        The speed at which the robot will revolve around itself during the maneuver. In the range -1 to 1.
 	 */
+	@Override
 	public void move2dp(double speed, double angle, double turnSpeed) {
-		motorSpeeds = calculateWheels(speed, angle, turnSpeed);
+		motorSpeeds = MecanumChassis.calculateWheels(speed, angle, turnSpeed);
 	}
 	
 	/**
+	 * Sets the movement to be calculated by the MecanumChassis using 2d cartesian coordinates.
+	 *
 	 * @param xSpeed
-	 *        : speed in x direction
+	 *        The speed in the X direction (side to side, strafe). In the range -1 to 1.
 	 * @param ySpeed
-	 *        : speed in y direction
+	 *        The speed in the Y direction (forward and back). In the range -1 to 1.
+	 * @param turnSpeed
+	 *        The speed at which the robot will revolve around itself during the maneuver. In the range -1 to 1.
 	 */
+	@Override
 	public void move2dc(double xSpeed, double ySpeed, double turnSpeed) {
-		double[] polar = cartesianToPolar(xSpeed, ySpeed);
+		double[] polar = MecanumChassis.cartesianToPolar(xSpeed, ySpeed);
 		move2dp(polar[0], polar[1], turnSpeed);
 	}
 	
 	/**
+	 * Sets the movement to be calculated by the MecanumChassis for moving straight ahead while turning.
+	 *
 	 * @param speed
-	 *        : speed in the y direction
+	 *        The speed in the Y direction (forward and back). In the range -1 to 1.
 	 * @param turnSpeed
-	 *        : rate of rotation around center
+	 *        The speed at which the robot will revolve around itself during the maneuver. In the range -1 to 1.
 	 */
+	@Override
 	public void move(double speed, double turnSpeed) {
 		move2dc(0.0, speed, turnSpeed);
 	}
 	
 	/**
 	 * Calculates the speeds for each motor given polar coordinates.
-	 * 
+	 *
 	 * @param speed
-	 *        The overall speed
+	 *        The magnitude of the speed. In the range -1 to 1.
 	 * @param angle
-	 *        The angle to travel at
+	 *        The direction of the speed in angles clockwise from straight ahead. In the range 0 to 2Pi.
 	 * @param turnSpeed
-	 *        The rate of rotation
+	 *        The speed at which the robot will revolve around itself during the maneuver. In the range -1 to 1.
+	 * 
 	 * @return
 	 * 		An array {frontLeftSpeed, frontRightSpeed, backLeftSpeed, backRightSpeed}
 	 */
@@ -90,8 +99,8 @@ public class MecanumChassis extends Chassis {
 	}
 	
 	/**
-	 * Converts an x and y coordinate into an array of speed, angle
-	 * 
+	 * Converts an x and y coordinate into an array of speed and angle.
+	 *
 	 * @param x
 	 *        The x coordinate
 	 * @param y

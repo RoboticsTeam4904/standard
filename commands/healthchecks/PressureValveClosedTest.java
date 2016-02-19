@@ -13,9 +13,9 @@ import edu.wpi.first.wpilibj.Compressor;
  * on the compressor. Make sure the system is sealed during this measurement!
  */
 public class PressureValveClosedTest extends AbstractHealthCheck {
-	private final double timeout;
-	private final double currentThreshold;
-	private final Compressor compressor;
+	protected final double timeout;
+	protected final double currentThreshold;
+	protected final Compressor compressor;
 	public static final double DEFAULT_TIMEOUT = 2;
 	
 	/**
@@ -35,7 +35,7 @@ public class PressureValveClosedTest extends AbstractHealthCheck {
 	
 	/**
 	 * Will construct a new Compressor(0).
-	 * 
+	 *
 	 * @param timeout
 	 *        Timeout before checking compressor current in seconds
 	 * @param currentThreshold
@@ -47,25 +47,25 @@ public class PressureValveClosedTest extends AbstractHealthCheck {
 	
 	/**
 	 * Will use PressureValveClosedTest.DEFAULT_TIMEOUT as the timeout.
-	 * 
+	 *
 	 * @param compressor
 	 *        The compressor to read current from
 	 * @param currentThreshold
 	 *        Current the compressor should be drawing at minimum if the system is pressurizing
 	 */
 	public PressureValveClosedTest(Compressor compressor, double currentThreshold) {
-		this(compressor, DEFAULT_TIMEOUT, currentThreshold);
+		this(compressor, PressureValveClosedTest.DEFAULT_TIMEOUT, currentThreshold);
 	}
 	
 	/**
 	 * Will use PressureValveClosedTest.DEFAULT_TIMEOUT as the timeout.
 	 * Will construct a new Compressor(0).
-	 * 
+	 *
 	 * @param currentThreshold
 	 *        Current the compressor should be drawing at minimum if the system is pressurizing
 	 */
 	public PressureValveClosedTest(double currentThreshold) {
-		this(DEFAULT_TIMEOUT, currentThreshold);
+		this(PressureValveClosedTest.DEFAULT_TIMEOUT, currentThreshold);
 	}
 	
 	@Override

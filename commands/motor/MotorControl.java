@@ -8,8 +8,8 @@ import edu.wpi.first.wpilibj.command.Command;
 
 /**
  * Controls a Motor directly from a Controller (e.g. Joystick or Xbox)
- * 
- * 
+ *
+ *
  */
 public class MotorControl extends Command {
 	protected final Motor motor;
@@ -20,7 +20,7 @@ public class MotorControl extends Command {
 	/**
 	 * This Command directly controls a Motor based on an axis of the Controller.
 	 * This can allow an Operator to easily control a single Motor from an axis of the Controller.
-	 * 
+	 *
 	 * @param motor
 	 * @param controller
 	 * @param axis

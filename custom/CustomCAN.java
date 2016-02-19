@@ -13,30 +13,31 @@ import edu.wpi.first.wpilibj.can.CANMessageNotFoundException;
  */
 public class CustomCAN implements Named {
 	// Because CANJNI is basically static, we do not extend it.
-	private final int messageID;
-	private final String name;
+	protected final int messageID;
+	protected final String name;
 	
 	/**
 	 * Constructor for a CustomCAN device.
 	 * The name is local and for your convenience only.
 	 * The id should be the same as the id programmed into the CAN device
-	 * 
+	 *
 	 * @param name
 	 * @param id
 	 *        ID of CAN device (0x400 to 0x500, corresponds to a Teensy)
 	 */
 	public CustomCAN(String name, int id) {
 		this.name = name;
-		this.messageID = id;
+		messageID = id;
 	}
 	
+	@Override
 	public String getName() {
 		return name;
 	}
 	
 	/**
 	 * Used to write data to the device.
-	 * 
+	 *
 	 * @param data
 	 *        Data to be written. Should be EXACTLY 8 bytes long ONLY.
 	 * @throws IllegalArgumentException
@@ -64,7 +65,7 @@ public class CustomCAN implements Named {
 	
 	/**
 	 * Reads data
-	 * 
+	 *
 	 * @return byte[] (8 long)
 	 */
 	public byte[] read() {

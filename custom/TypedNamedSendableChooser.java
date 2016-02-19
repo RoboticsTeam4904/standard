@@ -12,7 +12,7 @@ public class TypedNamedSendableChooser<T extends Named> extends SendableChooser 
 	/**
 	 * Adds an object of the type
 	 * to the smart dashboard.
-	 * 
+	 *
 	 * @param object
 	 */
 	public void addObject(T object) {
@@ -23,7 +23,7 @@ public class TypedNamedSendableChooser<T extends Named> extends SendableChooser 
 	 * Adds an object of the type
 	 * to the smart dashboard as
 	 * the default object.
-	 * 
+	 *
 	 * @param object
 	 */
 	public void addDefault(T object) {
@@ -31,8 +31,9 @@ public class TypedNamedSendableChooser<T extends Named> extends SendableChooser 
 	}
 	
 	/**
-	 * 
+	 *
 	 */
+	@Override
 	@SuppressWarnings("unchecked")
 	public T getSelected() {
 		return (T) super.getSelected();

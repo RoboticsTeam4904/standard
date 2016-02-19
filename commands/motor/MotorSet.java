@@ -18,8 +18,8 @@ import edu.wpi.first.wpilibj.command.Command;
  *
  */
 public class MotorSet extends Command {
-	private final SpeedController motor;
-	private double speed;
+	protected final SpeedController motor;
+	protected double speed;
 	
 	public MotorSet(Motor motor) {
 		super("MotorSet");
@@ -30,6 +30,7 @@ public class MotorSet extends Command {
 		setInterruptible(true);
 	}
 	
+	@Override
 	protected void initialize() {
 		LogKitten.v("MotorSet initialized");
 	}
@@ -42,20 +43,24 @@ public class MotorSet extends Command {
 		LogKitten.d("MotorSet writePipe set to " + Double.toString(speed));
 	}
 	
+	@Override
 	protected void execute() {
 		motor.set(speed);
 		LogKitten.d("MotorSet executing with speed " + Double.toString(speed));
 	}
 	
+	@Override
 	protected void end() {
 		motor.set(0);
 		LogKitten.v("MotorSet ended (motor speed set to 0)");
 	}
 	
+	@Override
 	protected void interrupted() {
 		LogKitten.w("MotorSet interupted (motor speed undefined)");
 	}
 	
+	@Override
 	protected boolean isFinished() {
 		return false;
 	}

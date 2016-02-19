@@ -6,7 +6,7 @@ public class CANUltrasonicDistanceSensor extends CANSensor implements DistanceSe
 	
 	/**
 	 * Construct a new Ultrasonic Distance Sensor connected via CAN
-	 * 
+	 *
 	 * @param name
 	 *        name of the CAN sensor
 	 * @param id
@@ -18,6 +18,6 @@ public class CANUltrasonicDistanceSensor extends CANSensor implements DistanceSe
 	
 	@Override
 	public double getDistance() {
-		return super.read(CAN_SENSOR_MODE);
+		return super.read(CANUltrasonicDistanceSensor.CAN_SENSOR_MODE);
 	}
 }

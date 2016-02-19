@@ -14,7 +14,7 @@ public class MotorIdle extends Command {
 	
 	/**
 	 * Constructor.
-	 * 
+	 *
 	 * @param motor
 	 */
 	public MotorIdle(Motor motor) {

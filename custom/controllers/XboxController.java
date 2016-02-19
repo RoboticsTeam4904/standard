@@ -90,20 +90,20 @@ public class XboxController extends Joystick {
 		super(port); // Extends Joystick...
 		/* Initialize */
 		this.port = port;
-		this.controller = new Joystick(this.port); // Joystick referenced by everything
-		this.leftStick = new Thumbstick(this.controller, HAND.LEFT);
-		this.rightStick = new Thumbstick(this.controller, HAND.RIGHT);
-		this.dPad = new DirectionalPad(this.controller);
-		this.lt = new Trigger(this.controller, HAND.LEFT);
-		this.rt = new Trigger(this.controller, HAND.RIGHT);
-		this.a = new CustomButton(this.controller, A_BUTTON_ID);
-		this.b = new CustomButton(this.controller, B_BUTTON_ID);
-		this.x = new CustomButton(this.controller, X_BUTTON_ID);
-		this.y = new CustomButton(this.controller, Y_BUTTON_ID);
-		this.lb = new CustomButton(this.controller, LB_BUTTON_ID);
-		this.rb = new CustomButton(this.controller, RB_BUTTON_ID);
-		this.back = new CustomButton(this.controller, BACK_BUTTON_ID);
-		this.start = new CustomButton(this.controller, START_BUTTON_ID);
+		controller = new Joystick(this.port); // Joystick referenced by everything
+		leftStick = new Thumbstick(controller, HAND.LEFT);
+		rightStick = new Thumbstick(controller, HAND.RIGHT);
+		dPad = new DirectionalPad(controller);
+		lt = new Trigger(controller, HAND.LEFT);
+		rt = new Trigger(controller, HAND.RIGHT);
+		a = new CustomButton(controller, XboxController.A_BUTTON_ID);
+		b = new CustomButton(controller, XboxController.B_BUTTON_ID);
+		x = new CustomButton(controller, XboxController.X_BUTTON_ID);
+		y = new CustomButton(controller, XboxController.Y_BUTTON_ID);
+		lb = new CustomButton(controller, XboxController.LB_BUTTON_ID);
+		rb = new CustomButton(controller, XboxController.RB_BUTTON_ID);
+		back = new CustomButton(controller, XboxController.BACK_BUTTON_ID);
+		start = new CustomButton(controller, XboxController.START_BUTTON_ID);
 	}
 	
 	/**
@@ -188,16 +188,16 @@ public class XboxController extends Joystick {
 			/* Initialize */
 			this.parent = parent;
 			this.hand = hand;
-			this.xDeadZone = DEFAULT_THUMBSTICK_DEADZONE;
-			this.yDeadZone = DEFAULT_THUMBSTICK_DEADZONE;
+			xDeadZone = XboxController.DEFAULT_THUMBSTICK_DEADZONE;
+			yDeadZone = XboxController.DEFAULT_THUMBSTICK_DEADZONE;
 			if (hand == HAND.LEFT) {
-				this.xAxisID = LEFT_THUMBSTICK_X_AXIS_ID;
-				this.yAxisID = LEFT_THUMBSTICK_Y_AXIS_ID;
-				this.pressedID = LEFT_THUMBSTIKC_BUTTON_ID;
+				xAxisID = XboxController.LEFT_THUMBSTICK_X_AXIS_ID;
+				yAxisID = XboxController.LEFT_THUMBSTICK_Y_AXIS_ID;
+				pressedID = XboxController.LEFT_THUMBSTIKC_BUTTON_ID;
 			} else { // If right hand
-				this.xAxisID = RIGHT_THUMBSTICK_X_AXIS_ID;
-				this.yAxisID = RIGHT_THUMBSTICK_Y_AXIS_ID;
-				this.pressedID = RIGHT_THUMBSTICK_BUTTON_ID;
+				xAxisID = XboxController.RIGHT_THUMBSTICK_X_AXIS_ID;
+				yAxisID = XboxController.RIGHT_THUMBSTICK_Y_AXIS_ID;
+				pressedID = XboxController.RIGHT_THUMBSTICK_BUTTON_ID;
 			}
 		}
 		
@@ -209,7 +209,7 @@ public class XboxController extends Joystick {
 		 */
 		private double rawX() {
 			final double rawInput = parent.getRawAxis(xAxisID);
-			return createDeadZone(rawInput, xDeadZone);
+			return XboxController.createDeadZone(rawInput, xDeadZone);
 		}
 		
 		/**
@@ -220,7 +220,7 @@ public class XboxController extends Joystick {
 		 */
 		private double rawY() {
 			final double rawInput = -parent.getRawAxis(yAxisID); // -Y was up on our thumbsticks. Consider this a fix?
-			return createDeadZone(rawInput, yDeadZone);
+			return XboxController.createDeadZone(rawInput, yDeadZone);
 		}
 		
 		/**
@@ -397,10 +397,10 @@ public class XboxController extends Joystick {
 		 */
 		Trigger(final Joystick joystick, final HAND hand) {
 			/* Initialize */
-			this.parent = joystick;
+			parent = joystick;
 			this.hand = hand;
-			this.deadZone = DEFAULT_TRIGGER_DEADZONE;
-			this.sensitivity = DEFAULT_TRIGGER_SENSITIVITY;
+			deadZone = XboxController.DEFAULT_TRIGGER_DEADZONE;
+			sensitivity = XboxController.DEFAULT_TRIGGER_SENSITIVITY;
 		}
 		
 		/* Extended Methods */
@@ -430,11 +430,11 @@ public class XboxController extends Joystick {
 		public double getX() {
 			final double rawInput;
 			if (hand == HAND.LEFT) {
-				rawInput = parent.getRawAxis(LEFT_TRIGGER_AXIS_ID);
+				rawInput = parent.getRawAxis(XboxController.LEFT_TRIGGER_AXIS_ID);
 			} else {
-				rawInput = parent.getRawAxis(RIGHT_TRIGGER_AXIS_ID);
+				rawInput = parent.getRawAxis(XboxController.RIGHT_TRIGGER_AXIS_ID);
 			}
-			return createDeadZone(rawInput, deadZone);
+			return XboxController.createDeadZone(rawInput, deadZone);
 		}
 		
 		public double getY() {
@@ -448,7 +448,7 @@ public class XboxController extends Joystick {
 		 * @param number
 		 */
 		public void setTriggerDeadZone(double number) {
-			this.deadZone = number;
+			deadZone = number;
 		}
 		
 		/**
@@ -457,7 +457,7 @@ public class XboxController extends Joystick {
 		 * @param number
 		 */
 		public void setTriggerSensitivity(double number) {
-			this.sensitivity = number;
+			sensitivity = number;
 		}
 	}
 	
@@ -484,14 +484,14 @@ public class XboxController extends Joystick {
 		DirectionalPad(final Joystick parent) {
 			/* Initialize */
 			this.parent = parent;
-			this.up = new DPadButton(this, DPAD.UP);
-			this.upRight = new DPadButton(this, DPAD.UP_RIGHT);
-			this.right = new DPadButton(this, DPAD.RIGHT);
-			this.downRight = new DPadButton(this, DPAD.DOWN_RIGHT);
-			this.down = new DPadButton(this, DPAD.DOWN);
-			this.downLeft = new DPadButton(this, DPAD.DOWN_LEFT);
-			this.left = new DPadButton(this, DPAD.LEFT);
-			this.upLeft = new DPadButton(this, DPAD.UP_LEFT);
+			up = new DPadButton(this, DPAD.UP);
+			upRight = new DPadButton(this, DPAD.UP_RIGHT);
+			right = new DPadButton(this, DPAD.RIGHT);
+			downRight = new DPadButton(this, DPAD.DOWN_RIGHT);
+			down = new DPadButton(this, DPAD.DOWN);
+			downLeft = new DPadButton(this, DPAD.DOWN_LEFT);
+			left = new DPadButton(this, DPAD.LEFT);
+			upLeft = new DPadButton(this, DPAD.UP_LEFT);
 		}
 		
 		/**
@@ -511,7 +511,7 @@ public class XboxController extends Joystick {
 			 */
 			DPadButton(final DirectionalPad parent, final DPAD dPadDirection) {
 				/* Initialize */
-				this.direction = dPadDirection;
+				direction = dPadDirection;
 				this.parent = parent;
 			}
 			

@@ -16,23 +16,26 @@ public abstract class Driver extends HumanInput implements Named, ChassisControl
 	}
 	
 	/**
-	 * 
+	 *
 	 * @return
 	 * 		X value that the Driver wants
 	 */
+	@Override
 	public abstract double getX();
 	
 	/**
-	 * 
+	 *
 	 * @return
 	 * 		Y value that the Driver wants
 	 */
+	@Override
 	public abstract double getY();
 	
 	/**
-	 * 
+	 *
 	 * @return
 	 * 		Turn speed that the Driver wants
 	 */
+	@Override
 	public abstract double getTurnSpeed();
 }

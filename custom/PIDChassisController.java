@@ -28,12 +28,12 @@ public class PIDChassisController implements ChassisController {
 		motionController.reset();
 		motionController.enable();
 		targetYaw = imu.getYaw();
-		lastUpdate = (double) System.currentTimeMillis() / 1000.0;
+		lastUpdate = System.currentTimeMillis() / 1000.0;
 	}
 	
 	public void reset() {
 		targetYaw = imu.getYaw();
-		lastUpdate = (double) System.currentTimeMillis() / 1000.0;
+		lastUpdate = System.currentTimeMillis() / 1000.0;
 		motionController.disable();
 		motionController.reset();
 		motionController.enable();
@@ -57,8 +57,8 @@ public class PIDChassisController implements ChassisController {
 			return controller.getTurnSpeed();
 		}
 		LogKitten.v(motionController.getSetpoint() + " " + imu.getYaw() + " " + motionController.get());
-		targetYaw = targetYaw + ((controller.getTurnSpeed() * maxDegreesPerSecond) * (((double) System.currentTimeMillis() / 1000.0) - lastUpdate));
-		lastUpdate = (double) System.currentTimeMillis() / 1000.0;
+		targetYaw = targetYaw + ((controller.getTurnSpeed() * maxDegreesPerSecond) * ((System.currentTimeMillis() / 1000.0) - lastUpdate));
+		lastUpdate = System.currentTimeMillis() / 1000.0;
 		if (targetYaw > 180) {
 			targetYaw = -180 + (Math.abs(targetYaw) - 180);
 		} else if (targetYaw < -180) {
