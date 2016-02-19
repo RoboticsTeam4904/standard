@@ -23,10 +23,12 @@ public class NavX extends AHRS implements IMU {
 		lastRoll = 0.0f;
 	}
 	
+	@Override
 	public double pidGet() {
 		return getYaw();
 	}
 	
+	@Override
 	public double getRate() {
 		double rate = super.getRate();
 		if (Math.abs(rate) > Math.abs(lastYawRate) + MAX_DEGREES_PER_TICK) {
@@ -39,6 +41,7 @@ public class NavX extends AHRS implements IMU {
 	/**
 	 * Returns an always positive yaw
 	 */
+	@Override
 	public float getYaw() {
 		float yaw = super.getYaw();
 		if (Math.abs(yaw) > Math.abs(lastYaw) + MAX_DEGREES_PER_TICK) { // Smoothing
@@ -55,6 +58,7 @@ public class NavX extends AHRS implements IMU {
 	/**
 	 * Returns an always positive pitch
 	 */
+	@Override
 	public float getPitch() {
 		float pitch = super.getPitch();
 		if (Math.abs(pitch) > Math.abs(lastPitch) + MAX_DEGREES_PER_TICK) {
@@ -72,6 +76,7 @@ public class NavX extends AHRS implements IMU {
 	/**
 	 * Returns an always positive roll
 	 */
+	@Override
 	public float getRoll() {
 		float roll = super.getRoll();
 		if (Math.abs(roll) > Math.abs(lastRoll) + MAX_DEGREES_PER_TICK) {

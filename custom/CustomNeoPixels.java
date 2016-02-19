@@ -1,5 +1,6 @@
 package org.usfirst.frc4904.standard.custom;
 
+
 /**
  * Class for interfacing with a Teensy running
  * TeensyNeoPixelCAN code.
@@ -15,7 +16,7 @@ public abstract class CustomNeoPixels extends CustomCAN {
 	/**
 	 * Constructor
 	 * ID should be between 0x600 and 0x700.
-	 * 
+	 *
 	 * @param name
 	 * @param id
 	 */
@@ -35,7 +36,7 @@ public abstract class CustomNeoPixels extends CustomCAN {
 	/**
 	 * Sets the color of the pattern.
 	 * Values are 0-255.
-	 * 
+	 *
 	 * @param R
 	 * @param G
 	 * @param B
@@ -49,7 +50,7 @@ public abstract class CustomNeoPixels extends CustomCAN {
 	/**
 	 * Sets the progress of the pattern.
 	 * Values are 0 to 32768.
-	 * 
+	 *
 	 * @param progress
 	 */
 	public void setProgress(int progress) {

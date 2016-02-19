@@ -11,7 +11,7 @@ public interface SpeedModifier {
 	/**
 	 * This function actually changes the speed
 	 * that the motor should use.
-	 * 
+	 *
 	 * @param speed
 	 *        The input speed of the motor
 	 * @return

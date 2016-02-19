@@ -8,7 +8,7 @@ public class Util {
 	/**
 	 * A function for determining if floating point numbers are effectively zero.
 	 * Floating point arithmetic tends to introduce very small errors.
-	 * 
+	 *
 	 * @param var
 	 *        The floating point number you want to compare
 	 * @return

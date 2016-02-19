@@ -20,7 +20,7 @@ public class SolenoidShifters extends Subsystem {
 	
 	/**
 	 * A subsystem for managing a solenoid for a shifting drivetrain.
-	 * 
+	 *
 	 * @param solenoid
 	 *        The DoubleSolenoid used to shift
 	 * @param isInverted
@@ -39,7 +39,7 @@ public class SolenoidShifters extends Subsystem {
 	
 	/**
 	 * A subsystem for managing a solenoid for a shifting drivetrain.
-	 * 
+	 *
 	 * @param solenoid
 	 *        The DoubleSolenoid used to shift
 	 */
@@ -49,7 +49,7 @@ public class SolenoidShifters extends Subsystem {
 	
 	/**
 	 * A subsystem for managing a solenoid for a shifting drivetrain.
-	 * 
+	 *
 	 * @param portUp
 	 *        The first port of the double solenoid
 	 * @param portDown
@@ -61,7 +61,7 @@ public class SolenoidShifters extends Subsystem {
 	
 	/**
 	 * A subsystem for managing a solenoid for a shifting drivetrain.
-	 * 
+	 *
 	 * @param module
 	 *        The ID of the PCM for the double solenoid
 	 * @param portUp
@@ -73,6 +73,7 @@ public class SolenoidShifters extends Subsystem {
 		this(new DoubleSolenoid(module, portUp, portDown), false);
 	}
 	
+	@Override
 	protected void initDefaultCommand() {
 		setDefaultCommand(new ChassisShift(this, SolenoidShifters.ShiftState.DOWN));
 	}
@@ -89,7 +90,7 @@ public class SolenoidShifters extends Subsystem {
 	
 	/**
 	 * Shifts both gearboxes to up state or down state
-	 * 
+	 *
 	 * @param state
 	 */
 	public void shift(ShiftState state) {

@@ -50,22 +50,27 @@ public class CANEncoder extends CANSensor implements CustomEncoder {
 	 * PIDSourceType is either PIDSourceType.kDisplacement
 	 * or PIDSourceType.kRate.
 	 */
+	@Override
 	public void setPIDSourceType(PIDSourceType pidSource) {
 		this.pidSource = pidSource;
 	}
 	
+	@Override
 	public PIDSourceType getPIDSourceType() {
 		return pidSource;
 	}
 	
+	@Override
 	public void setDistancePerPulse(double distancePerPulse) {
 		this.distancePerPulse = distancePerPulse;
 	}
 	
+	@Override
 	public void setReverseDirection(boolean reverseDirection) {
 		this.reverseDirection = reverseDirection;
 	}
 	
+	@Override
 	public double pidGet() {
 		if (pidSource == PIDSourceType.kDisplacement) {
 			return getDistance();
@@ -76,6 +81,7 @@ public class CANEncoder extends CANSensor implements CustomEncoder {
 	/**
 	 * Returns the raw number of ticks
 	 */
+	@Override
 	public int get() {
 		return super.read(0); // TODO: what mode numbers will be position and direction?
 	}
@@ -83,11 +89,12 @@ public class CANEncoder extends CANSensor implements CustomEncoder {
 	/**
 	 * Returns the scaled distance rotated by the encoder.
 	 */
+	@Override
 	public double getDistance() {
 		if (reverseDirection) {
-			return distancePerPulse * (double) super.read(0) * -1.0;
+			return distancePerPulse * super.read(0) * -1.0;
 		} else {
-			return distancePerPulse * (double) super.read(0);
+			return distancePerPulse * super.read(0);
 		}
 	}
 	
@@ -95,6 +102,7 @@ public class CANEncoder extends CANSensor implements CustomEncoder {
 	 * Returns the most recent direction of movement
 	 * (based on the speed)
 	 */
+	@Override
 	public boolean getDirection() {
 		return !reverseDirection == (super.read(1) >= 0);
 	}
@@ -102,17 +110,19 @@ public class CANEncoder extends CANSensor implements CustomEncoder {
 	/**
 	 * Returns the rate of rotation
 	 */
+	@Override
 	public double getRate() {
 		if (reverseDirection) {
-			return distancePerPulse * (double) super.read(1) * -1.0;
+			return distancePerPulse * super.read(1) * -1.0;
 		} else {
-			return distancePerPulse * (double) super.read(1);
+			return distancePerPulse * super.read(1);
 		}
 	}
 	
 	/**
 	 * Returns true when stopped
 	 */
+	@Override
 	public boolean getStopped() {
 		return Util.isZero(getRate());
 	}
@@ -120,6 +130,7 @@ public class CANEncoder extends CANSensor implements CustomEncoder {
 	/**
 	 * Resets the distance traveled for the encoder
 	 */
+	@Override
 	public void reset() {
 		super.write(new byte[] {0x72, 0x65, 0x73, 0x65, 0x74, 0x65, 0x6e, 0x63}); // resetenc
 		super.read();

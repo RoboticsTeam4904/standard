@@ -13,7 +13,7 @@ public class TankDriveShifting extends TankDrive implements ShiftingChassis {
 	
 	/**
 	 * A tank drive with shifting solenoids (only two solenoids supported)
-	 * 
+	 *
 	 * @param name
 	 * @param leftWheelA
 	 * @param leftWheelB
@@ -29,7 +29,7 @@ public class TankDriveShifting extends TankDrive implements ShiftingChassis {
 	
 	/**
 	 * A tank drive with shifting solenoids (only two solenoids supported)
-	 * 
+	 *
 	 * @param name
 	 * @param leftWheel
 	 * @param rightWheel
@@ -44,6 +44,7 @@ public class TankDriveShifting extends TankDrive implements ShiftingChassis {
 	/**
 	 * Returns an array of solenoids in the order left, right
 	 */
+	@Override
 	public SolenoidShifters getShifter() {
 		return shifter;
 	}

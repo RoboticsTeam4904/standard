@@ -16,7 +16,7 @@ public class RunUnless extends CommandGroup {
 	 * new RunIf(new Shoot(), shooter::isUnsafe)
 	 * This double-colon syntax only works in Java 8. If you must use this with an earlier version of Java, use:
 	 * new RunIf(new Shoot(), new BooleanInterface() { boolean evaluate() { return shooter.isUnsafe(); } })
-	 * 
+	 *
 	 * @param command
 	 *        The command to be run if the condition is NOT met
 	 * @param bi

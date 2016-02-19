@@ -19,6 +19,7 @@ public class LinearModifier implements SpeedModifier {
 		this(1.0);
 	}
 	
+	@Override
 	public double modify(double speed) {
 		return speed * scale;
 	}

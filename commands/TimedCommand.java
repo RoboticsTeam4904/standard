@@ -18,7 +18,7 @@ public abstract class TimedCommand extends Command {
 	
 	/**
 	 * Constructor.
-	 * 
+	 *
 	 * @param name
 	 */
 	public TimedCommand(String name) {
@@ -28,7 +28,7 @@ public abstract class TimedCommand extends Command {
 	
 	/**
 	 * Sets the interval between reset and getTimed
-	 * 
+	 *
 	 * @param interval
 	 */
 	protected void setTimeInterval(double interval) {
@@ -38,7 +38,7 @@ public abstract class TimedCommand extends Command {
 	/**
 	 * Returns true if there has been an
 	 * interval of time since the last reset
-	 * 
+	 *
 	 * @return
 	 */
 	protected boolean getTimed() {

@@ -41,7 +41,7 @@ public abstract class CommandRobotBase extends IterativeRobot {
 	}
 	
 	/**
-	 * 
+	 *
 	 * This is some code that makes it
 	 * a little easier to initialize the robot.
 	 * It currently automatically handles
@@ -51,7 +51,7 @@ public abstract class CommandRobotBase extends IterativeRobot {
 	 * Note that you should still
 	 * have a robotInit, but it should
 	 * call super.robotInit.
-	 * 
+	 *
 	 * @param healthchecks
 	 */
 	public void robotInit(AbstractHealthCheck... healthchecks) {
@@ -68,7 +68,7 @@ public abstract class CommandRobotBase extends IterativeRobot {
 	}
 	
 	/**
-	 * 
+	 *
 	 * @return
 	 * 		True if the robot is enabled
 	 *         and is in operator control.
@@ -78,7 +78,7 @@ public abstract class CommandRobotBase extends IterativeRobot {
 	}
 	
 	/**
-	 * 
+	 *
 	 * @return
 	 * 		True if the robot is enabled
 	 *         and is in autonomous mode.
@@ -93,6 +93,7 @@ public abstract class CommandRobotBase extends IterativeRobot {
 	 * that if you decide to override
 	 * you call super.disabledInit.
 	 */
+	@Override
 	public void disabledInit() {
 		if (healthcheckCommand != null) {
 			healthcheckCommand.reset();

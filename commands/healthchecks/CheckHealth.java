@@ -14,7 +14,7 @@ public class CheckHealth extends CommandGroup {
 	/**
 	 * CheckHealth runs a series of health checks.
 	 * It also includes a reset for all of the health checks.
-	 * 
+	 *
 	 * @param command
 	 *        The health check commands to run
 	 */
@@ -38,7 +38,7 @@ public class CheckHealth extends CommandGroup {
 	
 	/**
 	 * Returns current health status.
-	 * 
+	 *
 	 * @return
 	 */
 	public HealthLevel getStatus() {

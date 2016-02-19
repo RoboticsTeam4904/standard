@@ -40,6 +40,7 @@ public class VelocitySensorMotor extends SensorMotor {
 		this("VelocitySensorMotor", motionController, motors);
 	}
 	
+	@Override
 	public void set(double speed) {
 		LogKitten.v(speed + "");
 		motionController.setSetpoint(speed);

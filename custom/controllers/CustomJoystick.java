@@ -52,15 +52,15 @@ public class CustomJoystick extends Joystick implements Controller {
 	/**
 	 * Returns true if a given axis is
 	 * above the move threshold.
-	 * 
+	 *
 	 * @param axis
 	 * @return
 	 */
 	public boolean active(int axis) {
-		if (axis == X_AXIS) {
-			return Math.abs(super.getX()) > moveThreshold;
-		} else if (axis == Y_AXIS) {
-			return Math.abs(super.getY()) > moveThreshold;
+		if (axis == CustomJoystick.X_AXIS) {
+			return Math.abs(super.getX()) > CustomJoystick.moveThreshold;
+		} else if (axis == CustomJoystick.Y_AXIS) {
+			return Math.abs(super.getY()) > CustomJoystick.moveThreshold;
 		} else {
 			return false;
 		}
@@ -73,7 +73,7 @@ public class CustomJoystick extends Joystick implements Controller {
 	 * the number of buttons (> 0
 	 * means the joystick is
 	 * connected).
-	 * 
+	 *
 	 * @return
 	 */
 	public boolean connected() {
@@ -84,8 +84,9 @@ public class CustomJoystick extends Joystick implements Controller {
 	 * Returns the value of the
 	 * given axis.
 	 */
+	@Override
 	public double getAxis(int axis) {
-		if (Math.abs(super.getRawAxis(axis)) < moveThreshold) {
+		if (Math.abs(super.getRawAxis(axis)) < CustomJoystick.moveThreshold) {
 			return 0.0;
 		}
 		return super.getRawAxis(axis);

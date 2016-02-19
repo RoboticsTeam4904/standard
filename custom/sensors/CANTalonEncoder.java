@@ -68,9 +68,9 @@ public class CANTalonEncoder implements CustomEncoder {
 	@Override
 	public double getDistance() {
 		if (reverseDirection) {
-			return distancePerPulse * (double) talon.getEncPosition() * -1.0;
+			return distancePerPulse * talon.getEncPosition() * -1.0;
 		} else {
-			return distancePerPulse * (double) talon.getEncPosition();
+			return distancePerPulse * talon.getEncPosition();
 		}
 	}
 	

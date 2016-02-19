@@ -18,7 +18,7 @@ public abstract class Chassis extends Subsystem {
 	protected Motor[] motors;
 	
 	/**
-	 * 
+	 *
 	 * @param name
 	 * @param motors
 	 *        :
@@ -29,13 +29,14 @@ public abstract class Chassis extends Subsystem {
 		this.motors = motors;
 	}
 	
+	@Override
 	protected void initDefaultCommand() {
 		setDefaultCommand(new ChassisIdle(this));
 	}
 	
 	/**
 	 * returns the number of wheels
-	 * 
+	 *
 	 * @return
 	 */
 	public int getNumberWheels() {
@@ -44,7 +45,7 @@ public abstract class Chassis extends Subsystem {
 	
 	/**
 	 * returns an array of motors of the size getNumberWheels in the order that they were passed to the constructor
-	 * 
+	 *
 	 * @return
 	 */
 	public Motor[] getMotors() {
@@ -55,7 +56,7 @@ public abstract class Chassis extends Subsystem {
 	 * returns an array of the correct motor speeds
 	 * retrieves the speed calculated with the values
 	 * inputed using the move functions.
-	 * 
+	 *
 	 * @return
 	 */
 	public double[] getMotorSpeeds() {
@@ -66,7 +67,7 @@ public abstract class Chassis extends Subsystem {
 	 * sets the movement to be calculated by the chassis
 	 * to be the movement producing the speed at the angle
 	 * with the turn speed.
-	 * 
+	 *
 	 * @param speed
 	 * @param angle
 	 * @param turnSpeed
@@ -77,7 +78,7 @@ public abstract class Chassis extends Subsystem {
 	 * sets the movement to be calculated by the chassis
 	 * to be the movement producing the speed in the
 	 * X and Y directions with the turn speed
-	 * 
+	 *
 	 * @param xSpeed
 	 * @param ySpeed
 	 * @param turnSpeed
@@ -88,7 +89,7 @@ public abstract class Chassis extends Subsystem {
 	 * sets the movement to be calculated by the chassis
 	 * to be the movement producing the speed
 	 * with the turn speed. Assumed to be straight forward.
-	 * 
+	 *
 	 * @param speed
 	 * @param turnSpeed
 	 */

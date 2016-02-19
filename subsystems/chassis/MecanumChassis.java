@@ -12,7 +12,7 @@ import org.usfirst.frc4904.standard.subsystems.motor.Motor;
 public class MecanumChassis extends Chassis {
 	/**
 	 * Constructs a mecanum chassis
-	 * 
+	 *
 	 * @param name
 	 * @param frontLeftWheel
 	 * @param frontRightWheel
@@ -34,8 +34,9 @@ public class MecanumChassis extends Chassis {
 	 *        (-1 to 1)
 	 *        : rate of rotation around center
 	 */
+	@Override
 	public void move2dp(double speed, double angle, double turnSpeed) {
-		motorSpeeds = calculateWheels(speed, angle, turnSpeed);
+		motorSpeeds = MecanumChassis.calculateWheels(speed, angle, turnSpeed);
 	}
 	
 	/**
@@ -44,8 +45,9 @@ public class MecanumChassis extends Chassis {
 	 * @param ySpeed
 	 *        : speed in y direction
 	 */
+	@Override
 	public void move2dc(double xSpeed, double ySpeed, double turnSpeed) {
-		double[] polar = cartesianToPolar(xSpeed, ySpeed);
+		double[] polar = MecanumChassis.cartesianToPolar(xSpeed, ySpeed);
 		move2dp(polar[0], polar[1], turnSpeed);
 	}
 	
@@ -55,13 +57,14 @@ public class MecanumChassis extends Chassis {
 	 * @param turnSpeed
 	 *        : rate of rotation around center
 	 */
+	@Override
 	public void move(double speed, double turnSpeed) {
 		move2dc(0.0, speed, turnSpeed);
 	}
 	
 	/**
 	 * Calculates the speeds for each motor given polar coordinates.
-	 * 
+	 *
 	 * @param speed
 	 *        The overall speed
 	 * @param angle
@@ -91,7 +94,7 @@ public class MecanumChassis extends Chassis {
 	
 	/**
 	 * Converts an x and y coordinate into an array of speed, angle
-	 * 
+	 *
 	 * @param x
 	 *        The x coordinate
 	 * @param y

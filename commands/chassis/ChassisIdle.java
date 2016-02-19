@@ -16,7 +16,7 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
  */
 public class ChassisIdle extends CommandGroup {
 	/**
-	 * 
+	 *
 	 * @param chassis
 	 *        The robot chassis to idle.
 	 */
@@ -31,22 +31,27 @@ public class ChassisIdle extends CommandGroup {
 		}
 	}
 	
+	@Override
 	protected void initialize() {
 		LogKitten.v("ChassisIdle initialized");
 	}
 	
+	@Override
 	protected void execute() {
 		LogKitten.d("ChassisIdle executing");
 	}
 	
+	@Override
 	protected void end() {
 		LogKitten.v("ChassisIdle ended");
 	}
 	
+	@Override
 	protected void interrupted() {
 		LogKitten.w("ChassisIdle interrupted");
 	}
 	
+	@Override
 	protected boolean isFinished() {
 		return false; // default command
 	}

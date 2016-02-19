@@ -20,7 +20,7 @@ public class AccelerationCap implements SpeedModifier {
 	 * A SpeedModifier that does brownout protection and voltage ramping.
 	 * This is designed to reduce power consumption (via voltage ramping)
 	 * and prevent RoboRIO/Ginger brownouts.
-	 * 
+	 *
 	 * @param pdp
 	 *        The robot's power distribution panel.
 	 *        This is used to monitor the battery voltage.
@@ -39,10 +39,10 @@ public class AccelerationCap implements SpeedModifier {
 	 * A SpeedModifier that does brownout protection and voltage ramping.
 	 * This is designed to reduce power consumption (via voltage ramping)
 	 * and prevent RoboRIO/Ginger brownouts.
-	 * 
+	 *
 	 * Default soft stop voltage is 11 volts.
 	 * Default hard stop voltage is 10 volts.
-	 * 
+	 *
 	 * @param pdp
 	 *        The robot's power distribution panel.
 	 *        This is used to monitor the battery voltage.
@@ -58,6 +58,7 @@ public class AccelerationCap implements SpeedModifier {
 	 *
 	 * AccelerationCap also prevents brownouts by slowing motors as voltage decreases.
 	 */
+	@Override
 	public double modify(double inputSpeed) {
 		double outputSpeed;
 		if (Math.abs(inputSpeed) > Math.abs(currentSpeed) && pdp.getVoltage() < softStopVoltage) {

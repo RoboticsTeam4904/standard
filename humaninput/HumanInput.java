@@ -18,6 +18,7 @@ public abstract class HumanInput implements Named {
 		this.name = name;
 	}
 	
+	@Override
 	public String getName() {
 		return name;
 	}

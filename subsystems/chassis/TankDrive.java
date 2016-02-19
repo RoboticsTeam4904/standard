@@ -10,7 +10,7 @@ import org.usfirst.frc4904.standard.subsystems.motor.Motor;
  */
 public class TankDrive extends Chassis {
 	/**
-	 * 
+	 *
 	 * @param name
 	 * @param leftWheelA
 	 * @param leftWheelB
@@ -22,7 +22,7 @@ public class TankDrive extends Chassis {
 	}
 	
 	/**
-	 * 
+	 *
 	 * @param name
 	 * @param leftWheel
 	 * @param rightWheel
@@ -42,6 +42,7 @@ public class TankDrive extends Chassis {
 	 *        (-1 to 1)
 	 *        : rate of rotation around center
 	 */
+	@Override
 	public void move2dp(double speed, double angle, double turnSpeed) {
 		double normalize = Math.max(Math.max(Math.abs(speed + turnSpeed), Math.abs(speed - turnSpeed)), 1);
 		double leftSpeed = (speed + turnSpeed) / normalize;
@@ -62,6 +63,7 @@ public class TankDrive extends Chassis {
 	 *        : (-1 to 1)
 	 *        rate of rotation around center
 	 */
+	@Override
 	public void move2dc(double xSpeed, double ySpeed, double turnSpeed) {
 		move2dp(ySpeed, 0.0, turnSpeed);
 	}
@@ -72,5 +74,6 @@ public class TankDrive extends Chassis {
 	 * @param turnSpeed
 	 *        : rate of rotation around center
 	 */
+	@Override
 	public void move(double speed, double turnSpeed) {}
 }

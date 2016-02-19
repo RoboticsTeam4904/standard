@@ -35,7 +35,7 @@ public class PressureValveClosedTest extends AbstractHealthCheck {
 	
 	/**
 	 * Will construct a new Compressor(0).
-	 * 
+	 *
 	 * @param timeout
 	 *        Timeout before checking compressor current in seconds
 	 * @param currentThreshold
@@ -47,25 +47,25 @@ public class PressureValveClosedTest extends AbstractHealthCheck {
 	
 	/**
 	 * Will use PressureValveClosedTest.DEFAULT_TIMEOUT as the timeout.
-	 * 
+	 *
 	 * @param compressor
 	 *        The compressor to read current from
 	 * @param currentThreshold
 	 *        Current the compressor should be drawing at minimum if the system is pressurizing
 	 */
 	public PressureValveClosedTest(Compressor compressor, double currentThreshold) {
-		this(compressor, DEFAULT_TIMEOUT, currentThreshold);
+		this(compressor, PressureValveClosedTest.DEFAULT_TIMEOUT, currentThreshold);
 	}
 	
 	/**
 	 * Will use PressureValveClosedTest.DEFAULT_TIMEOUT as the timeout.
 	 * Will construct a new Compressor(0).
-	 * 
+	 *
 	 * @param currentThreshold
 	 *        Current the compressor should be drawing at minimum if the system is pressurizing
 	 */
 	public PressureValveClosedTest(double currentThreshold) {
-		this(DEFAULT_TIMEOUT, currentThreshold);
+		this(PressureValveClosedTest.DEFAULT_TIMEOUT, currentThreshold);
 	}
 	
 	@Override

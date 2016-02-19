@@ -23,7 +23,7 @@ public class BangBangController extends MotionController {
 	 * The bang bang controller increases the value of the output
 	 * if it is below the setpoint or decreases the value of the
 	 * output if it is above the setpoint.
-	 * 
+	 *
 	 * @param source
 	 *        Sensor
 	 * @param A
@@ -50,7 +50,7 @@ public class BangBangController extends MotionController {
 	 * The bang bang controller increases the value of the output
 	 * if it is below the setpoint or decreases the value of the
 	 * output if it is above the setpoint.
-	 * 
+	 *
 	 * @param source
 	 *        Sensor
 	 * @param A
@@ -77,7 +77,7 @@ public class BangBangController extends MotionController {
 	/**
 	 * Get the current output of the bang bang controller.
 	 * This should be used to set the output.
-	 * 
+	 *
 	 * @return
 	 * 		The current output of the bang bang controller.
 	 */

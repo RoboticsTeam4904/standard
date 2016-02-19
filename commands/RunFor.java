@@ -12,7 +12,7 @@ public class RunFor extends CommandGroup {
 	 * Run a command for a given amount of time, in seconds. The command will be cancelled at the end.
 	 * For example, if you want to go forward for 3 seconds, use:
 	 * new RunFor(new GoForward(), 3)
-	 * 
+	 *
 	 * @param command
 	 *        The command to be run for the duration
 	 * @param duration
