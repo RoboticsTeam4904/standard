@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 public class CommandSendableChooser extends SendableChooser {
 	/**
 	 * Adds the command object to the smart dashboard.
-	 * 
+	 *
 	 * @param object
 	 */
 	public void addObject(Command object) {
@@ -23,7 +23,7 @@ public class CommandSendableChooser extends SendableChooser {
 	/**
 	 * Adds the command object to the smart dashboard
 	 * as the default command.
-	 * 
+	 *
 	 * @param object
 	 */
 	public void addDefault(Command object) {
@@ -34,6 +34,7 @@ public class CommandSendableChooser extends SendableChooser {
 	 * Returns the command selected on the smart
 	 * dashboard.
 	 */
+	@Override
 	public Command getSelected() {
 		return (Command) super.getSelected();
 	}

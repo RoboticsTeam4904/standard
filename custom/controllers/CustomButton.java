@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj.command.Command;
  *
  */
 public class CustomButton extends JoystickButton {
-	private boolean currentState;
+	protected boolean currentState;
 	
 	public CustomButton(GenericHID joystick, int buttonNumber) {
 		super(joystick, buttonNumber);
@@ -20,7 +20,7 @@ public class CustomButton extends JoystickButton {
 	
 	/**
 	 * Returns true the first time the button is pressed and the function is called.
-	 * 
+	 *
 	 * @return whether the button was pressed since the last call to this function
 	 */
 	public boolean getFirstPressed() {
@@ -34,7 +34,7 @@ public class CustomButton extends JoystickButton {
 	
 	/**
 	 * Cancels a command when the button is released
-	 * 
+	 *
 	 * @param command
 	 *        The command to be cancelled.
 	 */
@@ -44,7 +44,7 @@ public class CustomButton extends JoystickButton {
 	
 	/**
 	 * Run a command once when a button is held.
-	 * 
+	 *
 	 * @param command
 	 *        The command to be run
 	 */
@@ -55,7 +55,7 @@ public class CustomButton extends JoystickButton {
 	
 	/**
 	 * Runs a command unless a button is held.
-	 * 
+	 *
 	 * @param command
 	 *        The command to be run.
 	 */

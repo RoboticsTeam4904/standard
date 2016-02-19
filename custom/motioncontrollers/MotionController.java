@@ -1,14 +1,14 @@
 package org.usfirst.frc4904.standard.custom.motioncontrollers;
 
 
-import org.usfirst.frc4904.standard.Constants;
+import org.usfirst.frc4904.standard.Util;
 import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.util.BoundaryException;
 
 /**
  * A MotionController modifies an output using a sensor
  * to precisely maintain a certain input.
- * 
+ *
  */
 public abstract class MotionController {
 	protected final PIDSource source;
@@ -25,7 +25,7 @@ public abstract class MotionController {
 	/**
 	 * A MotionController modifies an output using a sensor
 	 * to precisely maintain a certain input.
-	 * 
+	 *
 	 * @param source
 	 *        The sensor associated with the output you are
 	 *        trying to control
@@ -33,7 +33,7 @@ public abstract class MotionController {
 	public MotionController(PIDSource source) {
 		this.source = source;
 		enable = true;
-		absoluteTolerance = Constants.EPSILON; // Nonzero to avoid floating point errors
+		absoluteTolerance = Util.EPSILON; // Nonzero to avoid floating point errors
 		capOutput = false;
 		continuous = false;
 		inputMin = 0.0;
@@ -52,7 +52,7 @@ public abstract class MotionController {
 	/**
 	 * The calculated output value to achieve the
 	 * current setpoint.
-	 * 
+	 *
 	 * @return
 	 * 		Output value. If output range is set,
 	 *         this will be restricted to within
@@ -62,7 +62,7 @@ public abstract class MotionController {
 	
 	/**
 	 * A very recent error.
-	 * 
+	 *
 	 * @return
 	 * 		The most recent error calculated by
 	 *         the get function.
@@ -71,7 +71,7 @@ public abstract class MotionController {
 	
 	/**
 	 * The most recent setpoint.
-	 * 
+	 *
 	 * @return
 	 * 		The most recent setpoint.
 	 */
@@ -82,7 +82,7 @@ public abstract class MotionController {
 	/**
 	 * Sets the setpoint of the motion controller.
 	 * This is the value that the motion controller seeks.
-	 * 
+	 *
 	 * @param setpoint
 	 */
 	public void setSetpoint(double setpoint) {
@@ -93,7 +93,7 @@ public abstract class MotionController {
 	 * Sets the tolerance of the motion controller.
 	 * When the error is less than the tolerance,
 	 * onTarget returns true.
-	 * 
+	 *
 	 * @param absoluteTolerance
 	 */
 	public void setAbsoluteTolerance(double absoluteTolerance) {
@@ -108,7 +108,7 @@ public abstract class MotionController {
 	 * This is only used to work with continuous inputs.
 	 * If minimum is greater than maximum, this will throw
 	 * an exception.
-	 * 
+	 *
 	 * @param minimum
 	 * @param maximum
 	 */
@@ -125,7 +125,7 @@ public abstract class MotionController {
 	 * Results from the motion control calculation will be
 	 * capped at these values. The cap is automatically
 	 * enabled by calling this function.
-	 * 
+	 *
 	 * @param minimum
 	 * @param maximum
 	 */
@@ -149,7 +149,7 @@ public abstract class MotionController {
 	 * being at the same point, e.g. the controller
 	 * will try to pass through the maximum
 	 * to get to a point beyond it.
-	 * 
+	 *
 	 * @param continuous
 	 */
 	public void setContinuous(boolean continuous) {
@@ -175,7 +175,7 @@ public abstract class MotionController {
 	/**
 	 * True if the error in the motion controller is
 	 * less than the tolerance of the motion controller.
-	 * 
+	 *
 	 * @return
 	 * 		^^
 	 */

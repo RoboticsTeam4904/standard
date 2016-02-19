@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj.buttons.Button;
  *
  */
 public class CustomDigitalLimitSwitch extends Button implements CustomButton {
-	private final DigitalInput limitSwitch;
+	protected final DigitalInput limitSwitch;
 	
 	public CustomDigitalLimitSwitch(DigitalInput limitSwitch) {
 		this.limitSwitch = limitSwitch;
@@ -25,6 +25,7 @@ public class CustomDigitalLimitSwitch extends Button implements CustomButton {
 	 * This is based on the raw value of the limit
 	 * switch, not only once when it is first pressed.
 	 */
+	@Override
 	public boolean get() {
 		return !limitSwitch.get();
 	}

@@ -12,7 +12,7 @@ public interface Controller {
 	
 	/**
 	 * Allows a generic controller to return an indivdual axis
-	 * 
+	 *
 	 * @param axis
 	 *        (corresponding to standard axis
 	 * @return a double (-1 to 1) representing the position of the axis

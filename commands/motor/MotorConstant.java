@@ -12,7 +12,7 @@ public class MotorConstant extends Command {
 	protected final Motor motor;
 	
 	/**
-	 * 
+	 *
 	 * @param motor
 	 *        The motor to set the speed of.
 	 * @param motorSpeed

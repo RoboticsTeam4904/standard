@@ -13,8 +13,8 @@ public abstract class SensorMotor extends Motor {
 	protected double position;
 	protected long lastUpdate;
 	
-	public SensorMotor(String name, boolean inverted, SpeedModifier slopeController, MotionController motionController, SpeedController... motors) {
-		super(name, inverted, slopeController, motors);
+	public SensorMotor(String name, boolean inverted, SpeedModifier speedModifier, MotionController motionController, SpeedController... motors) {
+		super(name, inverted, speedModifier, motors);
 		this.motionController = motionController;
 		isMotionControlEnabled = false;
 	}
@@ -23,8 +23,8 @@ public abstract class SensorMotor extends Motor {
 		this(name, isInverted, new IdentityModifier(), motionController, motors);
 	}
 	
-	public SensorMotor(String name, SpeedModifier slopeController, MotionController motionController, SpeedController... motors) {
-		this(name, false, slopeController, motionController, motors);
+	public SensorMotor(String name, SpeedModifier speedModifier, MotionController motionController, SpeedController... motors) {
+		this(name, false, speedModifier, motionController, motors);
 	}
 	
 	public SensorMotor(String name, MotionController motionController, SpeedController... motors) {

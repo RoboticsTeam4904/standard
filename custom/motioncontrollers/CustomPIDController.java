@@ -19,7 +19,7 @@ public class CustomPIDController extends MotionController {
 	/**
 	 * An extremely basic PID controller.
 	 * It does not differentiate between rate and distance.
-	 * 
+	 *
 	 * @param P
 	 *        Initial P constant
 	 * @param I
@@ -42,7 +42,7 @@ public class CustomPIDController extends MotionController {
 	/**
 	 * An extremely basic PID controller.
 	 * It does not differentiate between rate and distance.
-	 * 
+	 *
 	 * @param P
 	 *        Initial P constant
 	 * @param I
@@ -59,7 +59,7 @@ public class CustomPIDController extends MotionController {
 	/**
 	 * An extremely basic PID controller.
 	 * It does not differentiate between rate and distance.
-	 * 
+	 *
 	 * @param source
 	 *        The sensor linked to the output
 	 */
@@ -101,14 +101,14 @@ public class CustomPIDController extends MotionController {
 	
 	/**
 	 * Sets the parameters of the PID loop
-	 * 
+	 *
 	 * @param P
 	 *        Proportional
 	 * @param I
 	 *        Integral
 	 * @param D
 	 *        Derivative
-	 * 
+	 *
 	 *        If you do not know what these mean, please refer
 	 *        to this link: https://en.wikipedia.org/wiki/PID_controller
 	 */
@@ -120,7 +120,7 @@ public class CustomPIDController extends MotionController {
 	
 	/**
 	 * Sets the parameters of the PID loop
-	 * 
+	 *
 	 * @param P
 	 *        Proportional
 	 * @param I
@@ -162,7 +162,7 @@ public class CustomPIDController extends MotionController {
 	/**
 	 * Get the current output of the PID loop.
 	 * This should be used to set the output (like a Motor).
-	 * 
+	 *
 	 * @return The current output of the PID loop.
 	 */
 	public double get() {

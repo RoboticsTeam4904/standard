@@ -10,7 +10,7 @@ public class RunAllSequential extends RunAll {
 	 * For example, if you want to go 10 miles north and then 5 miles east, use:
 	 * new RunAllParallel(new GoNorth(10), new GoEast(5))
 	 * If you will be using the same RunAllSequential more than once, make a new class and extend CommandGroup.
-	 * 
+	 *
 	 * @param commands
 	 *        The commands to be run in sequence
 	 */

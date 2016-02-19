@@ -12,7 +12,7 @@ public class MotorSensorHold extends MotorSet {
 	/**
 	 * Constructor.
 	 * The MotorSensorHold command holds a motor to a position.
-	 * 
+	 *
 	 * @param motor
 	 *        A Motor that also implements PositionSensorMotor.
 	 */
@@ -23,7 +23,7 @@ public class MotorSensorHold extends MotorSet {
 	
 	/**
 	 * Sets the motor to this position.
-	 * 
+	 *
 	 * @param position
 	 *        The position to set the motor to.
 	 */

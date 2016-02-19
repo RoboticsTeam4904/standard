@@ -7,20 +7,20 @@ import org.usfirst.frc4904.standard.custom.sensors.PDP;
 /**
  * A SpeedModifier that does brownout protection and voltage ramping.
  * This is designed to reduce power consumption (via voltage ramping)
- * and prevent RoboRIO/Ginger brownouts.
+ * and prevent RoboRIO/router brownouts.
  */
 public class AccelerationCap implements SpeedModifier {
-	private double currentSpeed;
-	private long lastUpdate;
-	private final PDP pdp;
-	private final double softStopVoltage;
-	private final double hardStopVoltage;
+	protected double currentSpeed;
+	protected long lastUpdate;
+	protected final PDP pdp;
+	protected final double softStopVoltage;
+	protected final double hardStopVoltage;
 	
 	/**
 	 * A SpeedModifier that does brownout protection and voltage ramping.
 	 * This is designed to reduce power consumption (via voltage ramping)
-	 * and prevent RoboRIO/Ginger brownouts.
-	 * 
+	 * and prevent RoboRIO/router brownouts.
+	 *
 	 * @param pdp
 	 *        The robot's power distribution panel.
 	 *        This is used to monitor the battery voltage.
@@ -38,11 +38,11 @@ public class AccelerationCap implements SpeedModifier {
 	/**
 	 * A SpeedModifier that does brownout protection and voltage ramping.
 	 * This is designed to reduce power consumption (via voltage ramping)
-	 * and prevent RoboRIO/Ginger brownouts.
-	 * 
+	 * and prevent RoboRIO/router brownouts.
+	 *
 	 * Default soft stop voltage is 11 volts.
 	 * Default hard stop voltage is 10 volts.
-	 * 
+	 *
 	 * @param pdp
 	 *        The robot's power distribution panel.
 	 *        This is used to monitor the battery voltage.
@@ -58,6 +58,7 @@ public class AccelerationCap implements SpeedModifier {
 	 *
 	 * AccelerationCap also prevents brownouts by slowing motors as voltage decreases.
 	 */
+	@Override
 	public double modify(double inputSpeed) {
 		double outputSpeed;
 		if (Math.abs(inputSpeed) > Math.abs(currentSpeed) && pdp.getVoltage() < softStopVoltage) {

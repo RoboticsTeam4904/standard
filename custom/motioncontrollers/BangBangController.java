@@ -1,7 +1,7 @@
 package org.usfirst.frc4904.standard.custom.motioncontrollers;
 
 
-import org.usfirst.frc4904.standard.Constants;
+import org.usfirst.frc4904.standard.Util;
 import edu.wpi.first.wpilibj.PIDSource;
 
 /**
@@ -23,7 +23,7 @@ public class BangBangController extends MotionController {
 	 * The bang bang controller increases the value of the output
 	 * if it is below the setpoint or decreases the value of the
 	 * output if it is above the setpoint.
-	 * 
+	 *
 	 * @param source
 	 *        Sensor
 	 * @param A
@@ -50,7 +50,7 @@ public class BangBangController extends MotionController {
 	 * The bang bang controller increases the value of the output
 	 * if it is below the setpoint or decreases the value of the
 	 * output if it is above the setpoint.
-	 * 
+	 *
 	 * @param source
 	 *        Sensor
 	 * @param A
@@ -62,7 +62,7 @@ public class BangBangController extends MotionController {
 	 *        The scalar on the input.
 	 */
 	public BangBangController(PIDSource source, double A, double F) {
-		this(source, A, F, Constants.EPSILON);
+		this(source, A, F, Util.EPSILON);
 	}
 	
 	/**
@@ -77,7 +77,7 @@ public class BangBangController extends MotionController {
 	/**
 	 * Get the current output of the bang bang controller.
 	 * This should be used to set the output.
-	 * 
+	 *
 	 * @return
 	 * 		The current output of the bang bang controller.
 	 */

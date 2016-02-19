@@ -6,9 +6,9 @@ import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 public class RunIfElse extends Command {
-	private final Command ifCommand;
-	private final Command elseCommand;
-	private final BooleanSupplier condition;
+	protected final Command ifCommand;
+	protected final Command elseCommand;
+	protected final BooleanSupplier condition;
 	
 	public RunIfElse(Command ifCommand, Command elseCommand, BooleanSupplier condition) {
 		super("RunIf[" + ifCommand.getName() + "]Else[" + elseCommand.getName() + "]");

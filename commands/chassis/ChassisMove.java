@@ -18,13 +18,13 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
  * This is the best way to handle this because it allows each motor to be a full subsystem.
  */
 public class ChassisMove extends CommandGroup {
-	private final MotorSet[] motorSpins;
-	private double[] motorSpeeds;
-	private final Chassis chassis;
-	private final ChassisController controller;
-	private final double xScale;
-	private final double yScale;
-	private final double turnScale;
+	protected final MotorSet[] motorSpins;
+	protected double[] motorSpeeds;
+	protected final Chassis chassis;
+	protected final ChassisController controller;
+	protected final double xScale;
+	protected final double yScale;
+	protected final double turnScale;
 	
 	/**
 	 * @param chassis
@@ -61,7 +61,7 @@ public class ChassisMove extends CommandGroup {
 		this.xScale = xScale;
 		this.yScale = yScale;
 		this.turnScale = turnScale;
-		LogKitten.v("ChassisMove created for " + Integer.toString(chassis.getNumberWheels()) + " wheels");
+		LogKitten.v("ChassisMove created for " + Integer.toString(chassis.getNumberMotors()) + " motors");
 	}
 	
 	/**
