@@ -73,15 +73,15 @@ public class Motor extends Subsystem implements SpeedController {
 	 *
 	 * @param name
 	 *        The name for the motor.
-	 * @param slopeController
+	 * @param speedModifier
 	 *        A SpeedModifier changes the input to every motor based on some factor.
 	 *        The default is an IdentityModifier, which does not affect anything.
 	 *        Can also regulate set speed to prevent brownouts (if you use AccelerationCap).
 	 * @param motors
 	 *        The SpeedControllers in this subsystem. Can be a single SpeedController or multiple SpeedControllers.
 	 */
-	public Motor(String name, SpeedModifier slopeController, SpeedController... motors) {
-		this(name, false, slopeController, motors);
+	public Motor(String name, SpeedModifier speedModifier, SpeedController... motors) {
+		this(name, false, speedModifier, motors);
 	}
 	
 	/**
@@ -148,8 +148,8 @@ public class Motor extends Subsystem implements SpeedController {
 	 * @param motors
 	 *        The SpeedControllers in this subsystem. Can be a single SpeedController or multiple SpeedControllers.
 	 */
-	public Motor(SpeedModifier slopeController, SpeedController... motors) {
-		this("Motor", slopeController, motors);
+	public Motor(SpeedModifier speedModifier, SpeedController... motors) {
+		this("Motor", speedModifier, motors);
 	}
 	
 	/**

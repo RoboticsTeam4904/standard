@@ -7,16 +7,16 @@ import org.usfirst.frc4904.standard.subsystems.motor.speedmodifiers.SpeedModifie
 import edu.wpi.first.wpilibj.SpeedController;
 
 public class VelocityEncodedMotor extends VelocitySensorMotor {
-	public VelocityEncodedMotor(String name, boolean isInverted, SpeedModifier slopeController, MotionController motionController, SpeedController... motors) {
-		super(name, isInverted, slopeController, motionController, motors);
+	public VelocityEncodedMotor(String name, boolean isInverted, SpeedModifier speedModifier, MotionController motionController, SpeedController... motors) {
+		super(name, isInverted, speedModifier, motionController, motors);
 	}
 	
 	public VelocityEncodedMotor(String name, boolean isInverted, MotionController motionController, SpeedController... motors) {
 		this(name, isInverted, new IdentityModifier(), motionController, motors);
 	}
 	
-	public VelocityEncodedMotor(String name, SpeedModifier slopeController, MotionController motionController, SpeedController... motors) {
-		this(name, false, slopeController, motionController, motors);
+	public VelocityEncodedMotor(String name, SpeedModifier speedModifier, MotionController motionController, SpeedController... motors) {
+		this(name, false, speedModifier, motionController, motors);
 	}
 	
 	public VelocityEncodedMotor(String name, MotionController motionController, SpeedController... motors) {
