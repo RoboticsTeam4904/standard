@@ -7,6 +7,11 @@ package org.usfirst.frc4904.standard.custom.controllers;
  *
  */
 public class CustomXbox extends XboxController implements Controller {
+	public final static int LEFT_X_AXIS = 0;
+	public final static int LEFT_Y_AXIS = 1;
+	public final static int RIGHT_X_AXIS = 2;
+	public final static int RIGHT_Y_AXIS = 3;
+	
 	public CustomXbox(final int port) {
 		super(port);
 	}
