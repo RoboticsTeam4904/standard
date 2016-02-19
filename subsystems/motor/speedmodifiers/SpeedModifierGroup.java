@@ -1,10 +1,10 @@
 package org.usfirst.frc4904.standard.subsystems.motor.speedmodifiers;
 
 
-public class GroupModifier implements SpeedModifier {
+public class SpeedModifierGroup implements SpeedModifier {
 	protected SpeedModifier[] speedModifiers;
 	
-	public GroupModifier(SpeedModifier... speedModifiers) {
+	public SpeedModifierGroup(SpeedModifier... speedModifiers) {
 		this.speedModifiers = speedModifiers;
 	}
 	
