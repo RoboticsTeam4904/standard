@@ -10,6 +10,7 @@ import org.usfirst.frc4904.standard.humaninput.Operator;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
+import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
@@ -167,6 +168,35 @@ public abstract class CommandRobotBase extends IterativeRobot {
 	 * Function for year specific code to be run while disabled.
 	 */
 	public abstract void disabledExecute();
+	
+	/**
+	 * This function is called by WPILib when the robot is in test mode.
+	 * Year specific code should be written in the disabledInitialize() function.
+	 */
+	@Override
+	public final void testInit() {
+		testInitialize();
+	}
+	
+	/**
+	 * Function for year specific code to be run on disabled initialize.
+	 */
+	public abstract void testInitialize();
+	
+	/**
+	 * This function is called by WPILib periodically while in test mode.
+	 * Year specific code should be written in the testExecute() function.
+	 */
+	@Override
+	public void testPeriodic() {
+		LiveWindow.run();
+		testExecute();
+	}
+	
+	/**
+	 * Function for year specific code to be run while in test mode.
+	 */
+	public abstract void testExecute();
 	
 	/**
 	 * Sets the health checks for the robot.
