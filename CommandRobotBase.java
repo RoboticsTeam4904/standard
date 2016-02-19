@@ -76,10 +76,14 @@ public abstract class CommandRobotBase extends IterativeRobot {
 		driverChooser.getSelected().bindCommands();
 		operatorChooser.getSelected().bindCommands();
 		teleopInitialize();
+		if (teleopCommand != null) {
+			teleopCommand.start();
+		}
 	}
 	
 	/**
 	 * Function for year specific code to be run on teleoperated initialize.
+	 * teleopCommand should be set in this function.
 	 */
 	public abstract void teleopInitialize();
 	
