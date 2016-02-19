@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
  * It also includes a reset for all of the health checks.
  */
 public class CheckHealth extends CommandGroup {
-	private final AbstractHealthCheck[] commands;
+	protected final AbstractHealthCheck[] commands;
 	
 	/**
 	 * CheckHealth runs a series of health checks.

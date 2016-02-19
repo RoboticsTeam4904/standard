@@ -13,8 +13,8 @@ import edu.wpi.first.wpilibj.command.Command;
  *
  */
 public abstract class TimedCommand extends Command {
-	private double lastReset;
-	private double interval;
+	protected double lastReset;
+	protected double interval;
 	
 	/**
 	 * Constructor.

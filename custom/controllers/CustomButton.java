@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj.command.Command;
  *
  */
 public class CustomButton extends JoystickButton {
-	private boolean currentState;
+	protected boolean currentState;
 	
 	public CustomButton(GenericHID joystick, int buttonNumber) {
 		super(joystick, buttonNumber);

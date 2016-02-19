@@ -10,11 +10,11 @@ import org.usfirst.frc4904.standard.custom.sensors.PDP;
  * and prevent RoboRIO/Ginger brownouts.
  */
 public class AccelerationCap implements SpeedModifier {
-	private double currentSpeed;
-	private long lastUpdate;
-	private final PDP pdp;
-	private final double softStopVoltage;
-	private final double hardStopVoltage;
+	protected double currentSpeed;
+	protected long lastUpdate;
+	protected final PDP pdp;
+	protected final double softStopVoltage;
+	protected final double hardStopVoltage;
 	
 	/**
 	 * A SpeedModifier that does brownout protection and voltage ramping.

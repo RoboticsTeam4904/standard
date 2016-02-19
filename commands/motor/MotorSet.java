@@ -18,8 +18,8 @@ import edu.wpi.first.wpilibj.command.Command;
  *
  */
 public class MotorSet extends Command {
-	private final SpeedController motor;
-	private double speed;
+	protected final SpeedController motor;
+	protected double speed;
 	
 	public MotorSet(Motor motor) {
 		super("MotorSet");

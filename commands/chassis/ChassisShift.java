@@ -9,8 +9,8 @@ import edu.wpi.first.wpilibj.command.Command;
  *
  */
 public class ChassisShift extends Command {
-	private final SolenoidShifters solenoids;
-	private SolenoidShifters.ShiftState state;
+	protected final SolenoidShifters solenoids;
+	protected SolenoidShifters.ShiftState state;
 	
 	/**
 	 * Shifts the solenoids to the opposite state

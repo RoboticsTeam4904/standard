@@ -13,8 +13,8 @@ import edu.wpi.first.wpilibj.can.CANMessageNotFoundException;
  */
 public class CustomCAN implements Named {
 	// Because CANJNI is basically static, we do not extend it.
-	private final int messageID;
-	private final String name;
+	protected final int messageID;
+	protected final String name;
 	
 	/**
 	 * Constructor for a CustomCAN device.

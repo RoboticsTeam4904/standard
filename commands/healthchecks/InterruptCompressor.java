@@ -4,7 +4,7 @@ package org.usfirst.frc4904.standard.commands.healthchecks;
 import edu.wpi.first.wpilibj.Compressor;
 
 public class InterruptCompressor extends HealthProtectCommand {
-	private final Compressor compressor;
+	protected final Compressor compressor;
 	
 	public InterruptCompressor(Compressor compressor) {
 		this.compressor = compressor;

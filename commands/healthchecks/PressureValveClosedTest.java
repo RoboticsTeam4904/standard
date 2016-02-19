@@ -13,9 +13,9 @@ import edu.wpi.first.wpilibj.Compressor;
  * on the compressor. Make sure the system is sealed during this measurement!
  */
 public class PressureValveClosedTest extends AbstractHealthCheck {
-	private final double timeout;
-	private final double currentThreshold;
-	private final Compressor compressor;
+	protected final double timeout;
+	protected final double currentThreshold;
+	protected final Compressor compressor;
 	public static final double DEFAULT_TIMEOUT = 2;
 	
 	/**

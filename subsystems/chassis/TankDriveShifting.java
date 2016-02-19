@@ -9,7 +9,7 @@ import org.usfirst.frc4904.standard.subsystems.motor.Motor;
  *
  */
 public class TankDriveShifting extends TankDrive implements ShiftingChassis {
-	private final SolenoidShifters shifter;
+	protected final SolenoidShifters shifter;
 	
 	/**
 	 * A tank drive with shifting solenoids (only two solenoids supported)
