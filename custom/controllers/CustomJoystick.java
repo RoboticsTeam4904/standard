@@ -16,7 +16,7 @@ import edu.wpi.first.wpilibj.Joystick;
 public class CustomJoystick extends Joystick implements Controller {
 	public static final int X_AXIS = 0;
 	public static final int Y_AXIS = 1;
-	protected static final double moveThreshold = 0.05;
+	protected double deadzone;
 	protected final int port;
 	// Buttons
 	public final CustomButton button1;
@@ -35,6 +35,7 @@ public class CustomJoystick extends Joystick implements Controller {
 	public CustomJoystick(int port) {
 		super(port);
 		this.port = port;
+		deadzone = 0;
 		button1 = new CustomButton(this, 1);
 		button2 = new CustomButton(this, 2);
 		button3 = new CustomButton(this, 3);
@@ -58,9 +59,9 @@ public class CustomJoystick extends Joystick implements Controller {
 	 */
 	public boolean active(int axis) {
 		if (axis == CustomJoystick.X_AXIS) {
-			return Math.abs(super.getX()) > CustomJoystick.moveThreshold;
+			return Math.abs(super.getX()) > deadzone;
 		} else if (axis == CustomJoystick.Y_AXIS) {
-			return Math.abs(super.getY()) > CustomJoystick.moveThreshold;
+			return Math.abs(super.getY()) > deadzone;
 		} else {
 			return false;
 		}
@@ -86,9 +87,13 @@ public class CustomJoystick extends Joystick implements Controller {
 	 */
 	@Override
 	public double getAxis(int axis) {
-		if (Math.abs(super.getRawAxis(axis)) < CustomJoystick.moveThreshold) {
+		if (Math.abs(super.getRawAxis(axis)) < deadzone) {
 			return 0.0;
 		}
 		return super.getRawAxis(axis);
+	}
+	
+	public void setDeadzone(double deadzone) {
+		this.deadzone = deadzone;
 	}
 }
