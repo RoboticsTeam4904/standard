@@ -23,7 +23,7 @@ public class ChassisIdle extends CommandGroup {
 	public ChassisIdle(Chassis chassis) {
 		super("ChassisIdle");
 		requires(chassis);
-		LogKitten.v("ChassisIdle created for " + Integer.toString(chassis.getNumberWheels()) + " wheels");
+		LogKitten.v("ChassisIdle created for " + Integer.toString(chassis.getNumberMotors()) + " motors");
 		setInterruptible(true); // default command
 		Motor[] motors = chassis.getMotors();
 		for (Motor motor : motors) {

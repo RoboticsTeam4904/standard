@@ -61,7 +61,7 @@ public class ChassisMove extends CommandGroup {
 		this.xScale = xScale;
 		this.yScale = yScale;
 		this.turnScale = turnScale;
-		LogKitten.v("ChassisMove created for " + Integer.toString(chassis.getNumberWheels()) + " wheels");
+		LogKitten.v("ChassisMove created for " + Integer.toString(chassis.getNumberMotors()) + " motors");
 	}
 	
 	/**

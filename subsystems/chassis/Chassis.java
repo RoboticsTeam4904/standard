@@ -11,7 +11,6 @@ import edu.wpi.first.wpilibj.command.Subsystem;
  *
  */
 public abstract class Chassis extends Subsystem {
-	protected int numberWheels;
 	protected double[] motorSpeeds;
 	protected Motor[] motors;
 	
@@ -32,16 +31,16 @@ public abstract class Chassis extends Subsystem {
 	}
 	
 	/**
-	 * Returns the number of wheels
+	 * Returns the number of motors
 	 *
-	 * @return number of wheels
+	 * @return number of motors
 	 */
-	public int getNumberWheels() {
-		return numberWheels;
+	public int getNumberMotors() {
+		return motors.length;
 	}
 	
 	/**
-	 * Returns an array of motors of the size getNumberWheels in the order that they were passed to the constructor
+	 * Returns an array of motors of the size getNumberMotors in the order that they were passed to the constructor
 	 *
 	 * @return
 	 * 		all motors in the order passed to the constructor
