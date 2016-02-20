@@ -17,6 +17,6 @@ public class RunIf extends RunIfElse {
 	 *        A variable number of condition functions (ANDed) using Java 8's colon syntax
 	 */
 	public RunIf(Command command, BooleanSupplier... booleanSuppliers) {
-		super("RunIf[" + command.getName() + "]", command, new Idle(), booleanSuppliers);
+		super("RunIf[" + command.getName() + "]", command, new Noop(), booleanSuppliers);
 	}
 }
