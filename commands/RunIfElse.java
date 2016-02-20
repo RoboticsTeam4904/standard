@@ -19,6 +19,13 @@ public class RunIfElse extends Command {
 		this.booleanSuppliers = booleanSuppliers;
 	}
 	
+	protected RunIfElse(String name, Command ifCommand, Command elseCommand, BooleanSupplier... booleanSuppliers) {
+		super(name);
+		this.ifCommand = ifCommand;
+		this.elseCommand = elseCommand;
+		this.booleanSuppliers = booleanSuppliers;
+	}
+	
 	@Override
 	public boolean doesRequire(Subsystem subsystem) {
 		return ifCommand.doesRequire(subsystem) || elseCommand.doesRequire(subsystem);
