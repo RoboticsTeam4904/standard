@@ -5,6 +5,11 @@ import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 public class Idle extends Command {
+	public Idle() {
+		super("Idle(No Subsystem)");
+		setInterruptible(true);
+	}
+	
 	public Idle(Subsystem subsystem) {
 		super("Idle[" + subsystem.getName() + "]");
 		setInterruptible(true);
