@@ -8,7 +8,9 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 public class RunIfElse extends Command {
 	protected final Command ifCommand;
 	protected final Command elseCommand;
+	protected Command runningCommand;
 	protected final BooleanSupplier condition;
+	protected boolean hasRunOnce;
 	
 	public RunIfElse(Command ifCommand, Command elseCommand, BooleanSupplier condition) {
 		super("RunIf[" + ifCommand.getName() + "]Else[" + elseCommand.getName() + "]");
@@ -26,8 +28,10 @@ public class RunIfElse extends Command {
 	protected void initialize() {
 		if (condition.getAsBoolean()) {
 			ifCommand.start();
+			runningCommand = ifCommand;
 		} else {
 			elseCommand.start();
+			runningCommand = elseCommand;
 		}
 	}
 	
@@ -36,15 +40,21 @@ public class RunIfElse extends Command {
 	
 	@Override
 	protected boolean isFinished() {
-		return !ifCommand.isRunning() && !elseCommand.isRunning();
+		if (runningCommand.isRunning() && !hasRunOnce) {
+			hasRunOnce = true;
+		}
+		return !runningCommand.isRunning() && hasRunOnce;
 	}
 	
 	@Override
-	protected void end() {}
+	protected void end() {
+		ifCommand.cancel();
+		elseCommand.cancel();
+		hasRunOnce = false;
+	}
 	
 	@Override
 	protected void interrupted() {
-		ifCommand.cancel();
-		elseCommand.cancel();
+		end();
 	}
 }
