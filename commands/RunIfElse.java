@@ -9,14 +9,21 @@ public class RunIfElse extends Command {
 	protected final Command ifCommand;
 	protected final Command elseCommand;
 	protected Command runningCommand;
-	protected final BooleanSupplier condition;
+	protected final BooleanSupplier[] booleanSuppliers;
 	protected boolean hasRunOnce;
 	
-	public RunIfElse(Command ifCommand, Command elseCommand, BooleanSupplier condition) {
+	public RunIfElse(Command ifCommand, Command elseCommand, BooleanSupplier... booleanSuppliers) {
 		super("RunIf[" + ifCommand.getName() + "]Else[" + elseCommand.getName() + "]");
 		this.ifCommand = ifCommand;
 		this.elseCommand = elseCommand;
-		this.condition = condition;
+		this.booleanSuppliers = booleanSuppliers;
+	}
+	
+	protected RunIfElse(String name, Command ifCommand, Command elseCommand, BooleanSupplier... booleanSuppliers) {
+		super(name);
+		this.ifCommand = ifCommand;
+		this.elseCommand = elseCommand;
+		this.booleanSuppliers = booleanSuppliers;
 	}
 	
 	@Override
@@ -26,13 +33,15 @@ public class RunIfElse extends Command {
 	
 	@Override
 	protected void initialize() {
-		if (condition.getAsBoolean()) {
-			ifCommand.start();
-			runningCommand = ifCommand;
-		} else {
-			elseCommand.start();
-			runningCommand = elseCommand;
+		for (BooleanSupplier booleanSupplier : booleanSuppliers) {
+			if (!booleanSupplier.getAsBoolean()) {
+				elseCommand.start();
+				runningCommand = elseCommand;
+				return;
+			}
 		}
+		ifCommand.start();
+		runningCommand = ifCommand;
 	}
 	
 	@Override
