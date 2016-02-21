@@ -21,6 +21,7 @@ public class MotorPositionSet extends Command {
 	public MotorPositionSet(SensorMotor motor) {
 		super("MotorPositionSet");
 		this.motor = motor;
+		requires(motor);
 		motor.enablePID();
 		setInterruptible(true);
 	}
@@ -32,14 +33,16 @@ public class MotorPositionSet extends Command {
 	 *        The position to set the motor to.
 	 */
 	public void setPosition(double position) {
-		motor.setPosition(position);
+		this.position = position;
 	}
 	
 	@Override
 	protected void initialize() {}
 	
 	@Override
-	protected void execute() {}
+	protected void execute() {
+		motor.setPosition(position);
+	}
 	
 	@Override
 	protected boolean isFinished() {
