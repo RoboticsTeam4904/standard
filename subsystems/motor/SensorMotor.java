@@ -70,6 +70,10 @@ public abstract class SensorMotor extends Motor {
 		super.set(motionController.get());
 	}
 	
+	public boolean onTarget() {
+		return motionController.onTarget();
+	}
+	
 	@Override
 	public abstract void set(double speed);
 	
