@@ -73,6 +73,9 @@ public class AccelerationCap implements SpeedModifier {
 		} else if (Math.abs(inputSpeed) > Math.abs(currentSpeed)) {
 			LogKitten.d("AccelerationCap voltage ramping");
 			outputSpeed = currentSpeed + ((double) (System.currentTimeMillis() - lastUpdate) / 64) * (inputSpeed - currentSpeed);
+			if (outputSpeed > inputSpeed) {
+				outputSpeed = inputSpeed;
+			}
 		} else {
 			outputSpeed = inputSpeed;
 		}
