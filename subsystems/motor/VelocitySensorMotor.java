@@ -1,7 +1,6 @@
 package org.usfirst.frc4904.standard.subsystems.motor;
 
 
-import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.custom.motioncontrollers.MotionController;
 import org.usfirst.frc4904.standard.subsystems.motor.speedmodifiers.IdentityModifier;
 import org.usfirst.frc4904.standard.subsystems.motor.speedmodifiers.SpeedModifier;
@@ -38,12 +37,5 @@ public class VelocitySensorMotor extends SensorMotor {
 	
 	public VelocitySensorMotor(MotionController motionController, SpeedController... motors) {
 		this("VelocitySensorMotor", motionController, motors);
-	}
-	
-	@Override
-	public void set(double speed) {
-		LogKitten.v(speed + "");
-		motionController.setSetpoint(speed);
-		super.write(speed);
 	}
 }
