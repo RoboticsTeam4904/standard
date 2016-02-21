@@ -11,14 +11,10 @@ import org.usfirst.frc4904.standard.custom.sensors.PDP;
  */
 public class AccelerationCap implements SpeedModifier {
 	protected double currentSpeed;
-	protected long lastUpdate; // in microseconds
+	protected long lastUpdate; // in milliseconds
 	protected final PDP pdp;
 	protected final double softStopVoltage;
 	protected final double hardStopVoltage;
-	
-	public static long getTimeMicros() {
-		return System.nanoTime() / 1000;
-	}
 	
 	/**
 	 * A SpeedModifier that does brownout protection and voltage ramping.
@@ -37,7 +33,7 @@ public class AccelerationCap implements SpeedModifier {
 		this.pdp = pdp;
 		this.softStopVoltage = softStopVoltage;
 		this.hardStopVoltage = hardStopVoltage;
-		lastUpdate = AccelerationCap.getTimeMicros();
+		lastUpdate = System.currentTimeMillis();
 	}
 	
 	/**
@@ -76,12 +72,12 @@ public class AccelerationCap implements SpeedModifier {
 			LogKitten.d("AccelerationCap input: " + Double.toString(inputSpeed) + "\t" + "AccelerationCap output: " + Double.toString(outputSpeed));
 		} else if (Math.abs(inputSpeed) > Math.abs(currentSpeed)) {
 			LogKitten.d("AccelerationCap voltage ramping");
-			outputSpeed = currentSpeed + ((double) (AccelerationCap.getTimeMicros() - lastUpdate) / 64) * (inputSpeed - currentSpeed);
-			lastUpdate = AccelerationCap.getTimeMicros();
+			outputSpeed = currentSpeed + ((double) (System.currentTimeMillis() - lastUpdate) / 64) * (inputSpeed - currentSpeed);
 		} else {
 			outputSpeed = inputSpeed;
 		}
 		LogKitten.d("AccelerationCap input: " + Double.toString(inputSpeed) + "\t" + "AccelerationCap output: " + Double.toString(outputSpeed));
+		lastUpdate = System.currentTimeMillis();
 		currentSpeed = outputSpeed;
 		return outputSpeed;
 	}
