@@ -1,6 +1,7 @@
 package org.usfirst.frc4904.standard.custom.motioncontrollers;
 
 
+import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.Util;
 import edu.wpi.first.wpilibj.PIDSource;
 
@@ -88,6 +89,7 @@ public class BangBangController extends MotionController {
 		}
 		double input = source.pidGet();
 		double error = setpoint - input;
+		LogKitten.v(input + " " + setpoint + " " + error);
 		if (continuous) {
 			double range = inputMax - inputMin;
 			// If the error is more than half of the range, it is faster to increase the error and loop around the boundary
@@ -100,8 +102,10 @@ public class BangBangController extends MotionController {
 			}
 		}
 		if (error < 0.0 && Math.abs(error) > threshold) {
+			LogKitten.v("+A " + error);
 			return A + F * setpoint;
 		} else if (error > 0.0 && Math.abs(error) > threshold) {
+			LogKitten.v("-A" + error);
 			return -1.0 * A + F * setpoint;
 		}
 		return F * setpoint;
