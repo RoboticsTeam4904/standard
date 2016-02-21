@@ -17,6 +17,7 @@ public abstract class SensorMotor extends Motor {
 		super(name, inverted, speedModifier, motors);
 		this.motionController = motionController;
 		isMotionControlEnabled = false;
+		position = 0;
 	}
 	
 	public SensorMotor(String name, boolean isInverted, MotionController motionController, SpeedController... motors) {
@@ -64,10 +65,11 @@ public abstract class SensorMotor extends Motor {
 	}
 	
 	public void setPosition(double position) {
-		LogKitten.v(getName() + " set to position " + position);
 		motionController.setSetpoint(position);
 		motionController.enable();
-		super.set(motionController.get());
+		double speed = motionController.get();
+		LogKitten.v(getName() + " set to position " + position + " " + speed);
+		super.set(speed);
 	}
 	
 	public boolean onTarget() {
@@ -75,10 +77,10 @@ public abstract class SensorMotor extends Motor {
 	}
 	
 	@Override
-	public abstract void set(double speed);
-	
-	public void write(double speed) {
+	public void set(double speed) {
+		LogKitten.v(speed + "");
 		if (isMotionControlEnabled) {
+			motionController.setSetpoint(speed);
 			super.set(motionController.get());
 		} else {
 			super.set(speed);
