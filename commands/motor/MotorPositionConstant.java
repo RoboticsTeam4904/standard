@@ -7,13 +7,13 @@ import edu.wpi.first.wpilibj.command.Command;
 public class MotorPositionConstant extends Command {
 	protected SensorMotor motor;
 	protected double position;
-	protected boolean end;
+	protected boolean endOnArrival;
 	
-	public MotorPositionConstant(SensorMotor motor, double position, boolean end) {
+	public MotorPositionConstant(SensorMotor motor, double position, boolean endOnArrival) {
 		super("MotorPositionConstant");
 		this.motor = motor;
 		this.position = position;
-		this.end = end;
+		this.endOnArrival = endOnArrival;
 		motor.enablePID();
 		setInterruptible(true);
 	}
@@ -32,7 +32,7 @@ public class MotorPositionConstant extends Command {
 	
 	@Override
 	protected boolean isFinished() {
-		if (end) {
+		if (endOnArrival) {
 			return motor.onTarget();
 		}
 		return false;
