@@ -99,6 +99,7 @@ public abstract class MotionController {
 	public void setAbsoluteTolerance(double absoluteTolerance) {
 		if (absoluteTolerance >= 0) {
 			this.absoluteTolerance = absoluteTolerance;
+			return;
 		}
 		throw new BoundaryException("Absolute tolerance negative");
 	}
