@@ -11,7 +11,7 @@ import org.usfirst.frc4904.standard.custom.sensors.PDP;
  */
 public class AccelerationCap implements SpeedModifier {
 	protected double currentSpeed;
-	protected long lastUpdate;
+	protected long lastUpdate; // in milliseconds
 	protected final PDP pdp;
 	protected final double softStopVoltage;
 	protected final double hardStopVoltage;
@@ -33,6 +33,7 @@ public class AccelerationCap implements SpeedModifier {
 		this.pdp = pdp;
 		this.softStopVoltage = softStopVoltage;
 		this.hardStopVoltage = hardStopVoltage;
+		lastUpdate = System.currentTimeMillis();
 	}
 	
 	/**
@@ -71,12 +72,15 @@ public class AccelerationCap implements SpeedModifier {
 			LogKitten.d("AccelerationCap input: " + Double.toString(inputSpeed) + "\t" + "AccelerationCap output: " + Double.toString(outputSpeed));
 		} else if (Math.abs(inputSpeed) > Math.abs(currentSpeed)) {
 			LogKitten.d("AccelerationCap voltage ramping");
-			outputSpeed = currentSpeed + ((double) (System.currentTimeMillis() - lastUpdate) / (double) 64) * (inputSpeed - currentSpeed);
-			lastUpdate = System.currentTimeMillis();
+			outputSpeed = currentSpeed + ((double) (System.currentTimeMillis() - lastUpdate) / 64) * (inputSpeed - currentSpeed);
+			if (outputSpeed > inputSpeed) {
+				outputSpeed = inputSpeed;
+			}
 		} else {
 			outputSpeed = inputSpeed;
 		}
 		LogKitten.d("AccelerationCap input: " + Double.toString(inputSpeed) + "\t" + "AccelerationCap output: " + Double.toString(outputSpeed));
+		lastUpdate = System.currentTimeMillis();
 		currentSpeed = outputSpeed;
 		return outputSpeed;
 	}

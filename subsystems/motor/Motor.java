@@ -229,7 +229,7 @@ public class Motor extends Subsystem implements SpeedController {
 	 */
 	@Override
 	public void set(double speed) {
-		LogKitten.d(getName() + " " + speed);
+		LogKitten.v(getName() + " " + speed + " " + Thread.currentThread().getStackTrace()[2].getMethodName());
 		double newSpeed = speedModifier.modify(speed);
 		lastSpeed = newSpeed;
 		for (SpeedController motor : motors) {
