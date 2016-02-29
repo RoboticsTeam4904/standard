@@ -38,12 +38,4 @@ public class PositionSensorMotor extends SensorMotor {
 	public PositionSensorMotor(MotionController motionController, SpeedController... motors) {
 		this("PositionSensorMotor", motionController, motors);
 	}
-	
-	@Override
-	public void set(double speed) {
-		position += speed * (System.currentTimeMillis() - lastUpdate);
-		lastUpdate = System.currentTimeMillis();
-		motionController.setSetpoint(position);
-		super.write(speed);
-	}
 }

@@ -2,18 +2,10 @@ package org.usfirst.frc4904.standard.commands;
 
 
 import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.command.Subsystem;
 
-public class Idle extends Command {
-	public Idle() {
-		super("Idle(No Subsystem)");
-		setInterruptible(true);
-	}
-	
-	public Idle(Subsystem subsystem) {
-		super("Idle[" + subsystem.getName() + "]");
-		setInterruptible(true);
-		requires(subsystem);
+public class Noop extends Command {
+	public Noop() {
+		super("Noop");
 	}
 	
 	@Override
@@ -24,7 +16,7 @@ public class Idle extends Command {
 	
 	@Override
 	protected boolean isFinished() {
-		return false;
+		return true;
 	}
 	
 	@Override

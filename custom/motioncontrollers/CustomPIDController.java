@@ -1,6 +1,7 @@
 package org.usfirst.frc4904.standard.custom.motioncontrollers;
 
 
+import org.usfirst.frc4904.standard.LogKitten;
 import edu.wpi.first.wpilibj.PIDSource;
 
 /**
@@ -190,16 +191,12 @@ public class CustomPIDController extends MotionController {
 		totalError += error;
 		// Calculate the result using the PIDF formula
 		double result = P * error + I * totalError + D * errorDerivative + F * setpoint;
-		// Limit the result to be within the output range [outputMin, outputMax]
-		result = Math.max(Math.min(result, outputMax), outputMin);
 		// Save the error for calculating future derivatives
 		lastError = error;
+		LogKitten.v(input + " " + setpoint + " " + result);
 		if (capOutput) {
-			if (result > outputMax) {
-				return outputMax;
-			} else if (result < outputMin) {
-				return outputMin;
-			}
+			// Limit the result to be within the output range [outputMin, outputMax]
+			result = Math.max(Math.min(result, outputMax), outputMin);
 		}
 		return result;
 	}

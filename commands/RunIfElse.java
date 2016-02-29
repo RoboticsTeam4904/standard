@@ -8,13 +8,22 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 public class RunIfElse extends Command {
 	protected final Command ifCommand;
 	protected final Command elseCommand;
-	protected final BooleanSupplier condition;
+	protected Command runningCommand;
+	protected final BooleanSupplier[] booleanSuppliers;
+	protected boolean hasRunOnce;
 	
-	public RunIfElse(Command ifCommand, Command elseCommand, BooleanSupplier condition) {
+	public RunIfElse(Command ifCommand, Command elseCommand, BooleanSupplier... booleanSuppliers) {
 		super("RunIf[" + ifCommand.getName() + "]Else[" + elseCommand.getName() + "]");
 		this.ifCommand = ifCommand;
 		this.elseCommand = elseCommand;
-		this.condition = condition;
+		this.booleanSuppliers = booleanSuppliers;
+	}
+	
+	protected RunIfElse(String name, Command ifCommand, Command elseCommand, BooleanSupplier... booleanSuppliers) {
+		super(name);
+		this.ifCommand = ifCommand;
+		this.elseCommand = elseCommand;
+		this.booleanSuppliers = booleanSuppliers;
 	}
 	
 	@Override
@@ -24,11 +33,15 @@ public class RunIfElse extends Command {
 	
 	@Override
 	protected void initialize() {
-		if (condition.getAsBoolean()) {
-			ifCommand.start();
-		} else {
-			elseCommand.start();
+		for (BooleanSupplier booleanSupplier : booleanSuppliers) {
+			if (!booleanSupplier.getAsBoolean()) {
+				elseCommand.start();
+				runningCommand = elseCommand;
+				return;
+			}
 		}
+		ifCommand.start();
+		runningCommand = ifCommand;
 	}
 	
 	@Override
@@ -36,15 +49,21 @@ public class RunIfElse extends Command {
 	
 	@Override
 	protected boolean isFinished() {
-		return !ifCommand.isRunning() && !elseCommand.isRunning();
+		if (runningCommand.isRunning() && !hasRunOnce) {
+			hasRunOnce = true;
+		}
+		return !runningCommand.isRunning() && hasRunOnce;
 	}
 	
 	@Override
-	protected void end() {}
+	protected void end() {
+		ifCommand.cancel();
+		elseCommand.cancel();
+		hasRunOnce = false;
+	}
 	
 	@Override
 	protected void interrupted() {
-		ifCommand.cancel();
-		elseCommand.cancel();
+		end();
 	}
 }
