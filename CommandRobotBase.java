@@ -27,7 +27,7 @@ public abstract class CommandRobotBase extends IterativeRobot {
 	protected CommandSendableChooser autoChooser;
 	protected TypedNamedSendableChooser<Driver> driverChooser;
 	protected TypedNamedSendableChooser<Operator> operatorChooser;
-
+	
 	/**
 	 * This displays our choosers.
 	 * The default choosers are for
@@ -40,7 +40,7 @@ public abstract class CommandRobotBase extends IterativeRobot {
 		SmartDashboard.putData("Driver control scheme chooser", driverChooser);
 		SmartDashboard.putData("Operator control scheme chooser", operatorChooser);
 	}
-	
+
 	/**
 	 * This initializes the entire robot.
 	 * It is called by WPILib on robot code launch.
@@ -61,14 +61,14 @@ public abstract class CommandRobotBase extends IterativeRobot {
 		displayChoosers();
 		SmartDashboard.putData(Scheduler.getInstance());
 	}
-	
+
 	/**
 	 * Function for year specific code to be run
 	 * on robot code launch.
 	 * setHealthChecks should be called here if needed.
 	 */
 	public abstract void initialize();
-	
+
 	/**
 	 * This initializes the teleoperated portion of the robot code.
 	 * It is called by WPILib on teleop enable.
@@ -80,17 +80,21 @@ public abstract class CommandRobotBase extends IterativeRobot {
 		if (autonomousCommand != null) {
 			autonomousCommand.cancel();
 		}
-		driverChooser.getSelected().bindCommands();
-		operatorChooser.getSelected().bindCommands();
+		if (driverChooser.getSelected() != null) {
+			driverChooser.getSelected().bindCommands();
+		}
+		if (operatorChooser.getSelected() != null) {
+			operatorChooser.getSelected().bindCommands();
+		}
 		teleopInitialize();
 	}
-	
+
 	/**
 	 * Function for year specific code to be run
 	 * on teleoperated initialize.
 	 */
 	public abstract void teleopInitialize();
-	
+
 	/**
 	 * This function is called by WPILib periodically during teleop.
 	 * Year specific code should be written in the teleopExecute()
@@ -101,13 +105,13 @@ public abstract class CommandRobotBase extends IterativeRobot {
 		Scheduler.getInstance().run();
 		teleopExecute();
 	}
-	
+
 	/**
 	 * Function for year specific code to be run
 	 * during teleoperated time.
 	 */
 	public abstract void teleopExecute();
-	
+
 	/**
 	 * This initializes the autonomous portion of the robot code.
 	 * It is called by WPILib on auton enable.
@@ -122,13 +126,13 @@ public abstract class CommandRobotBase extends IterativeRobot {
 		}
 		autonomousInitialize();
 	}
-	
+
 	/**
 	 * Function for year specific code to be run
 	 * on autonomous initialize.
 	 */
 	public abstract void autonomousInitialize();
-	
+
 	/**
 	 * This function is called by WPILib periodically during auton.
 	 * Year specific code should be written in the autonomousExecute()
@@ -139,13 +143,13 @@ public abstract class CommandRobotBase extends IterativeRobot {
 		Scheduler.getInstance().run();
 		autonomousExecute();
 	}
-	
+
 	/**
 	 * Function for year specific code to be run
 	 * during autonomous.
 	 */
 	public abstract void autonomousExecute();
-
+	
 	/**
 	 * This function is called by WPILib when the robot is disabled.
 	 * Year specific code should be written in the disabledInitialize()
@@ -158,13 +162,13 @@ public abstract class CommandRobotBase extends IterativeRobot {
 		}
 		disabledInitialize();
 	}
-
+	
 	/**
 	 * Function for year specific code to be run
 	 * on disabled initialize.
 	 */
 	public abstract void disabledInitialize();
-
+	
 	/**
 	 * This function is called by WPILib periodically while disabled.
 	 * Year specific code should be written in the disabledExecute()
@@ -175,13 +179,13 @@ public abstract class CommandRobotBase extends IterativeRobot {
 		Scheduler.getInstance().run();
 		disabledExecute();
 	}
-	
+
 	/**
 	 * Function for year specific code to be run
 	 * while disabled.
 	 */
 	public abstract void disabledExecute();
-
+	
 	/**
 	 * Sets the health checks for the robot.
 	 * This should be called in initialize.
@@ -191,7 +195,7 @@ public abstract class CommandRobotBase extends IterativeRobot {
 	public void setHealthChecks(AbstractHealthCheck... healthChecks) {
 		healthcheckCommand = new CheckHealth(healthChecks);
 	}
-
+	
 	/**
 	 * @return
 	 * 		True if the robot is enabled
@@ -200,7 +204,7 @@ public abstract class CommandRobotBase extends IterativeRobot {
 	public boolean isEnabledOperatorControl() {
 		return isEnabled() && isOperatorControl();
 	}
-
+	
 	/**
 	 *
 	 * @return
