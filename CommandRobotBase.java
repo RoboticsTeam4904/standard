@@ -74,9 +74,11 @@ public abstract class CommandRobotBase extends IterativeRobot {
 			autonomousCommand.cancel();
 		}
 		if (driverChooser.getSelected() != null) {
+			LogKitten.d("Loading driver " + driverChooser.getSelected().getName());
 			driverChooser.getSelected().bindCommands();
 		}
 		if (operatorChooser.getSelected() != null) {
+			LogKitten.d("Loading operator " + operatorChooser.getSelected().getName());
 			operatorChooser.getSelected().bindCommands();
 		}
 		teleopInitialize();
