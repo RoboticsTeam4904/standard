@@ -316,6 +316,21 @@ public class LogKitten {
 	}
 	
 	/**
+	 * Log exception at level LEVEL_ERROR
+	 * 
+	 * @param exception
+	 *        the exception to log
+	 */
+	public static void ex(Exception ex) {
+		String exceptionString = ex.toString() + "\n";
+		StringBuffer stackTraceString = new StringBuffer();
+		for (StackTraceElement element : ex.getStackTrace()) {
+			stackTraceString.append(element.toString() + "\n");
+		}
+		LogKitten.logMessage(exceptionString + stackTraceString.toString(), LogKitten.LEVEL_ERROR, true);
+	}
+	
+	/**
 	 * Tries to close the logfile stream
 	 */
 	public static void clean() {
