@@ -92,7 +92,7 @@ public class LogKitten {
 	 * @param DEFAULT_LOG_LEVEL
 	 *        default write-to-file level
 	 */
-	public static void setDefaultLogLevel(KittenLevel DEFAULT_LOG_LEVEL) {
+	public static synchronized void setDefaultLogLevel(KittenLevel DEFAULT_LOG_LEVEL) {
 		LogKitten.logLevel = DEFAULT_LOG_LEVEL;
 	}
 	
@@ -102,7 +102,7 @@ public class LogKitten {
 	 * @param DEFAULT_PRINT_LEVEL
 	 *        default console log level
 	 */
-	public static void setDefaultPrintLevel(KittenLevel DEFAULT_PRINT_LEVEL) {
+	public static synchronized void setDefaultPrintLevel(KittenLevel DEFAULT_PRINT_LEVEL) {
 		LogKitten.printLevel = DEFAULT_PRINT_LEVEL;
 	}
 	
@@ -112,7 +112,7 @@ public class LogKitten {
 	 * @param DEFAULT_DS_LEVEL
 	 *        default driver station level
 	 */
-	public static void setDefaultDSLevel(KittenLevel DEFAULT_DS_LEVEL) {
+	public static synchronized void setDefaultDSLevel(KittenLevel DEFAULT_DS_LEVEL) {
 		LogKitten.dsLevel = DEFAULT_DS_LEVEL;
 	}
 	
@@ -122,7 +122,7 @@ public class LogKitten {
 	 * @param LOG_PATH
 	 *        logfile path as a string
 	 */
-	public static void setLogPath(String LOG_PATH) {
+	public static synchronized void setLogPath(String LOG_PATH) {
 		LogKitten.LOG_PATH = LOG_PATH;
 	}
 	
@@ -132,7 +132,7 @@ public class LogKitten {
 	 *
 	 * @param mute
 	 */
-	public static void setPrintMute(boolean mute) {
+	public static synchronized void setPrintMute(boolean mute) {
 		LogKitten.PRINT_MUTE = mute;
 	}
 	
@@ -182,7 +182,7 @@ public class LogKitten {
 	 * @param message
 	 * @param override
 	 */
-	public static void wtf(String message, boolean override) {
+	public static synchronized void wtf(String message, boolean override) {
 		LogKitten.logMessage(message, LogKitten.LEVEL_WTF, override);
 	}
 	
@@ -192,7 +192,7 @@ public class LogKitten {
 	 * @param message
 	 *        the message to log
 	 */
-	public static void wtf(String message) { // Log WTF message
+	public static synchronized void wtf(String message) { // Log WTF message
 		LogKitten.logMessage(message, LogKitten.LEVEL_WTF, false);
 	}
 	
@@ -202,7 +202,7 @@ public class LogKitten {
 	 * @param message
 	 * @param override
 	 */
-	public static void f(String message, boolean override) {
+	public static synchronized void f(String message, boolean override) {
 		LogKitten.logMessage(message, LogKitten.LEVEL_FATAL, override);
 	}
 	
@@ -212,7 +212,7 @@ public class LogKitten {
 	 * @param message
 	 *        the message to log
 	 */
-	public static void f(String message) { // Log fatal message
+	public static synchronized void f(String message) { // Log fatal message
 		LogKitten.logMessage(message, LogKitten.LEVEL_FATAL, false);
 	}
 	
@@ -222,7 +222,7 @@ public class LogKitten {
 	 * @param message
 	 * @param override
 	 */
-	public static void e(String message, boolean override) {
+	public static synchronized void e(String message, boolean override) {
 		LogKitten.logMessage(message, LogKitten.LEVEL_ERROR, override);
 	}
 	
@@ -232,7 +232,7 @@ public class LogKitten {
 	 * @param message
 	 *        the message to log
 	 */
-	public static void e(String message) { // Log error message
+	public static synchronized void e(String message) { // Log error message
 		LogKitten.logMessage(message, LogKitten.LEVEL_ERROR, false);
 	}
 	
@@ -242,7 +242,7 @@ public class LogKitten {
 	 * @param message
 	 * @param override
 	 */
-	public static void w(String message, boolean override) {
+	public static synchronized void w(String message, boolean override) {
 		LogKitten.logMessage(message, LogKitten.LEVEL_WARN, override);
 	}
 	
@@ -252,7 +252,7 @@ public class LogKitten {
 	 * @param message
 	 *        the message to log
 	 */
-	public static void w(String message) { // Log warn message
+	public static synchronized void w(String message) { // Log warn message
 		LogKitten.logMessage(message, LogKitten.LEVEL_WARN, false);
 	}
 	
@@ -262,7 +262,7 @@ public class LogKitten {
 	 * @param message
 	 * @param override
 	 */
-	public static void v(String message, boolean override) {
+	public static synchronized void v(String message, boolean override) {
 		LogKitten.logMessage(message, LogKitten.LEVEL_VERBOSE, override);
 	}
 	
@@ -272,7 +272,7 @@ public class LogKitten {
 	 * @param message
 	 *        the message to log
 	 */
-	public static void v(String message) { // Log verbose message
+	public static synchronized void v(String message) { // Log verbose message
 		LogKitten.logMessage(message, LogKitten.LEVEL_VERBOSE, false);
 	}
 	
@@ -282,7 +282,7 @@ public class LogKitten {
 	 * @param message
 	 * @param override
 	 */
-	public static void i(String message, boolean override) {
+	public static synchronized void i(String message, boolean override) {
 		LogKitten.logMessage(message, LogKitten.LEVEL_VERBOSE, override);
 	}
 	
@@ -291,7 +291,7 @@ public class LogKitten {
 	 *
 	 * @param message
 	 */
-	public static void i(String message) {
+	public static synchronized void i(String message) {
 		LogKitten.logMessage(message, LogKitten.LEVEL_VERBOSE, false);
 	}
 	
@@ -301,7 +301,7 @@ public class LogKitten {
 	 * @param message
 	 * @param override
 	 */
-	public static void d(String message, boolean override) {
+	public static synchronized void d(String message, boolean override) {
 		LogKitten.logMessage(message, LogKitten.LEVEL_DEBUG, override);
 	}
 	
@@ -311,7 +311,7 @@ public class LogKitten {
 	 * @param message
 	 *        the message to log
 	 */
-	public static void d(String message) { // Log debug message
+	public static synchronized void d(String message) { // Log debug message
 		LogKitten.logMessage(message, LogKitten.LEVEL_DEBUG, false);
 	}
 	
@@ -321,7 +321,7 @@ public class LogKitten {
 	 * @param exception
 	 *        the exception to log
 	 */
-	public static void ex(Exception ex) {
+	public static synchronized void ex(Exception ex) {
 		String exceptionString = ex.toString() + "\n";
 		StringBuffer stackTraceString = new StringBuffer();
 		for (StackTraceElement element : ex.getStackTrace()) {
@@ -333,7 +333,7 @@ public class LogKitten {
 	/**
 	 * Tries to close the logfile stream
 	 */
-	public static void clean() {
+	public static synchronized void clean() {
 		try {
 			if (LogKitten.fileOutput != null) {
 				LogKitten.fileOutput.close();
