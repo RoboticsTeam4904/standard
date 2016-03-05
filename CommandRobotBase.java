@@ -32,7 +32,6 @@ public abstract class CommandRobotBase extends IterativeRobot {
 	 * The default choosers are for autonomous type, driver control, sand operator control.
 	 */
 	protected final void displayChoosers() {
-		// Display choosers on SmartDashboard
 		SmartDashboard.putData("Autonomous mode chooser", autoChooser);
 		SmartDashboard.putData("Driver control scheme chooser", driverChooser);
 		SmartDashboard.putData("Operator control scheme chooser", operatorChooser);
@@ -49,7 +48,9 @@ public abstract class CommandRobotBase extends IterativeRobot {
 		autoChooser = new CommandSendableChooser();
 		driverChooser = new TypedNamedSendableChooser<Driver>();
 		operatorChooser = new TypedNamedSendableChooser<Operator>();
+		// Run user-provided initialize function
 		initialize();
+		// Start health checks
 		if (healthcheckCommand != null) {
 			healthcheckCommand.start();
 		}
@@ -115,7 +116,6 @@ public abstract class CommandRobotBase extends IterativeRobot {
 	 */
 	@Override
 	public final void autonomousInit() {
-		// schedule the autonomous command (example)
 		autonomousCommand = autoChooser.getSelected();
 		if (autonomousCommand != null) {
 			autonomousCommand.start();
