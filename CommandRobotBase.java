@@ -116,6 +116,7 @@ public abstract class CommandRobotBase extends IterativeRobot {
 	@Override
 	public final void autonomousInit() {
 		// schedule the autonomous command (example)
+		autonomousCommand = autoChooser.getSelected();
 		if (autonomousCommand != null) {
 			autonomousCommand.start();
 		}
