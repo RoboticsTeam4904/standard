@@ -316,18 +316,30 @@ public class LogKitten {
 	}
 	
 	/**
-	 * Log exception at level LEVEL_ERROR
-	 * 
-	 * @param exception
+	 * Log exception at level LEVEL_ERROR allowing override
+	 *
+	 * @param ex
 	 *        the exception to log
+	 * @param override
+	 *        whether or not to override
 	 */
-	public static void ex(Exception ex) {
+	public static void ex(Exception ex, boolean override) {
 		String exceptionString = ex.toString() + "\n";
 		StringBuffer stackTraceString = new StringBuffer();
 		for (StackTraceElement element : ex.getStackTrace()) {
 			stackTraceString.append(element.toString() + "\n");
 		}
-		LogKitten.logMessage(exceptionString + stackTraceString.toString(), LogKitten.LEVEL_ERROR, true);
+		LogKitten.logMessage(exceptionString + stackTraceString.toString(), LogKitten.LEVEL_ERROR, override);
+	}
+	
+	/**
+	 * Log exception at level LEVEL_ERROR
+	 *
+	 * @param ex
+	 *        the exception to log
+	 */
+	public static void ex(Exception ex) {
+		LogKitten.ex(ex, false);
 	}
 	
 	/**
