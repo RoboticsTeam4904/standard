@@ -32,12 +32,11 @@ public abstract class CommandRobotBase extends IterativeRobot {
 	 * The default choosers are for autonomous type, driver control, sand operator control.
 	 */
 	protected final void displayChoosers() {
-		// Display choosers on SmartDashboard
 		SmartDashboard.putData("Autonomous mode chooser", autoChooser);
 		SmartDashboard.putData("Driver control scheme chooser", driverChooser);
 		SmartDashboard.putData("Operator control scheme chooser", operatorChooser);
 	}
-
+	
 	/**
 	 * This initializes the entire robot.
 	 * It is called by WPILib on robot code launch.
@@ -49,20 +48,22 @@ public abstract class CommandRobotBase extends IterativeRobot {
 		autoChooser = new CommandSendableChooser();
 		driverChooser = new TypedNamedSendableChooser<Driver>();
 		operatorChooser = new TypedNamedSendableChooser<Operator>();
+		// Run user-provided initialize function
 		initialize();
+		// Start health checks
 		if (healthcheckCommand != null) {
 			healthcheckCommand.start();
 		}
 		// Display choosers on SmartDashboard
 		displayChoosers();
 	}
-
+	
 	/**
 	 * Function for year specific code to be run on robot code launch.
 	 * setHealthChecks should be called here if needed.
 	 */
 	public abstract void initialize();
-
+	
 	/**
 	 * This initializes the teleoperated portion of the robot code.
 	 * It is called by WPILib on teleop enable.
@@ -86,13 +87,13 @@ public abstract class CommandRobotBase extends IterativeRobot {
 			teleopCommand.start();
 		}
 	}
-
+	
 	/**
 	 * Function for year specific code to be run on teleoperated initialize.
 	 * teleopCommand should be set in this function.
 	 */
 	public abstract void teleopInitialize();
-
+	
 	/**
 	 * This function is called by WPILib periodically during teleop.
 	 * Year specific code should be written in the teleopExecute() function.
@@ -102,12 +103,12 @@ public abstract class CommandRobotBase extends IterativeRobot {
 		Scheduler.getInstance().run();
 		teleopExecute();
 	}
-
+	
 	/**
 	 * Function for year specific code to be run during teleoperated time.
 	 */
 	public abstract void teleopExecute();
-
+	
 	/**
 	 * This initializes the autonomous portion of the robot code.
 	 * It is called by WPILib on auton enable.
@@ -115,18 +116,18 @@ public abstract class CommandRobotBase extends IterativeRobot {
 	 */
 	@Override
 	public final void autonomousInit() {
-		// schedule the autonomous command (example)
+		autonomousCommand = autoChooser.getSelected();
 		if (autonomousCommand != null) {
 			autonomousCommand.start();
 		}
 		autonomousInitialize();
 	}
-
+	
 	/**
 	 * Function for year specific code to be run on autonomous initialize.
 	 */
 	public abstract void autonomousInitialize();
-
+	
 	/**
 	 * This function is called by WPILib periodically during auton.
 	 * Year specific code should be written in the autonomousExecute() function.
@@ -136,7 +137,7 @@ public abstract class CommandRobotBase extends IterativeRobot {
 		Scheduler.getInstance().run();
 		autonomousExecute();
 	}
-
+	
 	/**
 	 * Function for year specific code to be run during autonomous.
 	 */
@@ -168,7 +169,7 @@ public abstract class CommandRobotBase extends IterativeRobot {
 		Scheduler.getInstance().run();
 		disabledExecute();
 	}
-
+	
 	/**
 	 * Function for year specific code to be run while disabled.
 	 */
