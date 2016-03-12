@@ -26,7 +26,7 @@ public class LogKitten {
 	private static KittenLevel dsLevel = LogKitten.DEFAULT_DS_LEVEL;
 	private static String LOG_PATH = "/home/lvuser/logs/";
 	private static String LOG_ALIAS_PATH = LogKitten.LOG_PATH + "recent.log";
-	private static boolean PRINT_MUTE = false;
+	private static volatile boolean PRINT_MUTE = false;
 	
 	static {
 		File logPathDirectory = new File(LogKitten.LOG_PATH);
@@ -149,7 +149,7 @@ public class LogKitten {
 		}
 	}
 	
-	private static void logMessage(String message, KittenLevel level, boolean override) {
+	private static synchronized void logMessage(String message, KittenLevel level, boolean override) {
 		if (LogKitten.logLevel.compareTo(level) >= 0) {
 			String content = LogKitten.timestamp() + " " + level.getName() + ": " + LogKitten.getLoggerMethodCallerMethodName() + ": " + message + " \n";
 			try {
@@ -345,11 +345,11 @@ public class LogKitten {
 	/**
 	 * Tries to close the logfile stream
 	 */
-	public static void clean() {
+	public static synchronized void clean() {
 		try {
 			if (LogKitten.fileOutput != null) {
 				LogKitten.fileOutput.close();
-			} // If it is null, it is closed
+			}
 		}
 		catch (IOException ioe) {
 			System.out.println("Could not close logfile output. This should never happen");
