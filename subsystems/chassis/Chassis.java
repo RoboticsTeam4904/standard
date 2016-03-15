@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 public abstract class Chassis extends Subsystem {
 	protected double[] motorSpeeds;
 	protected Motor[] motors;
-	
+
 	/**
 	 *
 	 * @param name
@@ -24,12 +24,12 @@ public abstract class Chassis extends Subsystem {
 		super(name);
 		this.motors = motors;
 	}
-	
+
 	@Override
 	protected void initDefaultCommand() {
 		setDefaultCommand(new ChassisIdle(this));
 	}
-	
+
 	/**
 	 * Returns the number of motors
 	 *
@@ -38,7 +38,7 @@ public abstract class Chassis extends Subsystem {
 	public int getNumberMotors() {
 		return motors.length;
 	}
-	
+
 	/**
 	 * Returns an array of motors of the size getNumberMotors in the order that they were passed to the constructor
 	 *
@@ -48,7 +48,7 @@ public abstract class Chassis extends Subsystem {
 	public Motor[] getMotors() {
 		return motors;
 	}
-	
+
 	/**
 	 * Returns an array of the correct motor speeds calculated with the values inputted using the move functions.
 	 *
@@ -58,7 +58,7 @@ public abstract class Chassis extends Subsystem {
 	public double[] getMotorSpeeds() {
 		return motorSpeeds;
 	}
-	
+
 	/**
 	 * Sets the movement to be calculated by the Chassis using 2d polar coordinates.
 	 *
@@ -70,7 +70,7 @@ public abstract class Chassis extends Subsystem {
 	 *        The speed at which the robot will revolve around itself during the maneuver. In the range -1 to 1.
 	 */
 	public abstract void move2dp(double speed, double angle, double turnSpeed);
-	
+
 	/**
 	 * Sets the movement to be calculated by the Chassis using 2d cartesian coordinates.
 	 *
@@ -82,14 +82,4 @@ public abstract class Chassis extends Subsystem {
 	 *        The speed at which the robot will revolve around itself during the maneuver. In the range -1 to 1.
 	 */
 	public abstract void move2dc(double xSpeed, double ySpeed, double turnSpeed);
-	
-	/**
-	 * Sets the movement to be calculated by the Chassis for moving straight ahead while turning.
-	 *
-	 * @param speed
-	 *        The speed in the Y direction (forward and back). In the range -1 to 1.
-	 * @param turnSpeed
-	 *        The speed at which the robot will revolve around itself during the maneuver. In the range -1 to 1.
-	 */
-	public abstract void move(double speed, double turnSpeed);
 }

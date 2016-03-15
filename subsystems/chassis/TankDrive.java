@@ -18,7 +18,7 @@ public class TankDrive extends Chassis {
 	public TankDrive(String name, Motor leftWheelA, Motor leftWheelB, Motor rightWheelA, Motor rightWheelB) {
 		super(name, leftWheelA, leftWheelB, rightWheelA, rightWheelB);
 	}
-	
+
 	/**
 	 *
 	 * @param name
@@ -28,7 +28,7 @@ public class TankDrive extends Chassis {
 	public TankDrive(String name, Motor leftWheel, Motor rightWheel) {
 		super(name, leftWheel, rightWheel);
 	}
-	
+
 	/**
 	 * Sets the movement to be calculated by the Chassis using 2d polar coordinates.
 	 *
@@ -50,7 +50,7 @@ public class TankDrive extends Chassis {
 			motorSpeeds = new double[] {leftSpeed, leftSpeed, rightSpeed, rightSpeed};
 		}
 	}
-	
+
 	/**
 	 * Sets the movement to be calculated by the Chassis using 2d cartesian coordinates.
 	 *
@@ -65,15 +65,4 @@ public class TankDrive extends Chassis {
 	public void move2dc(double xSpeed, double ySpeed, double turnSpeed) {
 		move2dp(ySpeed, 0.0, turnSpeed);
 	}
-	
-	/**
-	 * Sets the movement to be calculated by the Chassis for moving straight ahead while turning.
-	 *
-	 * @param speed
-	 *        The speed in the Y direction (forward and back). In the range -1 to 1.
-	 * @param turnSpeed
-	 *        The speed at which the robot will revolve around itself during the maneuver. In the range -1 to 1.
-	 */
-	@Override
-	public void move(double speed, double turnSpeed) {}
 }

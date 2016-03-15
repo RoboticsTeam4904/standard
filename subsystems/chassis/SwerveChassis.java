@@ -8,7 +8,7 @@ public class SwerveChassis extends Chassis {
 	public final Motor frontRightWheelSwerve;
 	public final Motor backLeftWheelSwerve;
 	public final Motor backRightWheelSwerve;
-	
+
 	/**
 	 * Constructs a swerve drive chassis
 	 *
@@ -29,19 +29,14 @@ public class SwerveChassis extends Chassis {
 		this.backLeftWheelSwerve = backLeftWheelSwerve;
 		this.backRightWheelSwerve = backRightWheelSwerve;
 	}
-	
+
 	@Override
 	public void move2dp(double xSpeed, double ySpeed, double turnSpeed) {
 		// TODO Implement
 	}
-	
+
 	@Override
 	public void move2dc(double speed, double angle, double turnSpeed) {
-		// TODO Implement
-	}
-	
-	@Override
-	public void move(double speed, double turnSpeed) {
 		// TODO Implement
 	}
 }
