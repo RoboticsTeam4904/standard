@@ -69,7 +69,7 @@ public abstract class Chassis extends Subsystem {
 	 * @param turnSpeed
 	 *        The speed at which the robot will revolve around itself during the maneuver. In the range -1 to 1.
 	 */
-	public abstract void move2dp(double speed, double angle, double turnSpeed);
+	public abstract void movePolar(double speed, double angle, double turnSpeed);
 
 	/**
 	 * Sets the movement to be calculated by the Chassis using 2d cartesian coordinates.
@@ -81,5 +81,5 @@ public abstract class Chassis extends Subsystem {
 	 * @param turnSpeed
 	 *        The speed at which the robot will revolve around itself during the maneuver. In the range -1 to 1.
 	 */
-	public abstract void move2dc(double xSpeed, double ySpeed, double turnSpeed);
+	public abstract void moveCarterstyle(double xSpeed, double ySpeed, double turnSpeed);
 }
