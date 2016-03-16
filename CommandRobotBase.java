@@ -20,7 +20,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * Robot should extend this instead of iterative robot.
  */
 public abstract class CommandRobotBase extends IterativeRobot {
-	protected Command teleopCommand;
 	private Command autonomousCommand;
 	protected CheckHealth healthcheckCommand;
 	protected CommandSendableChooser autoChooser;
@@ -35,6 +34,24 @@ public abstract class CommandRobotBase extends IterativeRobot {
 		SmartDashboard.putData("Autonomous mode chooser", autoChooser);
 		SmartDashboard.putData("Driver control scheme chooser", driverChooser);
 		SmartDashboard.putData("Operator control scheme chooser", operatorChooser);
+	}
+	
+	/**
+	 * This stops all commands from running on initialization of a state
+	 * so as to prevent commands from the previous state from interfering
+	 * with the current robot mode.
+	 */
+	private void cleanup() {
+		if (autonomousCommand != null) {
+			autonomousCommand.cancel();
+		}
+		if (healthcheckCommand != null) {
+			healthcheckCommand.cancel();
+		}
+		Scheduler.getInstance().removeAll();
+		if (healthcheckCommand != null) {
+			healthcheckCommand.start();
+		}
 	}
 	
 	/**
@@ -71,9 +88,7 @@ public abstract class CommandRobotBase extends IterativeRobot {
 	 */
 	@Override
 	public final void teleopInit() {
-		if (autonomousCommand != null) {
-			autonomousCommand.cancel();
-		}
+		cleanup();
 		if (driverChooser.getSelected() != null) {
 			LogKitten.d("Loading driver " + driverChooser.getSelected().getName());
 			driverChooser.getSelected().bindCommands();
@@ -83,9 +98,6 @@ public abstract class CommandRobotBase extends IterativeRobot {
 			operatorChooser.getSelected().bindCommands();
 		}
 		teleopInitialize();
-		if (teleopCommand != null) {
-			teleopCommand.start();
-		}
 	}
 	
 	/**
@@ -116,6 +128,7 @@ public abstract class CommandRobotBase extends IterativeRobot {
 	 */
 	@Override
 	public final void autonomousInit() {
+		cleanup();
 		autonomousCommand = autoChooser.getSelected();
 		if (autonomousCommand != null) {
 			autonomousCommand.start();
@@ -149,9 +162,7 @@ public abstract class CommandRobotBase extends IterativeRobot {
 	 */
 	@Override
 	public final void disabledInit() {
-		if (teleopCommand != null) {
-			teleopCommand.cancel();
-		}
+		cleanup();
 		disabledInitialize();
 	}
 	
@@ -181,6 +192,7 @@ public abstract class CommandRobotBase extends IterativeRobot {
 	 */
 	@Override
 	public final void testInit() {
+		cleanup();
 		testInitialize();
 	}
 	
