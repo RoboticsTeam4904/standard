@@ -11,7 +11,7 @@ public interface Controller {
 	public static final int TWIST_AXIS = 2;
 	
 	/**
-	 * Allows a generic controller to return an indivdual axis
+	 * Allows a generic controller to return an individual axis
 	 *
 	 * @param axis
 	 *        (corresponding to standard axis

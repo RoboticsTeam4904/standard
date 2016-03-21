@@ -27,7 +27,6 @@ public class LogKitten {
 	private static String LOG_PATH = "/home/lvuser/logs/";
 	private static String LOG_ALIAS_PATH = LogKitten.LOG_PATH + "recent.log";
 	private static volatile boolean PRINT_MUTE = false;
-	
 	static {
 		File logPathDirectory = new File(LogKitten.LOG_PATH);
 		try {

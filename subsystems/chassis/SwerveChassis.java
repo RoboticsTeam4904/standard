@@ -31,17 +31,12 @@ public class SwerveChassis extends Chassis {
 	}
 	
 	@Override
-	public void move2dp(double xSpeed, double ySpeed, double turnSpeed) {
+	public void movePolar(double xSpeed, double ySpeed, double turnSpeed) {
 		// TODO Implement
 	}
 	
 	@Override
-	public void move2dc(double speed, double angle, double turnSpeed) {
-		// TODO Implement
-	}
-	
-	@Override
-	public void move(double speed, double turnSpeed) {
+	public void moveCartesian(double speed, double angle, double turnSpeed) {
 		// TODO Implement
 	}
 }
