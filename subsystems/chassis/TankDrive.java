@@ -18,7 +18,7 @@ public class TankDrive extends Chassis {
 	public TankDrive(String name, Motor leftWheelA, Motor leftWheelB, Motor rightWheelA, Motor rightWheelB) {
 		super(name, leftWheelA, leftWheelB, rightWheelA, rightWheelB);
 	}
-
+	
 	/**
 	 *
 	 * @param name
@@ -28,7 +28,7 @@ public class TankDrive extends Chassis {
 	public TankDrive(String name, Motor leftWheel, Motor rightWheel) {
 		super(name, leftWheel, rightWheel);
 	}
-
+	
 	/**
 	 * Sets the movement to be calculated by the Chassis using 2d polar coordinates.
 	 *
@@ -50,7 +50,7 @@ public class TankDrive extends Chassis {
 			motorSpeeds = new double[] {leftSpeed, leftSpeed, rightSpeed, rightSpeed};
 		}
 	}
-
+	
 	/**
 	 * Sets the movement to be calculated by the Chassis using 2d cartesian coordinates.
 	 *

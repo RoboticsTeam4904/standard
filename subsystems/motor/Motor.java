@@ -241,7 +241,7 @@ public class Motor extends Subsystem implements SpeedController {
 	 * Set the motor speed. Passes through SpeedModifier.
 	 *
 	 * @deprecated For compatibility with CANJaguar. Use set(double speed)
-	 * 			
+	 * 
 	 * @param speed
 	 *        The speed to set. Value should be between -1.0 and 1.0.
 	 * @param syncGroup
