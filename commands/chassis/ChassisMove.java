@@ -49,7 +49,7 @@ public class ChassisMove extends CommandGroup {
 			motorSpins[i] = new MotorSet(motors[i]);
 			addParallel(motorSpins[i]);
 		}
-		LogKitten.v("ChassisMove created for " + Integer.toString(chassis.getNumberMotors()) + " motors");
+		LogKitten.v("ChassisMove created for " + chassis.getName());
 	}
 	
 	/**
