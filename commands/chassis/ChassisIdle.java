@@ -7,17 +7,14 @@ import org.usfirst.frc4904.standard.subsystems.motor.Motor;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
 /**
- * This command causes the chassis
- * to idle. It does this by calling
- * idle commands on each of the
- * motors in the chassis.
+ * This command causes the Chassis to idle by spawning a MotorIdle for every Motor in the Chassis.
  *
  */
 public class ChassisIdle extends CommandGroup {
 	/**
 	 *
 	 * @param chassis
-	 *        The robot chassis to idle.
+	 *        The robot Chassis to idle.
 	 */
 	public ChassisIdle(Chassis chassis) {
 		super("ChassisIdle");
