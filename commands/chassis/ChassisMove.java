@@ -69,7 +69,7 @@ public class ChassisMove extends CommandGroup {
 	
 	@Override
 	protected void execute() {
-		chassis.moveCarterstyle(controller.getX(), controller.getY(), controller.getTurnSpeed());
+		chassis.moveCartesian(controller.getX(), controller.getY(), controller.getTurnSpeed());
 		motorSpeeds = chassis.getMotorSpeeds();
 		String motorSpeedsString = "";
 		for (int i = 0; i < motorSpins.length; i++) {

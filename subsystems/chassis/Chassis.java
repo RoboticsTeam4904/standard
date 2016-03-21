@@ -72,5 +72,5 @@ public abstract class Chassis extends Subsystem {
 	 * @param turnSpeed
 	 *        The speed at which the robot will revolve around itself during the maneuver. In the range -1 to 1.
 	 */
-	public abstract void moveCarterstyle(double xSpeed, double ySpeed, double turnSpeed);
+	public abstract void moveCartesian(double xSpeed, double ySpeed, double turnSpeed);
 }

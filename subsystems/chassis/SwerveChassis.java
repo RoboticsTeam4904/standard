@@ -36,7 +36,7 @@ public class SwerveChassis extends Chassis {
 	}
 
 	@Override
-	public void moveCarterstyle(double speed, double angle, double turnSpeed) {
+	public void moveCartesian(double speed, double angle, double turnSpeed) {
 		// TODO Implement
 	}
 }
