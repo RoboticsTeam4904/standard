@@ -1,7 +1,6 @@
 package org.usfirst.frc4904.standard.commands.chassis;
 
 
-import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.commands.motor.MotorIdle;
 import org.usfirst.frc4904.standard.subsystems.chassis.Chassis;
 import org.usfirst.frc4904.standard.subsystems.motor.Motor;
@@ -31,24 +30,16 @@ public class ChassisIdle extends CommandGroup {
 	}
 	
 	@Override
-	protected void initialize() {
-		LogKitten.v("ChassisIdle initialized");
-	}
+	protected void initialize() {}
 	
 	@Override
-	protected void execute() {
-		LogKitten.d("ChassisIdle executing");
-	}
+	protected void execute() {}
 	
 	@Override
-	protected void end() {
-		LogKitten.v("ChassisIdle ended");
-	}
+	protected void end() {}
 	
 	@Override
-	protected void interrupted() {
-		LogKitten.w("ChassisIdle interrupted");
-	}
+	protected void interrupted() {}
 	
 	@Override
 	protected boolean isFinished() {
