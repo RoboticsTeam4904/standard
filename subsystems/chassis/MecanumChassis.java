@@ -22,7 +22,7 @@ public class MecanumChassis extends Chassis {
 	public MecanumChassis(String name, Motor frontLeftWheel, Motor frontRightWheel, Motor backLeftWheel, Motor backRightWheel) {
 		super(name, frontLeftWheel, frontRightWheel, backLeftWheel, backRightWheel);
 	}
-
+	
 	/**
 	 * Sets the movement to be calculated by the MecanumChassis using 2d polar coordinates.
 	 *
@@ -37,7 +37,7 @@ public class MecanumChassis extends Chassis {
 	public void movePolar(double speed, double angle, double turnSpeed) {
 		motorSpeeds = MecanumChassis.calculateWheels(speed, angle, turnSpeed);
 	}
-
+	
 	/**
 	 * Sets the movement to be calculated by the MecanumChassis using 2d cartesian coordinates.
 	 *
@@ -53,7 +53,7 @@ public class MecanumChassis extends Chassis {
 		double[] polar = MecanumChassis.cartesianToPolar(xSpeed, ySpeed);
 		movePolar(polar[0], polar[1], turnSpeed);
 	}
-
+	
 	/**
 	 * Calculates the speeds for each motor given polar coordinates.
 	 *
@@ -63,7 +63,7 @@ public class MecanumChassis extends Chassis {
 	 *        The direction of the speed in angles clockwise from straight ahead. In the range 0 to 2Pi.
 	 * @param turnSpeed
 	 *        The speed at which the robot will revolve around itself during the maneuver. In the range -1 to 1.
-	 * 		
+	 * 
 	 * @return
 	 * 		An array {frontLeftSpeed, frontRightSpeed, backLeftSpeed, backRightSpeed}
 	 */
@@ -84,7 +84,7 @@ public class MecanumChassis extends Chassis {
 		backRight /= scaleFactor;
 		return new double[] {frontLeft, frontRight, backLeft, backRight};
 	}
-
+	
 	/**
 	 * Converts an x and y coordinate into an array of speed and angle.
 	 *
