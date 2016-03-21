@@ -40,7 +40,7 @@ public class TankDrive extends Chassis {
 	 *        The speed at which the robot will revolve around itself during the maneuver. In the range -1 to 1.
 	 */
 	@Override
-	public void move2dp(double speed, double angle, double turnSpeed) {
+	public void movePolar(double speed, double angle, double turnSpeed) {
 		double normalize = Math.max(Math.max(Math.abs(speed + turnSpeed), Math.abs(speed - turnSpeed)), 1);
 		double leftSpeed = (speed + turnSpeed) / normalize;
 		double rightSpeed = (speed - turnSpeed) / normalize;
@@ -62,18 +62,7 @@ public class TankDrive extends Chassis {
 	 *        The speed at which the robot will revolve around itself during the maneuver. In the range -1 to 1.
 	 */
 	@Override
-	public void move2dc(double xSpeed, double ySpeed, double turnSpeed) {
-		move2dp(ySpeed, 0.0, turnSpeed);
+	public void moveCartesian(double xSpeed, double ySpeed, double turnSpeed) {
+		movePolar(ySpeed, 0.0, turnSpeed);
 	}
-	
-	/**
-	 * Sets the movement to be calculated by the Chassis for moving straight ahead while turning.
-	 *
-	 * @param speed
-	 *        The speed in the Y direction (forward and back). In the range -1 to 1.
-	 * @param turnSpeed
-	 *        The speed at which the robot will revolve around itself during the maneuver. In the range -1 to 1.
-	 */
-	@Override
-	public void move(double speed, double turnSpeed) {}
 }
