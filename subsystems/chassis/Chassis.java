@@ -6,7 +6,7 @@ import org.usfirst.frc4904.standard.subsystems.motor.Motor;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 /**
- * Generic chassis class.
+ * Generic Chassis class.
  * In the 4904 standard, the Chassis is treated as a container for motors and as a calculator for motor speeds.
  *
  */
@@ -18,7 +18,7 @@ public abstract class Chassis extends Subsystem {
 	 *
 	 * @param name
 	 * @param motors
-	 *        all the motors that are part of this chassis. Pass from front to back, left to right
+	 *        all the motors that are part of this Chassis. Pass from front to back, left to right
 	 */
 	public Chassis(String name, Motor... motors) {
 		super(name);
@@ -31,16 +31,7 @@ public abstract class Chassis extends Subsystem {
 	}
 	
 	/**
-	 * Returns the number of motors
-	 *
-	 * @return number of motors
-	 */
-	public int getNumberMotors() {
-		return motors.length;
-	}
-	
-	/**
-	 * Returns an array of motors of the size getNumberMotors in the order that they were passed to the constructor
+	 * Returns an array of motors in the order that they were passed to the constructor
 	 *
 	 * @return
 	 * 		all motors in the order passed to the constructor
@@ -60,7 +51,7 @@ public abstract class Chassis extends Subsystem {
 	}
 	
 	/**
-	 * Sets the movement to be calculated by the Chassis using 2d polar coordinates.
+	 * Sets the movement to be calculated by the Chassis using polar coordinates.
 	 *
 	 * @param speed
 	 *        The magnitude of the speed. In the range -1 to 1.
@@ -69,10 +60,10 @@ public abstract class Chassis extends Subsystem {
 	 * @param turnSpeed
 	 *        The speed at which the robot will revolve around itself during the maneuver. In the range -1 to 1.
 	 */
-	public abstract void move2dp(double speed, double angle, double turnSpeed);
+	public abstract void movePolar(double speed, double angle, double turnSpeed);
 	
 	/**
-	 * Sets the movement to be calculated by the Chassis using 2d cartesian coordinates.
+	 * Sets the movement to be calculated by the Chassis using cartesian coordinates.
 	 *
 	 * @param xSpeed
 	 *        The speed in the X direction (side to side, strafe). In the range -1 to 1.
@@ -81,15 +72,5 @@ public abstract class Chassis extends Subsystem {
 	 * @param turnSpeed
 	 *        The speed at which the robot will revolve around itself during the maneuver. In the range -1 to 1.
 	 */
-	public abstract void move2dc(double xSpeed, double ySpeed, double turnSpeed);
-	
-	/**
-	 * Sets the movement to be calculated by the Chassis for moving straight ahead while turning.
-	 *
-	 * @param speed
-	 *        The speed in the Y direction (forward and back). In the range -1 to 1.
-	 * @param turnSpeed
-	 *        The speed at which the robot will revolve around itself during the maneuver. In the range -1 to 1.
-	 */
-	public abstract void move(double speed, double turnSpeed);
+	public abstract void moveCartesian(double xSpeed, double ySpeed, double turnSpeed);
 }

@@ -22,25 +22,16 @@ public class ChassisMove extends CommandGroup {
 	protected double[] motorSpeeds;
 	protected final Chassis chassis;
 	protected final ChassisController controller;
-	protected final double xScale;
-	protected final double yScale;
-	protected final double turnScale;
 	
 	/**
 	 * @param chassis
 	 *        The robot's Chassis.
 	 * @param controller
 	 *        A ChassisController to control the Chassis, such as a Driver or autonomous routine.
-	 * @param xScale
-	 *        The scale factor for the x axis.
-	 * @param yScale
-	 *        The scale factor for the y axis.
-	 * @param turnScale
-	 *        The scale factor for the turning.
 	 * @param usePID
 	 *        Whether to enable PID using any SensorMotors that Chassis has.
 	 */
-	public ChassisMove(Chassis chassis, ChassisController controller, double xScale, double yScale, double turnScale, boolean usePID) {
+	public ChassisMove(Chassis chassis, ChassisController controller, boolean usePID) {
 		super("ChassisMove");
 		requires(chassis);
 		this.chassis = chassis;
@@ -58,38 +49,7 @@ public class ChassisMove extends CommandGroup {
 			motorSpins[i] = new MotorSet(motors[i]);
 			addParallel(motorSpins[i]);
 		}
-		this.xScale = xScale;
-		this.yScale = yScale;
-		this.turnScale = turnScale;
-		LogKitten.v("ChassisMove created for " + Integer.toString(chassis.getNumberMotors()) + " motors");
-	}
-	
-	/**
-	 * @param chassis
-	 *        The robot's chassis.
-	 * @param controller
-	 *        A ChassisController to control the Chassis, such as a Driver or autonomous routine.
-	 * @param xScale
-	 *        The scale factor for the x axis.
-	 * @param yScale
-	 *        The scale factor for the y axis.
-	 * @param turnScale
-	 *        The scale factor for the turning.
-	 */
-	public ChassisMove(Chassis chassis, ChassisController controller, double xScale, double yScale, double turnScale) {
-		this(chassis, controller, xScale, yScale, turnScale, false);
-	}
-	
-	/**
-	 * @param chassis
-	 *        The robot's chassis.
-	 * @param controller
-	 *        A ChassisController to control the Chassis, such as a Driver or autonomous routine.
-	 * @param usePID
-	 *        Whether to enable PID using any SensorMotors that Chassis has.
-	 */
-	public ChassisMove(Chassis chassis, ChassisController controller, boolean usePID) {
-		this(chassis, controller, 1.0, 1.0, 1.0, usePID);
+		LogKitten.v("ChassisMove created for " + chassis.getName());
 	}
 	
 	/**
@@ -99,7 +59,7 @@ public class ChassisMove extends CommandGroup {
 	 *        A ChassisController to control the Chassis, such as a Driver or autonomous routine.
 	 */
 	public ChassisMove(Chassis chassis, ChassisController controller) {
-		this(chassis, controller, 1.0, 1.0, 1.0, false);
+		this(chassis, controller, false);
 	}
 	
 	@Override
@@ -109,7 +69,7 @@ public class ChassisMove extends CommandGroup {
 	
 	@Override
 	protected void execute() {
-		chassis.move2dc(controller.getX() * xScale, controller.getY() * yScale, controller.getTurnSpeed() * turnScale);
+		chassis.moveCartesian(controller.getX(), controller.getY(), controller.getTurnSpeed());
 		motorSpeeds = chassis.getMotorSpeeds();
 		String motorSpeedsString = "";
 		for (int i = 0; i < motorSpins.length; i++) {
