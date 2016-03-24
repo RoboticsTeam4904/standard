@@ -6,6 +6,7 @@ import org.usfirst.frc4904.standard.commands.motor.MotorIdle;
 import org.usfirst.frc4904.standard.subsystems.motor.speedmodifiers.IdentityModifier;
 import org.usfirst.frc4904.standard.subsystems.motor.speedmodifiers.SpeedModifier;
 import edu.wpi.first.wpilibj.CANSpeedController;
+import edu.wpi.first.wpilibj.MotorSafety;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
@@ -22,6 +23,7 @@ public class Motor extends Subsystem implements SpeedController {
 	/**
 	 * A class that wraps around a variable number of SpeedController objects to give them Subsystem functionality.
 	 * Can also modify their speed with a SpeedModifier for things like scaling or brownout protection.
+	 * Please note that this class uses motor safety, so you will have to set your motors continuously.
 	 *
 	 * @param name
 	 *        The name for the motor
@@ -45,6 +47,10 @@ public class Motor extends Subsystem implements SpeedController {
 			if (motor instanceof CANSpeedController && ((CANSpeedController) motor).getControlMode().getValue() != 0) { // 0 is hopefully normal motor controller mode (Like CANTalon's PercentVBus mode)
 				throw new StrangeCANSpeedControllerModeRuntimeException(this);
 			}
+			// Enable motor safety (this requires motors to be continuously updated)
+			if (motor instanceof MotorSafety) {
+				((MotorSafety) motor).setSafetyEnabled(true);
+			}
 			motor.set(0); // Start all motors with 0 speed.
 		}
 		setInverted(isInverted);
@@ -53,6 +59,7 @@ public class Motor extends Subsystem implements SpeedController {
 	/**
 	 * A class that wraps around a variable number of SpeedController objects to give them Subsystem functionality.
 	 * Can also modify their speed with a SpeedModifier for things like scaling or brownout protection.
+	 * Please note that this class uses motor safety, so you will have to set your motors continuously.
 	 *
 	 * @param name
 	 *        The name for the motor
@@ -70,6 +77,7 @@ public class Motor extends Subsystem implements SpeedController {
 	/**
 	 * A class that wraps around a variable number of SpeedController objects to give them Subsystem functionality.
 	 * Can also modify their speed with a SpeedModifier for things like scaling or brownout protection.
+	 * Please note that this class uses motor safety, so you will have to set your motors continuously.
 	 *
 	 * @param name
 	 *        The name for the motor.
@@ -88,6 +96,7 @@ public class Motor extends Subsystem implements SpeedController {
 	/**
 	 * A class that wraps around a variable number of SpeedController objects to give them Subsystem functionality.
 	 * Can also modify their speed with a SpeedModifier for things like scaling or brownout protection.
+	 * Please note that this class uses motor safety, so you will have to set your motors continuously.
 	 *
 	 * @param name
 	 *        The name for the motor.
@@ -102,6 +111,7 @@ public class Motor extends Subsystem implements SpeedController {
 	/**
 	 * A class that wraps around a variable number of SpeedController objects to give them Subsystem functionality.
 	 * Can also modify their speed with a SpeedModifier for things like scaling or brownout protection.
+	 * Please note that this class uses motor safety, so you will have to set your motors continuously.
 	 *
 	 * @param isInverted
 	 *        Inverts the direction of all of the SpeedControllers.
@@ -121,6 +131,7 @@ public class Motor extends Subsystem implements SpeedController {
 	/**
 	 * A class that wraps around a variable number of SpeedController objects to give them Subsystem functionality.
 	 * Can also modify their speed with a SpeedModifier for things like scaling or brownout protection.
+	 * Please note that this class uses motor safety, so you will have to set your motors continuously.
 	 *
 	 * @param name
 	 *        The name for the motor.
@@ -142,6 +153,7 @@ public class Motor extends Subsystem implements SpeedController {
 	/**
 	 * A class that wraps around a variable number of SpeedController objects to give them Subsystem functionality.
 	 * Can also modify their speed with a SpeedModifier for things like scaling or brownout protection.
+	 * Please note that this class uses motor safety, so you will have to set your motors continuously.
 	 *
 	 * @param speedModifier
 	 *        A SpeedModifier changes the input to every motor based on some factor.
@@ -158,6 +170,7 @@ public class Motor extends Subsystem implements SpeedController {
 	/**
 	 * A class that wraps around a variable number of SpeedController objects to give them Subsystem functionality.
 	 * Can also modify their speed with a SpeedModifier for things like scaling or brownout protection.
+	 * Please note that this class uses motor safety, so you will have to set your motors continuously.
 	 *
 	 * @param motors
 	 *        The SpeedControllers in this subsystem.
