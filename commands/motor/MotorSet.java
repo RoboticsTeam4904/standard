@@ -25,14 +25,14 @@ public class MotorSet extends Command {
 		super("MotorSet");
 		this.motor = motor;
 		speed = 0;
-		LogKitten.v("MotorSet created for " + motor.getName());
+		LogKitten.d("MotorSet created for " + motor.getName());
 		requires(motor);
 		setInterruptible(true);
 	}
 	
 	@Override
 	protected void initialize() {
-		LogKitten.v("MotorSet initialized");
+		LogKitten.d("MotorSet initialized");
 	}
 	
 	/**
@@ -52,12 +52,12 @@ public class MotorSet extends Command {
 	@Override
 	protected void end() {
 		motor.set(0);
-		LogKitten.v("MotorSet ended (motor speed set to 0)");
+		LogKitten.d("MotorSet ended (motor speed set to 0)");
 	}
 	
 	@Override
 	protected void interrupted() {
-		LogKitten.w("MotorSet interupted (motor speed undefined)");
+		LogKitten.d("MotorSet interupted (motor speed undefined)");
 	}
 	
 	@Override

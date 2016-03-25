@@ -22,13 +22,13 @@ public class MotorIdle extends Command {
 		this.motor = motor;
 		requires(motor);
 		setInterruptible(true); // default command
-		LogKitten.v("MotorIdle created");
+		LogKitten.d("MotorIdle created");
 	}
 	
 	@Override
 	protected void initialize() {
 		motor.set(0);
-		LogKitten.v("MotorIdle initialized");
+		LogKitten.d("MotorIdle initialized");
 	}
 	
 	@Override
@@ -44,11 +44,11 @@ public class MotorIdle extends Command {
 	
 	@Override
 	protected void end() {
-		LogKitten.v("MotorIdle ended");
+		LogKitten.d("MotorIdle ended");
 	}
 	
 	@Override
 	protected void interrupted() {
-		LogKitten.w("MotorIdle interupted");
+		LogKitten.d("MotorIdle interupted");
 	}
 }
