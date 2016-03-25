@@ -34,7 +34,7 @@ public class MotorControl extends Command {
 		this.scale = scale;
 		requires(motor);
 		setInterruptible(true);
-		LogKitten.v("MotorControl created for " + motor.getName());
+		LogKitten.d("MotorControl created for " + motor.getName());
 	}
 	
 	/**
@@ -52,7 +52,7 @@ public class MotorControl extends Command {
 	
 	@Override
 	protected void initialize() {
-		LogKitten.v("MotorControl initialized");
+		LogKitten.d("MotorControl initialized");
 	}
 	
 	@Override
@@ -71,6 +71,6 @@ public class MotorControl extends Command {
 	
 	@Override
 	protected void interrupted() {
-		LogKitten.w("MotorControl interrupted");
+		LogKitten.d("MotorControl interrupted");
 	}
 }
