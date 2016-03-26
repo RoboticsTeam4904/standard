@@ -25,7 +25,7 @@ public class CANInfraredDistanceSensor extends CANSensor implements DistanceSens
 	@Override
 	public double getDistance() {
 		int value = this.read(CANInfraredDistanceSensor.CAN_SENSOR_MODE);
-		LogKitten.v(name + " read value " + value);
+		LogKitten.d(name + " read value " + value);
 		return value;
 	}
 }
