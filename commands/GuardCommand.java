@@ -2,6 +2,7 @@ package org.usfirst.frc4904.standard.commands;
 
 
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.command.Subsystem;
 
 /**
  * GuardCommand takes in two commands, a background and a primary.
@@ -23,6 +24,11 @@ public class GuardCommand extends Command {
 		super();
 		this.backgroundCommand = backgroundCommand;
 		this.primaryCommand = primaryCommand;
+	}
+	
+	@Override
+	public synchronized boolean doesRequire(Subsystem system) {
+		return backgroundCommand.doesRequire(system) || primaryCommand.doesRequire(system);
 	}
 	
 	@Override
