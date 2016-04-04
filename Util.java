@@ -23,4 +23,51 @@ public class Util {
 	public static boolean isZero(double var) {
 		return Math.abs(var) < Util.EPSILON;
 	}
+	
+	public static class Range {
+		double min;
+		double max;
+		boolean inclusive;
+		
+		public Range(double min, double max, boolean inclusive) {
+			this.min = min;
+			this.max = max;
+			this.inclusive = inclusive;
+		}
+		
+		public double getDistance() {
+			return max - min;
+		}
+		
+		public boolean contains(double value) {
+			if (inclusive) {
+				return value >= min && value <= max;
+			}
+			return value > min && value < max;
+		}
+		
+		public double getMin() {
+			return min;
+		}
+		
+		public double getMax() {
+			return max;
+		}
+		
+		public double getAverage() {
+			return (min + max) / 2.0;
+		}
+		
+		/**
+		 * Scales a value (between -1 and 1) to the range.
+		 * Example: (new Range(0,6)).scaleValue(0.5) == 4.5
+		 * 
+		 * @param value
+		 *        between -1 and 1
+		 * @return the scaled value
+		 */
+		public double scaleValue(double value) {
+			return getAverage() + value * (getDistance() / 2.0);
+		}
+	}
 }
