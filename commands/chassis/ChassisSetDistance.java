@@ -19,16 +19,25 @@ public class ChassisSetDistance extends ChassisConstant {
 			initialDistances[i] = motorEncoders[i].getDistance();
 		}
 	}
-
+	
 	@Override
 	protected boolean isFinished() {
 		double distanceSum = 0;
 		for (int i = 0; i < motorEncoders.length; i++) {
-			LogKitten.v("Encoder " + i + " reads " + motorEncoders[i].getDistance() + "out of " + distance);
 			distanceSum += motorEncoders[i].getDistance() - initialDistances[i];
+			LogKitten.d("Encoder " + i + " reads " + motorEncoders[i].getDistance() + " out of " + distance);
 		}
 		double distanceAvg = distanceSum / motorEncoders.length;
-		LogKitten.v((distanceAvg > distance) + "");
 		return distanceAvg >= distance;
+	}
+
+	@Override
+	protected void end() {
+		LogKitten.v("Finished traveling " + distance + " units (as set by setDistancePerPulse)");
+	}
+	
+	@Override
+	protected void interrupted() {
+		LogKitten.w("Interrupted! " + getName() + " is in undefined location.");
 	}
 }
