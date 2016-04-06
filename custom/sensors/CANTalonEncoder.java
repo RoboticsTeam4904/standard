@@ -93,10 +93,20 @@ public class CANTalonEncoder implements CustomEncoder {
 			return talon.getEncVelocity() * 10.0 * distancePerPulse;
 		}
 	}
+
+	@Override
+	public double getDistancePerPulse() {
+		return distancePerPulse;
+	}
 	
 	@Override
 	public void setDistancePerPulse(double distancePerPulse) {
 		this.distancePerPulse = distancePerPulse;
+	}
+	
+	@Override
+	public boolean getReverseDirection() {
+		return reverseDirection;
 	}
 	
 	@Override

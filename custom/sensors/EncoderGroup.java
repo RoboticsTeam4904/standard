@@ -7,9 +7,13 @@ import edu.wpi.first.wpilibj.PIDSourceType;
 public class EncoderGroup implements CustomEncoder {
 	private final CustomEncoder[] encoders;
 	private PIDSourceType pidSource;
-
+	private boolean reverseDirection;
+	private double distancePerPulse;
+	
 	public EncoderGroup(CustomEncoder... encoders) {
 		this.encoders = encoders;
+		pidSource = PIDSourceType.kDisplacement;
+		reverseDirection = false;
 	}
 	
 	@Override
@@ -27,7 +31,9 @@ public class EncoderGroup implements CustomEncoder {
 	
 	@Override
 	public void setPIDSourceType(PIDSourceType pidSource) {
-		this.pidSource = pidSource;
+		if (pidSource != null) {
+			this.pidSource = pidSource;
+		}
 	}
 	
 	@Override
@@ -67,17 +73,45 @@ public class EncoderGroup implements CustomEncoder {
 		return average / encoders.length;
 	}
 	
+	/**
+	 * Get whether this entire encoder is inverted.
+	 *
+	 * @return isInverted
+	 *         The state of inversion, true is inverted.
+	 */
 	@Override
-	public void setDistancePerPulse(double distancePerPulse) {
-		for (CustomEncoder encoder : encoders) {
-			encoder.setDistancePerPulse(distancePerPulse);
+	public boolean getReverseDirection() {
+		return reverseDirection;
+	}
+
+	/**
+	 * Sets the direction inversion of all encoder substituents.
+	 * This respects the original inversion state of each encoder when constructed,
+	 * and will only invert encoders if this.getReverseDirection() != the input.
+	 *
+	 * @param reverseDirection
+	 *        The state of inversion, true is inverted.
+	 */
+	@Override
+	public void setReverseDirection(boolean reverseDirection) {
+		if (getReverseDirection() != reverseDirection) {
+			for (CustomEncoder encoder : encoders) {
+				encoder.setReverseDirection(!encoder.getReverseDirection());
+			}
 		}
+		this.reverseDirection = reverseDirection;
 	}
 	
 	@Override
-	public void setReverseDirection(boolean reverseDirection) {
+	public double getDistancePerPulse() {
+		return distancePerPulse;
+	}
+	
+	@Override
+	public void setDistancePerPulse(double distancePerPulse) {
+		this.distancePerPulse = distancePerPulse;
 		for (CustomEncoder encoder : encoders) {
-			encoder.setReverseDirection(reverseDirection);
+			encoder.setDistancePerPulse(distancePerPulse);
 		}
 	}
 	
