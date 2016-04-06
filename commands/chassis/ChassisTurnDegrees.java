@@ -14,9 +14,9 @@ public class ChassisTurnDegrees extends Command implements ChassisController {
 	private final MotionController motionController;
 	private final IMU imu;
 
-	public ChassisTurnDegrees(Chassis chassis, double degrees, IMU imu, MotionController motionController) {
+	public ChassisTurnDegrees(Chassis chassis, double finalAngle, IMU imu, MotionController motionController) {
 		move = new ChassisMove(chassis, this);
-		finalAngle = degrees;
+		this.finalAngle = finalAngle;
 		this.imu = imu;
 		this.motionController = motionController;
 	}
