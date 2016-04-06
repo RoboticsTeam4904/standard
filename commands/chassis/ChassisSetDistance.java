@@ -15,6 +15,11 @@ public class ChassisSetDistance extends ChassisConstant {
 		this.motorEncoders = motorEncoders;
 		this.distance = distance;
 		initialDistances = new double[motorEncoders.length];
+	}
+	
+	@Override
+	protected void initialize() {
+		super.initialize();
 		for (int i = 0; i < motorEncoders.length; i++) {
 			initialDistances[i] = motorEncoders[i].getDistance();
 		}
