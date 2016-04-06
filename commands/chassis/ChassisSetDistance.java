@@ -33,11 +33,13 @@ public class ChassisSetDistance extends ChassisConstant {
 
 	@Override
 	protected void end() {
+		super.end();
 		LogKitten.v("Finished traveling " + distance + " units (as set by setDistancePerPulse)");
 	}
 	
 	@Override
 	protected void interrupted() {
+		super.interrupted();
 		LogKitten.w("Interrupted! " + getName() + " is in undefined location.");
 	}
 }
