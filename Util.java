@@ -58,11 +58,11 @@ public class Util {
 		 * Example: (new Range(0,6)).scaleValue(0.5) == 4.5
 		 * 
 		 * @param value
-		 *        between -1 and 1
+		 *        between -1 and 1 (will be limited to [-1, 1])
 		 * @return the scaled value
 		 */
 		public double scaleValue(double value) {
-			return getAverage() + value * (getDistance() / 2.0);
+			return limitValue(getCenter() + value * (getRange() / 2.0));
 		}
 		
 		/**
