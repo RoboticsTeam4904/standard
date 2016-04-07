@@ -22,7 +22,6 @@ public class MotorPositionConstant extends Command {
 		this.position = position;
 		this.endOnArrival = endOnArrival;
 		requires(motor);
-		motor.enablePID();
 		setInterruptible(true);
 	}
 	
@@ -31,7 +30,9 @@ public class MotorPositionConstant extends Command {
 	}
 	
 	@Override
-	protected void initialize() {}
+	protected void initialize() {
+		motor.enablePID();
+	}
 	
 	@Override
 	protected void execute() {
