@@ -64,5 +64,17 @@ public class Util {
 		public double scaleValue(double value) {
 			return getAverage() + value * (getDistance() / 2.0);
 		}
+		
+		/**
+		 * Limits a value to the range.
+		 * Example: (new Range(0,6)).limitValue(7) == 6
+		 * 
+		 * @param value
+		 *        the value to be limited
+		 * @return the limited value
+		 */
+		public double limitValue(double value) {
+			return Math.max(Math.min(value, max), min);
+		}
 	}
 }
