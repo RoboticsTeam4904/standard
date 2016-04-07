@@ -1,5 +1,6 @@
 package org.usfirst.frc4904.standard;
 
+import edu.wpi.first.wpilibj.util.BoundaryException;
 
 /**
  * Common utilities
@@ -29,6 +30,9 @@ public class Util {
 		private final double max;
 		
 		public Range(double min, double max) {
+			if (min > max) {
+				throw new BoundaryException("Range min " + min + " greater than max " + max);
+			}
 			this.min = min;
 			this.max = max;
 		}
