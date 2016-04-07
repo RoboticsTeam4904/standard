@@ -25,8 +25,8 @@ public class Util {
 	}
 	
 	public static class Range {
-		double min;
-		double max;
+		private final double min;
+		private final double max;
 		
 		public Range(double min, double max) {
 			this.min = min;
