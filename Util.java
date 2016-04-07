@@ -33,7 +33,7 @@ public class Util {
 			this.max = max;
 		}
 		
-		public double getDistance() {
+		public double getRange() {
 			return max - min;
 		}
 		
@@ -49,7 +49,7 @@ public class Util {
 			return max;
 		}
 		
-		public double getAverage() {
+		public double getCenter() {
 			return (min + max) / 2.0;
 		}
 		
