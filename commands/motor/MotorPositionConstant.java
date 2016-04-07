@@ -31,6 +31,7 @@ public class MotorPositionConstant extends Command {
 	
 	@Override
 	protected void initialize() {
+		motor.reset();
 		motor.enablePID();
 	}
 	
