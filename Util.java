@@ -27,12 +27,10 @@ public class Util {
 	public static class Range {
 		double min;
 		double max;
-		boolean inclusive;
 		
-		public Range(double min, double max, boolean inclusive) {
+		public Range(double min, double max) {
 			this.min = min;
 			this.max = max;
-			this.inclusive = inclusive;
 		}
 		
 		public double getDistance() {
@@ -40,10 +38,7 @@ public class Util {
 		}
 		
 		public boolean contains(double value) {
-			if (inclusive) {
-				return value >= min && value <= max;
-			}
-			return value > min && value < max;
+			return value >= min && value <= max;
 		}
 		
 		public double getMin() {
