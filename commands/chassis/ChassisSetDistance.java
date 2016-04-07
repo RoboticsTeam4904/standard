@@ -35,7 +35,7 @@ public class ChassisSetDistance extends ChassisConstant {
 		double distanceAvg = distanceSum / motorEncoders.length;
 		return distanceAvg >= distance;
 	}
-
+	
 	@Override
 	protected void end() {
 		super.end();

@@ -64,7 +64,7 @@ public class CANEncoder extends CANSensor implements CustomEncoder {
 	public double getDistancePerPulse() {
 		return distancePerPulse;
 	}
-
+	
 	@Override
 	public void setDistancePerPulse(double distancePerPulse) {
 		this.distancePerPulse = distancePerPulse;

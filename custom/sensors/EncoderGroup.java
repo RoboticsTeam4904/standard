@@ -83,7 +83,7 @@ public class EncoderGroup implements CustomEncoder {
 	public boolean getReverseDirection() {
 		return reverseDirection;
 	}
-
+	
 	/**
 	 * Sets the direction inversion of all encoder substituents.
 	 * This respects the original inversion state of each encoder when constructed,

@@ -39,7 +39,7 @@ public interface CustomEncoder extends PIDSource {
 	 * Gets the distance per pulse
 	 */
 	double getDistancePerPulse();
-
+	
 	/**
 	 * Sets the distance per pulse
 	 */

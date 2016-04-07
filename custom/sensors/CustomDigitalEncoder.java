@@ -53,7 +53,7 @@ public class CustomDigitalEncoder extends Encoder implements CustomEncoder {
 	public CustomDigitalEncoder(int aChannel, int bChannel, int indexChannel, boolean reverseDirection) {
 		super(aChannel, bChannel, indexChannel, reverseDirection);
 	}
-
+	
 	@Override
 	public double getDistancePerPulse() {
 		return distancePerPulse;
@@ -64,7 +64,7 @@ public class CustomDigitalEncoder extends Encoder implements CustomEncoder {
 		super.setDistancePerPulse(distancePerPulse);
 		this.distancePerPulse = distancePerPulse;
 	}
-
+	
 	@Override
 	public boolean getReverseDirection() {
 		return reverseDirection;
