@@ -4,6 +4,13 @@ package org.usfirst.frc4904.standard.commands.motor;
 import org.usfirst.frc4904.standard.subsystems.motor.SensorMotor;
 import edu.wpi.first.wpilibj.command.Command;
 
+/**
+ * MotorPositionConstant is a Command that runs while setting a SensorMotor's position
+ * to the provided (double) value. If (boolean) endOnArrival is provided and set to false,
+ * the command will run indefinitely. Otherwise, the command will end when the motor#onTarget()
+ * returns true (as set by internal PID).
+ *
+ */
 public class MotorPositionConstant extends Command {
 	protected SensorMotor motor;
 	protected double position;
@@ -15,7 +22,6 @@ public class MotorPositionConstant extends Command {
 		this.position = position;
 		this.endOnArrival = endOnArrival;
 		requires(motor);
-		motor.enablePID();
 		setInterruptible(true);
 	}
 	
@@ -24,7 +30,10 @@ public class MotorPositionConstant extends Command {
 	}
 	
 	@Override
-	protected void initialize() {}
+	protected void initialize() {
+		motor.reset();
+		motor.enablePID();
+	}
 	
 	@Override
 	protected void execute() {
