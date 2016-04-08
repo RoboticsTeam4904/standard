@@ -9,10 +9,10 @@ import edu.wpi.first.wpilibj.command.Command;
 
 public class ChassisTurnDegrees extends Command implements ChassisController {
 	protected final ChassisMove move;
-	private double initialAngle;
-	private final double finalAngle;
-	private final MotionController motionController;
-	private final IMU imu;
+	protected double initialAngle;
+	protected final double finalAngle;
+	protected final MotionController motionController;
+	protected final IMU imu;
 	
 	public ChassisTurnDegrees(Chassis chassis, double finalAngle, IMU imu, MotionController motionController) {
 		move = new ChassisMove(chassis, this);
