@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.Joystick;
 public class CustomJoystick extends Joystick implements Controller {
 	public static final int X_AXIS = 0;
 	public static final int Y_AXIS = 1;
+	public static final int SLIDER_AXIS = 3;
 	protected double deadzone;
 	protected final int port;
 	// Buttons
