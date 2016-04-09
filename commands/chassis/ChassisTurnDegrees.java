@@ -45,7 +45,7 @@ public class ChassisTurnDegrees extends Command implements ChassisController {
 	
 	@Override
 	protected void execute() {
-		motionController.setSetpoint(finalAngle + initialAngle);
+		motionController.setSetpoint(((finalAngle + initialAngle) + 360) % 360);
 	}
 	
 	@Override

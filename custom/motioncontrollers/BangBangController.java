@@ -88,7 +88,7 @@ public class BangBangController extends MotionController {
 			return F * setpoint;
 		}
 		double input = source.pidGet();
-		double error = setpoint - input;
+		error = setpoint - input;
 		LogKitten.v(input + " " + setpoint + " " + error);
 		if (continuous) {
 			double range = inputMax - inputMin;

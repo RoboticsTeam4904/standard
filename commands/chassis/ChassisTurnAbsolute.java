@@ -8,7 +8,7 @@ import org.usfirst.frc4904.standard.subsystems.chassis.Chassis;
 public class ChassisTurnAbsolute extends ChassisTurnDegrees {
 	
 	public ChassisTurnAbsolute(Chassis chassis, double finalAngle, IMU imu, MotionController motionController) {
-		super(chassis, finalAngle, imu, motionController);
+		super(chassis, (finalAngle % 360), imu, motionController);
 	}
 	
 	@Override
