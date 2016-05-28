@@ -40,7 +40,7 @@ public abstract class CommandRobotBase extends IterativeRobot {
 	/**
 	 * This initializes the entire robot.
 	 * It is called by WPILib on robot code launch.
-	 * Year specific code should be written in the initialize function.
+	 * Year-specific code should be written in the initialize function.
 	 */
 	@Override
 	public final void robotInit() {
@@ -59,7 +59,7 @@ public abstract class CommandRobotBase extends IterativeRobot {
 	}
 	
 	/**
-	 * Function for year specific code to be run on robot code launch.
+	 * Function for year-specific code to be run on robot code launch.
 	 * setHealthChecks should be called here if needed.
 	 */
 	public abstract void initialize();
@@ -67,7 +67,7 @@ public abstract class CommandRobotBase extends IterativeRobot {
 	/**
 	 * This initializes the teleoperated portion of the robot code.
 	 * It is called by WPILib on teleop enable.
-	 * Year specific code should be written in the teleopInitialize() function.
+	 * Year-specific code should be written in the teleopInitialize() function.
 	 */
 	@Override
 	public final void teleopInit() {
@@ -89,30 +89,31 @@ public abstract class CommandRobotBase extends IterativeRobot {
 	}
 	
 	/**
-	 * Function for year specific code to be run on teleoperated initialize.
+	 * Function for year-specific code to be run on teleoperated initialize.
 	 * teleopCommand should be set in this function.
 	 */
 	public abstract void teleopInitialize();
 	
 	/**
 	 * This function is called by WPILib periodically during teleop.
-	 * Year specific code should be written in the teleopExecute() function.
+	 * Year-specific code should be written in the teleopExecute() function.
 	 */
 	@Override
 	public final void teleopPeriodic() {
 		Scheduler.getInstance().run();
 		teleopExecute();
+		alwaysExecute();
 	}
 	
 	/**
-	 * Function for year specific code to be run during teleoperated time.
+	 * Function for year-specific code to be run during teleoperated time.
 	 */
 	public abstract void teleopExecute();
 	
 	/**
 	 * This initializes the autonomous portion of the robot code.
 	 * It is called by WPILib on auton enable.
-	 * Year specific code should be written in the autonomousInitialize() function.
+	 * Year-specific code should be written in the autonomousInitialize() function.
 	 */
 	@Override
 	public final void autonomousInit() {
@@ -124,28 +125,29 @@ public abstract class CommandRobotBase extends IterativeRobot {
 	}
 	
 	/**
-	 * Function for year specific code to be run on autonomous initialize.
+	 * Function for year-specific code to be run on autonomous initialize.
 	 */
 	public abstract void autonomousInitialize();
 	
 	/**
 	 * This function is called by WPILib periodically during auton.
-	 * Year specific code should be written in the autonomousExecute() function.
+	 * Year-specific code should be written in the autonomousExecute() function.
 	 */
 	@Override
 	public final void autonomousPeriodic() {
 		Scheduler.getInstance().run();
 		autonomousExecute();
+		alwaysExecute();
 	}
 	
 	/**
-	 * Function for year specific code to be run during autonomous.
+	 * Function for year-specific code to be run during autonomous.
 	 */
 	public abstract void autonomousExecute();
 	
 	/**
 	 * This function is called by WPILib when the robot is disabled.
-	 * Year specific code should be written in the disabledInitialize() function.
+	 * Year-specific code should be written in the disabledInitialize() function.
 	 */
 	@Override
 	public final void disabledInit() {
@@ -156,28 +158,29 @@ public abstract class CommandRobotBase extends IterativeRobot {
 	}
 	
 	/**
-	 * Function for year specific code to be run on disabled initialize.
+	 * Function for year-specific code to be run on disabled initialize.
 	 */
 	public abstract void disabledInitialize();
 	
 	/**
 	 * This function is called by WPILib periodically while disabled.
-	 * Year specific code should be written in the disabledExecute() function.
+	 * Year-specific code should be written in the disabledExecute() function.
 	 */
 	@Override
 	public final void disabledPeriodic() {
 		Scheduler.getInstance().run();
 		disabledExecute();
+		alwaysExecute();
 	}
 	
 	/**
-	 * Function for year specific code to be run while disabled.
+	 * Function for year-specific code to be run while disabled.
 	 */
 	public abstract void disabledExecute();
 	
 	/**
 	 * This function is called by WPILib when the robot is in test mode.
-	 * Year specific code should be written in the disabledInitialize() function.
+	 * Year-specific-code should be written in the disabledInitialize() function.
 	 */
 	@Override
 	public final void testInit() {
@@ -185,24 +188,30 @@ public abstract class CommandRobotBase extends IterativeRobot {
 	}
 	
 	/**
-	 * Function for year specific code to be run on disabled initialize.
+	 * Function for year-specific code to be run on disabled initialize.
 	 */
 	public abstract void testInitialize();
 	
 	/**
 	 * This function is called by WPILib periodically while in test mode.
-	 * Year specific code should be written in the testExecute() function.
+	 * Year-specific code should be written in the testExecute() function.
 	 */
 	@Override
 	public void testPeriodic() {
 		LiveWindow.run();
 		testExecute();
+		alwaysExecute();
 	}
 	
 	/**
-	 * Function for year specific code to be run while in test mode.
+	 * Function for year-specific code to be run while in test mode.
 	 */
 	public abstract void testExecute();
+	
+	/**
+	 * Function for year-specific code to be run in every robot mode.
+	 */
+	public abstract void alwaysExecute();
 	
 	/**
 	 * Sets the health checks for the robot.

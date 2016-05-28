@@ -4,6 +4,7 @@ package org.usfirst.frc4904.standard.commands.motor;
 import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.custom.controllers.Controller;
 import org.usfirst.frc4904.standard.subsystems.motor.Motor;
+import org.usfirst.frc4904.standard.subsystems.motor.PositionSensorMotor;
 import edu.wpi.first.wpilibj.command.Command;
 
 /**
@@ -40,6 +41,9 @@ public class MotorControl extends Command {
 	@Override
 	protected void initialize() {
 		LogKitten.d("MotorControl initialized");
+		if (motor instanceof PositionSensorMotor) {
+			((PositionSensorMotor) motor).disablePID();
+		}
 	}
 	
 	@Override
