@@ -16,9 +16,9 @@ import edu.wpi.first.wpilibj.command.Subsystem;
  *
  */
 public class GuardCommand extends Command {
-	Command backgroundCommand;
-	Command primaryCommand;
-	boolean hasRunOnce;
+	protected final Command backgroundCommand;
+	protected final Command primaryCommand;
+	private boolean hasRunOnce = false;
 	
 	public GuardCommand(Command backgroundCommand, Command primaryCommand) {
 		super();
@@ -35,12 +35,11 @@ public class GuardCommand extends Command {
 	protected void initialize() {
 		backgroundCommand.start();
 		primaryCommand.start();
+		hasRunOnce = false;
 	}
 	
 	@Override
-	protected void execute() {
-		// TODO Auto-generated method stub
-	}
+	protected void execute() {}
 	
 	@Override
 	protected boolean isFinished() {
