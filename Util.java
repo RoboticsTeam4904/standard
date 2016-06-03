@@ -1,5 +1,6 @@
 package org.usfirst.frc4904.standard;
 
+import edu.wpi.first.wpilibj.util.BoundaryException;
 
 /**
  * Common utilities
@@ -25,25 +26,23 @@ public class Util {
 	}
 	
 	public static class Range {
-		double min;
-		double max;
-		boolean inclusive;
+		private final double min;
+		private final double max;
 		
-		public Range(double min, double max, boolean inclusive) {
+		public Range(double min, double max) {
+			if (min > max) {
+				throw new BoundaryException("Range min " + min + " greater than max " + max);
+			}
 			this.min = min;
 			this.max = max;
-			this.inclusive = inclusive;
 		}
 		
-		public double getDistance() {
+		public double getRange() {
 			return max - min;
 		}
 		
 		public boolean contains(double value) {
-			if (inclusive) {
-				return value >= min && value <= max;
-			}
-			return value > min && value < max;
+			return value >= min && value <= max;
 		}
 		
 		public double getMin() {
@@ -54,7 +53,7 @@ public class Util {
 			return max;
 		}
 		
-		public double getAverage() {
+		public double getCenter() {
 			return (min + max) / 2.0;
 		}
 		
@@ -63,11 +62,23 @@ public class Util {
 		 * Example: (new Range(0,6)).scaleValue(0.5) == 4.5
 		 * 
 		 * @param value
-		 *        between -1 and 1
+		 *        between -1 and 1 (will be limited to [-1, 1])
 		 * @return the scaled value
 		 */
 		public double scaleValue(double value) {
-			return getAverage() + value * (getDistance() / 2.0);
+			return limitValue(getCenter() + value * (getRange() / 2.0));
+		}
+		
+		/**
+		 * Limits a value to the range.
+		 * Example: (new Range(0,6)).limitValue(7) == 6
+		 * 
+		 * @param value
+		 *        the value to be limited
+		 * @return the limited value
+		 */
+		public double limitValue(double value) {
+			return Math.max(Math.min(value, max), min);
 		}
 	}
 }
