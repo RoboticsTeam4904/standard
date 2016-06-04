@@ -20,6 +20,8 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 public class ChassisMove extends CommandGroup {
 	protected final MotorSet[] motorSpins;
 	protected double[] motorSpeeds;
+	protected final Motor[] motors;
+	protected final boolean usePID;
 	protected final Chassis chassis;
 	protected final ChassisController controller;
 	
@@ -36,16 +38,10 @@ public class ChassisMove extends CommandGroup {
 		requires(chassis);
 		this.chassis = chassis;
 		this.controller = controller;
-		Motor[] motors = this.chassis.getMotors();
+		this.usePID = usePID;
+		motors = this.chassis.getMotors();
 		motorSpins = new MotorSet[motors.length];
 		for (int i = 0; i < motors.length; i++) {
-			if (motors[i] instanceof SensorMotor) {
-				if (usePID) {
-					((SensorMotor) motors[i]).enablePID();
-				} else {
-					((SensorMotor) motors[i]).disablePID();
-				}
-			}
 			motorSpins[i] = new MotorSet(motors[i]);
 			addParallel(motorSpins[i]);
 		}
@@ -64,6 +60,15 @@ public class ChassisMove extends CommandGroup {
 	
 	@Override
 	protected void initialize() {
+		for (Motor motor : motors) {
+			if (motor instanceof SensorMotor) {
+				if (usePID) {
+					((SensorMotor) motor).enablePID();
+				} else {
+					((SensorMotor) motor).disablePID();
+				}
+			}
+		}
 		LogKitten.v("ChassisMove initialized");
 	}
 	
