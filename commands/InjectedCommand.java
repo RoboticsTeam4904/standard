@@ -7,6 +7,7 @@ public abstract class InjectedCommand extends Command {
 	private final Command previous;
 	
 	public InjectedCommand(Command previous) {
+		super();
 		this.previous = previous;
 	}
 	
@@ -26,10 +27,32 @@ public abstract class InjectedCommand extends Command {
 	}
 	
 	@Override
-	final protected void end() {
-		finish();
-		previous.start();
+	final protected void initialize() {
+		if (!previous.isCanceled()) {
+			previous.cancel();
+		}
+		onInitialize();
 	}
 	
-	abstract protected void finish();
+	@Override
+	final protected void interrupted() {
+		onInterrupted();
+		if (!previous.isRunning() || previous.isCanceled()) {
+			previous.start();
+		}
+	}
+	
+	@Override
+	final protected void end() {
+		onEnd();
+		if (!previous.isRunning() || previous.isCanceled()) {
+			previous.start();
+		}
+	}
+	
+	abstract protected void onInitialize();
+	
+	abstract protected void onInterrupted();
+	
+	abstract protected void onEnd();
 }
