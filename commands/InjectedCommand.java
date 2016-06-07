@@ -11,24 +11,24 @@ public abstract class InjectedCommand extends Command {
 		this.previous = previous;
 	}
 	
-	public InjectedCommand(Command previous, String name) {
+	public InjectedCommand(String name, Command previous) {
 		super(name);
 		this.previous = previous;
 	}
 	
-	public InjectedCommand(Command previous, double timeout) {
+	public InjectedCommand(double timeout, Command previous) {
 		super(timeout);
 		this.previous = previous;
 	}
 	
-	public InjectedCommand(Command previous, String name, double timeout) {
+	public InjectedCommand(String name, double timeout, Command previous) {
 		super(name, timeout);
 		this.previous = previous;
 	}
 	
 	@Override
 	final protected void initialize() {
-		if (previous.isRunning() || !previous.isCanceled()) {
+		if (previous != null && (previous.isRunning() || !previous.isCanceled())) {
 			previous.cancel();
 		}
 		onInitialize();
@@ -37,7 +37,7 @@ public abstract class InjectedCommand extends Command {
 	@Override
 	final protected void interrupted() {
 		onInterrupted();
-		if (!previous.isRunning() || previous.isCanceled()) {
+		if (previous != null && (!previous.isRunning() || previous.isCanceled())) {
 			previous.start();
 		}
 	}
@@ -45,7 +45,7 @@ public abstract class InjectedCommand extends Command {
 	@Override
 	final protected void end() {
 		onEnd();
-		if (!previous.isRunning() || previous.isCanceled()) {
+		if (previous != null && (!previous.isRunning() || previous.isCanceled())) {
 			previous.start();
 		}
 	}

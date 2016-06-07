@@ -12,14 +12,14 @@ public abstract class InjectedCommandGroup extends CommandGroup {
 		this.previous = previous;
 	}
 	
-	public InjectedCommandGroup(Command previous, String name) {
+	public InjectedCommandGroup(String name, Command previous) {
 		super(name);
 		this.previous = previous;
 	}
 	
 	@Override
 	final protected void initialize() {
-		if (previous.isRunning() || !previous.isCanceled()) {
+		if (previous != null && (previous.isRunning() || !previous.isCanceled())) {
 			previous.cancel();
 		}
 		onInitialize();
@@ -28,7 +28,7 @@ public abstract class InjectedCommandGroup extends CommandGroup {
 	@Override
 	final protected void interrupted() {
 		onInterrupted();
-		if (!previous.isRunning() || previous.isCanceled()) {
+		if (previous != null && (!previous.isRunning() || previous.isCanceled())) {
 			previous.start();
 		}
 	}
@@ -36,7 +36,7 @@ public abstract class InjectedCommandGroup extends CommandGroup {
 	@Override
 	final protected void end() {
 		onEnd();
-		if (!previous.isRunning() || previous.isCanceled()) {
+		if (previous != null && (!previous.isRunning() || previous.isCanceled())) {
 			previous.start();
 		}
 	}
