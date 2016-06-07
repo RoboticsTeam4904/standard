@@ -19,7 +19,7 @@ public abstract class InjectedCommandGroup extends CommandGroup {
 	
 	@Override
 	final protected void initialize() {
-		if (!previous.isCanceled()) {
+		if (previous.isRunning() || !previous.isCanceled()) {
 			previous.cancel();
 		}
 		onInitialize();
@@ -28,7 +28,7 @@ public abstract class InjectedCommandGroup extends CommandGroup {
 	@Override
 	final protected void interrupted() {
 		onInterrupted();
-		if (!previous.isRunning()) {
+		if (!previous.isRunning() || previous.isCanceled()) {
 			previous.start();
 		}
 	}
@@ -36,7 +36,7 @@ public abstract class InjectedCommandGroup extends CommandGroup {
 	@Override
 	final protected void end() {
 		onEnd();
-		if (!previous.isRunning()) {
+		if (!previous.isRunning() || previous.isCanceled()) {
 			previous.start();
 		}
 	}

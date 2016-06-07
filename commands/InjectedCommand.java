@@ -28,7 +28,7 @@ public abstract class InjectedCommand extends Command {
 	
 	@Override
 	final protected void initialize() {
-		if (!previous.isCanceled()) {
+		if (previous.isRunning() || !previous.isCanceled()) {
 			previous.cancel();
 		}
 		onInitialize();
