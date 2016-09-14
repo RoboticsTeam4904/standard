@@ -16,7 +16,7 @@ public class MotorControl extends Command {
 	protected final Motor motor;
 	protected final Controller controller;
 	protected final int axis;
-	protected final boolean invert;
+	protected final double scale;
 	
 	/**
 	 * This Command directly controls a Motor based on an axis of the Controller.
@@ -25,17 +25,30 @@ public class MotorControl extends Command {
 	 * @param motor
 	 * @param controller
 	 * @param axis
-	 * @param invert
+	 * @param scale
 	 */
-	public MotorControl(Motor motor, Controller controller, int axis, boolean invert) {
+	public MotorControl(Motor motor, Controller controller, int axis, double scale) {
 		super("MotorControl");
 		this.motor = motor;
 		this.controller = controller;
 		this.axis = axis;
-		this.invert = invert;
+		this.scale = scale;
 		requires(motor);
 		setInterruptible(true);
 		LogKitten.d("MotorControl created for " + motor.getName());
+	}
+	
+	/**
+	 * This Command directly controls a Motor based on an axis of the Controller.
+	 * This can allow an Operator to easily control a single Motor from an axis of the Controller.
+	 *
+	 * @param motor
+	 * @param controller
+	 * @param axis
+	 * @param scale
+	 */
+	public MotorControl(Motor motor, Controller controller, int axis) {
+		this(motor, controller, axis, 1.0);
 	}
 	
 	@Override
@@ -49,11 +62,7 @@ public class MotorControl extends Command {
 	@Override
 	protected void execute() {
 		LogKitten.d("MotorControl executing: " + controller.getAxis(axis));
-		if (!invert) {
-			motor.set(controller.getAxis(axis));
-		} else {
-			motor.set(-1.0f * controller.getAxis(axis));
-		}
+		motor.set(controller.getAxis(axis) * scale);
 	}
 	
 	@Override
