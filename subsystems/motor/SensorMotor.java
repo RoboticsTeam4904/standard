@@ -68,7 +68,7 @@ public abstract class SensorMotor extends Motor {
 		motionController.setSetpoint(position);
 		motionController.enable();
 		double speed = motionController.get();
-		LogKitten.v(getName() + " set to position " + position + " " + speed);
+		LogKitten.v(getName() + " set to position " + position + " at speed " + speed);
 		super.set(speed);
 	}
 	
