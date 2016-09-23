@@ -16,6 +16,7 @@ public class CustomPIDController extends MotionController {
 	protected double F;
 	protected double totalError;
 	protected double lastError;
+	protected boolean justReset;
 	
 	/**
 	 * An extremely basic PID controller.
@@ -38,6 +39,7 @@ public class CustomPIDController extends MotionController {
 		this.I = I;
 		this.D = D;
 		this.F = F;
+		justReset = true;
 	}
 	
 	/**
@@ -152,6 +154,7 @@ public class CustomPIDController extends MotionController {
 		setpoint = source.pidGet();
 		totalError = 0;
 		lastError = 0;
+		justReset = true;
 	}
 	
 	@Override
@@ -193,11 +196,17 @@ public class CustomPIDController extends MotionController {
 		double result = P * error + I * totalError + D * errorDerivative + F * setpoint;
 		// Save the error for calculating future derivatives
 		lastError = error;
+		justReset = false;
 		LogKitten.v(input + " " + setpoint + " " + result);
 		if (capOutput) {
 			// Limit the result to be within the output range [outputMin, outputMax]
 			result = Math.max(Math.min(result, outputMax), outputMin);
 		}
 		return result;
+	}
+	
+	@Override
+	public boolean onTarget() {
+		return !justReset && super.onTarget();
 	}
 }
