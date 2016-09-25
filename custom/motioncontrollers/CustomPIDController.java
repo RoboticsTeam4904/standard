@@ -189,7 +189,13 @@ public class CustomPIDController extends MotionController {
 			}
 		}
 		// Calculate the approximation of the error's derivative
-		double errorDerivative = (error - lastError);
+		double errorDerivative;
+		// If we've just reset the error could jump from 0 to a very high number so just return 0
+		if (justReset) {
+			errorDerivative = 0;
+		} else {
+			errorDerivative = (error - lastError);
+		}
 		// Calculate the approximation of the error's integral
 		totalError += error;
 		// Calculate the result using the PIDF formula
