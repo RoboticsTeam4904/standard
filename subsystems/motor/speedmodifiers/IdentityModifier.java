@@ -10,7 +10,7 @@ public class IdentityModifier implements SpeedModifier {
 	/**
 	 * A SpeedModifier that changes nothing.
 	 * It doesn't extend LinearModifier in order to reduce computation time
-	 * and have no same code duplication.
+	 * and have the same code duplication.
 	 */
 	public double modify(double speed) {
 		return speed;
