@@ -8,7 +8,8 @@ import org.usfirst.frc4904.standard.subsystems.motor.SensorMotor;
 import edu.wpi.first.wpilibj.command.Command;
 
 /**
- * Controls a SensorMotor's position directly from a Controller (e.g. Joystick or Xbox)
+ * An indefinite command that controls a SensorMotor's position
+ * directly from a Controller (e.g. Joystick or Xbox)
  *
  */
 public class MotorPositionControl extends Command {

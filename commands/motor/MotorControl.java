@@ -8,9 +8,13 @@ import org.usfirst.frc4904.standard.subsystems.motor.PositionSensorMotor;
 import edu.wpi.first.wpilibj.command.Command;
 
 /**
- * Controls a Motor directly from a Controller (e.g. Joystick or Xbox)
- *
- *
+ * Controls a Motor directly from a Controller
+ * 
+ * An indefinite command that sets a motor's input every execute cycle
+ * to the value read from the provided controller (at a given axis, and scaled
+ * by a given value). A controller might be a Joystick or Xbox controller.
+ * 
+ * Note: PID is disabled/ignored on the given motor for the duration of this command.
  */
 public class MotorControl extends Command {
 	protected final Motor motor;

@@ -5,7 +5,8 @@ import org.usfirst.frc4904.standard.subsystems.motor.SensorMotor;
 import edu.wpi.first.wpilibj.command.Command;
 
 /**
- * Sets a motor to a position and keeps it there using an encoder.
+ * An indefinite command that sets a motor to a position
+ * and maintains its position (keeps it there) using an encoder.
  */
 public class MotorPositionSet extends Command {
 	protected SensorMotor motor;

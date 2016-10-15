@@ -6,17 +6,12 @@ import org.usfirst.frc4904.standard.subsystems.motor.Motor;
 import edu.wpi.first.wpilibj.command.Command;
 
 /**
- * Idles the motor (sets speed to 0).
- *
+ * An indefinite command that sets the given motor's
+ * input to 0, effectively idling it.
  */
 public class MotorIdle extends Command {
 	protected final Motor motor;
 	
-	/**
-	 * Constructor.
-	 *
-	 * @param motor
-	 */
 	public MotorIdle(Motor motor) {
 		super("MotorIdle");
 		this.motor = motor;

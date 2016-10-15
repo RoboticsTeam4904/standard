@@ -7,15 +7,17 @@ import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.command.Command;
 
 /**
- * Sets a motor to a speed.
- * The speed can change through
- * use of the set command.
- * This is better than setting
- * the motor because it uses
- * requires to avoid having
- * multiple attempts to set a
- * motor simultaneously.
- *
+ * An indefinite command that, every execute cycle,
+ * sets a motor to a variable speed. A method set(double)
+ * is exposed which can be called to set the desired speed
+ * of the motor. That value will, in turn, be passed to the
+ * motor the next time execute is called.
+ * 
+ * This is better than setting the motor because it uses
+ * requires to avoid having multiple attempts to set a
+ * motor simultaneously. It also reduces the overhead of
+ * running multiple MotorConstant commands whenever the
+ * desired speed is changed.
  */
 public class MotorSet extends Command {
 	protected final SpeedController motor;

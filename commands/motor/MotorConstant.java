@@ -5,7 +5,9 @@ import org.usfirst.frc4904.standard.subsystems.motor.Motor;
 import edu.wpi.first.wpilibj.command.Command;
 
 /**
- * Runs a motor at a constant speed until interrupted.
+ * An indefinite command that runs a motor at a
+ * constant speed until interrupted. The motor and
+ * the speed are taken are accepted in the constructor.
  */
 public class MotorConstant extends Command {
 	protected final double motorSpeed;
