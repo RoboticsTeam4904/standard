@@ -8,6 +8,12 @@ import edu.wpi.first.wpilibj.PIDSource;
  * An extremely basic PID controller.
  * It does not differentiate between rate and distance.
  *
+ * It accepts P, I, and D constants with a PIDSource.
+ * It provides a get() function that reads the current
+ * value from the PIDSource, performs PID calculations
+ * on that value, and returns a double representing the
+ * output that the programmer should pass back into the
+ * control loop.
  */
 public class CustomPIDController extends MotionController {
 	protected double P;
@@ -157,6 +163,9 @@ public class CustomPIDController extends MotionController {
 		justReset = true;
 	}
 	
+	/**
+	 * Returns the most recently calculated error.
+	 */
 	@Override
 	public double getError() {
 		return lastError;
@@ -167,7 +176,8 @@ public class CustomPIDController extends MotionController {
 	 * Get the current output of the PID loop.
 	 * This should be used to set the output (like a Motor).
 	 *
-	 * @return The current output of the PID loop.
+	 * @return The current output of the PID loop based on
+	 *         the input read from the PIDSource.
 	 */
 	public double get() {
 		// If PID is not enabled, use feedforward only
@@ -211,6 +221,10 @@ public class CustomPIDController extends MotionController {
 		return result;
 	}
 	
+	/**
+	 * @return a boolean value representing whether or not
+	 *         the PIDSource is currently outputting the target value.
+	 */
 	@Override
 	public boolean onTarget() {
 		return !justReset && super.onTarget();
