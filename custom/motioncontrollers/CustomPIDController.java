@@ -16,7 +16,7 @@ public class CustomPIDController extends MotionController {
 	protected double F;
 	protected double totalError;
 	protected double lastError;
-	protected boolean justReset;
+	public boolean justReset;
 	
 	/**
 	 * An extremely basic PID controller.
@@ -189,7 +189,7 @@ public class CustomPIDController extends MotionController {
 			}
 		}
 		// Calculate the approximation of the error's derivative
-		double errorDerivative = (error - lastError);
+		double errorDerivative = justReset ? 0 : (error - lastError);
 		// Calculate the approximation of the error's integral
 		totalError += error;
 		// Calculate the result using the PIDF formula
