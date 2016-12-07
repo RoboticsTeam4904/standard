@@ -63,9 +63,9 @@ public class ChassisMove extends CommandGroup {
 		for (Motor motor : motors) {
 			if (motor instanceof SensorMotor) {
 				if (usePID) {
-					((SensorMotor) motor).enablePID();
+					((SensorMotor) motor).enableMC();
 				} else {
-					((SensorMotor) motor).disablePID();
+					((SensorMotor) motor).disableMC();
 				}
 			}
 		}
