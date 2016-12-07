@@ -47,7 +47,7 @@ public abstract class MotionController {
 		outputMax = 0.0;
 		reset();
 	}
-	
+
 	/**
 	 * Sets the output for this MotionController.
 	 * Once every MotionController tick, the output will
@@ -201,6 +201,13 @@ public abstract class MotionController {
 			}
 			catch (InterruptedException e) {}
 		}
+	}
+
+	/**
+	 * Is motion control enabled?
+	 */
+	public boolean isEnabled() {
+		return enable;
 	}
 
 	/**
