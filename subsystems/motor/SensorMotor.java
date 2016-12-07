@@ -15,7 +15,7 @@ public abstract class SensorMotor extends Motor {
 		super(name, inverted, speedModifier, motors);
 		this.motionController = motionController;
 		isMotionControlEnabled = false;
-		motionController.addOutput(this);
+		motionController.setOutput(this);
 	}
 	
 	public SensorMotor(String name, boolean isInverted, MotionController motionController, SpeedController... motors) {
