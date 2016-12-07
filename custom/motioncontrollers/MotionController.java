@@ -228,10 +228,18 @@ public abstract class MotionController {
 	protected class MotionControllerThread extends Thread {
 		@Override
 		public void run() {
+			long lastUpdate = System.currentTimeMillis();
 			while (enable) {
+				while (System.currentTimeMillis() - lastUpdate < 50) {
+					try {
+						Thread.sleep(2);
+					}
+					catch (InterruptedException e) {}
+				}
 				output.pidWrite(get());
+				lastUpdate = System.currentTimeMillis();
 				try {
-					Thread.sleep(20);
+					Thread.sleep(40);
 				}
 				catch (InterruptedException e) {}
 			}
