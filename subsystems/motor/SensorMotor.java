@@ -13,7 +13,6 @@ public abstract class SensorMotor extends Motor {
 	public SensorMotor(String name, boolean inverted, SpeedModifier speedModifier, MotionController motionController, SpeedController... motors) {
 		super(name, inverted, speedModifier, motors);
 		this.motionController = motionController;
-		motionController.setOutput(this);
 	}
 
 	public SensorMotor(String name, boolean isInverted, MotionController motionController, SpeedController... motors) {
@@ -52,6 +51,7 @@ public abstract class SensorMotor extends Motor {
 
 	public void enableMC() {
 		motionController.enable();
+		motionController.setOutput(this);
 	}
 
 	public void disableMC() {
