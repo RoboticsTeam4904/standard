@@ -2,6 +2,7 @@ package org.usfirst.frc4904.standard.custom.motioncontrollers;
 
 
 import org.usfirst.frc4904.standard.Util;
+import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.util.BoundaryException;
 
@@ -12,6 +13,8 @@ import edu.wpi.first.wpilibj.util.BoundaryException;
  */
 public abstract class MotionController {
 	protected final PIDSource source;
+	protected PIDOutput output;
+	protected MotionControllerThread thread;
 	protected double setpoint;
 	protected double absoluteTolerance;
 	protected boolean continuous;
@@ -31,6 +34,8 @@ public abstract class MotionController {
 	 *        trying to control
 	 */
 	public MotionController(PIDSource source) {
+		output = null;
+		thread = new MotionControllerThread();
 		this.source = source;
 		enable = true;
 		absoluteTolerance = Util.EPSILON; // Nonzero to avoid floating point errors
@@ -41,6 +46,13 @@ public abstract class MotionController {
 		outputMin = 0.0;
 		outputMax = 0.0;
 		reset();
+	}
+
+	public void addOutput(PIDOutput output) {
+		this.output = output;
+		if (!thread.isAlive()) {
+			thread.start();
+		}
 	}
 	
 	/**
@@ -162,6 +174,9 @@ public abstract class MotionController {
 	 */
 	public void enable() {
 		enable = true;
+		if (output != null && thread.isAlive()) {
+			thread.start();
+		}
 	}
 	
 	/**
@@ -171,6 +186,12 @@ public abstract class MotionController {
 	 */
 	public void disable() {
 		enable = false;
+		if (thread.isAlive()) {
+			try {
+				thread.join();
+			}
+			catch (InterruptedException e) {}
+		}
 	}
 	
 	/**
@@ -178,9 +199,21 @@ public abstract class MotionController {
 	 * less than the tolerance of the motion controller.
 	 *
 	 * @return
-	 * 		^^
 	 */
 	public boolean onTarget() {
 		return Math.abs(getError()) <= absoluteTolerance;
+	}
+	
+	protected class MotionControllerThread extends Thread {
+		@Override
+		public void run() {
+			while (enable) {
+				output.pidWrite(get());
+				try {
+					Thread.sleep(20);
+				}
+				catch (InterruptedException e) {}
+			}
+		}
 	}
 }
