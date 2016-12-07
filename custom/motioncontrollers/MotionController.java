@@ -24,7 +24,7 @@ public abstract class MotionController {
 	protected double outputMax;
 	protected double outputMin;
 	protected boolean enable;
-
+	
 	/**
 	 * A MotionController modifies an output using a sensor
 	 * to precisely maintain a certain input.
@@ -47,7 +47,7 @@ public abstract class MotionController {
 		outputMax = 0.0;
 		reset();
 	}
-
+	
 	/**
 	 * Sets the output for this MotionController.
 	 * Once every MotionController tick, the output will
@@ -59,17 +59,14 @@ public abstract class MotionController {
 	 */
 	public void setOutput(PIDOutput output) {
 		this.output = output;
-		if (!thread.isAlive()) {
-			thread.start();
-		}
 	}
-
+	
 	/**
 	 * This should return the motion controller
 	 * to a state such that it returns 0.
 	 */
 	public abstract void reset();
-
+	
 	/**
 	 * The calculated output value to achieve the
 	 * current setpoint.
@@ -80,7 +77,7 @@ public abstract class MotionController {
 	 *         that range.
 	 */
 	public abstract double get();
-
+	
 	/**
 	 * A very recent error.
 	 *
@@ -89,7 +86,7 @@ public abstract class MotionController {
 	 *         the get function.
 	 */
 	public abstract double getError();
-
+	
 	/**
 	 * The most recent setpoint.
 	 *
@@ -99,7 +96,7 @@ public abstract class MotionController {
 	public double getSetpoint() {
 		return setpoint;
 	}
-
+	
 	/**
 	 * Sets the setpoint of the motion controller.
 	 * This is the value that the motion controller seeks.
@@ -109,7 +106,7 @@ public abstract class MotionController {
 	public void setSetpoint(double setpoint) {
 		this.setpoint = setpoint;
 	}
-
+	
 	/**
 	 * Sets the tolerance of the motion controller.
 	 * When the error is less than the tolerance,
@@ -124,7 +121,7 @@ public abstract class MotionController {
 		}
 		throw new BoundaryException("Absolute tolerance negative");
 	}
-
+	
 	/**
 	 * Sets the input range of the motion controller.
 	 * This is only used to work with continuous inputs.
@@ -141,7 +138,7 @@ public abstract class MotionController {
 		inputMin = minimum;
 		inputMax = maximum;
 	}
-
+	
 	/**
 	 * Sets the output range of the motion controller.
 	 * Results from the motion control calculation will be
@@ -156,14 +153,14 @@ public abstract class MotionController {
 		outputMax = maximum;
 		capOutput = true;
 	}
-
+	
 	/**
 	 * Stops capping the output range.
 	 */
 	public void disableOutputRange() {
 		capOutput = false;
 	}
-
+	
 	/**
 	 * Sets the input range to continuous.
 	 * This means that it will treat the
@@ -177,17 +174,19 @@ public abstract class MotionController {
 	public void setContinuous(boolean continuous) {
 		this.continuous = continuous;
 	}
-
+	
 	/**
 	 * Turns on the motion controller.
 	 */
 	public void enable() {
-		enable = true;
-		if (output != null && thread.isAlive()) {
-			thread.start();
+		if (!isEnabled()) {
+			enable = true;
+			if (output != null) {
+				thread.start();
+			}
 		}
 	}
-
+	
 	/**
 	 * Bypasses the motion controller.
 	 * In some cases, this will still scale by
@@ -195,21 +194,23 @@ public abstract class MotionController {
 	 */
 	public void disable() {
 		enable = false;
-		if (thread.isAlive()) {
+		thread.interrupt();
+		if (!(thread.getState().equals(Thread.State.NEW) || thread.getState().equals(Thread.State.TERMINATED))) {
 			try {
-				thread.join();
+				thread.join(0);
 			}
 			catch (InterruptedException e) {}
+			thread = new MotionControllerThread();
 		}
 	}
-
+	
 	/**
 	 * Is motion control enabled?
 	 */
 	public boolean isEnabled() {
 		return enable;
 	}
-
+	
 	/**
 	 * True if the error in the motion controller is
 	 * less than the tolerance of the motion controller.
@@ -219,7 +220,7 @@ public abstract class MotionController {
 	public boolean onTarget() {
 		return Math.abs(getError()) <= absoluteTolerance;
 	}
-
+	
 	/**
 	 * The thread in which the output is updated with the
 	 * results of the motion controller calculation.
@@ -229,19 +230,26 @@ public abstract class MotionController {
 		@Override
 		public void run() {
 			long lastUpdate = System.currentTimeMillis();
-			while (enable) {
+			while (enable && !Thread.interrupted()) {
 				while (System.currentTimeMillis() - lastUpdate < 50) {
 					try {
 						Thread.sleep(2);
 					}
-					catch (InterruptedException e) {}
+					catch (InterruptedException e) {
+						return;
+					}
 				}
 				output.pidWrite(get());
 				lastUpdate = System.currentTimeMillis();
+				if (Thread.interrupted()) {
+					return;
+				}
 				try {
 					Thread.sleep(40);
 				}
-				catch (InterruptedException e) {}
+				catch (InterruptedException e) {
+					return;
+				}
 			}
 		}
 	}

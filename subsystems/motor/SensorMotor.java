@@ -50,8 +50,8 @@ public abstract class SensorMotor extends Motor {
 	public void setInputRange(double minimum, double maximum) {}
 
 	public void enableMC() {
-		motionController.enable();
 		motionController.setOutput(this);
+		motionController.enable();
 	}
 
 	public void disableMC() {
@@ -60,7 +60,6 @@ public abstract class SensorMotor extends Motor {
 
 	public void setPosition(double position) {
 		motionController.setSetpoint(position);
-		motionController.enable();
 	}
 
 	public boolean onTarget() {
