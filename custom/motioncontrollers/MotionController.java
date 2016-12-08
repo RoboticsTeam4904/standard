@@ -16,10 +16,7 @@ import edu.wpi.first.wpilibj.util.BoundaryException;
 public abstract class MotionController {
 	protected final PIDSource source;
 	protected PIDOutput output;
-	protected static Timer timer;
-	static {
-		MotionController.timer = new Timer();
-	}
+	protected Timer timer;
 	protected MotionControllerTask task;
 	protected double setpoint;
 	protected double absoluteTolerance;
@@ -41,6 +38,7 @@ public abstract class MotionController {
 	 */
 	public MotionController(PIDSource source) {
 		output = null;
+		timer = new Timer();
 		task = new MotionControllerTask();
 		this.source = source;
 		enable = true;
@@ -187,11 +185,9 @@ public abstract class MotionController {
 	public void enable() {
 		enable = true;
 		try {
-			MotionController.timer.scheduleAtFixedRate(task, 0, 20);
+			timer.scheduleAtFixedRate(task, 0, 20);
 		}
-		catch (IllegalStateException e) {
-			
-		}
+		catch (IllegalStateException e) {} // Do not die if the timer is already running
 	}
 
 	/**
@@ -202,7 +198,8 @@ public abstract class MotionController {
 	public void disable() {
 		enable = false;
 		task.cancel();
-		MotionController.timer.purge();
+		timer.purge();
+		task = new MotionControllerTask();
 	}
 
 	/**
@@ -231,7 +228,7 @@ public abstract class MotionController {
 		@Override
 		public void run() {
 			double value = get(); // Always calculate MC output
-			if (output != null && enable) {
+			if (output != null && isEnabled()) {
 				output.pidWrite(value);
 			}
 		}
