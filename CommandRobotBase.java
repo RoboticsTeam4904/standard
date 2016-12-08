@@ -136,6 +136,7 @@ public abstract class CommandRobotBase extends IterativeRobot {
 	@Override
 	public final void autonomousPeriodic() {
 		Scheduler.getInstance().run();
+		LogKitten.wtf(autonomousCommand.isRunning() + "");
 		autonomousExecute();
 		alwaysExecute();
 	}

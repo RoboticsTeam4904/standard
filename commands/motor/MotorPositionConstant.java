@@ -1,6 +1,7 @@
 package org.usfirst.frc4904.standard.commands.motor;
 
 
+import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.subsystems.motor.SensorMotor;
 import edu.wpi.first.wpilibj.command.Command;
 
@@ -23,6 +24,7 @@ public class MotorPositionConstant extends Command {
 		this.endOnArrival = endOnArrival;
 		requires(motor);
 		setInterruptible(true);
+		LogKitten.wtf("CONSTRUCT");
 	}
 
 	public MotorPositionConstant(SensorMotor motor, double position) {
@@ -34,10 +36,13 @@ public class MotorPositionConstant extends Command {
 		motor.reset();
 		motor.enableMC();
 		motor.setPosition(position);
+		LogKitten.wtf("INIT");
 	}
 
 	@Override
-	protected void execute() {}
+	protected void execute() {
+		LogKitten.wtf(motor.get() + "");
+	}
 
 	@Override
 	protected boolean isFinished() {
@@ -51,5 +56,7 @@ public class MotorPositionConstant extends Command {
 	protected void end() {}
 
 	@Override
-	protected void interrupted() {}
+	protected void interrupted() {
+		LogKitten.wtf("INTERRUPTED");
+	}
 }
