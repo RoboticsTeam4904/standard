@@ -1,16 +1,16 @@
 package org.usfirst.frc4904.standard.commands.motor;
 
 
-import org.usfirst.frc4904.standard.subsystems.motor.SensorMotor;
+import org.usfirst.frc4904.standard.subsystems.motor.PositionSensorMotor;
 import edu.wpi.first.wpilibj.command.Command;
 
 /**
  * Sets a motor to a position and keeps it there using an encoder.
  */
 public class MotorPositionSet extends Command {
-	protected SensorMotor motor;
+	protected PositionSensorMotor motor;
 	protected double position;
-
+	
 	/**
 	 * Constructor.
 	 * The MotorSensorHold command holds a motor to a position.
@@ -18,13 +18,13 @@ public class MotorPositionSet extends Command {
 	 * @param motor
 	 *        A Motor that also implements PositionSensorMotor.
 	 */
-	public MotorPositionSet(SensorMotor motor) {
+	public MotorPositionSet(PositionSensorMotor motor) {
 		super("MotorPositionSet");
 		this.motor = motor;
 		requires(motor);
 		setInterruptible(true);
 	}
-
+	
 	/**
 	 * Sets the motor to this position.
 	 *
@@ -34,25 +34,25 @@ public class MotorPositionSet extends Command {
 	public void setPosition(double position) {
 		this.position = position;
 	}
-
+	
 	@Override
 	protected void initialize() {
 		motor.reset();
 		motor.enableMC();
 		motor.setPosition(position);
 	}
-
+	
 	@Override
 	protected void execute() {}
-
+	
 	@Override
 	protected boolean isFinished() {
 		return false;
 	}
-
+	
 	@Override
 	protected void end() {}
-
+	
 	@Override
 	protected void interrupted() {}
 }
