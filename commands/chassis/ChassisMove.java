@@ -6,7 +6,7 @@ import org.usfirst.frc4904.standard.commands.motor.MotorSet;
 import org.usfirst.frc4904.standard.custom.ChassisController;
 import org.usfirst.frc4904.standard.subsystems.chassis.Chassis;
 import org.usfirst.frc4904.standard.subsystems.motor.Motor;
-import org.usfirst.frc4904.standard.subsystems.motor.SensorMotor;
+import org.usfirst.frc4904.standard.subsystems.motor.VelocitySensorMotor;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
 /**
@@ -61,11 +61,11 @@ public class ChassisMove extends CommandGroup {
 	@Override
 	protected void initialize() {
 		for (Motor motor : motors) {
-			if (motor instanceof SensorMotor) {
+			if (motor instanceof VelocitySensorMotor) {
 				if (usePID) {
-					((SensorMotor) motor).enableMC();
+					((VelocitySensorMotor) motor).enableMC();
 				} else {
-					((SensorMotor) motor).disableMC();
+					((VelocitySensorMotor) motor).disableMC();
 				}
 			}
 		}
