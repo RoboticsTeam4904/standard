@@ -2,7 +2,7 @@ package org.usfirst.frc4904.standard.commands.motor;
 
 
 import org.usfirst.frc4904.standard.LogKitten;
-import org.usfirst.frc4904.standard.subsystems.motor.SensorMotor;
+import org.usfirst.frc4904.standard.subsystems.motor.PositionSensorMotor;
 import edu.wpi.first.wpilibj.command.Command;
 
 /**
@@ -13,11 +13,11 @@ import edu.wpi.first.wpilibj.command.Command;
  *
  */
 public class MotorPositionConstant extends Command {
-	protected SensorMotor motor;
+	protected PositionSensorMotor motor;
 	protected double position;
 	protected boolean endOnArrival;
-
-	public MotorPositionConstant(SensorMotor motor, double position, boolean endOnArrival) {
+	
+	public MotorPositionConstant(PositionSensorMotor motor, double position, boolean endOnArrival) {
 		super("MotorPositionConstant");
 		this.motor = motor;
 		this.position = position;
@@ -26,11 +26,11 @@ public class MotorPositionConstant extends Command {
 		setInterruptible(true);
 		LogKitten.wtf("CONSTRUCT");
 	}
-
-	public MotorPositionConstant(SensorMotor motor, double position) {
+	
+	public MotorPositionConstant(PositionSensorMotor motor, double position) {
 		this(motor, position, true);
 	}
-
+	
 	@Override
 	protected void initialize() {
 		motor.reset();
@@ -38,12 +38,12 @@ public class MotorPositionConstant extends Command {
 		motor.setPosition(position);
 		LogKitten.wtf("INIT");
 	}
-
+	
 	@Override
 	protected void execute() {
 		LogKitten.wtf(motor.get() + "");
 	}
-
+	
 	@Override
 	protected boolean isFinished() {
 		if (endOnArrival) {
@@ -51,10 +51,10 @@ public class MotorPositionConstant extends Command {
 		}
 		return false;
 	}
-
+	
 	@Override
 	protected void end() {}
-
+	
 	@Override
 	protected void interrupted() {
 		LogKitten.wtf("INTERRUPTED");
