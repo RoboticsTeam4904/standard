@@ -16,6 +16,7 @@ public class CustomPIDController extends MotionController {
 	protected double F;
 	protected double totalError;
 	protected double lastError;
+	protected boolean justReset;
 	
 	/**
 	 * An extremely basic PID controller.
@@ -38,6 +39,7 @@ public class CustomPIDController extends MotionController {
 		this.I = I;
 		this.D = D;
 		this.F = F;
+		justReset = true;
 	}
 	
 	/**
@@ -152,6 +154,7 @@ public class CustomPIDController extends MotionController {
 		setpoint = source.pidGet();
 		totalError = 0;
 		lastError = 0;
+		justReset = true;
 	}
 	
 	@Override
@@ -186,18 +189,30 @@ public class CustomPIDController extends MotionController {
 			}
 		}
 		// Calculate the approximation of the error's derivative
-		double errorDerivative = (error - lastError);
+		double errorDerivative;
+		// If we've just reset the error could jump from 0 to a very high number so just return 0
+		if (justReset) {
+			errorDerivative = 0;
+		} else {
+			errorDerivative = (error - lastError);
+		}
 		// Calculate the approximation of the error's integral
 		totalError += error;
 		// Calculate the result using the PIDF formula
 		double result = P * error + I * totalError + D * errorDerivative + F * setpoint;
 		// Save the error for calculating future derivatives
 		lastError = error;
+		justReset = false;
 		LogKitten.v(input + " " + setpoint + " " + result);
 		if (capOutput) {
 			// Limit the result to be within the output range [outputMin, outputMax]
 			result = Math.max(Math.min(result, outputMax), outputMin);
 		}
 		return result;
+	}
+	
+	@Override
+	public boolean onTarget() {
+		return !justReset && super.onTarget();
 	}
 }
