@@ -17,7 +17,8 @@ public class EncoderGroup implements CustomEncoder {
 	private PIDSourceType pidSource;
 	private boolean reverseDirection;
 	private double distancePerPulse;
-	
+	private final double ENCODER_DIFFERENCE_FRACTION = 0.1;
+
 	/**
 	 * Amalgamates the data of several encoders for the purpose
 	 * of controlling a single motion controller.
@@ -34,12 +35,12 @@ public class EncoderGroup implements CustomEncoder {
 		pidSource = PIDSourceType.kDisplacement;
 		reverseDirection = false;
 	}
-	
+
 	@Override
 	public PIDSourceType getPIDSourceType() {
 		return pidSource;
 	}
-	
+
 	@Override
 	public double pidGet() {
 		try {
@@ -52,51 +53,60 @@ public class EncoderGroup implements CustomEncoder {
 			throw new RuntimeInvalidSensorException(e.getMessage(), e.getCause());
 		}
 	}
-	
+
 	@Override
 	public void setPIDSourceType(PIDSourceType pidSource) {
 		if (pidSource != null) {
 			this.pidSource = pidSource;
 		}
 	}
-	
+
 	@Override
 	public int get() throws InvalidSensorException {
 		int average = 0;
 		for (CustomEncoder encoder : encoders) {
+			if (Math.abs(average - encoder.get()) > encoder.get() * ENCODER_DIFFERENCE_FRACTION) {
+				throw new InvalidSensorException("Encoders in group too different");
+			}
 			average += encoder.get();
 		}
 		return average / encoders.length;
 	}
-	
+
 	@Override
 	public double getDistance() throws InvalidSensorException {
 		double average = 0.0;
 		for (CustomEncoder encoder : encoders) {
+			if (Math.abs(average - encoder.getDistance()) > encoder.getDistance() * ENCODER_DIFFERENCE_FRACTION) {
+				throw new InvalidSensorException("Encoders in group too different");
+			}
 			average += encoder.getDistance();
 		}
 		return average / encoders.length;
 	}
-	
+
 	@Override
 	public boolean getDirection() throws InvalidSensorException {
 		return (getRate() > 0);
 	}
-	
+
 	@Override
 	public boolean getStopped() throws InvalidSensorException {
 		return Util.isZero(getRate());
 	}
-	
+
 	@Override
 	public double getRate() throws InvalidSensorException {
 		double average = 0.0;
 		for (CustomEncoder encoder : encoders) {
+			if (Math.abs(average - encoder.getRate()) > encoder.getRate() * ENCODER_DIFFERENCE_FRACTION) {
+				throw new InvalidSensorException("Encoders in group too different");
+			}
 			average += encoder.getRate();
 		}
 		return average / encoders.length;
 	}
-	
+
 	/**
 	 * Get whether this entire encoder is inverted.
 	 *
@@ -107,7 +117,7 @@ public class EncoderGroup implements CustomEncoder {
 	public boolean getReverseDirection() {
 		return reverseDirection;
 	}
-	
+
 	/**
 	 * Sets the direction inversion of all encoder substituents.
 	 * This respects the original inversion state of each encoder when constructed,
@@ -125,12 +135,12 @@ public class EncoderGroup implements CustomEncoder {
 		}
 		this.reverseDirection = reverseDirection;
 	}
-	
+
 	@Override
 	public double getDistancePerPulse() {
 		return distancePerPulse;
 	}
-	
+
 	@Override
 	public void setDistancePerPulse(double distancePerPulse) {
 		this.distancePerPulse = distancePerPulse;
@@ -138,7 +148,7 @@ public class EncoderGroup implements CustomEncoder {
 			encoder.setDistancePerPulse(distancePerPulse);
 		}
 	}
-	
+
 	@Override
 	public void reset() {
 		for (CustomEncoder encoder : encoders) {
