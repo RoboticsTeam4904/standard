@@ -82,17 +82,22 @@ public class CANEncoder extends CANSensor implements CustomEncoder {
 
 	@Override
 	public double pidGet() {
-		if (pidSource == PIDSourceType.kDisplacement) {
-			return getDistance();
+		try {
+			if (pidSource == PIDSourceType.kDisplacement) {
+				return getDistance();
+			}
+			return getRate();
 		}
-		return getRate();
+		catch (InvalidSensorException e) {
+			throw new RuntimeInvalidSensorException(e.getMessage(), e.getCause());
+		}
 	}
 
 	/**
 	 * Returns the raw number of ticks
 	 */
 	@Override
-	public int get() {
+	public int get() throws InvalidSensorException {
 		return super.read(0); // TODO: what mode numbers will be position and direction?
 	}
 
@@ -100,7 +105,7 @@ public class CANEncoder extends CANSensor implements CustomEncoder {
 	 * Returns the scaled distance rotated by the encoder.
 	 */
 	@Override
-	public double getDistance() {
+	public double getDistance() throws InvalidSensorException {
 		if (reverseDirection) {
 			return distancePerPulse * super.read(0) * -1.0;
 		} else {
@@ -113,7 +118,7 @@ public class CANEncoder extends CANSensor implements CustomEncoder {
 	 * (based on the speed)
 	 */
 	@Override
-	public boolean getDirection() {
+	public boolean getDirection() throws InvalidSensorException {
 		return !reverseDirection == (super.read(1) >= 0);
 	}
 
@@ -121,7 +126,7 @@ public class CANEncoder extends CANSensor implements CustomEncoder {
 	 * Returns the rate of rotation
 	 */
 	@Override
-	public double getRate() {
+	public double getRate() throws InvalidSensorException {
 		if (reverseDirection) {
 			return distancePerPulse * super.read(1) * -1.0;
 		} else {
@@ -133,7 +138,7 @@ public class CANEncoder extends CANSensor implements CustomEncoder {
 	 * Returns true when stopped
 	 */
 	@Override
-	public boolean getStopped() {
+	public boolean getStopped() throws InvalidSensorException {
 		return Util.isZero(getRate());
 	}
 

@@ -7,7 +7,7 @@ import edu.wpi.first.wpilibj.PIDSourceType;
 /**
  * Amalgamates the data of several encoders for the purpose
  * of controlling a single motion controller.
- * 
+ *
  * @warning The amalgamation will be the average. Verify
  *          before using this class that all the encoders will be rotating
  *          in the same direction with the same rate (before setDistancePerTick).
@@ -17,11 +17,11 @@ public class EncoderGroup implements CustomEncoder {
 	private PIDSourceType pidSource;
 	private boolean reverseDirection;
 	private double distancePerPulse;
-
+	
 	/**
 	 * Amalgamates the data of several encoders for the purpose
 	 * of controlling a single motion controller.
-	 * 
+	 *
 	 * @warning The amalgamation will be the average. Verify
 	 *          before using this class that all the encoders will be rotating
 	 *          in the same direction with the same rate (before setDistancePerTick).
@@ -34,64 +34,69 @@ public class EncoderGroup implements CustomEncoder {
 		pidSource = PIDSourceType.kDisplacement;
 		reverseDirection = false;
 	}
-
+	
 	@Override
 	public PIDSourceType getPIDSourceType() {
 		return pidSource;
 	}
-
+	
 	@Override
 	public double pidGet() {
-		if (pidSource == PIDSourceType.kDisplacement) {
-			return getDistance();
+		try {
+			if (pidSource == PIDSourceType.kDisplacement) {
+				return getDistance();
+			}
+			return getRate();
 		}
-		return getRate();
+		catch (InvalidSensorException e) {
+			throw new RuntimeInvalidSensorException(e.getMessage(), e.getCause());
+		}
 	}
-
+	
 	@Override
 	public void setPIDSourceType(PIDSourceType pidSource) {
 		if (pidSource != null) {
 			this.pidSource = pidSource;
 		}
 	}
-
+	
 	@Override
-	public int get() {
+	public int get() throws InvalidSensorException {
 		int average = 0;
 		for (CustomEncoder encoder : encoders) {
 			average += encoder.get();
 		}
 		return average / encoders.length;
 	}
-
+	
 	@Override
-	public double getDistance() {
+	public double getDistance() throws InvalidSensorException {
 		double average = 0.0;
 		for (CustomEncoder encoder : encoders) {
 			average += encoder.getDistance();
 		}
 		return average / encoders.length;
 	}
-
+	
 	@Override
-	public boolean getDirection() {
+	public boolean getDirection() throws InvalidSensorException {
 		return (getRate() > 0);
 	}
-
+	
 	@Override
-	public boolean getStopped() {
+	public boolean getStopped() throws InvalidSensorException {
 		return Util.isZero(getRate());
 	}
-
+	
 	@Override
-	public double getRate() {
+	public double getRate() throws InvalidSensorException {
 		double average = 0.0;
 		for (CustomEncoder encoder : encoders) {
 			average += encoder.getRate();
 		}
 		return average / encoders.length;
 	}
-
+	
 	/**
 	 * Get whether this entire encoder is inverted.
 	 *
@@ -102,7 +107,7 @@ public class EncoderGroup implements CustomEncoder {
 	public boolean getReverseDirection() {
 		return reverseDirection;
 	}
-
+	
 	/**
 	 * Sets the direction inversion of all encoder substituents.
 	 * This respects the original inversion state of each encoder when constructed,
@@ -120,12 +125,12 @@ public class EncoderGroup implements CustomEncoder {
 		}
 		this.reverseDirection = reverseDirection;
 	}
-
+	
 	@Override
 	public double getDistancePerPulse() {
 		return distancePerPulse;
 	}
-
+	
 	@Override
 	public void setDistancePerPulse(double distancePerPulse) {
 		this.distancePerPulse = distancePerPulse;
@@ -133,7 +138,7 @@ public class EncoderGroup implements CustomEncoder {
 			encoder.setDistancePerPulse(distancePerPulse);
 		}
 	}
-
+	
 	@Override
 	public void reset() {
 		for (CustomEncoder encoder : encoders) {

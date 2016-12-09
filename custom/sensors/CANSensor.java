@@ -10,7 +10,7 @@ import org.usfirst.frc4904.standard.custom.CustomCAN;
  */
 public class CANSensor extends CustomCAN {
 	private final int[] cachedValues;
-	
+
 	/**
 	 *
 	 * @param name
@@ -27,7 +27,7 @@ public class CANSensor extends CustomCAN {
 			cachedValues[i] = 0; // Should we make this a more obscure value (e.g. 2^32 - 1)?
 		}
 	}
-	
+
 	/**
 	 *
 	 * @param name
@@ -38,7 +38,7 @@ public class CANSensor extends CustomCAN {
 	public CANSensor(String name, int id) {
 		this(name, id, 1);
 	}
-	
+
 	/**
 	 * Mode determines what signal from the CAN node to look for. The first int
 	 * is 0 if the data was returned correctly and -1 if no data was returned
@@ -46,7 +46,7 @@ public class CANSensor extends CustomCAN {
 	 * @param mode
 	 * @return
 	 */
-	public int read(int mode, int retryMax) {
+	public int read(int mode, int retryMax) throws InvalidSensorException {
 		super.write(new byte[] {(byte) ((byte) mode & 0xFF), 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01}); // Write to trigger read
 		for (int i = 0; i < retryMax; i++) {
 			ByteBuffer rawData = super.readBuffer();
@@ -63,16 +63,16 @@ public class CANSensor extends CustomCAN {
 				}
 			}
 		}
-		return cachedValues[mode];
+		throw new InvalidSensorException("No CAN Response");
 	}
-	
+
 	/**
 	 * Default read (retries 10 times)
 	 *
 	 * @param mode
 	 * @return
 	 */
-	public int read(int mode) {
+	public int read(int mode) throws InvalidSensorException {
 		return read(mode, 10);
 	}
 }
