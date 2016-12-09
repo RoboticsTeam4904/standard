@@ -2,11 +2,11 @@ package org.usfirst.frc4904.standard.commands;
 
 
 import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.command.CommandGroup;
 
-public class RunFor extends CommandGroup {
+public class RunFor extends Command {
 	protected final double duration;
 	protected final Command command;
+	protected boolean firstTick;
 	
 	/**
 	 * Run a command for a given amount of time, in seconds. The command will be cancelled at the end.
@@ -24,12 +24,34 @@ public class RunFor extends CommandGroup {
 		super("RunFor[" + command.getName() + "]");
 		this.duration = duration;
 		this.command = command;
+		firstTick = true;
 		setTimeout(duration);
-		addSequential(command);
 	}
 	
 	@Override
+	protected void initialize() {
+		command.start();
+	}
+	
+	@Override
+	protected void execute() {}
+	
+	@Override
 	protected boolean isFinished() {
+		if (firstTick) {
+			firstTick = false;
+			return isTimedOut();
+		}
 		return isTimedOut() || !command.isRunning();
+	}
+	
+	@Override
+	protected void end() {
+		command.cancel();
+	}
+	
+	@Override
+	protected void interrupted() {
+		end();
 	}
 }

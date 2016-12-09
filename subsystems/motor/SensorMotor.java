@@ -10,14 +10,11 @@ import edu.wpi.first.wpilibj.SpeedController;
 public abstract class SensorMotor extends Motor {
 	protected final MotionController motionController;
 	private boolean isMotionControlEnabled;
-	protected double position;
-	protected long lastUpdate;
 	
 	public SensorMotor(String name, boolean inverted, SpeedModifier speedModifier, MotionController motionController, SpeedController... motors) {
 		super(name, inverted, speedModifier, motors);
 		this.motionController = motionController;
 		isMotionControlEnabled = false;
-		position = 0;
 	}
 	
 	public SensorMotor(String name, boolean isInverted, MotionController motionController, SpeedController... motors) {
@@ -68,7 +65,7 @@ public abstract class SensorMotor extends Motor {
 		motionController.setSetpoint(position);
 		motionController.enable();
 		double speed = motionController.get();
-		LogKitten.v(getName() + " set to position " + position + " " + speed);
+		LogKitten.v(getName() + " set to position " + position + " at speed " + speed);
 		super.set(speed);
 	}
 	
