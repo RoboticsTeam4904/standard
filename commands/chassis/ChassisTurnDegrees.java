@@ -50,7 +50,7 @@ public class ChassisTurnDegrees extends Command implements ChassisController {
 	
 	@Override
 	protected boolean isFinished() {
-		return motionController.onTarget();
+		return motionController.onTarget() || !move.isRunning();
 	}
 	
 	@Override

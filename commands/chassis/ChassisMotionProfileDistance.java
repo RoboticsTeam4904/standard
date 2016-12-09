@@ -64,6 +64,6 @@ public class ChassisMotionProfileDistance extends Command implements ChassisCont
 
 	@Override
 	protected boolean isFinished() {
-		return motionController.onTarget();
+		return motionController.onTarget() || !chassisMove.isRunning();
 	}
 }
