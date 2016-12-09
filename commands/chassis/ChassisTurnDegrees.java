@@ -16,7 +16,7 @@ public class ChassisTurnDegrees extends Command implements ChassisController {
 	
 	public ChassisTurnDegrees(Chassis chassis, double finalAngle, IMU imu, MotionController motionController) {
 		move = new ChassisMove(chassis, this);
-		this.finalAngle = finalAngle;
+		this.finalAngle = -((finalAngle + 360) % 360 - 180);
 		this.imu = imu;
 		this.motionController = motionController;
 	}
@@ -45,7 +45,7 @@ public class ChassisTurnDegrees extends Command implements ChassisController {
 	
 	@Override
 	protected void execute() {
-		motionController.setSetpoint(((finalAngle + initialAngle) + 360) % 360);
+		motionController.setSetpoint(((finalAngle + initialAngle) + 360) % 360 - 180);
 	}
 	
 	@Override
