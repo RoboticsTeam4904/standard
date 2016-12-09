@@ -11,6 +11,9 @@ import edu.wpi.first.wpilibj.Encoder;
  *
  */
 public class CustomDigitalEncoder extends Encoder implements CustomEncoder {
+	private double distancePerPulse;
+	private boolean reverseDirection;
+	
 	public CustomDigitalEncoder(DigitalSource aSource, DigitalSource bSource) {
 		super(aSource, bSource);
 	}
@@ -49,5 +52,27 @@ public class CustomDigitalEncoder extends Encoder implements CustomEncoder {
 	
 	public CustomDigitalEncoder(int aChannel, int bChannel, int indexChannel, boolean reverseDirection) {
 		super(aChannel, bChannel, indexChannel, reverseDirection);
+	}
+	
+	@Override
+	public double getDistancePerPulse() {
+		return distancePerPulse;
+	}
+	
+	@Override
+	public void setDistancePerPulse(double distancePerPulse) {
+		super.setDistancePerPulse(distancePerPulse);
+		this.distancePerPulse = distancePerPulse;
+	}
+	
+	@Override
+	public boolean getReverseDirection() {
+		return reverseDirection;
+	}
+	
+	@Override
+	public void setReverseDirection(boolean reverseDirection) {
+		super.setReverseDirection(reverseDirection);
+		this.reverseDirection = reverseDirection;
 	}
 }

@@ -36,9 +36,19 @@ public interface CustomEncoder extends PIDSource {
 	double getRate();
 	
 	/**
+	 * Gets the distance per pulse
+	 */
+	double getDistancePerPulse();
+	
+	/**
 	 * Sets the distance per pulse
 	 */
 	void setDistancePerPulse(double distancePerPulse);
+	
+	/**
+	 * Gets inversion state
+	 */
+	boolean getReverseDirection();
 	
 	/**
 	 * To the surprise of everyone, enables and disables reverse direction

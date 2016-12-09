@@ -178,7 +178,6 @@ public abstract class MotionController {
 	 * less than the tolerance of the motion controller.
 	 *
 	 * @return
-	 * 		^^
 	 */
 	public boolean onTarget() {
 		return Math.abs(getError()) <= absoluteTolerance;

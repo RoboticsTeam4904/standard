@@ -95,8 +95,18 @@ public class CANTalonEncoder implements CustomEncoder {
 	}
 	
 	@Override
+	public double getDistancePerPulse() {
+		return distancePerPulse;
+	}
+	
+	@Override
 	public void setDistancePerPulse(double distancePerPulse) {
 		this.distancePerPulse = distancePerPulse;
+	}
+	
+	@Override
+	public boolean getReverseDirection() {
+		return reverseDirection;
 	}
 	
 	@Override
