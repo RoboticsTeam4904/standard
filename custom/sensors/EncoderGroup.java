@@ -4,23 +4,42 @@ package org.usfirst.frc4904.standard.custom.sensors;
 import org.usfirst.frc4904.standard.Util;
 import edu.wpi.first.wpilibj.PIDSourceType;
 
+/**
+ * Amalgamates the data of several encoders for the purpose
+ * of controlling a single motion controller.
+ * 
+ * @warning The amalgamation will be the average. Verify
+ *          before using this class that all the encoders will be rotating
+ *          in the same direction with the same rate (before setDistancePerTick).
+ */
 public class EncoderGroup implements CustomEncoder {
 	private final CustomEncoder[] encoders;
 	private PIDSourceType pidSource;
 	private boolean reverseDirection;
 	private double distancePerPulse;
-	
+
+	/**
+	 * Amalgamates the data of several encoders for the purpose
+	 * of controlling a single motion controller.
+	 * 
+	 * @warning The amalgamation will be the average. Verify
+	 *          before using this class that all the encoders will be rotating
+	 *          in the same direction with the same rate (before setDistancePerTick).
+	 *
+	 * @param encoders
+	 *        The encoders to amalgamate.
+	 */
 	public EncoderGroup(CustomEncoder... encoders) {
 		this.encoders = encoders;
 		pidSource = PIDSourceType.kDisplacement;
 		reverseDirection = false;
 	}
-	
+
 	@Override
 	public PIDSourceType getPIDSourceType() {
 		return pidSource;
 	}
-	
+
 	@Override
 	public double pidGet() {
 		if (pidSource == PIDSourceType.kDisplacement) {
@@ -28,14 +47,14 @@ public class EncoderGroup implements CustomEncoder {
 		}
 		return getRate();
 	}
-	
+
 	@Override
 	public void setPIDSourceType(PIDSourceType pidSource) {
 		if (pidSource != null) {
 			this.pidSource = pidSource;
 		}
 	}
-	
+
 	@Override
 	public int get() {
 		int average = 0;
@@ -44,7 +63,7 @@ public class EncoderGroup implements CustomEncoder {
 		}
 		return average / encoders.length;
 	}
-	
+
 	@Override
 	public double getDistance() {
 		double average = 0.0;
@@ -53,17 +72,17 @@ public class EncoderGroup implements CustomEncoder {
 		}
 		return average / encoders.length;
 	}
-	
+
 	@Override
 	public boolean getDirection() {
 		return (getRate() > 0);
 	}
-	
+
 	@Override
 	public boolean getStopped() {
 		return Util.isZero(getRate());
 	}
-	
+
 	@Override
 	public double getRate() {
 		double average = 0.0;
@@ -72,7 +91,7 @@ public class EncoderGroup implements CustomEncoder {
 		}
 		return average / encoders.length;
 	}
-	
+
 	/**
 	 * Get whether this entire encoder is inverted.
 	 *
@@ -83,7 +102,7 @@ public class EncoderGroup implements CustomEncoder {
 	public boolean getReverseDirection() {
 		return reverseDirection;
 	}
-	
+
 	/**
 	 * Sets the direction inversion of all encoder substituents.
 	 * This respects the original inversion state of each encoder when constructed,
@@ -101,12 +120,12 @@ public class EncoderGroup implements CustomEncoder {
 		}
 		this.reverseDirection = reverseDirection;
 	}
-	
+
 	@Override
 	public double getDistancePerPulse() {
 		return distancePerPulse;
 	}
-	
+
 	@Override
 	public void setDistancePerPulse(double distancePerPulse) {
 		this.distancePerPulse = distancePerPulse;
@@ -114,7 +133,7 @@ public class EncoderGroup implements CustomEncoder {
 			encoder.setDistancePerPulse(distancePerPulse);
 		}
 	}
-	
+
 	@Override
 	public void reset() {
 		for (CustomEncoder encoder : encoders) {
