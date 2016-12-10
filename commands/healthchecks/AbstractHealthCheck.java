@@ -6,10 +6,19 @@ import java.util.HashMap;
 import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.commands.TimedCommand;
 
+/**
+ * Curates a list of Commands. When the status is
+ * set, all commands set with that status will run
+ * and all commands with a different status will cancel
+ *
+ */
 public abstract class AbstractHealthCheck extends TimedCommand { // Many of our healthchecks will use timing, so a TimedCommand is needed
 	protected HashMap<HealthLevel, ArrayList<HealthProtectCommand>> commands;
 	protected volatile HealthLevel status;
 	
+	/**
+	 * Defaults to an status of HealthLevel.UNKNOWN
+	 */
 	public AbstractHealthCheck(String name) {
 		super(name);
 		status = HealthLevel.UNKNOWN;
@@ -17,6 +26,12 @@ public abstract class AbstractHealthCheck extends TimedCommand { // Many of our 
 		commands = new HashMap<HealthLevel, ArrayList<HealthProtectCommand>>();
 	}
 	
+	/**
+	 * Adds a command to the list
+	 * 
+	 * @param level
+	 *        which HealthLevel should be required for toRun to run
+	 */
 	public void runCommandOnState(HealthLevel level, HealthProtectCommand toRun) {
 		if (commands.get(level) == null) {
 			commands.put(level, new ArrayList<HealthProtectCommand>());

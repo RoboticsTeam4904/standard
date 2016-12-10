@@ -4,6 +4,10 @@ package org.usfirst.frc4904.standard.commands;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
+/**
+ * Abstract command indicating that a group of
+ * commands should all be run.
+ */
 public abstract class RunAll extends CommandGroup {
 	public RunAll(String name) {
 		super(name);

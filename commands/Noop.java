@@ -3,6 +3,11 @@ package org.usfirst.frc4904.standard.commands;
 
 import edu.wpi.first.wpilibj.command.Command;
 
+/**
+ * This command is a placeholder. It does not
+ * cause anything to happen. Use it as a placeholder
+ * when a Command object is needed.
+ */
 public class Noop extends Command {
 	public Noop() {
 		super("Noop");

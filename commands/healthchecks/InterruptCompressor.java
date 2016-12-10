@@ -3,6 +3,10 @@ package org.usfirst.frc4904.standard.commands.healthchecks;
 
 import edu.wpi.first.wpilibj.Compressor;
 
+/**
+ * This Command implements HealthProtectCommands to reset a compressor.
+ *
+ */
 public class InterruptCompressor extends HealthProtectCommand {
 	protected final Compressor compressor;
 	

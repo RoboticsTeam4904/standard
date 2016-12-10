@@ -5,6 +5,10 @@ import java.util.function.BooleanSupplier;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
+/**
+ * This command should be used if one of two commands should be run,
+ * for at time of initialization exactly which one to run is not known.
+ */
 public class RunIfElse extends Command {
 	protected final Command ifCommand;
 	protected final Command elseCommand;
@@ -12,6 +16,12 @@ public class RunIfElse extends Command {
 	protected final BooleanSupplier[] booleanSuppliers;
 	protected boolean hasRunOnce;
 	
+	/**
+	 * @param ifCommand
+	 *        Will run if a true is supplied
+	 * @param elseCommand
+	 *        Will run if a false is supplied
+	 */
 	public RunIfElse(Command ifCommand, Command elseCommand, BooleanSupplier... booleanSuppliers) {
 		super("RunIf[" + ifCommand.getName() + "]Else[" + elseCommand.getName() + "]");
 		this.ifCommand = ifCommand;
@@ -19,6 +29,12 @@ public class RunIfElse extends Command {
 		this.booleanSuppliers = booleanSuppliers;
 	}
 	
+	/**
+	 * @param ifCommand
+	 *        Will run if a true is supplied
+	 * @param elseCommand
+	 *        Will run if a false is supplied
+	 */
 	protected RunIfElse(String name, Command ifCommand, Command elseCommand, BooleanSupplier... booleanSuppliers) {
 		super(name);
 		this.ifCommand = ifCommand;
