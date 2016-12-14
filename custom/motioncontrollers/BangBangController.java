@@ -72,7 +72,12 @@ public class BangBangController extends MotionController {
 	 */
 	@Override
 	public void reset() {
-		setpoint = source.pidGet();
+		try {
+			setpoint = source.pidGet();
+		}
+		catch (RuntimeInvalidSensorException e) {
+			LogKitten.ex(e);
+		}
 		error = 0;
 	}
 	
@@ -93,6 +98,7 @@ public class BangBangController extends MotionController {
 			input = source.pidGet();
 		}
 		catch (RuntimeInvalidSensorException e) {
+			LogKitten.ex(e);
 			disable();
 			error = 0;
 			return 0;

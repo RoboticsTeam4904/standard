@@ -18,7 +18,7 @@ public class CustomPIDController extends MotionController {
 	protected double totalError;
 	protected double lastError;
 	protected boolean justReset;
-
+	
 	/**
 	 * An extremely basic PID controller.
 	 * It does not differentiate between rate and distance.
@@ -42,7 +42,7 @@ public class CustomPIDController extends MotionController {
 		this.F = F;
 		justReset = true;
 	}
-
+	
 	/**
 	 * An extremely basic PID controller.
 	 * It does not differentiate between rate and distance.
@@ -59,7 +59,7 @@ public class CustomPIDController extends MotionController {
 	public CustomPIDController(double P, double I, double D, PIDSource source) {
 		this(P, I, D, 0.0, source);
 	}
-
+	
 	/**
 	 * An extremely basic PID controller.
 	 * It does not differentiate between rate and distance.
@@ -70,7 +70,7 @@ public class CustomPIDController extends MotionController {
 	public CustomPIDController(PIDSource source) {
 		this(0, 0, 0, source);
 	}
-
+	
 	/**
 	 * @return
 	 * 		The current P value
@@ -78,7 +78,7 @@ public class CustomPIDController extends MotionController {
 	public double getP() {
 		return P;
 	}
-
+	
 	/**
 	 * @return
 	 * 		The current I value
@@ -86,7 +86,7 @@ public class CustomPIDController extends MotionController {
 	public double getI() {
 		return I;
 	}
-
+	
 	/**
 	 * @return
 	 * 		The current D value
@@ -94,7 +94,7 @@ public class CustomPIDController extends MotionController {
 	public double getD() {
 		return D;
 	}
-
+	
 	/**
 	 * @return
 	 * 		The current F (feed forward) value
@@ -102,7 +102,7 @@ public class CustomPIDController extends MotionController {
 	public double getF() {
 		return F;
 	}
-
+	
 	/**
 	 * Sets the parameters of the PID loop
 	 *
@@ -121,7 +121,7 @@ public class CustomPIDController extends MotionController {
 		this.I = I;
 		this.D = D;
 	}
-
+	
 	/**
 	 * Sets the parameters of the PID loop
 	 *
@@ -143,7 +143,7 @@ public class CustomPIDController extends MotionController {
 		this.D = D;
 		this.F = F;
 	}
-
+	
 	/**
 	 * Resets the PID controller.
 	 * This sets total error and last error to 0,
@@ -152,17 +152,22 @@ public class CustomPIDController extends MotionController {
 	 */
 	@Override
 	public void reset() {
-		setpoint = source.pidGet();
+		try {
+			setpoint = source.pidGet();
+		}
+		catch (RuntimeInvalidSensorException e) {
+			LogKitten.ex(e);
+		}
 		totalError = 0;
 		lastError = 0;
 		justReset = true;
 	}
-
+	
 	@Override
 	public double getError() {
 		return lastError;
 	}
-
+	
 	@Override
 	/**
 	 * Get the current output of the PID loop.
@@ -180,6 +185,7 @@ public class CustomPIDController extends MotionController {
 			input = source.pidGet();
 		}
 		catch (RuntimeInvalidSensorException e) {
+			LogKitten.ex(e);
 			disable();
 			lastError = 0;
 			return 0;
@@ -219,7 +225,7 @@ public class CustomPIDController extends MotionController {
 		}
 		return result;
 	}
-
+	
 	@Override
 	public boolean onTarget() {
 		return !justReset && super.onTarget();
