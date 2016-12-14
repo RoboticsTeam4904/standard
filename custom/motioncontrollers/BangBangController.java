@@ -3,6 +3,7 @@ package org.usfirst.frc4904.standard.custom.motioncontrollers;
 
 import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.Util;
+import org.usfirst.frc4904.standard.custom.sensors.InvalidSensorException;
 import org.usfirst.frc4904.standard.custom.sensors.RuntimeInvalidSensorException;
 import edu.wpi.first.wpilibj.PIDSource;
 
@@ -87,9 +88,10 @@ public class BangBangController extends MotionController {
 	 *
 	 * @return
 	 * 		The current output of the bang bang controller.
+	 * @throws InvalidSensorException
 	 */
 	@Override
-	public double get() {
+	public double get() throws InvalidSensorException {
 		if (!enable) {
 			return F * setpoint;
 		}
@@ -98,10 +100,7 @@ public class BangBangController extends MotionController {
 			input = source.pidGet();
 		}
 		catch (RuntimeInvalidSensorException e) {
-			LogKitten.ex(e);
-			disable();
-			error = 0;
-			return 0;
+			throw new InvalidSensorException(e);
 		}
 		error = setpoint - input;
 		LogKitten.v(input + " " + setpoint + " " + error);

@@ -1,6 +1,7 @@
 package org.usfirst.frc4904.standard.commands.motor;
 
 
+import org.usfirst.frc4904.standard.custom.sensors.InvalidSensorException;
 import org.usfirst.frc4904.standard.subsystems.motor.SensorMotor;
 import edu.wpi.first.wpilibj.command.Command;
 
@@ -15,7 +16,7 @@ public class MotorPositionConstant extends Command {
 	protected SensorMotor motor;
 	protected double position;
 	protected boolean endOnArrival;
-	
+
 	public MotorPositionConstant(SensorMotor motor, double position, boolean endOnArrival) {
 		super("MotorPositionConstant");
 		this.motor = motor;
@@ -24,22 +25,27 @@ public class MotorPositionConstant extends Command {
 		requires(motor);
 		setInterruptible(true);
 	}
-	
+
 	public MotorPositionConstant(SensorMotor motor, double position) {
 		this(motor, position, true);
 	}
-	
+
 	@Override
 	protected void initialize() {
 		motor.reset();
 		motor.enablePID();
 	}
-	
+
 	@Override
 	protected void execute() {
-		motor.setPosition(position);
+		try {
+			motor.setPosition(position);
+		}
+		catch (InvalidSensorException e) {
+			cancel();
+		}
 	}
-	
+
 	@Override
 	protected boolean isFinished() {
 		if (endOnArrival) {
@@ -47,10 +53,10 @@ public class MotorPositionConstant extends Command {
 		}
 		return false;
 	}
-	
+
 	@Override
 	protected void end() {}
-	
+
 	@Override
 	protected void interrupted() {}
 }
