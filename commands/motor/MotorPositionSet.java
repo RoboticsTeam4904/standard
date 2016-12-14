@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj.command.Command;
 public class MotorPositionSet extends Command {
 	protected SensorMotor motor;
 	protected double position;
-
+	
 	/**
 	 * Constructor.
 	 * The MotorSensorHold command holds a motor to a position.
@@ -26,7 +26,7 @@ public class MotorPositionSet extends Command {
 		motor.enablePID();
 		setInterruptible(true);
 	}
-
+	
 	/**
 	 * Sets the motor to this position.
 	 *
@@ -36,10 +36,10 @@ public class MotorPositionSet extends Command {
 	public void setPosition(double position) {
 		this.position = position;
 	}
-
+	
 	@Override
 	protected void initialize() {}
-
+	
 	@Override
 	protected void execute() {
 		try {
@@ -49,15 +49,15 @@ public class MotorPositionSet extends Command {
 			cancel();
 		}
 	}
-
+	
 	@Override
 	protected boolean isFinished() {
 		return false;
 	}
-
+	
 	@Override
 	protected void end() {}
-
+	
 	@Override
 	protected void interrupted() {}
 }

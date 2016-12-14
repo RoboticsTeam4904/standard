@@ -14,14 +14,14 @@ public class ChassisMotionProfileDistance extends Command implements ChassisCont
 	private final MotionController motionController;
 	private final double distance;
 	private final CustomEncoder[] encoders;
-	
+
 	public ChassisMotionProfileDistance(Chassis chassis, double distance, MotionController motionController, CustomEncoder... encoders) {
 		chassisMove = new ChassisMove(chassis, this, false);
 		this.motionController = motionController;
-		this.distance = distance;
 		this.encoders = encoders;
+		this.distance = distance;
 	}
-	
+
 	@Override
 	public void initialize() {
 		chassisMove.start();
@@ -29,13 +29,14 @@ public class ChassisMotionProfileDistance extends Command implements ChassisCont
 		for (CustomEncoder encoder : encoders) {
 			encoder.reset();
 		}
+		motionController.setSetpoint(distance);
 	}
-	
+
 	@Override
 	public double getX() {
 		return 0;
 	}
-	
+
 	@Override
 	public double getY() {
 		double speed;
@@ -49,27 +50,25 @@ public class ChassisMotionProfileDistance extends Command implements ChassisCont
 		LogKitten.d("MotionProfileSpeed: " + speed);
 		return speed;
 	}
-	
+
 	@Override
 	public double getTurnSpeed() {
 		return 0;
 	}
-	
+
 	@Override
 	protected void end() {
 		chassisMove.cancel();
 	}
-	
+
 	@Override
-	protected void execute() {
-		motionController.setSetpoint(distance);
-	}
-	
+	protected void execute() {}
+
 	@Override
 	protected void interrupted() {
 		end();
 	}
-	
+
 	@Override
 	protected boolean isFinished() {
 		return motionController.onTarget() || !chassisMove.isRunning();
