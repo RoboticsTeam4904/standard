@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj.can.CANMessageNotFoundException;
  * of messages over CAN to a specific ID.
  *
  */
-public class CustomCAN implements Named {
+public class CustomCAN {
 	// Because CANJNI is basically static, we do not extend it.
 	protected final int messageID;
 	protected final String name;
@@ -30,7 +30,6 @@ public class CustomCAN implements Named {
 		messageID = id;
 	}
 	
-	@Override
 	public String getName() {
 		return name;
 	}
@@ -47,7 +46,8 @@ public class CustomCAN implements Named {
 		for (int i = 0; i < 8; i++) {
 			canData.put(i, data[i]);
 		}
-		CANJNI.FRCNetworkCommunicationCANSessionMuxSendMessage(messageID, canData, CANJNI.CAN_SEND_PERIOD_NO_REPEAT);
+		CANJNI.FRCNetworkCommunicationCANSessionMuxSendMessage(messageID, null, CANJNI.CAN_SEND_PERIOD_STOP_REPEATING);
+		CANJNI.FRCNetworkCommunicationCANSessionMuxSendMessage(messageID, canData, 2);
 	}
 	
 	protected ByteBuffer readBuffer() {
@@ -55,12 +55,17 @@ public class CustomCAN implements Named {
 		idBuffer.clear();
 		idBuffer.put(0, Integer.reverseBytes(messageID));
 		ByteBuffer timestamp = ByteBuffer.allocate(4);
-		try {
-			return CANJNI.FRCNetworkCommunicationCANSessionMuxReceiveMessage(idBuffer, CANJNI.CAN_MSGID_FULL_M, timestamp);
+		ByteBuffer response = null;
+		long start = System.currentTimeMillis();
+		while (System.currentTimeMillis() - start < 30) {
+			try {
+				response = CANJNI.FRCNetworkCommunicationCANSessionMuxReceiveMessage(idBuffer, CANJNI.CAN_MSGID_FULL_M, timestamp);
+				break;
+			}
+			catch (CANMessageNotFoundException e) {}
 		}
-		catch (CANMessageNotFoundException e) {
-			return null;
-		}
+		CANJNI.FRCNetworkCommunicationCANSessionMuxSendMessage(messageID, null, CANJNI.CAN_SEND_PERIOD_STOP_REPEATING);
+		return response;
 	}
 	
 	/**
