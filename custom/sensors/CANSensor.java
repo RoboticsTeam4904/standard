@@ -13,7 +13,7 @@ public class CANSensor extends CustomCAN {
 	private final int[] values;
 	private final long[] ages;
 	private final long MAX_AGE = 1000;
-	
+
 	/**
 	 *
 	 * @param name
@@ -32,37 +32,49 @@ public class CANSensor extends CustomCAN {
 			ages[i] = System.currentTimeMillis();
 		}
 	}
-	
+
 	/**
 	 *
 	 * @param name
 	 *        Name of CAN sensor
 	 * @param id
-	 *        ID of CAN sensor (0x400 to 0x500, should correspond to a Teensy or similar)
+	 *        ID of CAN sensor (0x600 to 0x700, should correspond to a Teensy or similar)
 	 */
 	public CANSensor(String name, int id) {
 		this(name, id, 1);
 	}
-	
+
 	/**
-	 * Mode determines what signal from the CAN node to look for. The first int
-	 * is 0 if the data was returned correctly and -1 if no data was returned
-	 *
-	 * @deprecated
+	 * Read an int from a CAN sensor with retries
+	 * Retries are now ignored
 	 *
 	 * @param mode
+	 *        Which mode to read the sensor in (interpreted by the Teensy)
 	 * @return
+	 * 		The integer the Teensy returned for that mode
+	 *
+	 * @throws InvalidSensorException
+	 *         If the available data is more than one second old,
+	 *         this function will throw an InvalidSensorException
+	 *         to indicate that.
 	 */
 	@Deprecated
 	public int read(int mode, int retryMax) throws InvalidSensorException {
 		return read(mode);
 	}
-	
+
 	/**
-	 * Default read (retries 10 times)
+	 * Read an int from a CAN sensor
 	 *
 	 * @param mode
+	 *        Which mode to read the sensor in (interpreted by the Teensy)
 	 * @return
+	 * 		The integer the Teensy returned for that mode
+	 *
+	 * @throws InvalidSensorException
+	 *         If the available data is more than one second old,
+	 *         this function will throw an InvalidSensorException
+	 *         to indicate that.
 	 */
 	public int read(int mode) throws InvalidSensorException {
 		write(new byte[] {(byte) ((byte) mode & 0xFF), 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01}); // Write to trigger read
