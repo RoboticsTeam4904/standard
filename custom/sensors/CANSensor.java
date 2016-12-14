@@ -2,6 +2,7 @@ package org.usfirst.frc4904.standard.custom.sensors;
 
 
 import java.nio.ByteBuffer;
+import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.custom.CustomCAN;
 
 /**
@@ -80,6 +81,7 @@ public class CANSensor extends CustomCAN {
 		if (System.currentTimeMillis() - ages[mode] > MAX_AGE) {
 			throw new InvalidSensorException("CAN data oudated For CAN sensor " + getName() + " with ID " + messageID);
 		}
+		LogKitten.v("Cached Sensor Value Used\n");
 		return values[mode];
 	}
 }
