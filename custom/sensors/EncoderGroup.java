@@ -47,19 +47,11 @@ public class EncoderGroup implements CustomEncoder {
 	}
 	
 	@Override
-	public double pidGet() {
-		try {
-			if (pidSource == PIDSourceType.kDisplacement) {
-				return getDistance();
-			}
-			return getRate();
+	public double pidGet() throws InvalidSensorException {
+		if (pidSource == PIDSourceType.kDisplacement) {
+			return getDistance();
 		}
-		catch (InvalidSensorException e) {
-			throw new RuntimeInvalidSensorException(e);
-		}
-		catch (RuntimeInvalidSensorException e) {
-			throw new RuntimeInvalidSensorException(e);
-		}
+		return getRate();
 	}
 	
 	@Override

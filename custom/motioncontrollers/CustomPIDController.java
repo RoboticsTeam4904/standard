@@ -3,7 +3,7 @@ package org.usfirst.frc4904.standard.custom.motioncontrollers;
 
 import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.custom.sensors.InvalidSensorException;
-import org.usfirst.frc4904.standard.custom.sensors.RuntimeInvalidSensorException;
+import org.usfirst.frc4904.standard.custom.sensors.PIDSensor;
 import edu.wpi.first.wpilibj.PIDSource;
 
 /**
@@ -19,7 +19,7 @@ public class CustomPIDController extends MotionController {
 	protected double totalError;
 	protected double lastError;
 	protected boolean justReset;
-
+	
 	/**
 	 * An extremely basic PID controller.
 	 * It does not differentiate between rate and distance.
@@ -32,11 +32,11 @@ public class CustomPIDController extends MotionController {
 	 *        Initial D constant
 	 * @param F
 	 *        Initial F (feed forward) constant
-	 * @param source
+	 * @param sensor
 	 *        The sensor linked to the output
 	 */
-	public CustomPIDController(double P, double I, double D, double F, PIDSource source) {
-		super(source);
+	public CustomPIDController(double P, double I, double D, double F, PIDSensor sensor) {
+		super(sensor);
 		this.P = P;
 		this.I = I;
 		this.D = D;
@@ -54,24 +54,76 @@ public class CustomPIDController extends MotionController {
 	 *        Initial I constant
 	 * @param D
 	 *        Initial D constant
-	 * @param source
+	 * @param F
+	 *        Initial F (feed forward) constant
+	 * @param sensor
+	 *        The sensor linked to the output
+	 */
+	public CustomPIDController(double P, double I, double D, double F, PIDSource source) {
+		super(source);
+		this.P = P;
+		this.I = I;
+		this.D = D;
+		this.F = F;
+		justReset = true;
+	}
+	
+	/**
+	 * An extremely basic PID controller.
+	 * It does not differentiate between rate and distance.
+	 *
+	 * @param P
+	 *        Initial P constant
+	 * @param I
+	 *        Initial I constant
+	 * @param D
+	 *        Initial D constant
+	 * @param sensor
+	 *        The sensor linked to the output
+	 */
+	public CustomPIDController(double P, double I, double D, PIDSensor sensor) {
+		this(P, I, D, 0.0, sensor);
+	}
+	
+	/**
+	 * An extremely basic PID controller.
+	 * It does not differentiate between rate and distance.
+	 *
+	 * @param P
+	 *        Initial P constant
+	 * @param I
+	 *        Initial I constant
+	 * @param D
+	 *        Initial D constant
+	 * @param sensor
 	 *        The sensor linked to the output
 	 */
 	public CustomPIDController(double P, double I, double D, PIDSource source) {
 		this(P, I, D, 0.0, source);
 	}
-
+	
 	/**
 	 * An extremely basic PID controller.
 	 * It does not differentiate between rate and distance.
 	 *
-	 * @param source
+	 * @param sensor
+	 *        The sensor linked to the output
+	 */
+	public CustomPIDController(PIDSensor sensor) {
+		this(0, 0, 0, sensor);
+	}
+	
+	/**
+	 * An extremely basic PID controller.
+	 * It does not differentiate between rate and distance.
+	 *
+	 * @param sensor
 	 *        The sensor linked to the output
 	 */
 	public CustomPIDController(PIDSource source) {
 		this(0, 0, 0, source);
 	}
-
+	
 	/**
 	 * @return
 	 * 		The current P value
@@ -79,7 +131,7 @@ public class CustomPIDController extends MotionController {
 	public double getP() {
 		return P;
 	}
-
+	
 	/**
 	 * @return
 	 * 		The current I value
@@ -87,7 +139,7 @@ public class CustomPIDController extends MotionController {
 	public double getI() {
 		return I;
 	}
-
+	
 	/**
 	 * @return
 	 * 		The current D value
@@ -95,7 +147,7 @@ public class CustomPIDController extends MotionController {
 	public double getD() {
 		return D;
 	}
-
+	
 	/**
 	 * @return
 	 * 		The current F (feed forward) value
@@ -103,7 +155,7 @@ public class CustomPIDController extends MotionController {
 	public double getF() {
 		return F;
 	}
-
+	
 	/**
 	 * Sets the parameters of the PID loop
 	 *
@@ -122,7 +174,7 @@ public class CustomPIDController extends MotionController {
 		this.I = I;
 		this.D = D;
 	}
-
+	
 	/**
 	 * Sets the parameters of the PID loop
 	 *
@@ -144,7 +196,7 @@ public class CustomPIDController extends MotionController {
 		this.D = D;
 		this.F = F;
 	}
-
+	
 	/**
 	 * Resets the PID controller.
 	 * This sets total error and last error to 0,
@@ -154,21 +206,21 @@ public class CustomPIDController extends MotionController {
 	@Override
 	public void reset() {
 		try {
-			setpoint = source.pidGet();
+			setpoint = sensor.pidGet();
 		}
-		catch (RuntimeInvalidSensorException e) {
+		catch (InvalidSensorException e) {
 			LogKitten.ex(e);
 		}
 		totalError = 0;
 		lastError = 0;
 		justReset = true;
 	}
-
+	
 	@Override
 	public double getError() {
 		return lastError;
 	}
-
+	
 	@Override
 	/**
 	 * Get the current output of the PID loop.
@@ -182,12 +234,7 @@ public class CustomPIDController extends MotionController {
 			return F * setpoint;
 		}
 		double input = 0.0;
-		try {
-			input = source.pidGet();
-		}
-		catch (RuntimeInvalidSensorException e) {
-			throw new InvalidSensorException(e);
-		}
+		input = sensor.pidGet();
 		double error = setpoint - input;
 		// Account for continuous input ranges
 		if (continuous) {
@@ -223,7 +270,7 @@ public class CustomPIDController extends MotionController {
 		}
 		return result;
 	}
-
+	
 	@Override
 	public boolean onTarget() {
 		return !justReset && super.onTarget();

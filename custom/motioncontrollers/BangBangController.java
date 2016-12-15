@@ -4,7 +4,7 @@ package org.usfirst.frc4904.standard.custom.motioncontrollers;
 import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.Util;
 import org.usfirst.frc4904.standard.custom.sensors.InvalidSensorException;
-import org.usfirst.frc4904.standard.custom.sensors.RuntimeInvalidSensorException;
+import org.usfirst.frc4904.standard.custom.sensors.PIDSensor;
 import edu.wpi.first.wpilibj.PIDSource;
 
 /**
@@ -19,7 +19,34 @@ public class BangBangController extends MotionController {
 	protected double A;
 	protected double F;
 	protected double threshold;
-	
+
+	/**
+	 * BangBang controller
+	 * A bang bang controller.
+	 * The bang bang controller increases the value of the output
+	 * if it is below the setpoint or decreases the value of the
+	 * output if it is above the setpoint.
+	 *
+	 * @param sensor
+	 *        Sensor
+	 * @param A
+	 *        Adjustment term
+	 *        The is the amount the setpoint is increase
+	 *        or decrease by.
+	 * @param F
+	 *        Feedforward term
+	 *        The scalar on the input.
+	 * @param threshold
+	 *        The threshold for the bangbang to start doing something.
+	 */
+	public BangBangController(PIDSensor sensor, double A, double F, double threshold) {
+		super(sensor);
+		this.A = A;
+		this.F = F;
+		this.threshold = threshold;
+		reset();
+	}
+
 	/**
 	 * BangBang controller
 	 * A bang bang controller.
@@ -46,6 +73,27 @@ public class BangBangController extends MotionController {
 		this.threshold = threshold;
 		reset();
 	}
+
+	/**
+	 * BangBang controller
+	 * A bang bang controller.
+	 * The bang bang controller increases the value of the output
+	 * if it is below the setpoint or decreases the value of the
+	 * output if it is above the setpoint.
+	 *
+	 * @param sensor
+	 *        Sensor
+	 * @param A
+	 *        Adjustment term
+	 *        The is the amount the setpoint is increase
+	 *        or decrease by.
+	 * @param F
+	 *        Feedforward term
+	 *        The scalar on the input.
+	 */
+	public BangBangController(PIDSensor sensor, double A, double F) {
+		this(sensor, A, F, Util.EPSILON);
+	}
 	
 	/**
 	 * BangBang controller
@@ -67,21 +115,21 @@ public class BangBangController extends MotionController {
 	public BangBangController(PIDSource source, double A, double F) {
 		this(source, A, F, Util.EPSILON);
 	}
-	
+
 	/**
 	 * Sets the setpoint to the current sensor value.
 	 */
 	@Override
 	public void reset() {
 		try {
-			setpoint = source.pidGet();
+			setpoint = sensor.pidGet();
 		}
-		catch (RuntimeInvalidSensorException e) {
+		catch (InvalidSensorException e) {
 			LogKitten.ex(e);
 		}
 		error = 0;
 	}
-	
+
 	/**
 	 * Get the current output of the bang bang controller.
 	 * This should be used to set the output.
@@ -96,12 +144,7 @@ public class BangBangController extends MotionController {
 			return F * setpoint;
 		}
 		double input = 0.0;
-		try {
-			input = source.pidGet();
-		}
-		catch (RuntimeInvalidSensorException e) {
-			throw new InvalidSensorException(e);
-		}
+		input = sensor.pidGet();
 		error = setpoint - input;
 		LogKitten.v(input + " " + setpoint + " " + error);
 		if (continuous) {
@@ -124,7 +167,7 @@ public class BangBangController extends MotionController {
 		}
 		return F * setpoint;
 	}
-	
+
 	/**
 	 * @return
 	 * 		The most recent error.

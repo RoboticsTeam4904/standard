@@ -3,7 +3,7 @@ package org.usfirst.frc4904.standard.custom.motioncontrollers;
 
 import org.usfirst.frc4904.standard.Util;
 import org.usfirst.frc4904.standard.custom.sensors.InvalidSensorException;
-import org.usfirst.frc4904.standard.custom.sensors.RuntimeInvalidSensorException;
+import org.usfirst.frc4904.standard.custom.sensors.PIDSensor;
 import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.util.BoundaryException;
 
@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj.util.BoundaryException;
  *
  */
 public abstract class MotionController {
-	protected final PIDSource source;
+	protected final PIDSensor sensor;
 	protected double setpoint;
 	protected double absoluteTolerance;
 	protected boolean continuous;
@@ -23,17 +23,17 @@ public abstract class MotionController {
 	protected double outputMax;
 	protected double outputMin;
 	protected boolean enable;
-	
+
 	/**
 	 * A MotionController modifies an output using a sensor
 	 * to precisely maintain a certain input.
 	 *
-	 * @param source
+	 * @param sensor
 	 *        The sensor associated with the output you are
 	 *        trying to control
 	 */
-	public MotionController(PIDSource source) {
-		this.source = source;
+	public MotionController(PIDSensor sensor) {
+		this.sensor = sensor;
 		enable = true;
 		absoluteTolerance = Util.EPSILON; // Nonzero to avoid floating point errors
 		capOutput = false;
@@ -46,11 +46,23 @@ public abstract class MotionController {
 	}
 	
 	/**
+	 * A MotionController modifies an output using a sensor
+	 * to precisely maintain a certain input.
+	 *
+	 * @param sensor
+	 *        The sensor associated with the output you are
+	 *        trying to control
+	 */
+	public MotionController(PIDSource source) {
+		this(new PIDSensor.PIDSourceWrapper(source));
+	}
+	
+	/**
 	 * This should return the motion controller
 	 * to a state such that it returns 0.
 	 */
 	public abstract void reset();
-	
+
 	/**
 	 * The calculated output value to achieve the
 	 * current setpoint.
@@ -61,7 +73,7 @@ public abstract class MotionController {
 	 *         that range.
 	 */
 	public abstract double get() throws InvalidSensorException;
-	
+
 	/**
 	 * A very recent error.
 	 *
@@ -70,7 +82,7 @@ public abstract class MotionController {
 	 *         the get function.
 	 */
 	public abstract double getError();
-	
+
 	/**
 	 * The most recent setpoint.
 	 *
@@ -80,7 +92,7 @@ public abstract class MotionController {
 	public double getSetpoint() {
 		return setpoint;
 	}
-	
+
 	/**
 	 * Sets the setpoint of the motion controller.
 	 * This is the value that the motion controller seeks.
@@ -90,7 +102,7 @@ public abstract class MotionController {
 	public void setSetpoint(double setpoint) {
 		this.setpoint = setpoint;
 	}
-	
+
 	/**
 	 * Sets the tolerance of the motion controller.
 	 * When the error is less than the tolerance,
@@ -105,7 +117,7 @@ public abstract class MotionController {
 		}
 		throw new BoundaryException("Absolute tolerance negative");
 	}
-	
+
 	/**
 	 * Sets the input range of the motion controller.
 	 * This is only used to work with continuous inputs.
@@ -122,7 +134,7 @@ public abstract class MotionController {
 		inputMin = minimum;
 		inputMax = maximum;
 	}
-	
+
 	/**
 	 * Sets the output range of the motion controller.
 	 * Results from the motion control calculation will be
@@ -137,14 +149,14 @@ public abstract class MotionController {
 		outputMax = maximum;
 		capOutput = true;
 	}
-	
+
 	/**
 	 * Stops capping the output range.
 	 */
 	public void disableOutputRange() {
 		capOutput = false;
 	}
-	
+
 	/**
 	 * Sets the input range to continuous.
 	 * This means that it will treat the
@@ -158,14 +170,14 @@ public abstract class MotionController {
 	public void setContinuous(boolean continuous) {
 		this.continuous = continuous;
 	}
-	
+
 	/**
 	 * Turns on the motion controller.
 	 */
 	public void enable() {
 		enable = true;
 	}
-	
+
 	/**
 	 * Bypasses the motion controller.
 	 * In some cases, this will still scale by
@@ -174,11 +186,11 @@ public abstract class MotionController {
 	public void disable() {
 		enable = false;
 		try {
-			setpoint = source.pidGet();
+			setpoint = sensor.pidGet();
 		}
-		catch (RuntimeInvalidSensorException e) {}
+		catch (InvalidSensorException e) {}
 	}
-	
+
 	/**
 	 * True if the error in the motion controller is
 	 * less than the tolerance of the motion controller.
