@@ -18,6 +18,31 @@ public class MotorPositionControl extends Command {
 	protected final int axis;
 	protected final boolean invert;
 	protected final Util.Range motorPositionRange;
+	protected final Command fallbackCommand;
+
+	/**
+	 * This Command directly controls a SensorMotor's position based on an axis of the Controller.
+	 * This can allow an Operator to easily control the position of a single SensorMotor from an axis of the Controller.
+	 *
+	 * @param motor
+	 * @param controller
+	 * @param axis
+	 * @param invert
+	 * @param fallbackCommand
+	 *        If the sensor fails for some reason, this command will be cancelled, then the fallbackCommand will start
+	 */
+	public MotorPositionControl(SensorMotor motor, Util.Range motorPositionRange, Controller controller, int axis, boolean invert, Command fallbackCommand) {
+		super("MotorPositionControl");
+		this.motor = motor;
+		this.motorPositionRange = motorPositionRange;
+		this.controller = controller;
+		this.axis = axis;
+		this.invert = invert;
+		this.fallbackCommand = fallbackCommand;
+		requires(motor);
+		setInterruptible(true);
+		LogKitten.d("MotorControl created for " + motor.getName());
+	}
 
 	/**
 	 * This Command directly controls a SensorMotor's position based on an axis of the Controller.
@@ -29,15 +54,7 @@ public class MotorPositionControl extends Command {
 	 * @param invert
 	 */
 	public MotorPositionControl(SensorMotor motor, Util.Range motorPositionRange, Controller controller, int axis, boolean invert) {
-		super("MotorPositionControl");
-		this.motor = motor;
-		this.motorPositionRange = motorPositionRange;
-		this.controller = controller;
-		this.axis = axis;
-		this.invert = invert;
-		requires(motor);
-		setInterruptible(true);
-		LogKitten.d("MotorControl created for " + motor.getName());
+		this(motor, motorPositionRange, controller, axis, invert, null);
 	}
 
 	@Override
@@ -55,6 +72,9 @@ public class MotorPositionControl extends Command {
 		}
 		catch (InvalidSensorException e) {
 			cancel();
+			if (fallbackCommand != null) {
+				fallbackCommand.start();
+			}
 		}
 	}
 

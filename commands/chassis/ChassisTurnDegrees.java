@@ -13,13 +13,39 @@ public class ChassisTurnDegrees extends Command implements ChassisController {
 	protected double initialAngle;
 	protected final double finalAngle;
 	protected final MotionController motionController;
+	protected final ChassisController fallbackController;
 	protected final IMU imu;
 
-	public ChassisTurnDegrees(Chassis chassis, double finalAngle, IMU imu, MotionController motionController) {
+	/**
+	 * Constructor
+	 * This command rotates the chassis to a position relative to the current angle of the robot
+	 *
+	 * @param chassis
+	 * @param finalAngle
+	 * @param imu
+	 * @param fallbackController
+	 *        If the sensor fails for some reason, this controller will be cancelled, then the fallbackController will start
+	 * @param motionController
+	 */
+	public ChassisTurnDegrees(Chassis chassis, double finalAngle, IMU imu, ChassisController fallbackController, MotionController motionController) {
 		move = new ChassisMove(chassis, this);
 		this.finalAngle = -((finalAngle + 360) % 360 - 180);
 		this.imu = imu;
 		this.motionController = motionController;
+		this.fallbackController = fallbackController;
+	}
+
+	/**
+	 * Constructor
+	 * This command rotates the chassis to a position relative to the current angle of the robot
+	 *
+	 * @param chassis
+	 * @param finalAngle
+	 * @param imu
+	 * @param motionController
+	 */
+	public ChassisTurnDegrees(Chassis chassis, double finalAngle, IMU imu, MotionController motionController) {
+		this(chassis, finalAngle, imu, null, motionController);
 	}
 
 	@Override
@@ -38,8 +64,12 @@ public class ChassisTurnDegrees extends Command implements ChassisController {
 			return motionController.get();
 		}
 		catch (InvalidSensorException e) {
-			cancel();
-			return 0;
+			if (fallbackController != null) {
+				return fallbackController.getTurnSpeed();
+			} else {
+				cancel();
+				return 0;
+			}
 		}
 	}
 

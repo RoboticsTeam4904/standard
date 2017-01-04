@@ -10,16 +10,48 @@ import org.usfirst.frc4904.standard.subsystems.chassis.Chassis;
 import edu.wpi.first.wpilibj.command.Command;
 
 public class ChassisMotionProfileDistance extends Command implements ChassisController {
-	private final ChassisMove chassisMove;
-	private final MotionController motionController;
-	private final double distance;
-	private final CustomEncoder[] encoders;
+	protected final ChassisMove chassisMove;
+	protected final MotionController motionController;
+	protected final ChassisController fallbackController;
+	protected final double distance;
+	protected final CustomEncoder[] encoders;
 
-	public ChassisMotionProfileDistance(Chassis chassis, double distance, MotionController motionController, CustomEncoder... encoders) {
+	/**
+	 * Constructor.
+	 * This command moves the chassis forward a known distance via a set of encoders.
+	 * The distance is calculated as the average of the provided encoders.
+	 * The speed is decided by the provided motionController.
+	 *
+	 * @param chassis
+	 * @param distance
+	 *        distance to move in encoder ticks
+	 * @param motionController
+	 * @param fallbackCommand
+	 *        If the sensor fails for some reason, this command will be cancelled, then the fallbackCommand will start
+	 * @param encoders
+	 */
+	public ChassisMotionProfileDistance(Chassis chassis, double distance, MotionController motionController, ChassisController fallbackController, CustomEncoder... encoders) {
 		chassisMove = new ChassisMove(chassis, this, false);
 		this.motionController = motionController;
 		this.encoders = encoders;
 		this.distance = distance;
+		this.fallbackController = fallbackController;
+	}
+	
+	/**
+	 * Constructor.
+	 * This command moves the chassis forward a known distance via a set of encoders.
+	 * The distance is calculated as the average of the provided encoders.
+	 * The speed is decided by the provided motionController.
+	 *
+	 * @param chassis
+	 * @param distance
+	 *        distance to move in encoder ticks
+	 * @param motionController
+	 * @param encoders
+	 */
+	public ChassisMotionProfileDistance(Chassis chassis, double distance, MotionController motionController, CustomEncoder... encoders) {
+		this(chassis, distance, motionController, null, encoders);
 	}
 
 	@Override
@@ -44,8 +76,12 @@ public class ChassisMotionProfileDistance extends Command implements ChassisCont
 			speed = motionController.get();
 		}
 		catch (InvalidSensorException e) {
-			cancel();
-			return 0;
+			if (fallbackController != null) {
+				speed = fallbackController.getY();
+			} else {
+				cancel();
+				speed = 0;
+			}
 		}
 		LogKitten.d("MotionProfileSpeed: " + speed);
 		return speed;
