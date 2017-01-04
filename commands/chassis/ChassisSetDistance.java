@@ -11,7 +11,7 @@ public class ChassisSetDistance extends ChassisConstant {
 	protected final ChassisConstant fallbackCommand;
 	protected double distance;
 	protected double[] initialDistances;
-	
+
 	/**
 	 * Constructor.
 	 * This command moves the chassis forward a known distance via a set of encoders.
@@ -34,7 +34,7 @@ public class ChassisSetDistance extends ChassisConstant {
 		this.fallbackCommand = fallbackCommand;
 		initialDistances = new double[encoders.length];
 	}
-	
+
 	/**
 	 * Constructor.
 	 * This command moves the chassis forward a known distance via a set of encoders.
@@ -51,7 +51,7 @@ public class ChassisSetDistance extends ChassisConstant {
 	public ChassisSetDistance(Chassis chassis, double distance, double speed, CustomEncoder... encoders) {
 		this(chassis, distance, speed, null, encoders);
 	}
-	
+
 	@Override
 	protected void initialize() {
 		super.initialize();
@@ -65,7 +65,7 @@ public class ChassisSetDistance extends ChassisConstant {
 			}
 		}
 	}
-	
+
 	@Override
 	protected boolean isFinished() {
 		double distanceSum = 0;
@@ -85,13 +85,13 @@ public class ChassisSetDistance extends ChassisConstant {
 		double distanceAvg = distanceSum / encoders.length;
 		return distanceAvg >= distance;
 	}
-	
+
 	@Override
 	protected void end() {
 		super.end();
 		LogKitten.v("Finished traveling " + distance + " units (as set by setDistancePerPulse)");
 	}
-	
+
 	@Override
 	protected void interrupted() {
 		super.interrupted();

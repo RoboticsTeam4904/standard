@@ -1,10 +1,10 @@
 package org.usfirst.frc4904.standard.commands.chassis;
 
 
-import org.usfirst.frc4904.standard.custom.ChassisController;
 import org.usfirst.frc4904.standard.custom.motioncontrollers.MotionController;
 import org.usfirst.frc4904.standard.custom.sensors.IMU;
 import org.usfirst.frc4904.standard.subsystems.chassis.Chassis;
+import edu.wpi.first.wpilibj.command.Command;
 
 public class ChassisTurnAbsolute extends ChassisTurnDegrees {
 	
@@ -21,7 +21,7 @@ public class ChassisTurnAbsolute extends ChassisTurnDegrees {
 	public ChassisTurnAbsolute(Chassis chassis, double finalAngle, IMU imu, MotionController motionController) {
 		super(chassis, (finalAngle % 360) - 180, imu, motionController);
 	}
-	
+
 	/**
 	 * Constructor
 	 * This command rotates the chassis to a position relative to the starting point of the robot
@@ -30,14 +30,14 @@ public class ChassisTurnAbsolute extends ChassisTurnDegrees {
 	 * @param chassis
 	 * @param finalAngle
 	 * @param imu
-	 * @param fallbackController
+	 * @param fallbackCommand
 	 *        If the sensor fails for some reason, this controller will be cancelled, then the fallbackController will start
 	 * @param motionController
 	 */
-	public ChassisTurnAbsolute(Chassis chassis, double finalAngle, IMU imu, ChassisController fallbackController, MotionController motionController) {
-		super(chassis, (finalAngle % 360) - 180, imu, fallbackController, motionController);
+	public ChassisTurnAbsolute(Chassis chassis, double finalAngle, IMU imu, Command fallbackCommand, MotionController motionController) {
+		super(chassis, (finalAngle % 360) - 180, imu, fallbackCommand, motionController);
 	}
-
+	
 	@Override
 	protected void initialize() {
 		// ChassisTurnDegrees measures an initial angle and compensates for it

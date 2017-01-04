@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj.command.Command;
 public class ChassisMotionProfileDistance extends Command implements ChassisController {
 	protected final ChassisMove chassisMove;
 	protected final MotionController motionController;
-	protected final ChassisController fallbackController;
+	protected final Command fallbackCommand;
 	protected final double distance;
 	protected final CustomEncoder[] encoders;
 
@@ -30,12 +30,12 @@ public class ChassisMotionProfileDistance extends Command implements ChassisCont
 	 *        If the sensor fails for some reason, this command will be cancelled, then the fallbackCommand will start
 	 * @param encoders
 	 */
-	public ChassisMotionProfileDistance(Chassis chassis, double distance, MotionController motionController, ChassisController fallbackController, CustomEncoder... encoders) {
+	public ChassisMotionProfileDistance(Chassis chassis, double distance, MotionController motionController, Command fallbackCommand, CustomEncoder... encoders) {
 		chassisMove = new ChassisMove(chassis, this, false);
 		this.motionController = motionController;
 		this.encoders = encoders;
 		this.distance = distance;
-		this.fallbackController = fallbackController;
+		this.fallbackCommand = fallbackCommand;
 	}
 	
 	/**
@@ -76,12 +76,11 @@ public class ChassisMotionProfileDistance extends Command implements ChassisCont
 			speed = motionController.get();
 		}
 		catch (InvalidSensorException e) {
-			if (fallbackController != null) {
-				speed = fallbackController.getY();
-			} else {
-				cancel();
-				speed = 0;
+			cancel();
+			if (fallbackCommand != null) {
+				fallbackCommand.start();
 			}
+			speed = 0;
 		}
 		LogKitten.d("MotionProfileSpeed: " + speed);
 		return speed;
