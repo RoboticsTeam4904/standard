@@ -61,6 +61,7 @@ public class ChassisMotionProfileDistance extends Command implements ChassisCont
 			motionController.reset();
 		}
 		catch (InvalidSensorException e) {
+			chassisMove.cancel();
 			cancel();
 			if (fallbackCommand != null) {
 				fallbackCommand.start();
@@ -85,6 +86,7 @@ public class ChassisMotionProfileDistance extends Command implements ChassisCont
 			speed = motionController.get();
 		}
 		catch (InvalidSensorException e) {
+			chassisMove.cancel();
 			cancel();
 			if (fallbackCommand != null) {
 				fallbackCommand.start();

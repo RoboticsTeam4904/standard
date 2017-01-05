@@ -64,6 +64,7 @@ public class ChassisTurnDegrees extends Command implements ChassisController {
 			return motionController.get();
 		}
 		catch (InvalidSensorException e) {
+			move.cancel();
 			cancel();
 			if (fallbackCommand != null) {
 				fallbackCommand.start();
@@ -80,6 +81,7 @@ public class ChassisTurnDegrees extends Command implements ChassisController {
 			motionController.reset();
 		}
 		catch (InvalidSensorException e) {
+			move.cancel();
 			cancel();
 			if (fallbackCommand != null) {
 				fallbackCommand.start();
