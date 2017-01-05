@@ -57,7 +57,16 @@ public class ChassisMotionProfileDistance extends Command implements ChassisCont
 	@Override
 	public void initialize() {
 		chassisMove.start();
-		motionController.reset();
+		try {
+			motionController.reset();
+		}
+		catch (InvalidSensorException e) {
+			cancel();
+			if (fallbackCommand != null) {
+				fallbackCommand.start();
+			}
+			return;
+		}
 		for (CustomEncoder encoder : encoders) {
 			encoder.reset();
 		}

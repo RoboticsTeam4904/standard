@@ -1,6 +1,7 @@
 package org.usfirst.frc4904.standard.custom.motioncontrollers;
 
 
+import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.Util;
 import org.usfirst.frc4904.standard.custom.sensors.InvalidSensorException;
 import org.usfirst.frc4904.standard.custom.sensors.PIDSensor;
@@ -42,7 +43,12 @@ public abstract class MotionController {
 		inputMax = 0.0;
 		outputMin = 0.0;
 		outputMax = 0.0;
-		reset();
+		try {
+			reset();
+		}
+		catch (InvalidSensorException e) {
+			LogKitten.ex(e);
+		}
 	}
 	
 	/**
@@ -61,7 +67,7 @@ public abstract class MotionController {
 	 * This should return the motion controller
 	 * to a state such that it returns 0.
 	 */
-	public abstract void reset();
+	public abstract void reset() throws InvalidSensorException;
 
 	/**
 	 * The calculated output value to achieve the

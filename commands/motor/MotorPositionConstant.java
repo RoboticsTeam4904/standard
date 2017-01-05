@@ -53,7 +53,16 @@ public class MotorPositionConstant extends Command {
 
 	@Override
 	protected void initialize() {
-		motor.reset();
+		try {
+			motor.reset();
+		}
+		catch (InvalidSensorException e) {
+			cancel();
+			if (fallbackCommand != null) {
+				fallbackCommand.start();
+			}
+			return;
+		}
 		motor.enablePID();
 	}
 

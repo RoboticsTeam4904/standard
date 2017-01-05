@@ -26,13 +26,18 @@ public class PIDChassisController implements ChassisController {
 		motionController.setInputRange(-180.0f, 180.0f);
 		motionController.setOutputRange(-1.0f, 1.0f);
 		motionController.setContinuous(true);
-		motionController.reset();
+		try {
+			motionController.reset();
+		}
+		catch (InvalidSensorException e) {
+			LogKitten.ex(e);
+		}
 		motionController.enable();
 		targetYaw = imu.getYaw();
 		lastUpdate = System.currentTimeMillis() / 1000.0;
 	}
 	
-	public void reset() {
+	public void reset() throws InvalidSensorException {
 		targetYaw = imu.getYaw();
 		lastUpdate = System.currentTimeMillis() / 1000.0;
 		motionController.disable();
