@@ -26,12 +26,7 @@ public class PIDChassisController implements ChassisController {
 		motionController.setInputRange(-180.0f, 180.0f);
 		motionController.setOutputRange(-1.0f, 1.0f);
 		motionController.setContinuous(true);
-		try {
-			motionController.reset();
-		}
-		catch (InvalidSensorException e) {
-			LogKitten.ex(e);
-		}
+		motionController.reset();
 		motionController.enable();
 		targetYaw = imu.getYaw();
 		lastUpdate = System.currentTimeMillis() / 1000.0;
@@ -63,7 +58,7 @@ public class PIDChassisController implements ChassisController {
 			return controller.getTurnSpeed();
 		}
 		try {
-			LogKitten.v(motionController.getSetpoint() + " " + imu.getYaw() + " " + motionController.get());
+			LogKitten.v(motionController.getSetpoint() + " " + imu.getYaw() + " " + motionController.getSafely());
 		}
 		catch (InvalidSensorException e) {}
 		targetYaw = targetYaw + ((controller.getTurnSpeed() * maxDegreesPerSecond) * ((System.currentTimeMillis() / 1000.0) - lastUpdate));
@@ -75,7 +70,7 @@ public class PIDChassisController implements ChassisController {
 		}
 		motionController.setSetpoint(targetYaw);
 		try {
-			return motionController.get();
+			return motionController.getSafely();
 		}
 		catch (InvalidSensorException e) {
 			return controller.getTurnSpeed();

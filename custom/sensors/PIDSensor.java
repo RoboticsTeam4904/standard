@@ -27,19 +27,19 @@ public interface PIDSensor {
 	 * $
 	 *
 	 * @return the result to use in PIDController
-	 * @throws InvalidSensorException
-	 *         when sensor data should not be used for PID due to potential inaccuracy
+	 * @warning does not report sensor errors, will just return 0
 	 */
-	public double pidGet() throws InvalidSensorException;
+	public double pidGet();
 	
 	/**
 	 * Get the result to use in PIDController
 	 * $
 	 *
 	 * @return the result to use in PIDController
-	 *         This does not throw an exception on error! Use with caution!
+	 * @throws InvalidSensorException
+	 *         when sensor data should not be used for PID due to potential inaccuracy
 	 */
-	public double pidGetSafely();
+	public double pidGetSafely() throws InvalidSensorException;
 	
 	/**
 	 * Class to wrap a PIDSource to a PIDSensor
@@ -63,12 +63,12 @@ public interface PIDSensor {
 		}
 
 		@Override
-		public double pidGet() throws InvalidSensorException {
+		public double pidGetSafely() throws InvalidSensorException { // No exception possible anyway
 			return source.pidGet();
 		}
 
 		@Override
-		public double pidGetSafely() { // No exception possible anyway
+		public double pidGet() {
 			return source.pidGet();
 		}
 	}

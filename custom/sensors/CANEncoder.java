@@ -82,7 +82,7 @@ public class CANEncoder extends CANSensor implements CustomEncoder {
 	}
 	
 	@Override
-	public double pidGet() throws InvalidSensorException {
+	public double pidGetSafely() throws InvalidSensorException {
 		if (pidSource == PIDSourceType.kDisplacement) {
 			return getDistance();
 		}
@@ -93,7 +93,7 @@ public class CANEncoder extends CANSensor implements CustomEncoder {
 	 * Returns the raw number of ticks
 	 */
 	@Override
-	public int get() throws InvalidSensorException {
+	public int getSafely() throws InvalidSensorException {
 		return super.read(0); // TODO: what mode numbers will be position and direction?
 	}
 	
@@ -101,7 +101,7 @@ public class CANEncoder extends CANSensor implements CustomEncoder {
 	 * Returns the scaled distance rotated by the encoder.
 	 */
 	@Override
-	public double getDistance() throws InvalidSensorException {
+	public double getDistanceSafely() throws InvalidSensorException {
 		if (reverseDirection) {
 			return distancePerPulse * super.read(0) * -1.0;
 		} else {
@@ -114,7 +114,7 @@ public class CANEncoder extends CANSensor implements CustomEncoder {
 	 * (based on the speed)
 	 */
 	@Override
-	public boolean getDirection() throws InvalidSensorException {
+	public boolean getDirectionSafely() throws InvalidSensorException {
 		return !reverseDirection == (super.read(1) >= 0);
 	}
 	
@@ -122,7 +122,7 @@ public class CANEncoder extends CANSensor implements CustomEncoder {
 	 * Returns the rate of rotation
 	 */
 	@Override
-	public double getRate() throws InvalidSensorException {
+	public double getRateSafely() throws InvalidSensorException {
 		if (reverseDirection) {
 			return distancePerPulse * super.read(1) * -1.0;
 		} else {
@@ -134,7 +134,7 @@ public class CANEncoder extends CANSensor implements CustomEncoder {
 	 * Returns true when stopped
 	 */
 	@Override
-	public boolean getStopped() throws InvalidSensorException {
+	public boolean getStoppedSafely() throws InvalidSensorException {
 		return Util.isZero(getRate());
 	}
 	
@@ -148,9 +148,9 @@ public class CANEncoder extends CANSensor implements CustomEncoder {
 	}
 	
 	@Override
-	public double pidGetSafely() {
+	public double pidGet() {
 		try {
-			return pidGet();
+			return pidGetSafely();
 		}
 		catch (Exception e) {
 			LogKitten.ex(e);
@@ -159,9 +159,9 @@ public class CANEncoder extends CANSensor implements CustomEncoder {
 	}
 	
 	@Override
-	public int getSafely() {
+	public int get() {
 		try {
-			return get();
+			return getSafely();
 		}
 		catch (Exception e) {
 			LogKitten.ex(e);
@@ -170,9 +170,9 @@ public class CANEncoder extends CANSensor implements CustomEncoder {
 	}
 	
 	@Override
-	public double getDistanceSafely() {
+	public double getDistance() {
 		try {
-			return getDistance();
+			return getDistanceSafely();
 		}
 		catch (Exception e) {
 			LogKitten.ex(e);
@@ -181,9 +181,9 @@ public class CANEncoder extends CANSensor implements CustomEncoder {
 	}
 	
 	@Override
-	public boolean getDirectionSafely() {
+	public boolean getDirection() {
 		try {
-			return getDirection();
+			return getDirectionSafely();
 		}
 		catch (Exception e) {
 			LogKitten.ex(e);
@@ -192,9 +192,9 @@ public class CANEncoder extends CANSensor implements CustomEncoder {
 	}
 	
 	@Override
-	public boolean getStoppedSafely() {
+	public boolean getStopped() {
 		try {
-			return getStopped();
+			return getStoppedSafely();
 		}
 		catch (Exception e) {
 			LogKitten.ex(e);
@@ -203,9 +203,9 @@ public class CANEncoder extends CANSensor implements CustomEncoder {
 	}
 	
 	@Override
-	public double getRateSafely() {
+	public double getRate() {
 		try {
-			return getRate();
+			return getRateSafely();
 		}
 		catch (Exception e) {
 			LogKitten.ex(e);

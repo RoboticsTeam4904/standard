@@ -11,7 +11,7 @@ public class ChassisMinimumDistance extends ChassisConstant {
 	protected final ChassisConstant fallbackCommand;
 	protected double distance;
 	protected double[] initialDistances;
-
+	
 	/**
 	 * Constructor.
 	 * This command moves the chassis forward a known distance via a set of encoders.
@@ -34,7 +34,7 @@ public class ChassisMinimumDistance extends ChassisConstant {
 		this.fallbackCommand = fallbackCommand;
 		initialDistances = new double[encoders.length];
 	}
-
+	
 	/**
 	 * Constructor.
 	 * This command moves the chassis forward a known distance via a set of encoders.
@@ -51,13 +51,13 @@ public class ChassisMinimumDistance extends ChassisConstant {
 	public ChassisMinimumDistance(Chassis chassis, double distance, double speed, CustomEncoder... encoders) {
 		this(chassis, distance, speed, null, encoders);
 	}
-
+	
 	@Override
 	protected void initialize() {
 		super.initialize();
 		for (int i = 0; i < encoders.length; i++) {
 			try {
-				initialDistances[i] = encoders[i].getDistance();
+				initialDistances[i] = encoders[i].getDistanceSafely();
 			}
 			catch (InvalidSensorException e) {
 				cancel();
@@ -65,14 +65,14 @@ public class ChassisMinimumDistance extends ChassisConstant {
 			}
 		}
 	}
-
+	
 	@Override
 	protected boolean isFinished() {
 		double distanceSum = 0;
 		for (int i = 0; i < encoders.length; i++) {
 			try {
-				distanceSum += encoders[i].getDistance() - initialDistances[i];
-				LogKitten.d("Encoder " + i + " reads " + encoders[i].getDistance() + " out of " + distance);
+				distanceSum += encoders[i].getDistanceSafely() - initialDistances[i];
+				LogKitten.d("Encoder " + i + " reads " + encoders[i].getDistanceSafely() + " out of " + distance);
 			}
 			catch (InvalidSensorException e) {
 				cancel();
@@ -85,13 +85,13 @@ public class ChassisMinimumDistance extends ChassisConstant {
 		double distanceAvg = distanceSum / encoders.length;
 		return distanceAvg >= distance;
 	}
-
+	
 	@Override
 	protected void end() {
 		super.end();
 		LogKitten.v("Finished traveling " + distance + " units (as set by setDistancePerPulse)");
 	}
-
+	
 	@Override
 	protected void interrupted() {
 		super.interrupted();

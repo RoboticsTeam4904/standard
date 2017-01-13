@@ -10,58 +10,63 @@ package org.usfirst.frc4904.standard.custom.sensors;
 public interface CustomEncoder extends PIDSensor {
 	/**
 	 * Gets current count
+	 *
+	 * @warning does not indicate sensor errors
 	 */
-	int get() throws InvalidSensorException;
+	int get();
 	
 	/**
 	 * Gets current count
-	 * This does not throw an exception on error! Use with caution!
 	 */
-	int getSafely();
+	int getSafely() throws InvalidSensorException;
+
+	/**
+	 * Gets current distance
+	 *
+	 * @warning does not indicate sensor errors
+	 */
+	double getDistance();
 
 	/**
 	 * Gets current distance
 	 */
-	double getDistance() throws InvalidSensorException;
+	double getDistanceSafely() throws InvalidSensorException;
 
 	/**
-	 * Gets current distance
-	 * This does not throw an exception on error! Use with caution!
+	 * Gets direction of most recent movement
+	 *
+	 * @warning does not indicate sensor errors
 	 */
-	double getDistanceSafely();
+	boolean getDirection();
 
 	/**
 	 * Gets direction of most recent movement
 	 */
-	boolean getDirection() throws InvalidSensorException;
+	boolean getDirectionSafely() throws InvalidSensorException;
 
 	/**
-	 * Gets direction of most recent movement
-	 * This does not throw an exception on error! Use with caution!
+	 * Returns true when stopped
+	 *
+	 * @warning does not indicate sensor errors
 	 */
-	boolean getDirectionSafely();
+	boolean getStopped();
 
 	/**
 	 * Returns true when stopped
 	 */
-	boolean getStopped() throws InvalidSensorException;
+	boolean getStoppedSafely() throws InvalidSensorException;
 
 	/**
-	 * Returns true when stopped
-	 * This does not throw an exception on error! Use with caution!
+	 * Gets rate
+	 *
+	 * @warning does not indicate sensor errors
 	 */
-	boolean getStoppedSafely();
+	double getRate();
 
 	/**
 	 * Gets rate
 	 */
-	double getRate() throws InvalidSensorException;
-
-	/**
-	 * Gets rate
-	 * This does not throw an exception on error! Use with caution!
-	 */
-	double getRateSafely();
+	double getRateSafely() throws InvalidSensorException;
 
 	/**
 	 * Gets the distance per pulse

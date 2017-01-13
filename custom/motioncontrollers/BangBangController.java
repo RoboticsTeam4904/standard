@@ -44,7 +44,7 @@ public class BangBangController extends MotionController {
 		this.A = A;
 		this.F = F;
 		this.threshold = threshold;
-		resetSafely();
+		reset();
 	}
 	
 	/**
@@ -71,7 +71,7 @@ public class BangBangController extends MotionController {
 		this.A = A;
 		this.F = F;
 		this.threshold = threshold;
-		resetSafely();
+		reset();
 	}
 	
 	/**
@@ -120,17 +120,19 @@ public class BangBangController extends MotionController {
 	 * Sets the setpoint to the current sensor value.
 	 */
 	@Override
-	public void reset() throws InvalidSensorException {
-		setpoint = sensor.pidGet();
+	public void resetSafely() throws InvalidSensorException {
+		setpoint = sensor.pidGetSafely();
 		error = 0;
 	}
 	
 	/**
 	 * Sets the setpoint to the current sensor value.
+	 *
+	 * @warning does not indicate sensor errors
 	 */
 	@Override
-	public void resetSafely() {
-		setpoint = sensor.pidGetSafely();
+	public void reset() {
+		setpoint = sensor.pidGet();
 		error = 0;
 	}
 	
@@ -143,12 +145,12 @@ public class BangBangController extends MotionController {
 	 * @throws InvalidSensorException
 	 */
 	@Override
-	public double get() throws InvalidSensorException {
+	public double getSafely() throws InvalidSensorException {
 		if (!enable) {
 			return F * setpoint;
 		}
 		double input = 0.0;
-		input = sensor.pidGet();
+		input = sensor.pidGetSafely();
 		error = setpoint - input;
 		LogKitten.v(input + " " + setpoint + " " + error);
 		if (continuous) {
@@ -178,12 +180,12 @@ public class BangBangController extends MotionController {
 	 *
 	 * @return
 	 * 		The current output of the bang bang controller.
-	 * @throws InvalidSensorException
+	 * @warning does not indicate sensor error
 	 */
 	@Override
-	public double getSafely() {
+	public double get() {
 		try {
-			return get();
+			return getSafely();
 		}
 		catch (Exception e) {
 			LogKitten.ex(e);

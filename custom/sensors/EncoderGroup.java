@@ -21,7 +21,7 @@ public class EncoderGroup implements CustomEncoder {
 	private final double tolerance;
 	private int errorCount;
 	private final int MAX_ENCODER_ERRORS = 20;
-	
+
 	/**
 	 * Amalgamates the data of several encoders for the purpose
 	 * of controlling a single motion controller.
@@ -40,37 +40,37 @@ public class EncoderGroup implements CustomEncoder {
 		reverseDirection = false;
 		errorCount = 0;
 	}
-	
+
 	@Override
 	public PIDSourceType getPIDSourceType() {
 		return pidSource;
 	}
-	
+
 	@Override
-	public double pidGet() throws InvalidSensorException {
+	public double pidGet() {
 		if (pidSource == PIDSourceType.kDisplacement) {
 			return getDistance();
 		}
 		return getRate();
 	}
-	
+
 	@Override
-	public double pidGetSafely() {
+	public double pidGetSafely() throws InvalidSensorException {
 		if (pidSource == PIDSourceType.kDisplacement) {
 			return getDistanceSafely();
 		}
 		return getRateSafely();
 	}
-	
+
 	@Override
 	public void setPIDSourceType(PIDSourceType pidSource) {
 		if (pidSource != null) {
 			this.pidSource = pidSource;
 		}
 	}
-	
+
 	@Override
-	public int get() throws InvalidSensorException {
+	public int getSafely() throws InvalidSensorException {
 		int average = encoders[0].get();
 		for (int i = 1; i < encoders.length; i++) {
 			if (new Util.Range(average - tolerance, average + tolerance).contains(encoders[i].get())) {
@@ -86,20 +86,20 @@ public class EncoderGroup implements CustomEncoder {
 		}
 		return average / encoders.length;
 	}
-	
+
 	@Override
-	public int getSafely() {
+	public int get() {
 		try {
-			return get();
+			return getSafely();
 		}
 		catch (Exception e) {
 			LogKitten.ex(e);
 			return 0;
 		}
 	}
-	
+
 	@Override
-	public double getDistance() throws InvalidSensorException {
+	public double getDistanceSafely() throws InvalidSensorException {
 		double average = encoders[0].getDistance();
 		for (int i = 1; i < encoders.length; i++) {
 			if (new Util.Range(average - tolerance, average + tolerance).contains(encoders[i].getDistance())) {
@@ -115,40 +115,40 @@ public class EncoderGroup implements CustomEncoder {
 		}
 		return average / encoders.length;
 	}
-	
+
 	@Override
-	public double getDistanceSafely() {
+	public double getDistance() {
 		try {
-			return getDistance();
+			return getDistanceSafely();
 		}
 		catch (Exception e) {
 			LogKitten.ex(e);
 			return 0;
 		}
 	}
-	
+
 	@Override
-	public boolean getDirection() throws InvalidSensorException {
+	public boolean getDirection() {
 		return (getRate() > 0);
 	}
-	
+
 	@Override
-	public boolean getDirectionSafely() {
+	public boolean getDirectionSafely() throws InvalidSensorException {
 		return (getRateSafely() > 0);
 	}
-	
+
 	@Override
-	public boolean getStopped() throws InvalidSensorException {
+	public boolean getStopped() {
 		return Util.isZero(getRate());
 	}
 	
 	@Override
-	public boolean getStoppedSafely() {
+	public boolean getStoppedSafely() throws InvalidSensorException {
 		return Util.isZero(getRateSafely());
 	}
-	
+
 	@Override
-	public double getRate() throws InvalidSensorException {
+	public double getRateSafely() throws InvalidSensorException {
 		double average = encoders[0].getRate();
 		for (int i = 1; i < encoders.length; i++) {
 			if (new Util.Range(average - tolerance, average + tolerance).contains(encoders[i].getRate())) {
@@ -164,18 +164,18 @@ public class EncoderGroup implements CustomEncoder {
 		}
 		return average / encoders.length;
 	}
-	
+
 	@Override
-	public double getRateSafely() {
+	public double getRate() {
 		try {
-			return getRate();
+			return getRateSafely();
 		}
 		catch (Exception e) {
 			LogKitten.ex(e);
 			return 0;
 		}
 	}
-	
+
 	/**
 	 * Get whether this entire encoder is inverted.
 	 *
@@ -186,7 +186,7 @@ public class EncoderGroup implements CustomEncoder {
 	public boolean getReverseDirection() {
 		return reverseDirection;
 	}
-	
+
 	/**
 	 * Sets the direction inversion of all encoder substituents.
 	 * This respects the original inversion state of each encoder when constructed,
@@ -204,12 +204,12 @@ public class EncoderGroup implements CustomEncoder {
 		}
 		this.reverseDirection = reverseDirection;
 	}
-	
+
 	@Override
 	public double getDistancePerPulse() {
 		return distancePerPulse;
 	}
-	
+
 	@Override
 	public void setDistancePerPulse(double distancePerPulse) {
 		this.distancePerPulse = distancePerPulse;
@@ -217,7 +217,7 @@ public class EncoderGroup implements CustomEncoder {
 			encoder.setDistancePerPulse(distancePerPulse);
 		}
 	}
-	
+
 	@Override
 	public void reset() {
 		for (CustomEncoder encoder : encoders) {

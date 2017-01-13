@@ -58,7 +58,7 @@ public class ChassisSetDistance extends Command implements ChassisController {
 	public void initialize() {
 		chassisMove.start();
 		try {
-			motionController.reset();
+			motionController.resetSafely();
 		}
 		catch (InvalidSensorException e) {
 			chassisMove.cancel();
@@ -83,7 +83,7 @@ public class ChassisSetDistance extends Command implements ChassisController {
 	public double getY() {
 		double speed;
 		try {
-			speed = motionController.get();
+			speed = motionController.getSafely();
 		}
 		catch (InvalidSensorException e) {
 			chassisMove.cancel();

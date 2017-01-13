@@ -62,7 +62,27 @@ public abstract class SensorMotor extends Motor {
 		motionController.disable();
 	}
 	
-	public void setPosition(double position) throws InvalidSensorException {
+	/**
+	 * Set the position of a sensor motor
+	 *
+	 * @param position
+	 * @throws InvalidSensorException
+	 */
+	public void setPositionSafely(double position) throws InvalidSensorException {
+		motionController.setSetpoint(position);
+		motionController.enable();
+		double speed = motionController.getSafely();
+		LogKitten.v(getName() + " set to position " + position + " at speed " + speed);
+		super.set(speed);
+	}
+	
+	/**
+	 * Set the position of a sensor motor
+	 * 
+	 * @param position
+	 * @warning this does not indicate sensor failure
+	 */
+	public void setPosition(double position) {
 		motionController.setSetpoint(position);
 		motionController.enable();
 		double speed = motionController.get();
@@ -80,9 +100,10 @@ public abstract class SensorMotor extends Motor {
 		if (isMotionControlEnabled) {
 			motionController.setSetpoint(speed);
 			try {
-				super.set(motionController.get());
+				super.set(motionController.getSafely());
 			}
 			catch (InvalidSensorException e) {
+				LogKitten.ex(e);
 				super.set(speed);
 			}
 		} else {
