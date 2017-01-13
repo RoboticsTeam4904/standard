@@ -8,4 +8,6 @@ import org.usfirst.frc4904.standard.custom.Named;
  */
 public interface DistanceSensor extends Named {
 	double getDistance() throws InvalidSensorException;
+
+	double getDistanceSafely();
 }

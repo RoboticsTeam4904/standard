@@ -19,7 +19,7 @@ public class BangBangController extends MotionController {
 	protected double A;
 	protected double F;
 	protected double threshold;
-
+	
 	/**
 	 * BangBang controller
 	 * A bang bang controller.
@@ -44,9 +44,9 @@ public class BangBangController extends MotionController {
 		this.A = A;
 		this.F = F;
 		this.threshold = threshold;
-		reset();
+		resetSafely();
 	}
-
+	
 	/**
 	 * BangBang controller
 	 * A bang bang controller.
@@ -71,9 +71,9 @@ public class BangBangController extends MotionController {
 		this.A = A;
 		this.F = F;
 		this.threshold = threshold;
-		reset();
+		resetSafely();
 	}
-
+	
 	/**
 	 * BangBang controller
 	 * A bang bang controller.
@@ -94,7 +94,7 @@ public class BangBangController extends MotionController {
 	public BangBangController(PIDSensor sensor, double A, double F) {
 		this(sensor, A, F, Util.EPSILON);
 	}
-	
+
 	/**
 	 * BangBang controller
 	 * A bang bang controller.
@@ -115,21 +115,25 @@ public class BangBangController extends MotionController {
 	public BangBangController(PIDSource source, double A, double F) {
 		this(source, A, F, Util.EPSILON);
 	}
-
+	
 	/**
 	 * Sets the setpoint to the current sensor value.
 	 */
 	@Override
-	public void reset() {
-		try {
-			setpoint = sensor.pidGet();
-		}
-		catch (InvalidSensorException e) {
-			LogKitten.ex(e);
-		}
+	public void reset() throws InvalidSensorException {
+		setpoint = sensor.pidGet();
 		error = 0;
 	}
-
+	
+	/**
+	 * Sets the setpoint to the current sensor value.
+	 */
+	@Override
+	public void resetSafely() {
+		setpoint = sensor.pidGetSafely();
+		error = 0;
+	}
+	
 	/**
 	 * Get the current output of the bang bang controller.
 	 * This should be used to set the output.
@@ -167,7 +171,26 @@ public class BangBangController extends MotionController {
 		}
 		return F * setpoint;
 	}
-
+	
+	/**
+	 * Get the current output of the bang bang controller.
+	 * This should be used to set the output.
+	 *
+	 * @return
+	 * 		The current output of the bang bang controller.
+	 * @throws InvalidSensorException
+	 */
+	@Override
+	public double getSafely() {
+		try {
+			return get();
+		}
+		catch (Exception e) {
+			LogKitten.ex(e);
+			return 0;
+		}
+	}
+	
 	/**
 	 * @return
 	 * 		The most recent error.

@@ -24,7 +24,7 @@ public abstract class MotionController {
 	protected double outputMax;
 	protected double outputMin;
 	protected boolean enable;
-
+	
 	/**
 	 * A MotionController modifies an output using a sensor
 	 * to precisely maintain a certain input.
@@ -43,14 +43,9 @@ public abstract class MotionController {
 		inputMax = 0.0;
 		outputMin = 0.0;
 		outputMax = 0.0;
-		try {
-			reset();
-		}
-		catch (InvalidSensorException e) {
-			LogKitten.ex(e);
-		}
+		resetSafely();
 	}
-	
+
 	/**
 	 * A MotionController modifies an output using a sensor
 	 * to precisely maintain a certain input.
@@ -62,13 +57,20 @@ public abstract class MotionController {
 	public MotionController(PIDSource source) {
 		this(new PIDSensor.PIDSourceWrapper(source));
 	}
-	
+
 	/**
 	 * This should return the motion controller
 	 * to a state such that it returns 0.
 	 */
 	public abstract void reset() throws InvalidSensorException;
 
+	/**
+	 * This should return the motion controller
+	 * to a state such that it returns 0.
+	 * This does not throw an exception on error! Use with caution!
+	 */
+	public abstract void resetSafely();
+	
 	/**
 	 * The calculated output value to achieve the
 	 * current setpoint.
@@ -79,7 +81,19 @@ public abstract class MotionController {
 	 *         that range.
 	 */
 	public abstract double get() throws InvalidSensorException;
-
+	
+	/**
+	 * The calculated output value to achieve the
+	 * current setpoint.
+	 *
+	 * @return
+	 * 		Output value. If output range is set,
+	 *         this will be restricted to within
+	 *         that range.
+	 *         This does not throw an exception on error! Use with caution!
+	 */
+	public abstract double getSafely();
+	
 	/**
 	 * A very recent error.
 	 *
@@ -88,7 +102,7 @@ public abstract class MotionController {
 	 *         the get function.
 	 */
 	public abstract double getError();
-
+	
 	/**
 	 * The most recent setpoint.
 	 *
@@ -98,7 +112,7 @@ public abstract class MotionController {
 	public double getSetpoint() {
 		return setpoint;
 	}
-
+	
 	/**
 	 * Sets the setpoint of the motion controller.
 	 * This is the value that the motion controller seeks.
@@ -108,7 +122,7 @@ public abstract class MotionController {
 	public void setSetpoint(double setpoint) {
 		this.setpoint = setpoint;
 	}
-
+	
 	/**
 	 * Sets the tolerance of the motion controller.
 	 * When the error is less than the tolerance,
@@ -123,7 +137,7 @@ public abstract class MotionController {
 		}
 		throw new BoundaryException("Absolute tolerance negative");
 	}
-
+	
 	/**
 	 * Sets the input range of the motion controller.
 	 * This is only used to work with continuous inputs.
@@ -140,7 +154,7 @@ public abstract class MotionController {
 		inputMin = minimum;
 		inputMax = maximum;
 	}
-
+	
 	/**
 	 * Sets the output range of the motion controller.
 	 * Results from the motion control calculation will be
@@ -155,14 +169,14 @@ public abstract class MotionController {
 		outputMax = maximum;
 		capOutput = true;
 	}
-
+	
 	/**
 	 * Stops capping the output range.
 	 */
 	public void disableOutputRange() {
 		capOutput = false;
 	}
-
+	
 	/**
 	 * Sets the input range to continuous.
 	 * This means that it will treat the
@@ -176,14 +190,14 @@ public abstract class MotionController {
 	public void setContinuous(boolean continuous) {
 		this.continuous = continuous;
 	}
-
+	
 	/**
 	 * Turns on the motion controller.
 	 */
 	public void enable() {
 		enable = true;
 	}
-
+	
 	/**
 	 * Bypasses the motion controller.
 	 * In some cases, this will still scale by
@@ -194,9 +208,11 @@ public abstract class MotionController {
 		try {
 			setpoint = sensor.pidGet();
 		}
-		catch (InvalidSensorException e) {}
+		catch (InvalidSensorException e) {
+			LogKitten.ex(e);
+		}
 	}
-
+	
 	/**
 	 * True if the error in the motion controller is
 	 * less than the tolerance of the motion controller.

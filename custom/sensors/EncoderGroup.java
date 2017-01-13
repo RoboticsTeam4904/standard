@@ -55,6 +55,14 @@ public class EncoderGroup implements CustomEncoder {
 	}
 	
 	@Override
+	public double pidGetSafely() {
+		if (pidSource == PIDSourceType.kDisplacement) {
+			return getDistanceSafely();
+		}
+		return getRateSafely();
+	}
+	
+	@Override
 	public void setPIDSourceType(PIDSourceType pidSource) {
 		if (pidSource != null) {
 			this.pidSource = pidSource;
@@ -80,6 +88,17 @@ public class EncoderGroup implements CustomEncoder {
 	}
 	
 	@Override
+	public int getSafely() {
+		try {
+			return get();
+		}
+		catch (Exception e) {
+			LogKitten.ex(e);
+			return 0;
+		}
+	}
+	
+	@Override
 	public double getDistance() throws InvalidSensorException {
 		double average = encoders[0].getDistance();
 		for (int i = 1; i < encoders.length; i++) {
@@ -98,13 +117,34 @@ public class EncoderGroup implements CustomEncoder {
 	}
 	
 	@Override
+	public double getDistanceSafely() {
+		try {
+			return getDistance();
+		}
+		catch (Exception e) {
+			LogKitten.ex(e);
+			return 0;
+		}
+	}
+	
+	@Override
 	public boolean getDirection() throws InvalidSensorException {
 		return (getRate() > 0);
 	}
 	
 	@Override
+	public boolean getDirectionSafely() {
+		return (getRateSafely() > 0);
+	}
+	
+	@Override
 	public boolean getStopped() throws InvalidSensorException {
 		return Util.isZero(getRate());
+	}
+	
+	@Override
+	public boolean getStoppedSafely() {
+		return Util.isZero(getRateSafely());
 	}
 	
 	@Override
@@ -123,6 +163,17 @@ public class EncoderGroup implements CustomEncoder {
 			average = (average * i + encoders[i].getRate()) / (i + 1);
 		}
 		return average / encoders.length;
+	}
+	
+	@Override
+	public double getRateSafely() {
+		try {
+			return getRate();
+		}
+		catch (Exception e) {
+			LogKitten.ex(e);
+			return 0;
+		}
 	}
 	
 	/**
