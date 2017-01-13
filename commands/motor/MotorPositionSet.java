@@ -1,6 +1,7 @@
 package org.usfirst.frc4904.standard.commands.motor;
 
 
+import org.usfirst.frc4904.standard.custom.sensors.InvalidSensorException;
 import org.usfirst.frc4904.standard.subsystems.motor.SensorMotor;
 import edu.wpi.first.wpilibj.command.Command;
 
@@ -10,6 +11,25 @@ import edu.wpi.first.wpilibj.command.Command;
 public class MotorPositionSet extends Command {
 	protected SensorMotor motor;
 	protected double position;
+	protected final Command fallbackCommand;
+	
+	/**
+	 * Constructor.
+	 * The MotorSensorHold command holds a motor to a position.
+	 *
+	 * @param motor
+	 *        A Motor that also implements PositionSensorMotor.
+	 * @param fallbackCommand
+	 *        If the sensor fails for some reason, this command will be cancelled, then the fallbackCommand will start
+	 */
+	public MotorPositionSet(SensorMotor motor, Command fallbackCommand) {
+		super("MotorPositionSet");
+		this.motor = motor;
+		requires(motor);
+		motor.enablePID();
+		setInterruptible(true);
+		this.fallbackCommand = fallbackCommand;
+	}
 	
 	/**
 	 * Constructor.
@@ -19,11 +39,7 @@ public class MotorPositionSet extends Command {
 	 *        A Motor that also implements PositionSensorMotor.
 	 */
 	public MotorPositionSet(SensorMotor motor) {
-		super("MotorPositionSet");
-		this.motor = motor;
-		requires(motor);
-		motor.enablePID();
-		setInterruptible(true);
+		this(motor, null);
 	}
 	
 	/**
@@ -41,7 +57,15 @@ public class MotorPositionSet extends Command {
 	
 	@Override
 	protected void execute() {
-		motor.setPosition(position);
+		try {
+			motor.setPositionSafely(position);
+		}
+		catch (InvalidSensorException e) {
+			cancel();
+			if (fallbackCommand != null) {
+				fallbackCommand.start();
+			}
+		}
 	}
 	
 	@Override
