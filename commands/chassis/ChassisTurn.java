@@ -8,7 +8,7 @@ import org.usfirst.frc4904.standard.custom.sensors.InvalidSensorException;
 import org.usfirst.frc4904.standard.subsystems.chassis.Chassis;
 import edu.wpi.first.wpilibj.command.Command;
 
-public class ChassisTurnDegrees extends Command implements ChassisController {
+public class ChassisTurn extends Command implements ChassisController {
 	protected final ChassisMove move;
 	protected double initialAngle;
 	protected final double finalAngle;
@@ -27,7 +27,7 @@ public class ChassisTurnDegrees extends Command implements ChassisController {
 	 *        If the sensor fails for some reason, this command will be cancelled, then the fallbackCommand will start
 	 * @param motionController
 	 */
-	public ChassisTurnDegrees(Chassis chassis, double finalAngle, IMU imu, Command fallbackCommand, MotionController motionController) {
+	public ChassisTurn(Chassis chassis, double finalAngle, IMU imu, Command fallbackCommand, MotionController motionController) {
 		move = new ChassisMove(chassis, this);
 		this.finalAngle = -((finalAngle + 360) % 360 - 180);
 		this.imu = imu;
@@ -44,7 +44,7 @@ public class ChassisTurnDegrees extends Command implements ChassisController {
 	 * @param imu
 	 * @param motionController
 	 */
-	public ChassisTurnDegrees(Chassis chassis, double finalAngle, IMU imu, MotionController motionController) {
+	public ChassisTurn(Chassis chassis, double finalAngle, IMU imu, MotionController motionController) {
 		this(chassis, finalAngle, imu, null, motionController);
 	}
 

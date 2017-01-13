@@ -9,7 +9,7 @@ import org.usfirst.frc4904.standard.custom.sensors.InvalidSensorException;
 import org.usfirst.frc4904.standard.subsystems.chassis.Chassis;
 import edu.wpi.first.wpilibj.command.Command;
 
-public class ChassisSetDistance extends Command implements ChassisController {
+public class ChassisMoveDistance extends Command implements ChassisController {
 	protected final ChassisMove chassisMove;
 	protected final MotionController motionController;
 	protected final Command fallbackCommand;
@@ -30,7 +30,7 @@ public class ChassisSetDistance extends Command implements ChassisController {
 	 *        If the sensor fails for some reason, this command will be cancelled, then the fallbackCommand will start
 	 * @param encoders
 	 */
-	public ChassisSetDistance(Chassis chassis, double distance, MotionController motionController, Command fallbackCommand, CustomEncoder... encoders) {
+	public ChassisMoveDistance(Chassis chassis, double distance, MotionController motionController, Command fallbackCommand, CustomEncoder... encoders) {
 		chassisMove = new ChassisMove(chassis, this, false);
 		this.motionController = motionController;
 		this.encoders = encoders;
@@ -50,7 +50,7 @@ public class ChassisSetDistance extends Command implements ChassisController {
 	 * @param motionController
 	 * @param encoders
 	 */
-	public ChassisSetDistance(Chassis chassis, double distance, MotionController motionController, CustomEncoder... encoders) {
+	public ChassisMoveDistance(Chassis chassis, double distance, MotionController motionController, CustomEncoder... encoders) {
 		this(chassis, distance, motionController, null, encoders);
 	}
 

@@ -6,7 +6,7 @@ import org.usfirst.frc4904.standard.custom.sensors.IMU;
 import org.usfirst.frc4904.standard.subsystems.chassis.Chassis;
 import edu.wpi.first.wpilibj.command.Command;
 
-public class ChassisTurnAbsolute extends ChassisTurnDegrees {
+public class ChassisTurnAbsolute extends ChassisTurn {
 	
 	/**
 	 * Constructor
