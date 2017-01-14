@@ -2,7 +2,7 @@ package org.usfirst.frc4904.standard.custom.sensors;
 
 
 import org.usfirst.frc4904.standard.Util;
-import edu.wpi.first.wpilibj.CANTalon;
+import com.ctre.CANTalon;
 import edu.wpi.first.wpilibj.PIDSourceType;
 
 public class CANTalonEncoder implements CustomEncoder {
@@ -118,32 +118,32 @@ public class CANTalonEncoder implements CustomEncoder {
 	public void reset() {
 		talon.setEncPosition(0);
 	}
-
+	
 	@Override
 	public double pidGetSafely() {
 		return pidGet();
 	}
-
+	
 	@Override
 	public int getSafely() {
 		return get();
 	}
-
+	
 	@Override
 	public double getDistanceSafely() {
 		return getDistance();
 	}
-
+	
 	@Override
 	public boolean getDirectionSafely() {
 		return getDirection();
 	}
-
+	
 	@Override
 	public boolean getStoppedSafely() {
 		return getStopped();
 	}
-
+	
 	@Override
 	public double getRateSafely() {
 		return getRate();
