@@ -1,7 +1,9 @@
 package org.usfirst.frc4904.standard.subsystems.motor;
 
 
+import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.custom.motioncontrollers.MotionController;
+import org.usfirst.frc4904.standard.custom.sensors.InvalidSensorException;
 import org.usfirst.frc4904.standard.subsystems.motor.speedmodifiers.IdentityModifier;
 import org.usfirst.frc4904.standard.subsystems.motor.speedmodifiers.SpeedModifier;
 import edu.wpi.first.wpilibj.SpeedController;
@@ -42,7 +44,7 @@ public abstract class SensorMotor extends Motor {
 		this("SensorMotor", motionController, motors);
 	}
 	
-	public void reset() {
+	public void reset() throws InvalidSensorException {
 		motionController.reset();
 	}
 	
@@ -57,6 +59,34 @@ public abstract class SensorMotor extends Motor {
 	
 	public void disableMC() {
 		motionController.disable();
+	}
+
+	/**
+	 * Set the position of a sensor motor
+	 *
+	 * @param position
+	 * @throws InvalidSensorException
+	 */
+	public void setPositionSafely(double position) throws InvalidSensorException {
+		motionController.setSetpoint(position);
+		motionController.enable();
+		double speed = motionController.getSafely();
+		LogKitten.v(getName() + " set to position " + position + " at speed " + speed);
+		super.set(speed);
+	}
+	
+	/**
+	 * Set the position of a sensor motor
+	 *
+	 * @param position
+	 * @warning this does not indicate sensor failure
+	 */
+	public void setPosition(double position) {
+		motionController.setSetpoint(position);
+		motionController.enable();
+		double speed = motionController.get();
+		LogKitten.v(getName() + " set to position " + position + " at speed " + speed);
+		super.set(speed);
 	}
 	
 	public boolean onTarget() {

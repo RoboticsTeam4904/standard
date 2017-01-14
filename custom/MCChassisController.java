@@ -5,6 +5,7 @@ import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.Util;
 import org.usfirst.frc4904.standard.custom.motioncontrollers.MotionController;
 import org.usfirst.frc4904.standard.custom.sensors.IMU;
+import org.usfirst.frc4904.standard.custom.sensors.InvalidSensorException;
 import edu.wpi.first.wpilibj.PIDSourceType;
 
 public class MCChassisController implements ChassisController {
@@ -31,7 +32,7 @@ public class MCChassisController implements ChassisController {
 		lastUpdate = System.currentTimeMillis() / 1000.0;
 	}
 	
-	public void reset() {
+	public void reset() throws InvalidSensorException {
 		targetYaw = imu.getYaw();
 		lastUpdate = System.currentTimeMillis() / 1000.0;
 		motionController.disable();
@@ -56,7 +57,10 @@ public class MCChassisController implements ChassisController {
 			targetYaw = imu.getYaw();
 			return controller.getTurnSpeed();
 		}
-		LogKitten.v(motionController.getSetpoint() + " " + imu.getYaw() + " " + motionController.get());
+		try {
+			LogKitten.v(motionController.getSetpoint() + " " + imu.getYaw() + " " + motionController.getSafely());
+		}
+		catch (InvalidSensorException e) {}
 		targetYaw = targetYaw + ((controller.getTurnSpeed() * maxDegreesPerSecond) * ((System.currentTimeMillis() / 1000.0) - lastUpdate));
 		lastUpdate = System.currentTimeMillis() / 1000.0;
 		if (targetYaw > 180) {
@@ -65,7 +69,11 @@ public class MCChassisController implements ChassisController {
 			targetYaw = 180 - (Math.abs(targetYaw) - 180);
 		}
 		motionController.setSetpoint(targetYaw);
-		// LogKitten.d("Total error: " + pid.totalError + ", Raw Yaw: " + ahrs.getRawYaw() + ", Error: " + pid.getError(), true);
-		return motionController.get();
+		try {
+			return motionController.getSafely();
+		}
+		catch (InvalidSensorException e) {
+			return controller.getTurnSpeed();
+		}
 	}
 }

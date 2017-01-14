@@ -4,6 +4,8 @@ package org.usfirst.frc4904.standard.custom.motioncontrollers;
 import java.util.Timer;
 import java.util.TimerTask;
 import org.usfirst.frc4904.standard.Util;
+import org.usfirst.frc4904.standard.custom.sensors.InvalidSensorException;
+import org.usfirst.frc4904.standard.custom.sensors.PIDSensor;
 import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.util.BoundaryException;
@@ -14,10 +16,10 @@ import edu.wpi.first.wpilibj.util.BoundaryException;
  *
  */
 public abstract class MotionController {
-	protected final PIDSource source;
 	protected PIDOutput output;
 	protected Timer timer;
 	protected MotionControllerTask task;
+	protected final PIDSensor sensor;
 	protected double setpoint;
 	protected double absoluteTolerance;
 	protected boolean continuous;
@@ -32,15 +34,15 @@ public abstract class MotionController {
 	 * A MotionController modifies an output using a sensor
 	 * to precisely maintain a certain input.
 	 *
-	 * @param source
+	 * @param sensor
 	 *        The sensor associated with the output you are
 	 *        trying to control
 	 */
-	public MotionController(PIDSource source) {
+	public MotionController(PIDSensor sensor) {
+		this.sensor = sensor;
 		output = null;
 		timer = new Timer();
 		task = new MotionControllerTask();
-		this.source = source;
 		enable = true;
 		absoluteTolerance = Util.EPSILON; // Nonzero to avoid floating point errors
 		capOutput = false;
@@ -66,10 +68,30 @@ public abstract class MotionController {
 	}
 
 	/**
+	 * A MotionController modifies an output using a sensor
+	 * to precisely maintain a certain input.
+	 *
+	 * @param sensor
+	 *        The sensor associated with the output you are
+	 *        trying to control
+	 */
+	public MotionController(PIDSource source) {
+		this(new PIDSensor.PIDSourceWrapper(source));
+	}
+	
+	/**
+	 * This should return the motion controller
+	 * to a state such that it returns 0.
+	 *
+	 * @warning this does not indicate sensor errors
+	 */
+	public abstract void reset();
+
+	/**
 	 * This should return the motion controller
 	 * to a state such that it returns 0.
 	 */
-	public abstract void reset();
+	public abstract void resetSafely() throws InvalidSensorException;
 
 	/**
 	 * The calculated output value to achieve the
@@ -79,6 +101,18 @@ public abstract class MotionController {
 	 * 		Output value. If output range is set,
 	 *         this will be restricted to within
 	 *         that range.
+	 */
+	public abstract double getSafely() throws InvalidSensorException;
+
+	/**
+	 * The calculated output value to achieve the
+	 * current setpoint.
+	 *
+	 * @return
+	 * 		Output value. If output range is set,
+	 *         this will be restricted to within
+	 *         that range.
+	 * @warning does not indicate sensor errors
 	 */
 	public abstract double get();
 
@@ -200,6 +234,7 @@ public abstract class MotionController {
 		task.cancel();
 		timer.purge();
 		task = new MotionControllerTask();
+		setpoint = sensor.pidGet();
 	}
 
 	/**
