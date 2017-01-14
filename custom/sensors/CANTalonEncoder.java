@@ -95,8 +95,18 @@ public class CANTalonEncoder implements CustomEncoder {
 	}
 	
 	@Override
+	public double getDistancePerPulse() {
+		return distancePerPulse;
+	}
+	
+	@Override
 	public void setDistancePerPulse(double distancePerPulse) {
 		this.distancePerPulse = distancePerPulse;
+	}
+	
+	@Override
+	public boolean getReverseDirection() {
+		return reverseDirection;
 	}
 	
 	@Override
@@ -107,5 +117,35 @@ public class CANTalonEncoder implements CustomEncoder {
 	@Override
 	public void reset() {
 		talon.setEncPosition(0);
+	}
+
+	@Override
+	public double pidGetSafely() {
+		return pidGet();
+	}
+
+	@Override
+	public int getSafely() {
+		return get();
+	}
+
+	@Override
+	public double getDistanceSafely() {
+		return getDistance();
+	}
+
+	@Override
+	public boolean getDirectionSafely() {
+		return getDirection();
+	}
+
+	@Override
+	public boolean getStoppedSafely() {
+		return getStopped();
+	}
+
+	@Override
+	public double getRateSafely() {
+		return getRate();
 	}
 }
