@@ -7,8 +7,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.Calendar;
 import java.util.Comparator;
-import edu.wpi.first.wpilibj.communication.FRCNetworkCommunicationsLibrary;
-import edu.wpi.first.wpilibj.communication.HALControlWord;
+import edu.wpi.first.wpilibj.hal.HAL;
 
 public class LogKitten {
 	private static FileOutputStream fileOutput;
@@ -137,15 +136,13 @@ public class LogKitten {
 
 	/**
 	 * Like DriverStation.reportError, but w/o stack trace nor printing to System.err
+	 * (updated for 2017 WPILib release)
 	 *
 	 * @see edu.wpi.first.wpilibj.DriverStation.reportError
 	 * @param errorString
 	 */
-	private static void reportErrorToDriverStation(String errorString) {
-		HALControlWord controlWord = FRCNetworkCommunicationsLibrary.HALGetControlWord();
-		if (controlWord.getDSAttached()) {
-			FRCNetworkCommunicationsLibrary.HALSetErrorData(errorString);
-		}
+	private static void reportErrorToDriverStation(String details, String errorMessage, KittenLevel logLevel) {
+		HAL.sendError(true, logLevel.severity, false, details, errorMessage, null, false);
 	}
 
 	private static synchronized void logMessage(String message, KittenLevel level, boolean override) {
@@ -170,7 +167,7 @@ public class LogKitten {
 				System.out.println(printContent);
 			}
 			if (LogKitten.dsLevel.compareTo(level) >= 0) {
-				LogKitten.reportErrorToDriverStation(printContent);
+				LogKitten.reportErrorToDriverStation(LogKitten.getLoggerMethodCallerClassName() + "#" + LogKitten.getLoggerMethodCallerMethodName(), level.getName() + ": " + message, level);
 			}
 		}
 	}
