@@ -15,7 +15,7 @@ public class CustomCAN {
 	// Because CANJNI is basically static, we do not extend it.
 	protected final int messageID;
 	protected final String name;
-
+	
 	/**
 	 * Constructor for a CustomCAN device.
 	 * The name is local and for your convenience only.
@@ -29,11 +29,11 @@ public class CustomCAN {
 		this.name = name;
 		messageID = id;
 	}
-
+	
 	public String getName() {
 		return name;
 	}
-
+	
 	/**
 	 * Used to write data to the device.
 	 * Will continue writing until read is called.
@@ -47,10 +47,10 @@ public class CustomCAN {
 		for (int i = 0; i < 8; i++) {
 			canData.put(i, data[i]);
 		}
-		CANJNI.FRCNetworkCommunicationCANSessionMuxSendMessage(messageID, null, CANJNI.CAN_SEND_PERIOD_STOP_REPEATING);
-		CANJNI.FRCNetworkCommunicationCANSessionMuxSendMessage(messageID, canData, 1);
+		CANJNI.FRCNetCommCANSessionMuxSendMessage(messageID, null, CANJNI.CAN_SEND_PERIOD_STOP_REPEATING);
+		CANJNI.FRCNetCommCANSessionMuxSendMessage(messageID, canData, 1);
 	}
-
+	
 	protected ByteBuffer readBuffer() {
 		IntBuffer idBuffer = ByteBuffer.allocateDirect(4).asIntBuffer();
 		idBuffer.clear();
@@ -60,15 +60,15 @@ public class CustomCAN {
 		long start = System.currentTimeMillis();
 		while (System.currentTimeMillis() - start < 10) {
 			try {
-				response = CANJNI.FRCNetworkCommunicationCANSessionMuxReceiveMessage(idBuffer, CANJNI.CAN_MSGID_FULL_M, timestamp);
+				response = CANJNI.FRCNetCommCANSessionMuxReceiveMessage(idBuffer, 0xffffffff, timestamp);
 				break;
 			}
 			catch (CANMessageNotFoundException e) {}
 		}
-		CANJNI.FRCNetworkCommunicationCANSessionMuxSendMessage(messageID, null, CANJNI.CAN_SEND_PERIOD_STOP_REPEATING);
+		CANJNI.FRCNetCommCANSessionMuxSendMessage(messageID, null, CANJNI.CAN_SEND_PERIOD_STOP_REPEATING);
 		return response;
 	}
-
+	
 	/**
 	 * Reads data
 	 * Also stops repeating the last message.
