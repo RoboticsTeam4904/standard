@@ -30,6 +30,7 @@ public abstract class MotionController {
 	protected double outputMin;
 	protected boolean enable;
 	protected boolean justReset;
+	protected Exception mcException;
 
 	/**
 	 * A MotionController modifies an output using a sensor
@@ -54,6 +55,7 @@ public abstract class MotionController {
 		outputMax = 0.0;
 		reset();
 		justReset = true;
+		mcException = null;
 	}
 
 	/**
@@ -261,6 +263,17 @@ public abstract class MotionController {
 	}
 
 	/**
+	 * Check if the motion controller has generated
+	 * an exception within the TimerTask. If there is
+	 * not an exception, the function returns null.
+	 *
+	 * @return the exception (probably null)
+	 */
+	public Exception checkException() {
+		return mcException;
+	}
+
+	/**
 	 * The thread in which the output is updated with the
 	 * results of the motion controller calculation.
 	 *
@@ -279,6 +292,7 @@ public abstract class MotionController {
 				}
 			}
 			catch (Exception e) {
+				mcException = e;
 			}
 		}
 	}

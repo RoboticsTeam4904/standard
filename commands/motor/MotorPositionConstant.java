@@ -68,7 +68,12 @@ public class MotorPositionConstant extends Command {
 	}
 
 	@Override
-	protected void execute() {}
+	protected void execute() {
+		if (motor.checkMCException() != null) {
+			cancel();
+			fallbackCommand.start();
+		}
+	}
 
 	@Override
 	protected boolean isFinished() {
