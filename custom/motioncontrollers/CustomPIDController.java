@@ -18,7 +18,6 @@ public class CustomPIDController extends MotionController {
 	protected double F;
 	protected double totalError;
 	protected double lastError;
-	protected boolean justReset;
 
 	/**
 	 * An extremely basic PID controller.
@@ -41,7 +40,6 @@ public class CustomPIDController extends MotionController {
 		this.I = I;
 		this.D = D;
 		this.F = F;
-		justReset = true;
 	}
 	
 	/**
@@ -65,7 +63,6 @@ public class CustomPIDController extends MotionController {
 		this.I = I;
 		this.D = D;
 		this.F = F;
-		justReset = true;
 	}
 
 	/**

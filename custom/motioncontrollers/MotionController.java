@@ -29,6 +29,7 @@ public abstract class MotionController {
 	protected double outputMax;
 	protected double outputMin;
 	protected boolean enable;
+	protected boolean justReset;
 
 	/**
 	 * A MotionController modifies an output using a sensor
@@ -52,6 +53,7 @@ public abstract class MotionController {
 		outputMin = 0.0;
 		outputMax = 0.0;
 		reset();
+		justReset = true;
 	}
 
 	/**
@@ -219,7 +221,11 @@ public abstract class MotionController {
 	public void enable() {
 		enable = true;
 		try {
-			timer.scheduleAtFixedRate(task, 0, 20);
+			timer.scheduleAtFixedRate(task, 10, 20);
+			justReset = true;
+			// justReset is written to by both the main thread and the Task,
+			// so there is a 10 millisecond delay in the initial execution of
+			// the task
 		}
 		catch (IllegalStateException e) {} // Do not die if the timer is already running
 	}
@@ -262,9 +268,17 @@ public abstract class MotionController {
 	protected class MotionControllerTask extends TimerTask {
 		@Override
 		public void run() {
-			double value = get(); // Always calculate MC output
-			if (output != null && isEnabled()) {
-				output.pidWrite(value);
+			try {
+				double value = getSafely(); // Always calculate MC output
+				if (justReset) {
+					justReset = false;
+					return;
+				}
+				if (output != null && isEnabled()) {
+					output.pidWrite(value);
+				}
+			}
+			catch (Exception e) {
 			}
 		}
 	}
