@@ -117,22 +117,10 @@ public class BangBangController extends MotionController {
 	}
 	
 	/**
-	 * Sets the setpoint to the current sensor value.
+	 * Zeroes error
 	 */
 	@Override
-	public void resetSafely() throws InvalidSensorException {
-		setpoint = sensor.pidGetSafely();
-		error = 0;
-	}
-	
-	/**
-	 * Sets the setpoint to the current sensor value.
-	 *
-	 * @warning does not indicate sensor errors
-	 */
-	@Override
-	public void reset() {
-		setpoint = sensor.pidGet();
+	public void resetMC() {
 		error = 0;
 	}
 	

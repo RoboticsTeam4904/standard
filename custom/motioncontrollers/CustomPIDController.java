@@ -196,35 +196,12 @@ public class CustomPIDController extends MotionController {
 
 	/**
 	 * Resets the PID controller.
-	 * This sets total error and last error to 0,
-	 * as well as setting the setpoint to the current
-	 * sensor reading.
 	 *
-	 * @throws InvalidSensorException
-	 *         when a sensor fails
 	 */
 	@Override
-	public void resetSafely() throws InvalidSensorException {
-		setpoint = sensor.pidGet();
+	protected void resetMC() {
 		totalError = 0;
 		lastError = 0;
-		justReset = true;
-	}
-
-	/**
-	 * Resets the PID controller.
-	 * This sets total error and last error to 0,
-	 * as well as setting the setpoint to the current
-	 * sensor reading.
-	 *
-	 * @warning does not indicate sensor error
-	 */
-	@Override
-	public void reset() {
-		setpoint = sensor.pidGet();
-		totalError = 0;
-		lastError = 0;
-		justReset = true;
 	}
 
 	@Override
@@ -262,20 +239,13 @@ public class CustomPIDController extends MotionController {
 			}
 		}
 		// Calculate the approximation of the error's derivative
-		double errorDerivative;
-		// If we've just reset the error could jump from 0 to a very high number so just return 0
-		if (justReset) {
-			errorDerivative = 0;
-		} else {
-			errorDerivative = (error - lastError);
-		}
+		double errorDerivative = (error - lastError);
 		// Calculate the approximation of the error's integral
 		totalError += error;
 		// Calculate the result using the PIDF formula
 		double result = P * error + I * totalError + D * errorDerivative + F * setpoint;
 		// Save the error for calculating future derivatives
 		lastError = error;
-		justReset = false;
 		LogKitten.v(input + " " + setpoint + " " + result);
 		if (capOutput) {
 			// Limit the result to be within the output range [outputMin, outputMax]
@@ -304,6 +274,6 @@ public class CustomPIDController extends MotionController {
 
 	@Override
 	public boolean onTarget() {
-		return !justReset && super.onTarget();
+		return super.onTarget();
 	}
 }
