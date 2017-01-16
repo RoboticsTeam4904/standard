@@ -13,7 +13,7 @@ install:
 - curl -o ~/wpilib/java/current/lib/CTRLib.jar http://www.t4904.xyz/wiki/files/ctrlib/CTRLib.jar
 - curl -o ~/wpilib/java/current/lib/libCTRLibDriver.so http://www.t4904.xyz/wiki/files/ctrlib/libCTRLibDriver.so
 - curl -o ~/wpilib/java/current/lib/libCTRLibDriver.so.debug http://www.t4904.xyz/wiki/files/ctrlib/libCTRLibDriver.so.debug
-- curl -o ~/wpilib/java/current/ant/build.properties http://www.t4904.xyz/wiki/files/navx/build.properties
+- curl -o ~/wpilib/java/current/ant/build.properties http://www.t4904.xyz/wiki/files/build.properties
 
 notifications:
   email: none
