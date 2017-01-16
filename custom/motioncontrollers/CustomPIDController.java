@@ -3,8 +3,10 @@ package org.usfirst.frc4904.standard.custom.motioncontrollers;
 
 import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.custom.sensors.InvalidSensorException;
+import org.usfirst.frc4904.standard.custom.sensors.NativeDerivativeSensor;
 import org.usfirst.frc4904.standard.custom.sensors.PIDSensor;
 import edu.wpi.first.wpilibj.PIDSource;
+import edu.wpi.first.wpilibj.PIDSourceType;
 
 /**
  * An extremely basic PID controller.
@@ -18,7 +20,8 @@ public class CustomPIDController extends MotionController {
 	protected double F;
 	protected double totalError;
 	protected double lastError;
-
+	protected long lastTime;
+	
 	/**
 	 * An extremely basic PID controller.
 	 * It does not differentiate between rate and distance.
@@ -64,7 +67,7 @@ public class CustomPIDController extends MotionController {
 		this.D = D;
 		this.F = F;
 	}
-
+	
 	/**
 	 * An extremely basic PID controller.
 	 * It does not differentiate between rate and distance.
@@ -81,7 +84,7 @@ public class CustomPIDController extends MotionController {
 	public CustomPIDController(double P, double I, double D, PIDSensor sensor) {
 		this(P, I, D, 0.0, sensor);
 	}
-
+	
 	/**
 	 * An extremely basic PID controller.
 	 * It does not differentiate between rate and distance.
@@ -98,7 +101,7 @@ public class CustomPIDController extends MotionController {
 	public CustomPIDController(double P, double I, double D, PIDSource source) {
 		this(P, I, D, 0.0, source);
 	}
-
+	
 	/**
 	 * An extremely basic PID controller.
 	 * It does not differentiate between rate and distance.
@@ -109,7 +112,7 @@ public class CustomPIDController extends MotionController {
 	public CustomPIDController(PIDSensor sensor) {
 		this(0, 0, 0, sensor);
 	}
-
+	
 	/**
 	 * An extremely basic PID controller.
 	 * It does not differentiate between rate and distance.
@@ -120,7 +123,7 @@ public class CustomPIDController extends MotionController {
 	public CustomPIDController(PIDSource source) {
 		this(0, 0, 0, source);
 	}
-
+	
 	/**
 	 * @return
 	 * 		The current P value
@@ -128,7 +131,7 @@ public class CustomPIDController extends MotionController {
 	public double getP() {
 		return P;
 	}
-
+	
 	/**
 	 * @return
 	 * 		The current I value
@@ -136,7 +139,7 @@ public class CustomPIDController extends MotionController {
 	public double getI() {
 		return I;
 	}
-
+	
 	/**
 	 * @return
 	 * 		The current D value
@@ -144,7 +147,7 @@ public class CustomPIDController extends MotionController {
 	public double getD() {
 		return D;
 	}
-
+	
 	/**
 	 * @return
 	 * 		The current F (feed forward) value
@@ -152,7 +155,7 @@ public class CustomPIDController extends MotionController {
 	public double getF() {
 		return F;
 	}
-
+	
 	/**
 	 * Sets the parameters of the PID loop
 	 *
@@ -171,7 +174,7 @@ public class CustomPIDController extends MotionController {
 		this.I = I;
 		this.D = D;
 	}
-
+	
 	/**
 	 * Sets the parameters of the PID loop
 	 *
@@ -193,7 +196,7 @@ public class CustomPIDController extends MotionController {
 		this.D = D;
 		this.F = F;
 	}
-
+	
 	/**
 	 * Resets the PID controller.
 	 *
@@ -203,12 +206,12 @@ public class CustomPIDController extends MotionController {
 		totalError = 0;
 		lastError = 0;
 	}
-
+	
 	@Override
 	public double getError() {
 		return lastError;
 	}
-
+	
 	@Override
 	/**
 	 * Get the current output of the PID loop.
@@ -238,8 +241,18 @@ public class CustomPIDController extends MotionController {
 				}
 			}
 		}
-		// Calculate the approximation of the error's derivative
-		double errorDerivative = (error - lastError);
+		double errorDerivative;
+		// Check if the sensor supports native derivative calculations.
+		if (sensor instanceof NativeDerivativeSensor && sensor.getPIDSourceType() == PIDSourceType.kDisplacement) {
+			sensor.setPIDSourceType(PIDSourceType.kRate);
+			errorDerivative = sensor.pidGet();
+			sensor.setPIDSourceType(PIDSourceType.kDisplacement);
+		} else {
+			// Calculate the approximation of the derivative.
+			long latestTime = System.currentTimeMillis();
+			errorDerivative = (error - lastError) / (latestTime - lastTime);
+			lastTime = latestTime;
+		}
 		// Calculate the approximation of the error's integral
 		totalError += error;
 		// Calculate the result using the PIDF formula
@@ -253,7 +266,7 @@ public class CustomPIDController extends MotionController {
 		}
 		return result;
 	}
-
+	
 	@Override
 	/**
 	 * Get the current output of the PID loop.
@@ -271,7 +284,7 @@ public class CustomPIDController extends MotionController {
 			return 0;
 		}
 	}
-
+	
 	@Override
 	public boolean onTarget() {
 		return super.onTarget();
