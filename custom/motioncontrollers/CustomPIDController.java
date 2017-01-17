@@ -242,6 +242,8 @@ public class CustomPIDController extends MotionController {
 			}
 		}
 		double errorDerivative;
+		long latestTime = System.currentTimeMillis();
+		long timeDiff = latestTime - lastTime;
 		// Check if the sensor supports native derivative calculations.
 		if (sensor instanceof NativeDerivativeSensor && sensor.getPIDSourceType() == PIDSourceType.kDisplacement) {
 			sensor.setPIDSourceType(PIDSourceType.kRate);
@@ -249,12 +251,11 @@ public class CustomPIDController extends MotionController {
 			sensor.setPIDSourceType(PIDSourceType.kDisplacement);
 		} else {
 			// Calculate the approximation of the derivative.
-			long latestTime = System.currentTimeMillis();
-			errorDerivative = (error - lastError) / (latestTime - lastTime);
-			lastTime = latestTime;
+			errorDerivative = (error - lastError) / timeDiff;
 		}
+		lastTime = latestTime;
 		// Calculate the approximation of the error's integral
-		totalError += error;
+		totalError += error * timeDiff;
 		// Calculate the result using the PIDF formula
 		double result = P * error + I * totalError + D * errorDerivative + F * setpoint;
 		// Save the error for calculating future derivatives
