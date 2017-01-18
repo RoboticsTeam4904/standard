@@ -61,7 +61,7 @@ public class LogKitten {
 			ioe.printStackTrace();
 		}
 	}
-
+	
 	/**
 	 * Get the name of a logger method's caller
 	 *
@@ -142,7 +142,7 @@ public class LogKitten {
 	 * @param errorString
 	 */
 	private static void reportErrorToDriverStation(String details, String errorMessage, KittenLevel logLevel) {
-		HAL.sendError(true, logLevel.severity, false, details, errorMessage, null, false);
+		HAL.sendError(true, logLevel.severity, false, errorMessage, details, null, false);
 	}
 	
 	private static synchronized void logMessage(String message, KittenLevel level, boolean override) {
