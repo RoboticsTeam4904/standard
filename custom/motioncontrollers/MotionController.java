@@ -30,7 +30,8 @@ public abstract class MotionController {
 	protected double outputMin;
 	protected boolean enable;
 	protected Exception mcException;
-	private Boolean justReset;
+	private volatile boolean justReset;
+	private final Object lock=new Object();
 	
 	/**
 	 * A MotionController modifies an output using a sensor
@@ -92,7 +93,7 @@ public abstract class MotionController {
 	public final void reset() {
 		resetMC();
 		setpoint = sensor.pidGet();
-		synchronized (justReset) {
+		synchronized (lock) {
 			justReset = true;
 		}
 	}
@@ -104,7 +105,7 @@ public abstract class MotionController {
 	public final void resetSafely() throws InvalidSensorException {
 		resetMC();
 		setpoint = sensor.pidGetSafely();
-		synchronized (justReset) {
+		synchronized (lock) {
 			justReset = true;
 		}
 	}
@@ -243,7 +244,7 @@ public abstract class MotionController {
 		enable = true;
 		try {
 			timer.scheduleAtFixedRate(task, 10, 20);
-			synchronized (justReset) {
+			synchronized (lock) {
 				justReset = true;
 			}
 			// justReset is written to by both the main thread and the Task,
@@ -304,11 +305,11 @@ public abstract class MotionController {
 		public void run() {
 			try {
 				double value = getSafely(); // Always calculate MC output
-				if (justReset) {
-					synchronized (justReset) {
+				synchronized (lock) {
+					if (justReset) {
 						justReset = false;
+						return;
 					}
-					return;
 				}
 				if (output != null && isEnabled()) {
 					output.pidWrite(value);
