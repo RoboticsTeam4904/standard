@@ -5,8 +5,9 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.Calendar;
+import java.text.SimpleDateFormat;
 import java.util.Comparator;
+import java.util.Date;
 import edu.wpi.first.wpilibj.hal.HAL;
 
 public class LogKitten {
