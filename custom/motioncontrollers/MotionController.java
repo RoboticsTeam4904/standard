@@ -31,7 +31,7 @@ public abstract class MotionController {
 	protected boolean enable;
 	protected Exception mcException;
 	private volatile boolean justReset;
-	private final Object lock=new Object();
+	private final Object lock = new Object();
 	
 	/**
 	 * A MotionController modifies an output using a sensor

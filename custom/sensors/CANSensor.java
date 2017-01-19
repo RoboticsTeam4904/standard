@@ -13,7 +13,7 @@ public class CANSensor extends CustomCAN {
 	private final int[] values;
 	private final long[] ages;
 	private final long MAX_AGE = 1000;
-
+	
 	/**
 	 *
 	 * @param name
@@ -32,7 +32,7 @@ public class CANSensor extends CustomCAN {
 			ages[i] = System.currentTimeMillis();
 		}
 	}
-
+	
 	/**
 	 *
 	 * @param name
@@ -43,7 +43,7 @@ public class CANSensor extends CustomCAN {
 	public CANSensor(String name, int id) {
 		this(name, id, 1);
 	}
-
+	
 	/**
 	 * Read an int from a CAN sensor with retries
 	 * Retries are now ignored
@@ -62,7 +62,7 @@ public class CANSensor extends CustomCAN {
 	public int read(int mode, int retryMax) throws InvalidSensorException {
 		return read(mode);
 	}
-
+	
 	/**
 	 * Read an int from a CAN sensor
 	 *

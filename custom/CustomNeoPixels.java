@@ -12,7 +12,7 @@ public abstract class CustomNeoPixels extends CustomCAN {
 	protected byte B;
 	protected int mode;
 	protected int value;
-
+	
 	/**
 	 * Constructor
 	 * ID should be between 0x600 and 0x700.
@@ -28,11 +28,11 @@ public abstract class CustomNeoPixels extends CustomCAN {
 		mode = 0;
 		value = 0;
 	}
-
+	
 	protected final void setMode(int mode) { // People should be forced to overwrite this with a more user friendly mode system
 		this.mode = mode;
 	}
-
+	
 	/**
 	 * Sets the color of the pattern.
 	 * Values are 0-255.
@@ -46,7 +46,7 @@ public abstract class CustomNeoPixels extends CustomCAN {
 		this.G = (byte) G;
 		this.B = (byte) B;
 	}
-
+	
 	/**
 	 * Sets the progress of the pattern.
 	 * Values are 0 to 32768.
@@ -56,7 +56,7 @@ public abstract class CustomNeoPixels extends CustomCAN {
 	public void setValue(int value) {
 		this.value = value;
 	}
-
+	
 	/**
 	 * Writes LED pattern to Teensy.
 	 */
