@@ -55,7 +55,7 @@ public class MotorPositionConstant extends Command {
 	protected void initialize() {
 		try {
 			motor.reset();
-			motor.enableMC();
+			motor.enableMotionController();
 			motor.setPositionSafely(position);
 		}
 		catch (InvalidSensorException e) {
