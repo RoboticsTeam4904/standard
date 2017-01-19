@@ -16,6 +16,7 @@ public class CustomPIDController extends MotionController {
 	protected double F;
 	protected double totalError;
 	protected double lastError;
+	protected double minNominalOutput = 0.0;
 	protected boolean justReset;
 	
 	/**
@@ -103,6 +104,15 @@ public class CustomPIDController extends MotionController {
 	}
 	
 	/**
+	 * 
+	 * @return
+	 * 		The current minNominalOutput (minimum nominal output) value
+	 */
+	public double getMinNominalOutput() {
+		return minNominalOutput;
+	}
+	
+	/**
 	 * Sets the parameters of the PID loop
 	 *
 	 * @param P
@@ -141,6 +151,16 @@ public class CustomPIDController extends MotionController {
 		this.I = I;
 		this.D = D;
 		this.F = F;
+	}
+	
+	/**
+	 * 
+	 * @param minNominalOutput
+	 *        Minimum Nominal Output
+	 *        result will default to this value if less than this
+	 */
+	public void setMinNominalOutput(double minNominalOutput) {
+		this.minNominalOutput = minNominalOutput;
 	}
 	
 	/**
@@ -207,6 +227,9 @@ public class CustomPIDController extends MotionController {
 		if (capOutput) {
 			// Limit the result to be within the output range [outputMin, outputMax]
 			result = Math.max(Math.min(result, outputMax), outputMin);
+		}
+		if (Math.abs(result) < minNominalOutput) {
+			result = Math.signum(result) * minNominalOutput;
 		}
 		return result;
 	}
