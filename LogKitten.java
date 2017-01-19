@@ -359,7 +359,7 @@ public class LogKitten {
 	 * @return timestamp as string in the format "YEAR-MONTH-DAY_HOUR:MIN:SEC"
 	 */
 	private static String timestamp() {
-		SimpleDateFormat sdfr = new SimpleDateFormat("yyyy-M-dd_HH:mm:ss");
+		SimpleDateFormat sdfr = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
 		return sdfr.format(new Date());
 	}
 	
