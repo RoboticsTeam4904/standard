@@ -212,7 +212,6 @@ public class CustomPIDController extends MotionController {
 		return lastError;
 	}
 	
-	@Override
 	/**
 	 * Get the current output of the PID loop.
 	 * This should be used to set the output (like a Motor).
@@ -221,6 +220,7 @@ public class CustomPIDController extends MotionController {
 	 * @throws InvalidSensorException
 	 *         when a sensor fails
 	 */
+	@Override
 	public double getSafely() throws InvalidSensorException {
 		// If PID is not enabled, use feedforward only
 		if (!enable) {
@@ -268,7 +268,7 @@ public class CustomPIDController extends MotionController {
 		return result;
 	}
 	
-	@Override
+	
 	/**
 	 * Get the current output of the PID loop.
 	 * This should be used to set the output (like a Motor).
@@ -276,6 +276,7 @@ public class CustomPIDController extends MotionController {
 	 * @return The current output of the PID loop.
 	 * @warning does not indicate sensor error
 	 */
+	@Override
 	public double get() {
 		try {
 			return getSafely();
@@ -284,10 +285,5 @@ public class CustomPIDController extends MotionController {
 			LogKitten.ex(e);
 			return 0;
 		}
-	}
-	
-	@Override
-	public boolean onTarget() {
-		return super.onTarget();
 	}
 }
