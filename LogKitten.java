@@ -359,14 +359,8 @@ public class LogKitten {
 	 * @return timestamp as string in the format "YEAR-MONTH-DAY_HOUR:MIN:SEC"
 	 */
 	private static String timestamp() {
-		Calendar now = Calendar.getInstance();
-		String timestamp = Integer.toString(now.get(Calendar.YEAR));
-		timestamp += "-" + Integer.toString(now.get(Calendar.MONTH) + 1);
-		timestamp += "-" + Integer.toString(now.get(Calendar.DATE));
-		timestamp += "_" + Integer.toString(now.get(Calendar.HOUR_OF_DAY));
-		timestamp += ":" + Integer.toString(now.get(Calendar.MINUTE));
-		timestamp += ":" + Integer.toString(now.get(Calendar.SECOND));
-		return timestamp;
+		SimpleDateFormat sdfr = new SimpleDateFormat("yyyy-M-dd_HH:mm:ss");
+		return sdfr.format(new Date());
 	}
 	
 	public static class KittenLevel implements Comparable<KittenLevel>, Comparator<KittenLevel> {
