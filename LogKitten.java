@@ -34,8 +34,7 @@ public class LogKitten {
 			}
 		}
 		catch (SecurityException se) {
-			System.out.println("Could not create log directory");
-			se.printStackTrace();
+			throw new RuntimeException("Could not create log directory", se);
 		}
 		String filePath = LogKitten.LOG_PATH + LogKitten.timestamp() + ".log"; // Set this sessions log to /home/lvuser/logs/[current time].log
 		File file = new File(filePath);
@@ -46,8 +45,7 @@ public class LogKitten {
 			LogKitten.fileOutput = new FileOutputStream(file);
 		}
 		catch (IOException ioe) {
-			System.out.println("Could not open logfile");
-			ioe.printStackTrace();
+			throw new RuntimeException("Could not open logfile", ioe);
 		}
 		File logAlias = new File(LogKitten.LOG_ALIAS_PATH);
 		try {
@@ -57,8 +55,7 @@ public class LogKitten {
 			Files.createSymbolicLink(logAlias.toPath(), file.toPath());
 		}
 		catch (IOException ioe) {
-			System.out.println("Could not alias logfile");
-			ioe.printStackTrace();
+			throw new RuntimeException("Could not alias logfile", ioe);
 		}
 	}
 	
