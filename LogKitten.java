@@ -379,7 +379,7 @@ public class LogKitten {
 		 * @param name
 		 * @param severity
 		 */
-		public KittenLevel(String name, int severity) {
+		private KittenLevel(String name, int severity) {
 			this.severity = severity;
 			this.name = name;
 		}
