@@ -11,12 +11,6 @@ import edu.wpi.first.wpilibj.hal.HAL;
 
 public class LogKitten {
 	private static FileOutputStream fileOutput;
-	public final static KittenLevel LEVEL_WTF = new KittenLevel("WTF", -1);
-	public final static KittenLevel LEVEL_FATAL = new KittenLevel("FATAL", 0);
-	public final static KittenLevel LEVEL_ERROR = new KittenLevel("ERROR", 1);
-	public final static KittenLevel LEVEL_WARN = new KittenLevel("WARN", 2);
-	public final static KittenLevel LEVEL_VERBOSE = new KittenLevel("VERBOSE", 3);
-	public final static KittenLevel LEVEL_DEBUG = new KittenLevel("DEBUG", 4);
 	public static KittenLevel DEFAULT_LOG_LEVEL = LogKitten.LEVEL_VERBOSE;
 	public static KittenLevel DEFAULT_PRINT_LEVEL = LogKitten.LEVEL_WARN;
 	public static KittenLevel DEFAULT_DS_LEVEL = LogKitten.DEFAULT_PRINT_LEVEL;
@@ -179,7 +173,7 @@ public class LogKitten {
 	 * @param override
 	 */
 	public static void wtf(String message, boolean override) {
-		LogKitten.logMessage(message, LogKitten.LEVEL_WTF, override);
+		LogKitten.logMessage(message, KittenLevel.LEVEL_WTF, override);
 	}
 	
 	/**
@@ -189,7 +183,7 @@ public class LogKitten {
 	 *        the message to log
 	 */
 	public static void wtf(String message) { // Log WTF message
-		LogKitten.logMessage(message, LogKitten.LEVEL_WTF, false);
+		LogKitten.logMessage(message, KittenLevel.LEVEL_WTF, false);
 	}
 	
 	/**
@@ -199,7 +193,7 @@ public class LogKitten {
 	 * @param override
 	 */
 	public static void f(String message, boolean override) {
-		LogKitten.logMessage(message, LogKitten.LEVEL_FATAL, override);
+		LogKitten.logMessage(message, KittenLevel.LEVEL_FATAL, override);
 	}
 	
 	/**
@@ -209,7 +203,7 @@ public class LogKitten {
 	 *        the message to log
 	 */
 	public static void f(String message) { // Log fatal message
-		LogKitten.logMessage(message, LogKitten.LEVEL_FATAL, false);
+		LogKitten.logMessage(message, KittenLevel.LEVEL_FATAL, false);
 	}
 	
 	/**
@@ -219,7 +213,7 @@ public class LogKitten {
 	 * @param override
 	 */
 	public static void e(String message, boolean override) {
-		LogKitten.logMessage(message, LogKitten.LEVEL_ERROR, override);
+		LogKitten.logMessage(message, KittenLevel.LEVEL_ERROR, override);
 	}
 	
 	/**
@@ -229,7 +223,7 @@ public class LogKitten {
 	 *        the message to log
 	 */
 	public static void e(String message) { // Log error message
-		LogKitten.logMessage(message, LogKitten.LEVEL_ERROR, false);
+		LogKitten.logMessage(message, KittenLevel.LEVEL_ERROR, false);
 	}
 	
 	/**
@@ -239,7 +233,7 @@ public class LogKitten {
 	 * @param override
 	 */
 	public static void w(String message, boolean override) {
-		LogKitten.logMessage(message, LogKitten.LEVEL_WARN, override);
+		LogKitten.logMessage(message, KittenLevel.LEVEL_WARN, override);
 	}
 	
 	/**
@@ -249,7 +243,7 @@ public class LogKitten {
 	 *        the message to log
 	 */
 	public static void w(String message) { // Log warn message
-		LogKitten.logMessage(message, LogKitten.LEVEL_WARN, false);
+		LogKitten.logMessage(message, KittenLevel.LEVEL_WARN, false);
 	}
 	
 	/**
@@ -259,7 +253,7 @@ public class LogKitten {
 	 * @param override
 	 */
 	public static void v(String message, boolean override) {
-		LogKitten.logMessage(message, LogKitten.LEVEL_VERBOSE, override);
+		LogKitten.logMessage(message, KittenLevel.LEVEL_VERBOSE, override);
 	}
 	
 	/**
@@ -269,7 +263,7 @@ public class LogKitten {
 	 *        the message to log
 	 */
 	public static void v(String message) { // Log verbose message
-		LogKitten.logMessage(message, LogKitten.LEVEL_VERBOSE, false);
+		LogKitten.logMessage(message, KittenLevel.LEVEL_VERBOSE, false);
 	}
 	
 	/**
@@ -279,7 +273,7 @@ public class LogKitten {
 	 * @param override
 	 */
 	public static void i(String message, boolean override) {
-		LogKitten.logMessage(message, LogKitten.LEVEL_VERBOSE, override);
+		LogKitten.logMessage(message, KittenLevel.LEVEL_VERBOSE, override);
 	}
 	
 	/**
@@ -288,7 +282,7 @@ public class LogKitten {
 	 * @param message
 	 */
 	public static void i(String message) {
-		LogKitten.logMessage(message, LogKitten.LEVEL_VERBOSE, false);
+		LogKitten.logMessage(message, KittenLevel.LEVEL_VERBOSE, false);
 	}
 	
 	/**
@@ -298,7 +292,7 @@ public class LogKitten {
 	 * @param override
 	 */
 	public static void d(String message, boolean override) {
-		LogKitten.logMessage(message, LogKitten.LEVEL_DEBUG, override);
+		LogKitten.logMessage(message, KittenLevel.LEVEL_DEBUG, override);
 	}
 	
 	/**
@@ -308,7 +302,7 @@ public class LogKitten {
 	 *        the message to log
 	 */
 	public static void d(String message) { // Log debug message
-		LogKitten.logMessage(message, LogKitten.LEVEL_DEBUG, false);
+		LogKitten.logMessage(message, KittenLevel.LEVEL_DEBUG, false);
 	}
 	
 	/**
@@ -325,7 +319,7 @@ public class LogKitten {
 		for (StackTraceElement element : ex.getStackTrace()) {
 			stackTraceString.append(element.toString() + "\n");
 		}
-		LogKitten.logMessage(exceptionString + stackTraceString.toString(), LogKitten.LEVEL_ERROR, override);
+		LogKitten.logMessage(exceptionString + stackTraceString.toString(), KittenLevel.LEVEL_ERROR, override);
 	}
 	
 	/**
@@ -369,7 +363,8 @@ public class LogKitten {
 		return timestamp;
 	}
 	
-	public static class KittenLevel implements Comparable<KittenLevel>, Comparator<KittenLevel> {
+	public static enum KittenLevel implements Comparable<KittenLevel>, Comparator<KittenLevel> {
+		LEVEL_WTF("WTF", -1), LEVEL_FATAL("FATAL", 0), LEVEL_ERROR("ERROR", 1), LEVEL_WARN("WARN", 2), LEVEL_VERBOSE("VERBOSE", 3), LEVEL_DEBUG("DEBUG", 4);
 		private final String name;
 		private final int severity;
 		
@@ -379,7 +374,7 @@ public class LogKitten {
 		 * @param name
 		 * @param severity
 		 */
-		public KittenLevel(String name, int severity) {
+		private KittenLevel(String name, int severity) {
 			this.severity = severity;
 			this.name = name;
 		}
@@ -408,20 +403,6 @@ public class LogKitten {
 		@Override
 		public int compare(KittenLevel o1, KittenLevel o2) {
 			return o1.getSeverity() - o2.getSeverity();
-		}
-		
-		/**
-		 * Compare the instance's severity to another KittenLevel
-		 */
-		@Override
-		public int compareTo(KittenLevel o) {
-			if (compare(this, o) > 0) {
-				return 1;
-			} else if (compare(this, o) == 0) {
-				return 0;
-			} else {
-				return -1;
-			}
 		}
 	}
 }
