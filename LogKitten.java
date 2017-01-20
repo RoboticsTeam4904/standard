@@ -390,6 +390,7 @@ public class LogKitten {
 		 * @return the level severity as an int
 		 */
 		public int getSeverity() {
+			// Severity is the same as the ordinal, which increases with the order of the enum values
 			return ordinal();
 		}
 		
