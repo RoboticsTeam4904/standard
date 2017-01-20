@@ -11,8 +11,8 @@ import edu.wpi.first.wpilibj.hal.HAL;
 
 public class LogKitten {
 	private static FileOutputStream fileOutput;
-	public static KittenLevel DEFAULT_LOG_LEVEL = LogKitten.LEVEL_VERBOSE;
-	public static KittenLevel DEFAULT_PRINT_LEVEL = LogKitten.LEVEL_WARN;
+	public static KittenLevel DEFAULT_LOG_LEVEL = KittenLevel.LEVEL_VERBOSE;
+	public static KittenLevel DEFAULT_PRINT_LEVEL = KittenLevel.LEVEL_WARN;
 	public static KittenLevel DEFAULT_DS_LEVEL = LogKitten.DEFAULT_PRINT_LEVEL;
 	private static KittenLevel logLevel = LogKitten.DEFAULT_LOG_LEVEL;
 	private static KittenLevel printLevel = LogKitten.DEFAULT_PRINT_LEVEL;
