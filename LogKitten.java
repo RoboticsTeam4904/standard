@@ -145,7 +145,7 @@ public class LogKitten {
 		HAL.sendError(true, logLevel.severity, false, errorMessage, details, null, false);
 	}
 	
-	private static synchronized void logMessage(String message, KittenLevel level, boolean override) {
+	public static synchronized void logMessage(String message, KittenLevel level, boolean override) {
 		if (LogKitten.logLevel.compareTo(level) >= 0) {
 			String content = LogKitten.timestamp() + " " + level.getName() + ": " + LogKitten.getLoggerMethodCallerMethodName() + ": " + message + " \n";
 			try {
