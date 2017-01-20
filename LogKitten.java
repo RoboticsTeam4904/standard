@@ -27,6 +27,7 @@ public class LogKitten {
 	private static String LOG_PATH = "/home/lvuser/logs/";
 	private static String LOG_ALIAS_PATH = LogKitten.LOG_PATH + "recent.log";
 	private static volatile boolean PRINT_MUTE = false;
+	private static final SimpleDateFormat TIMESTAMP_FORMAT = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
 	static {
 		File logPathDirectory = new File(LogKitten.LOG_PATH);
 		try {
@@ -360,8 +361,7 @@ public class LogKitten {
 	 * @return timestamp as string in the format "YEAR-MONTH-DAY_HOUR:MIN:SEC"
 	 */
 	private static String timestamp() {
-		SimpleDateFormat sdfr = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
-		return sdfr.format(new Date());
+		return TIMESTAMP_FORMAT.format(new Date());
 	}
 	
 	public static class KittenLevel implements Comparable<KittenLevel>, Comparator<KittenLevel> {
