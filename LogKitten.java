@@ -142,7 +142,7 @@ public class LogKitten {
 	 * @param errorString
 	 */
 	private static void reportErrorToDriverStation(String details, String errorMessage, KittenLevel logLevel) {
-		HAL.sendError(true, logLevel.severity, false, errorMessage, details, null, false);
+		HAL.sendError(true, logLevel.getSeverity(), false, errorMessage, details, null, false);
 	}
 	
 	public static synchronized void logMessage(String message, KittenLevel level, boolean override) {
