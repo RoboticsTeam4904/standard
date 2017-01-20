@@ -361,7 +361,7 @@ public class LogKitten {
 	 * @return timestamp as string in the format "YEAR-MONTH-DAY_HOUR:MIN:SEC"
 	 */
 	private static String timestamp() {
-		return TIMESTAMP_FORMAT.format(new Date());
+		return LogKitten.TIMESTAMP_FORMAT.format(new Date());
 	}
 	
 	public static class KittenLevel implements Comparable<KittenLevel>, Comparator<KittenLevel> {
