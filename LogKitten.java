@@ -154,8 +154,7 @@ public class LogKitten {
 				}
 			}
 			catch (IOException ioe) {
-				System.out.println("Error logging " + level.getName() + " message");
-				ioe.printStackTrace();
+				throw new RuntimeException("Error logging " + level.getName() + " message", ioe);
 			}
 		}
 		if (!LogKitten.PRINT_MUTE || override) {
@@ -345,8 +344,7 @@ public class LogKitten {
 			}
 		}
 		catch (IOException ioe) {
-			System.out.println("Could not close logfile output. This should never happen");
-			ioe.printStackTrace();
+			throw new RuntimeException("Could not close logfile output. This should never happen", ioe);
 		}
 	}
 	
