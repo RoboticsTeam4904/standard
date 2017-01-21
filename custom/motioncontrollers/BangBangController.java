@@ -120,7 +120,7 @@ public class BangBangController extends MotionController {
 	 * Zeroes error
 	 */
 	@Override
-	public void resetMC() {
+	public void resetErrorToZero() {
 		error = 0;
 	}
 	

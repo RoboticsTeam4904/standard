@@ -202,7 +202,7 @@ public class CustomPIDController extends MotionController {
 	 *
 	 */
 	@Override
-	protected void resetMC() {
+	protected void resetErrorToZero() {
 		totalError = 0;
 		lastError = 0;
 	}

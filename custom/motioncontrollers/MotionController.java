@@ -91,7 +91,7 @@ public abstract class MotionController {
 	 * @warning this does not indicate sensor errors
 	 */
 	public final void reset() {
-		resetMC();
+		resetErrorToZero();
 		setpoint = sensor.pidGet();
 		synchronized (lock) {
 			justReset = true;
@@ -103,7 +103,7 @@ public abstract class MotionController {
 	 * to a state such that it returns 0.
 	 */
 	public final void resetSafely() throws InvalidSensorException {
-		resetMC();
+		resetErrorToZero();
 		setpoint = sensor.pidGetSafely();
 		synchronized (lock) {
 			justReset = true;
@@ -111,11 +111,11 @@ public abstract class MotionController {
 	}
 	
 	/**
-	 * Method specific method for resetting the
+	 * Method-specific method for resetting the
 	 * motion controller without indicating sensor
 	 * errors.
 	 */
-	protected abstract void resetMC();
+	protected abstract void resetErrorToZero();
 	
 	/**
 	 * The calculated output value to achieve the
