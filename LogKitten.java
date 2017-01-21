@@ -5,20 +5,21 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.Calendar;
+import java.text.SimpleDateFormat;
 import java.util.Comparator;
+import java.util.Date;
 import edu.wpi.first.wpilibj.hal.HAL;
 
 public class LogKitten {
 	private static FileOutputStream fileOutput;
-	public final static KittenLevel LEVEL_WTF = new KittenLevel("WTF", -1);
-	public final static KittenLevel LEVEL_FATAL = new KittenLevel("FATAL", 0);
-	public final static KittenLevel LEVEL_ERROR = new KittenLevel("ERROR", 1);
-	public final static KittenLevel LEVEL_WARN = new KittenLevel("WARN", 2);
-	public final static KittenLevel LEVEL_VERBOSE = new KittenLevel("VERBOSE", 3);
-	public final static KittenLevel LEVEL_DEBUG = new KittenLevel("DEBUG", 4);
-	public static KittenLevel DEFAULT_LOG_LEVEL = LogKitten.LEVEL_VERBOSE;
-	public static KittenLevel DEFAULT_PRINT_LEVEL = LogKitten.LEVEL_WARN;
+	public final static KittenLevel LEVEL_WTF = KittenLevel.LEVEL_WTF;
+	public final static KittenLevel LEVEL_FATAL = KittenLevel.LEVEL_FATAL;
+	public final static KittenLevel LEVEL_ERROR = KittenLevel.LEVEL_ERROR;
+	public final static KittenLevel LEVEL_WARN = KittenLevel.LEVEL_WARN;
+	public final static KittenLevel LEVEL_VERBOSE = KittenLevel.LEVEL_VERBOSE;
+	public final static KittenLevel LEVEL_DEBUG = KittenLevel.LEVEL_DEBUG;
+	public static KittenLevel DEFAULT_LOG_LEVEL = KittenLevel.LEVEL_VERBOSE;
+	public static KittenLevel DEFAULT_PRINT_LEVEL = KittenLevel.LEVEL_WARN;
 	public static KittenLevel DEFAULT_DS_LEVEL = LogKitten.DEFAULT_PRINT_LEVEL;
 	private static KittenLevel logLevel = LogKitten.DEFAULT_LOG_LEVEL;
 	private static KittenLevel printLevel = LogKitten.DEFAULT_PRINT_LEVEL;
@@ -26,6 +27,7 @@ public class LogKitten {
 	private static String LOG_PATH = "/home/lvuser/logs/";
 	private static String LOG_ALIAS_PATH = LogKitten.LOG_PATH + "recent.log";
 	private static volatile boolean PRINT_MUTE = false;
+	private static final SimpleDateFormat TIMESTAMP_FORMAT = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
 	static {
 		File logPathDirectory = new File(LogKitten.LOG_PATH);
 		try {
@@ -142,10 +144,10 @@ public class LogKitten {
 	 * @param errorString
 	 */
 	private static void reportErrorToDriverStation(String details, String errorMessage, KittenLevel logLevel) {
-		HAL.sendError(true, logLevel.severity, false, errorMessage, details, null, false);
+		HAL.sendError(true, logLevel.getSeverity(), false, errorMessage, details, "", false);
 	}
 	
-	private static synchronized void logMessage(String message, KittenLevel level, boolean override) {
+	public static synchronized void logMessage(String message, KittenLevel level, boolean override) {
 		if (LogKitten.logLevel.compareTo(level) >= 0) {
 			String content = LogKitten.timestamp() + " " + level.getName() + ": " + LogKitten.getLoggerMethodCallerMethodName() + ": " + message + " \n";
 			try {
@@ -179,7 +181,7 @@ public class LogKitten {
 	 * @param override
 	 */
 	public static void wtf(String message, boolean override) {
-		LogKitten.logMessage(message, LogKitten.LEVEL_WTF, override);
+		LogKitten.logMessage(message, KittenLevel.LEVEL_WTF, override);
 	}
 	
 	/**
@@ -189,7 +191,7 @@ public class LogKitten {
 	 *        the message to log
 	 */
 	public static void wtf(String message) { // Log WTF message
-		LogKitten.logMessage(message, LogKitten.LEVEL_WTF, false);
+		LogKitten.logMessage(message, KittenLevel.LEVEL_WTF, false);
 	}
 	
 	/**
@@ -199,7 +201,7 @@ public class LogKitten {
 	 * @param override
 	 */
 	public static void f(String message, boolean override) {
-		LogKitten.logMessage(message, LogKitten.LEVEL_FATAL, override);
+		LogKitten.logMessage(message, KittenLevel.LEVEL_FATAL, override);
 	}
 	
 	/**
@@ -209,7 +211,7 @@ public class LogKitten {
 	 *        the message to log
 	 */
 	public static void f(String message) { // Log fatal message
-		LogKitten.logMessage(message, LogKitten.LEVEL_FATAL, false);
+		LogKitten.logMessage(message, KittenLevel.LEVEL_FATAL, false);
 	}
 	
 	/**
@@ -219,7 +221,7 @@ public class LogKitten {
 	 * @param override
 	 */
 	public static void e(String message, boolean override) {
-		LogKitten.logMessage(message, LogKitten.LEVEL_ERROR, override);
+		LogKitten.logMessage(message, KittenLevel.LEVEL_ERROR, override);
 	}
 	
 	/**
@@ -229,7 +231,7 @@ public class LogKitten {
 	 *        the message to log
 	 */
 	public static void e(String message) { // Log error message
-		LogKitten.logMessage(message, LogKitten.LEVEL_ERROR, false);
+		LogKitten.logMessage(message, KittenLevel.LEVEL_ERROR, false);
 	}
 	
 	/**
@@ -239,7 +241,7 @@ public class LogKitten {
 	 * @param override
 	 */
 	public static void w(String message, boolean override) {
-		LogKitten.logMessage(message, LogKitten.LEVEL_WARN, override);
+		LogKitten.logMessage(message, KittenLevel.LEVEL_WARN, override);
 	}
 	
 	/**
@@ -249,7 +251,7 @@ public class LogKitten {
 	 *        the message to log
 	 */
 	public static void w(String message) { // Log warn message
-		LogKitten.logMessage(message, LogKitten.LEVEL_WARN, false);
+		LogKitten.logMessage(message, KittenLevel.LEVEL_WARN, false);
 	}
 	
 	/**
@@ -259,7 +261,7 @@ public class LogKitten {
 	 * @param override
 	 */
 	public static void v(String message, boolean override) {
-		LogKitten.logMessage(message, LogKitten.LEVEL_VERBOSE, override);
+		LogKitten.logMessage(message, KittenLevel.LEVEL_VERBOSE, override);
 	}
 	
 	/**
@@ -269,7 +271,7 @@ public class LogKitten {
 	 *        the message to log
 	 */
 	public static void v(String message) { // Log verbose message
-		LogKitten.logMessage(message, LogKitten.LEVEL_VERBOSE, false);
+		LogKitten.logMessage(message, KittenLevel.LEVEL_VERBOSE, false);
 	}
 	
 	/**
@@ -279,7 +281,7 @@ public class LogKitten {
 	 * @param override
 	 */
 	public static void i(String message, boolean override) {
-		LogKitten.logMessage(message, LogKitten.LEVEL_VERBOSE, override);
+		LogKitten.logMessage(message, KittenLevel.LEVEL_VERBOSE, override);
 	}
 	
 	/**
@@ -288,7 +290,7 @@ public class LogKitten {
 	 * @param message
 	 */
 	public static void i(String message) {
-		LogKitten.logMessage(message, LogKitten.LEVEL_VERBOSE, false);
+		LogKitten.logMessage(message, KittenLevel.LEVEL_VERBOSE, false);
 	}
 	
 	/**
@@ -298,7 +300,7 @@ public class LogKitten {
 	 * @param override
 	 */
 	public static void d(String message, boolean override) {
-		LogKitten.logMessage(message, LogKitten.LEVEL_DEBUG, override);
+		LogKitten.logMessage(message, KittenLevel.LEVEL_DEBUG, override);
 	}
 	
 	/**
@@ -308,7 +310,7 @@ public class LogKitten {
 	 *        the message to log
 	 */
 	public static void d(String message) { // Log debug message
-		LogKitten.logMessage(message, LogKitten.LEVEL_DEBUG, false);
+		LogKitten.logMessage(message, KittenLevel.LEVEL_DEBUG, false);
 	}
 	
 	/**
@@ -325,7 +327,7 @@ public class LogKitten {
 		for (StackTraceElement element : ex.getStackTrace()) {
 			stackTraceString.append(element.toString() + "\n");
 		}
-		LogKitten.logMessage(exceptionString + stackTraceString.toString(), LogKitten.LEVEL_ERROR, override);
+		LogKitten.logMessage(exceptionString + stackTraceString.toString(), KittenLevel.LEVEL_ERROR, override);
 	}
 	
 	/**
@@ -359,19 +361,13 @@ public class LogKitten {
 	 * @return timestamp as string in the format "YEAR-MONTH-DAY_HOUR:MIN:SEC"
 	 */
 	private static String timestamp() {
-		Calendar now = Calendar.getInstance();
-		String timestamp = Integer.toString(now.get(Calendar.YEAR));
-		timestamp += "-" + Integer.toString(now.get(Calendar.MONTH) + 1);
-		timestamp += "-" + Integer.toString(now.get(Calendar.DATE));
-		timestamp += "_" + Integer.toString(now.get(Calendar.HOUR_OF_DAY));
-		timestamp += ":" + Integer.toString(now.get(Calendar.MINUTE));
-		timestamp += ":" + Integer.toString(now.get(Calendar.SECOND));
-		return timestamp;
+		return LogKitten.TIMESTAMP_FORMAT.format(new Date());
 	}
 	
-	public static class KittenLevel implements Comparable<KittenLevel>, Comparator<KittenLevel> {
+	public static enum KittenLevel implements Comparable<KittenLevel>, Comparator<KittenLevel> {
+		// Defined in decreasing order of severity. Enum.compareTo uses the definition order to compare enum values.
+		LEVEL_WTF("WTF"), LEVEL_FATAL("FATAL"), LEVEL_ERROR("ERROR"), LEVEL_WARN("WARN"), LEVEL_VERBOSE("VERBOSE"), LEVEL_DEBUG("DEBUG");
 		private final String name;
-		private final int severity;
 		
 		/**
 		 * Construct a new KittenLevel instance
@@ -379,8 +375,7 @@ public class LogKitten {
 		 * @param name
 		 * @param severity
 		 */
-		public KittenLevel(String name, int severity) {
-			this.severity = severity;
+		private KittenLevel(String name) {
 			this.name = name;
 		}
 		
@@ -390,7 +385,8 @@ public class LogKitten {
 		 * @return the level severity as an int
 		 */
 		public int getSeverity() {
-			return severity;
+			// Severity is the same as the ordinal, which increases with the order of the enum values
+			return ordinal();
 		}
 		
 		/**
@@ -408,20 +404,6 @@ public class LogKitten {
 		@Override
 		public int compare(KittenLevel o1, KittenLevel o2) {
 			return o1.getSeverity() - o2.getSeverity();
-		}
-		
-		/**
-		 * Compare the instance's severity to another KittenLevel
-		 */
-		@Override
-		public int compareTo(KittenLevel o) {
-			if (compare(this, o) > 0) {
-				return 1;
-			} else if (compare(this, o) == 0) {
-				return 0;
-			} else {
-				return -1;
-			}
 		}
 	}
 }
