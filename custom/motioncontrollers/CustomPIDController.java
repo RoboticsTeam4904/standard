@@ -21,7 +21,37 @@ public class CustomPIDController extends MotionController {
 	protected double totalError;
 	protected double lastError;
 	protected long lastTime;
+	protected double errorDerivative;
+	protected double absoluteDerivativeStopTolerance;
+	protected boolean ignoreDerivativeTolerance = true;
 	
+	/**
+	 * An extremely basic PID controller.
+	 * It does not differentiate between rate and distance.
+	 *
+	 * @param P
+	 *        Initial P constant
+	 * @param I
+	 *        Initial I constant
+	 * @param D
+	 *        Initial D constant
+	 * @param F
+	 *        Initial F (feed forward) constant
+	 * @param sensor
+	 *        The sensor linked to the output
+	 * @param absoluteDerivativeStopTolerance
+	 *        The maximum value of the calculated derivative in order for onTarget() to return true
+	 */
+	public CustomPIDController(double P, double I, double D, double F, PIDSensor sensor, double absoluteDerivativeStopTolerance) {
+		super(sensor);
+		this.P = P;
+		this.I = I;
+		this.D = D;
+		this.F = F;
+		this.absoluteDerivativeStopTolerance = absoluteDerivativeStopTolerance;
+		ignoreDerivativeTolerance = false;
+	}
+
 	/**
 	 * An extremely basic PID controller.
 	 * It does not differentiate between rate and distance.
@@ -198,6 +228,28 @@ public class CustomPIDController extends MotionController {
 	}
 	
 	/**
+	 * Set the maximum derivative value at which the controller can be considered "on-target,"
+	 * given that the source suggests that the setpoint has been reached. Set this value to a
+	 * higher value if overshoot due to high velocity is a problem.
+	 *
+	 * @param absoluteDerivativeStopTolerance
+	 *        the maximum derivative value for onTarget() to return true
+	 */
+	public void setDerivativeStopTolerance(double absoluteDerivativeStopTolerance) {
+		this.absoluteDerivativeStopTolerance = absoluteDerivativeStopTolerance;
+	}
+
+	/**
+	 * Get the absolute derivative value stop condition.
+	 *
+	 * @see #setDerivativeStopCondition(double)
+	 * @return the maximum derivative value for onTarget() to return true
+	 */
+	public double getDerivativeStopTolerance() {
+		return absoluteDerivativeStopTolerance;
+	}
+	
+	/**
 	 * Resets the PID controller.
 	 *
 	 */
@@ -241,7 +293,6 @@ public class CustomPIDController extends MotionController {
 				}
 			}
 		}
-		double errorDerivative;
 		long latestTime = System.currentTimeMillis();
 		long timeDiff = latestTime - lastTime;
 		// Check if the sensor supports native derivative calculations.
@@ -267,8 +318,7 @@ public class CustomPIDController extends MotionController {
 		}
 		return result;
 	}
-	
-	
+
 	/**
 	 * Get the current output of the PID loop.
 	 * This should be used to set the output (like a Motor).
@@ -285,5 +335,16 @@ public class CustomPIDController extends MotionController {
 			LogKitten.ex(e);
 			return 0;
 		}
+	}
+	
+	@Override
+	public boolean onTarget() {
+		if (!super.onTarget()) {
+			return false;
+		}
+		if (!enable || ignoreDerivativeTolerance) {
+			return true;
+		}
+		return Math.abs(errorDerivative) < absoluteDerivativeStopTolerance;
 	}
 }
