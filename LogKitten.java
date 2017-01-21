@@ -5,8 +5,9 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.Calendar;
+import java.text.SimpleDateFormat;
 import java.util.Comparator;
+import java.util.Date;
 import edu.wpi.first.wpilibj.hal.HAL;
 
 public class LogKitten {
@@ -26,6 +27,7 @@ public class LogKitten {
 	private static String LOG_PATH = "/home/lvuser/logs/";
 	private static String LOG_ALIAS_PATH = LogKitten.LOG_PATH + "recent.log";
 	private static volatile boolean PRINT_MUTE = false;
+	private static final SimpleDateFormat TIMESTAMP_FORMAT = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
 	static {
 		File logPathDirectory = new File(LogKitten.LOG_PATH);
 		try {
@@ -142,7 +144,7 @@ public class LogKitten {
 	 * @param errorString
 	 */
 	private static void reportErrorToDriverStation(String details, String errorMessage, KittenLevel logLevel) {
-		HAL.sendError(true, logLevel.getSeverity(), false, errorMessage, details, null, false);
+		HAL.sendError(true, logLevel.getSeverity(), false, errorMessage, details, "", false);
 	}
 	
 	public static synchronized void logMessage(String message, KittenLevel level, boolean override) {
@@ -359,14 +361,7 @@ public class LogKitten {
 	 * @return timestamp as string in the format "YEAR-MONTH-DAY_HOUR:MIN:SEC"
 	 */
 	private static String timestamp() {
-		Calendar now = Calendar.getInstance();
-		String timestamp = Integer.toString(now.get(Calendar.YEAR));
-		timestamp += "-" + Integer.toString(now.get(Calendar.MONTH) + 1);
-		timestamp += "-" + Integer.toString(now.get(Calendar.DATE));
-		timestamp += "_" + Integer.toString(now.get(Calendar.HOUR_OF_DAY));
-		timestamp += ":" + Integer.toString(now.get(Calendar.MINUTE));
-		timestamp += ":" + Integer.toString(now.get(Calendar.SECOND));
-		return timestamp;
+		return LogKitten.TIMESTAMP_FORMAT.format(new Date());
 	}
 	
 	public static enum KittenLevel implements Comparable<KittenLevel>, Comparator<KittenLevel> {
