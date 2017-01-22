@@ -6,7 +6,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.text.SimpleDateFormat;
-import java.util.Comparator;
 import java.util.Date;
 import edu.wpi.first.wpilibj.hal.HAL;
 
@@ -323,12 +322,14 @@ public class LogKitten {
 	 *        whether or not to override
 	 */
 	public static void ex(Exception ex, boolean override) {
-		String exceptionString = ex.toString() + "\n";
-		StringBuffer stackTraceString = new StringBuffer();
+		StringBuilder stackTraceString = new StringBuilder();
+		stackTraceString.append(ex.toString());
+		stackTraceString.append('\n');
 		for (StackTraceElement element : ex.getStackTrace()) {
-			stackTraceString.append(element.toString() + "\n");
+			stackTraceString.append(element.toString());
+			stackTraceString.append('\n');
 		}
-		LogKitten.logMessage(exceptionString + stackTraceString.toString(), KittenLevel.LEVEL_ERROR, override);
+		LogKitten.logMessage(stackTraceString.toString(), KittenLevel.LEVEL_ERROR, override);
 	}
 	
 	/**
@@ -365,7 +366,7 @@ public class LogKitten {
 		return LogKitten.TIMESTAMP_FORMAT.format(new Date());
 	}
 	
-	public static enum KittenLevel implements Comparable<KittenLevel>, Comparator<KittenLevel> {
+	public static enum KittenLevel implements Comparable<KittenLevel> {
 		// Defined in decreasing order of severity. Enum.compareTo uses the definition order to compare enum values.
 		LEVEL_WTF("WTF"), LEVEL_FATAL("FATAL"), LEVEL_ERROR("ERROR"), LEVEL_WARN("WARN"), LEVEL_VERBOSE("VERBOSE"), LEVEL_DEBUG("DEBUG");
 		private final String name;
@@ -397,14 +398,6 @@ public class LogKitten {
 		 */
 		public String getName() {
 			return name;
-		}
-		
-		/**
-		 * Compare the severity of two KittenLevels
-		 */
-		@Override
-		public int compare(KittenLevel o1, KittenLevel o2) {
-			return o1.getSeverity() - o2.getSeverity();
 		}
 	}
 }
