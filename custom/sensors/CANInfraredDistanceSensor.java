@@ -23,14 +23,7 @@ public class CANInfraredDistanceSensor extends CANSensor implements DistanceSens
 	}
 	
 	@Override
-	public double getDistance() throws InvalidSensorException {
-		int value = read(CANInfraredDistanceSensor.CAN_SENSOR_MODE);
-		LogKitten.d(name + " read value " + value);
-		return value;
-	}
-	
-	@Override
-	public double getDistanceSafely() {
+	public double getDistance() {
 		try {
 			return getDistance();
 		}
@@ -38,5 +31,12 @@ public class CANInfraredDistanceSensor extends CANSensor implements DistanceSens
 			LogKitten.ex(e);
 			return 0;
 		}
+	}
+	
+	@Override
+	public double getDistanceSafely() throws InvalidSensorException {
+		int value = read(CANInfraredDistanceSensor.CAN_SENSOR_MODE);
+		LogKitten.d(name + " read value " + value);
+		return value;
 	}
 }
