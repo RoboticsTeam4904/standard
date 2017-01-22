@@ -366,19 +366,7 @@ public class LogKitten {
 	
 	public static enum KittenLevel implements Comparable<KittenLevel>, Comparator<KittenLevel> {
 		// Defined in decreasing order of severity. Enum.compareTo uses the definition order to compare enum values.
-		LEVEL_WTF("WTF"), LEVEL_FATAL("FATAL"), LEVEL_ERROR("ERROR"), LEVEL_WARN("WARN"), LEVEL_VERBOSE("VERBOSE"), LEVEL_DEBUG("DEBUG");
-		private final String name;
-		
-		/**
-		 * Construct a new KittenLevel instance
-		 *
-		 * @param name
-		 * @param severity
-		 */
-		private KittenLevel(String name) {
-			this.name = name;
-		}
-		
+		LEVEL_WTF, LEVEL_FATAL, LEVEL_ERROR, LEVEL_WARN, LEVEL_VERBOSE, LEVEL_DEBUG;
 		/**
 		 * Get the level severity
 		 *
@@ -395,7 +383,7 @@ public class LogKitten {
 		 * @return level name as a string
 		 */
 		public String getName() {
-			return name;
+			return name().split("_")[1]; // e.g. "LEVEL_WTF" -> "WTF"
 		}
 		
 		/**
