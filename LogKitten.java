@@ -321,12 +321,14 @@ public class LogKitten {
 	 *        whether or not to override
 	 */
 	public static void ex(Exception ex, boolean override) {
-		String exceptionString = ex.toString() + "\n";
-		StringBuffer stackTraceString = new StringBuffer();
+		StringBuilder stackTraceString = new StringBuilder();
+		stackTraceString.append(ex.toString());
+		stackTraceString.append('\n');
 		for (StackTraceElement element : ex.getStackTrace()) {
-			stackTraceString.append(element.toString() + "\n");
+			stackTraceString.append(element.toString());
+			stackTraceString.append('\n');
 		}
-		LogKitten.logMessage(exceptionString + stackTraceString.toString(), KittenLevel.LEVEL_ERROR, override);
+		LogKitten.logMessage(stackTraceString.toString(), KittenLevel.LEVEL_ERROR, override);
 	}
 	
 	/**
