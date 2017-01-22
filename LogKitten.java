@@ -145,8 +145,9 @@ public class LogKitten {
 	private static void reportErrorToDriverStation(String details, String errorMessage, KittenLevel logLevel) {
 		HAL.sendError(true, logLevel.getSeverity(), false, errorMessage, details, "", false);
 	}
-
-	public static synchronized void logMessage(String message, KittenLevel level, boolean override) {
+	
+	public static synchronized void logMessage(Object message, KittenLevel level, boolean override) {
+		message = message.toString(); // Not strictly needed, but good practice
 		if (LogKitten.logLevel.compareTo(level) >= 0) {
 			String content = LogKitten.timestamp() + " " + level.getName() + ": " + LogKitten.getLoggerMethodCallerMethodName() + ": " + message + " \n";
 			try {
@@ -179,7 +180,7 @@ public class LogKitten {
 	 * @param message
 	 * @param override
 	 */
-	public static void wtf(String message, boolean override) {
+	public static void wtf(Object message, boolean override) {
 		LogKitten.logMessage(message, KittenLevel.WTF, override);
 	}
 
@@ -189,7 +190,7 @@ public class LogKitten {
 	 * @param message
 	 *        the message to log
 	 */
-	public static void wtf(String message) { // Log WTF message
+	public static void wtf(Object message) { // Log WTF message
 		LogKitten.logMessage(message, KittenLevel.WTF, false);
 	}
 
@@ -199,7 +200,7 @@ public class LogKitten {
 	 * @param message
 	 * @param override
 	 */
-	public static void f(String message, boolean override) {
+	public static void f(Object message, boolean override) {
 		LogKitten.logMessage(message, KittenLevel.FATAL, override);
 	}
 
@@ -209,7 +210,7 @@ public class LogKitten {
 	 * @param message
 	 *        the message to log
 	 */
-	public static void f(String message) { // Log fatal message
+	public static void f(Object message) { // Log fatal message
 		LogKitten.logMessage(message, KittenLevel.FATAL, false);
 	}
 
@@ -219,7 +220,7 @@ public class LogKitten {
 	 * @param message
 	 * @param override
 	 */
-	public static void e(String message, boolean override) {
+	public static void e(Object message, boolean override) {
 		LogKitten.logMessage(message, KittenLevel.ERROR, override);
 	}
 
@@ -229,7 +230,7 @@ public class LogKitten {
 	 * @param message
 	 *        the message to log
 	 */
-	public static void e(String message) { // Log error message
+	public static void e(Object message) { // Log error message
 		LogKitten.logMessage(message, KittenLevel.ERROR, false);
 	}
 
@@ -239,7 +240,7 @@ public class LogKitten {
 	 * @param message
 	 * @param override
 	 */
-	public static void w(String message, boolean override) {
+	public static void w(Object message, boolean override) {
 		LogKitten.logMessage(message, KittenLevel.WARN, override);
 	}
 
@@ -249,7 +250,7 @@ public class LogKitten {
 	 * @param message
 	 *        the message to log
 	 */
-	public static void w(String message) { // Log warn message
+	public static void w(Object message) { // Log warn message
 		LogKitten.logMessage(message, KittenLevel.WARN, false);
 	}
 
@@ -259,7 +260,7 @@ public class LogKitten {
 	 * @param message
 	 * @param override
 	 */
-	public static void v(String message, boolean override) {
+	public static void v(Object message, boolean override) {
 		LogKitten.logMessage(message, KittenLevel.VERBOSE, override);
 	}
 
@@ -269,7 +270,7 @@ public class LogKitten {
 	 * @param message
 	 *        the message to log
 	 */
-	public static void v(String message) { // Log verbose message
+	public static void v(Object message) { // Log verbose message
 		LogKitten.logMessage(message, KittenLevel.VERBOSE, false);
 	}
 
@@ -279,7 +280,7 @@ public class LogKitten {
 	 * @param message
 	 * @param override
 	 */
-	public static void i(String message, boolean override) {
+	public static void i(Object message, boolean override) {
 		LogKitten.logMessage(message, KittenLevel.VERBOSE, override);
 	}
 
@@ -288,7 +289,7 @@ public class LogKitten {
 	 *
 	 * @param message
 	 */
-	public static void i(String message) {
+	public static void i(Object message) {
 		LogKitten.logMessage(message, KittenLevel.VERBOSE, false);
 	}
 
@@ -298,7 +299,7 @@ public class LogKitten {
 	 * @param message
 	 * @param override
 	 */
-	public static void d(String message, boolean override) {
+	public static void d(Object message, boolean override) {
 		LogKitten.logMessage(message, KittenLevel.DEBUG, override);
 	}
 
@@ -308,7 +309,7 @@ public class LogKitten {
 	 * @param message
 	 *        the message to log
 	 */
-	public static void d(String message) { // Log debug message
+	public static void d(Object message) { // Log debug message
 		LogKitten.logMessage(message, KittenLevel.DEBUG, false);
 	}
 
