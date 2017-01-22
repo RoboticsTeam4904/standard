@@ -322,7 +322,7 @@ public class LogKitten {
 	 *        whether or not to override
 	 */
 	public static void ex(Exception ex, boolean override) {
-		StringBuffer stackTraceString = new StringBuffer();
+		StringBuilder stackTraceString = new StringBuilder();
 		stackTraceString.append(ex.toString());
 		stackTraceString.append('\n');
 		for (StackTraceElement element : ex.getStackTrace()) {
