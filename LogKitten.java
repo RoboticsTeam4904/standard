@@ -231,7 +231,7 @@ public class LogKitten {
 	 *        the message to log
 	 */
 	public static void e(Object message) { // Log error message
-		LogKitten.logMessage(message, KittenLevel.LEVEL_ERROR, false);
+		LogKitten.logMessage(message, KittenLevel.ERROR, false);
 	}
 
 	/**
