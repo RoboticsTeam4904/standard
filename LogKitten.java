@@ -12,14 +12,14 @@ import edu.wpi.first.wpilibj.hal.HAL;
 
 public class LogKitten {
 	private static FileOutputStream fileOutput;
-	public final static KittenLevel LEVEL_WTF = KittenLevel.LEVEL_WTF;
-	public final static KittenLevel LEVEL_FATAL = KittenLevel.LEVEL_FATAL;
-	public final static KittenLevel LEVEL_ERROR = KittenLevel.LEVEL_ERROR;
-	public final static KittenLevel LEVEL_WARN = KittenLevel.LEVEL_WARN;
-	public final static KittenLevel LEVEL_VERBOSE = KittenLevel.LEVEL_VERBOSE;
-	public final static KittenLevel LEVEL_DEBUG = KittenLevel.LEVEL_DEBUG;
-	public static KittenLevel DEFAULT_LOG_LEVEL = KittenLevel.LEVEL_VERBOSE;
-	public static KittenLevel DEFAULT_PRINT_LEVEL = KittenLevel.LEVEL_WARN;
+	public final static KittenLevel LEVEL_WTF = KittenLevel.WTF;
+	public final static KittenLevel LEVEL_FATAL = KittenLevel.FATAL;
+	public final static KittenLevel LEVEL_ERROR = KittenLevel.ERROR;
+	public final static KittenLevel LEVEL_WARN = KittenLevel.WARN;
+	public final static KittenLevel LEVEL_VERBOSE = KittenLevel.VERBOSE;
+	public final static KittenLevel LEVEL_DEBUG = KittenLevel.DEBUG;
+	public static KittenLevel DEFAULT_LOG_LEVEL = KittenLevel.VERBOSE;
+	public static KittenLevel DEFAULT_PRINT_LEVEL = KittenLevel.WARN;
 	public static KittenLevel DEFAULT_DS_LEVEL = LogKitten.DEFAULT_PRINT_LEVEL;
 	private static KittenLevel logLevel = LogKitten.DEFAULT_LOG_LEVEL;
 	private static KittenLevel printLevel = LogKitten.DEFAULT_PRINT_LEVEL;
@@ -181,7 +181,7 @@ public class LogKitten {
 	 * @param override
 	 */
 	public static void wtf(String message, boolean override) {
-		LogKitten.logMessage(message, KittenLevel.LEVEL_WTF, override);
+		LogKitten.logMessage(message, KittenLevel.WTF, override);
 	}
 	
 	/**
@@ -191,130 +191,130 @@ public class LogKitten {
 	 *        the message to log
 	 */
 	public static void wtf(String message) { // Log WTF message
-		LogKitten.logMessage(message, KittenLevel.LEVEL_WTF, false);
+		LogKitten.logMessage(message, KittenLevel.WTF, false);
 	}
 	
 	/**
-	 * Log message at level LEVEL_FATAL allowing override
+	 * Log message at level FATAL allowing override
 	 *
 	 * @param message
 	 * @param override
 	 */
 	public static void f(String message, boolean override) {
-		LogKitten.logMessage(message, KittenLevel.LEVEL_FATAL, override);
+		LogKitten.logMessage(message, KittenLevel.FATAL, override);
 	}
 	
 	/**
-	 * Log message at level LEVEL_FATAL
+	 * Log message at level FATAL
 	 *
 	 * @param message
 	 *        the message to log
 	 */
 	public static void f(String message) { // Log fatal message
-		LogKitten.logMessage(message, KittenLevel.LEVEL_FATAL, false);
+		LogKitten.logMessage(message, KittenLevel.FATAL, false);
 	}
 	
 	/**
-	 * Log message at LEVEL_ERROR allowing override
+	 * Log message at ERROR allowing override
 	 *
 	 * @param message
 	 * @param override
 	 */
 	public static void e(String message, boolean override) {
-		LogKitten.logMessage(message, KittenLevel.LEVEL_ERROR, override);
+		LogKitten.logMessage(message, KittenLevel.ERROR, override);
 	}
 	
 	/**
-	 * Log message at level LEVEL_ERROR
+	 * Log message at level ERROR
 	 *
 	 * @param message
 	 *        the message to log
 	 */
 	public static void e(String message) { // Log error message
-		LogKitten.logMessage(message, KittenLevel.LEVEL_ERROR, false);
+		LogKitten.logMessage(message, KittenLevel.ERROR, false);
 	}
 	
 	/**
-	 * Log message at LEVEL_WARN allowing override
+	 * Log message at WARN allowing override
 	 *
 	 * @param message
 	 * @param override
 	 */
 	public static void w(String message, boolean override) {
-		LogKitten.logMessage(message, KittenLevel.LEVEL_WARN, override);
+		LogKitten.logMessage(message, KittenLevel.WARN, override);
 	}
 	
 	/**
-	 * Log message at level LEVEL_WARN
+	 * Log message at level WARN
 	 *
 	 * @param message
 	 *        the message to log
 	 */
 	public static void w(String message) { // Log warn message
-		LogKitten.logMessage(message, KittenLevel.LEVEL_WARN, false);
+		LogKitten.logMessage(message, KittenLevel.WARN, false);
 	}
 	
 	/**
-	 * Log message at LEVEL_VERBOSE allowing override
+	 * Log message at VERBOSE allowing override
 	 *
 	 * @param message
 	 * @param override
 	 */
 	public static void v(String message, boolean override) {
-		LogKitten.logMessage(message, KittenLevel.LEVEL_VERBOSE, override);
+		LogKitten.logMessage(message, KittenLevel.VERBOSE, override);
 	}
 	
 	/**
-	 * Log message at level LEVEL_VERBOSE
+	 * Log message at level VERBOSE
 	 *
 	 * @param message
 	 *        the message to log
 	 */
 	public static void v(String message) { // Log verbose message
-		LogKitten.logMessage(message, KittenLevel.LEVEL_VERBOSE, false);
+		LogKitten.logMessage(message, KittenLevel.VERBOSE, false);
 	}
 	
 	/**
-	 * Log message at LEVEL_VERBOSE (INFO links to verbose) allowing override
+	 * Log message at VERBOSE (INFO links to verbose) allowing override
 	 *
 	 * @param message
 	 * @param override
 	 */
 	public static void i(String message, boolean override) {
-		LogKitten.logMessage(message, KittenLevel.LEVEL_VERBOSE, override);
+		LogKitten.logMessage(message, KittenLevel.VERBOSE, override);
 	}
 	
 	/**
-	 * Log message at LEVEL_VERBOSE (INFO links to verbose)
+	 * Log message at VERBOSE (INFO links to verbose)
 	 *
 	 * @param message
 	 */
 	public static void i(String message) {
-		LogKitten.logMessage(message, KittenLevel.LEVEL_VERBOSE, false);
+		LogKitten.logMessage(message, KittenLevel.VERBOSE, false);
 	}
 	
 	/**
-	 * Log message at level LEVEL_DEBUG allowing override
+	 * Log message at level DEBUG allowing override
 	 *
 	 * @param message
 	 * @param override
 	 */
 	public static void d(String message, boolean override) {
-		LogKitten.logMessage(message, KittenLevel.LEVEL_DEBUG, override);
+		LogKitten.logMessage(message, KittenLevel.DEBUG, override);
 	}
 	
 	/**
-	 * Log message at level LEVEL_DEBUG
+	 * Log message at level DEBUG
 	 *
 	 * @param message
 	 *        the message to log
 	 */
 	public static void d(String message) { // Log debug message
-		LogKitten.logMessage(message, KittenLevel.LEVEL_DEBUG, false);
+		LogKitten.logMessage(message, KittenLevel.DEBUG, false);
 	}
 	
 	/**
-	 * Log exception at level LEVEL_ERROR allowing override
+	 * Log exception at level ERROR allowing override
 	 *
 	 * @param ex
 	 *        the exception to log
@@ -327,11 +327,11 @@ public class LogKitten {
 		for (StackTraceElement element : ex.getStackTrace()) {
 			stackTraceString.append(element.toString() + "\n");
 		}
-		LogKitten.logMessage(exceptionString + stackTraceString.toString(), KittenLevel.LEVEL_ERROR, override);
+		LogKitten.logMessage(exceptionString + stackTraceString.toString(), KittenLevel.ERROR, override);
 	}
 	
 	/**
-	 * Log exception at level LEVEL_ERROR
+	 * Log exception at level ERROR
 	 *
 	 * @param ex
 	 *        the exception to log
@@ -366,7 +366,7 @@ public class LogKitten {
 	
 	public static enum KittenLevel implements Comparable<KittenLevel>, Comparator<KittenLevel> {
 		// Defined in decreasing order of severity. Enum.compareTo uses the definition order to compare enum values.
-		LEVEL_WTF, LEVEL_FATAL, LEVEL_ERROR, LEVEL_WARN, LEVEL_VERBOSE, LEVEL_DEBUG;
+		WTF, FATAL, ERROR, WARN, VERBOSE, DEBUG;
 		/**
 		 * Get the level severity
 		 *
@@ -383,7 +383,7 @@ public class LogKitten {
 		 * @return level name as a string
 		 */
 		public String getName() {
-			return name().split("_")[1]; // e.g. "LEVEL_WTF" -> "WTF"
+			return name(); // Enum.name() is the Java builtin to get the name of an enum value
 		}
 		
 		/**
