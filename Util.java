@@ -15,7 +15,7 @@ public class Util {
 	 * @param var
 	 *        The floating point number you want to compare
 	 * @return
-	 * 		Whether or not it is within Constants.EPSILON of zero
+	 * 		Whether or not it is within Double.MIN_VALUE of zero
 	 */
 	public static boolean isZero(double var) {
 		return Math.abs(var) < Double.MIN_VALUE;
