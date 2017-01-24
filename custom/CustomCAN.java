@@ -47,8 +47,7 @@ public class CustomCAN {
 		for (int i = 0; i < 8; i++) {
 			canData.put(i, data[i]);
 		}
-		CANJNI.FRCNetCommCANSessionMuxSendMessage(messageID, null, CANJNI.CAN_SEND_PERIOD_STOP_REPEATING);
-		CANJNI.FRCNetCommCANSessionMuxSendMessage(messageID, canData, 1);
+		CANJNI.FRCNetCommCANSessionMuxSendMessage(messageID, canData, CANJNI.CAN_SEND_PERIOD_NO_REPEAT);
 	}
 
 	protected ByteBuffer readBuffer() {
@@ -58,14 +57,13 @@ public class CustomCAN {
 		ByteBuffer timestamp = ByteBuffer.allocate(4);
 		ByteBuffer response = null;
 		long start = System.currentTimeMillis();
-		while (System.currentTimeMillis() - start < 10) {
+		while (System.currentTimeMillis() - start < 5) {
 			try {
-				response = CANJNI.FRCNetCommCANSessionMuxReceiveMessage(idBuffer, 0xffffffff, timestamp);
+				response = CANJNI.FRCNetCommCANSessionMuxReceiveMessage(idBuffer, 0x0fffffff, timestamp);
 				break;
 			}
 			catch (CANMessageNotFoundException e) {}
 		}
-		CANJNI.FRCNetCommCANSessionMuxSendMessage(messageID, null, CANJNI.CAN_SEND_PERIOD_STOP_REPEATING);
 		return response;
 	}
 
