@@ -15,7 +15,7 @@ public class CustomCAN {
 	// Because CANJNI is basically static, we do not extend it.
 	protected final int messageID;
 	protected final String name;
-	
+
 	/**
 	 * Constructor for a CustomCAN device.
 	 * The name is local and for your convenience only.
@@ -27,16 +27,15 @@ public class CustomCAN {
 	 */
 	public CustomCAN(String name, int id) {
 		this.name = name;
-		messageID = id;
+		messageID = 0x00000FFF & id; // Ensure that the messageID is zeroed (32 bit int should be default, but better to be careful)
 	}
-	
+
 	public String getName() {
 		return name;
 	}
-
+	
 	/**
 	 * Used to write data to the device.
-	 * Will continue writing until read is called.
 	 *
 	 * @param data
 	 *        Data to be written. Should be EXACTLY 8 bytes long ONLY.
@@ -49,7 +48,13 @@ public class CustomCAN {
 		}
 		CANJNI.FRCNetCommCANSessionMuxSendMessage(messageID, canData, CANJNI.CAN_SEND_PERIOD_NO_REPEAT);
 	}
-
+	
+	/**
+	 * Read data as bytebuffer
+	 *
+	 * @return
+	 * 		ByteBuffer containing CAN message, or null
+	 */
 	protected ByteBuffer readBuffer() {
 		IntBuffer idBuffer = ByteBuffer.allocateDirect(4).asIntBuffer();
 		idBuffer.clear();
@@ -66,7 +71,7 @@ public class CustomCAN {
 		}
 		return response;
 	}
-
+	
 	/**
 	 * Reads data
 	 * Also stops repeating the last message.
