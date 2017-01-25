@@ -13,7 +13,7 @@ public class CANSensor extends CustomCAN {
 	private final int[] values;
 	private long lastRead; // data age
 	private static final long MAX_AGE = 100;
-
+	
 	/**
 	 *
 	 * @param name
@@ -28,7 +28,7 @@ public class CANSensor extends CustomCAN {
 		values[1] = 0;
 		lastRead = System.currentTimeMillis();
 	}
-
+	
 	/**
 	 * Read the pair of ints from a CAN sensor
 	 *
@@ -42,7 +42,7 @@ public class CANSensor extends CustomCAN {
 	 */
 	public int[] readSensor() throws InvalidSensorException {
 		ByteBuffer rawData = super.readBuffer();
-		if (rawData != null && rawData.remaining() > 7) {
+		if (rawData != null && rawData.remaining() > 7) { // 8 is minimum CAN message length
 			rawData.rewind();
 			long data = Long.reverseBytes(rawData.getLong());
 			values[0] = (int) data & 0xFFFFFFFF;
