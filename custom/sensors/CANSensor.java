@@ -40,7 +40,7 @@ public class CANSensor extends CustomCAN {
 	 *         this function will throw an InvalidSensorException
 	 *         to indicate that.
 	 */
-	public int[] read(int mode) throws InvalidSensorException {
+	public int[] readSensor() throws InvalidSensorException {
 		ByteBuffer rawData = super.readBuffer();
 		if (rawData != null && rawData.remaining() > 7) {
 			rawData.rewind();
@@ -51,7 +51,7 @@ public class CANSensor extends CustomCAN {
 			return values;
 		}
 		if (System.currentTimeMillis() - age > MAX_AGE) {
-			throw new InvalidSensorException("CAN data oudated For CAN sensor " + getName() + " in mode " + mode);
+			throw new InvalidSensorException("CAN data oudated For CAN sensor " + getName());
 		}
 		LogKitten.v("Cached Sensor Value Used\n");
 		return values;
