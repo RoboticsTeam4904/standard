@@ -14,6 +14,11 @@ public class CANEncoder extends CANSensor implements CustomEncoder {
 	private PIDSourceType pidSource;
 	private double distancePerPulse;
 	private boolean reverseDirection;
+	/**
+	 * Sequence of bytes used to reset an encoder
+	 * Spells out "resetenc" in ASCII
+	 */
+	private static final byte[] RESET_ENCODER_BYTE_SEQUENCE = new byte[] {0x72, 0x65, 0x73, 0x65, 0x74, 0x65, 0x6e, 0x63};
 	
 	public CANEncoder(String name, int id, boolean reverseDirection, double distancePerPulse) {
 		super(name, id);
@@ -143,7 +148,7 @@ public class CANEncoder extends CANSensor implements CustomEncoder {
 	 */
 	@Override
 	public void reset() {
-		super.write(new byte[] {0x72, 0x65, 0x73, 0x65, 0x74, 0x65, 0x6e, 0x63}); // resetenc
+		super.write(CANEncoder.RESET_ENCODER_BYTE_SEQUENCE); // resetenc
 	}
 	
 	@Override

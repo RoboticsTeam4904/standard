@@ -12,7 +12,7 @@ import org.usfirst.frc4904.standard.custom.CustomCAN;
 public class CANSensor extends CustomCAN {
 	private final int[] values;
 	private long lastRead; // data age
-	private final long MAX_AGE = 100;
+	private static final long MAX_AGE = 100;
 
 	/**
 	 *
@@ -50,7 +50,7 @@ public class CANSensor extends CustomCAN {
 			lastRead = System.currentTimeMillis();
 			return values;
 		}
-		if (System.currentTimeMillis() - lastRead > MAX_AGE) {
+		if (System.currentTimeMillis() - lastRead > CANSensor.MAX_AGE) {
 			throw new InvalidSensorException("CAN data oudated For CAN sensor " + getName());
 		}
 		LogKitten.v("Cached Sensor Value Used\n");

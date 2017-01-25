@@ -15,6 +15,7 @@ public class CustomCAN {
 	// Because CANJNI is basically static, we do not extend it.
 	protected final int messageID;
 	protected final String name;
+	private static final int CAN_MAX_READ_WAIT = 5; // How long to wait for a CAN message before returning null
 	
 	/**
 	 * Constructor for a CustomCAN device.
@@ -60,7 +61,7 @@ public class CustomCAN {
 		ByteBuffer timestamp = ByteBuffer.allocate(4);
 		ByteBuffer response = null;
 		long start = System.currentTimeMillis();
-		while (System.currentTimeMillis() - start < 5) {
+		while (System.currentTimeMillis() - start < CustomCAN.CAN_MAX_READ_WAIT) {
 			try {
 				response = CANJNI.FRCNetCommCANSessionMuxReceiveMessage(idBuffer, 0x0fffffff, timestamp);
 				break;
