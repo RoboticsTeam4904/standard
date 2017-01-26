@@ -18,19 +18,7 @@ public class KittenCommand extends Command {
 	
 	@Override
 	protected void initialize() {
-		if (level == LogKitten.LEVEL_WTF) {
-			LogKitten.wtf(message);
-		} else if (level == LogKitten.LEVEL_FATAL) {
-			LogKitten.f(message);
-		} else if (level == LogKitten.LEVEL_ERROR) {
-			LogKitten.e(message);
-		} else if (level == LogKitten.LEVEL_WARN) {
-			LogKitten.w(message);
-		} else if (level == LogKitten.LEVEL_VERBOSE) {
-			LogKitten.v(message);
-		} else if (level == LogKitten.LEVEL_DEBUG) {
-			LogKitten.d(message);
-		}
+		LogKitten.logMessage(message, level, false);
 	}
 	
 	@Override
