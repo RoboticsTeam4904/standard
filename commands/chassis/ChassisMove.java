@@ -24,7 +24,7 @@ public class ChassisMove extends CommandGroup {
 	protected final boolean usePID;
 	protected final Chassis chassis;
 	protected final ChassisController controller;
-	
+
 	/**
 	 * @param chassis
 	 *        The robot's Chassis.
@@ -47,7 +47,7 @@ public class ChassisMove extends CommandGroup {
 		}
 		LogKitten.v("ChassisMove created for " + chassis.getName());
 	}
-	
+
 	/**
 	 * @param chassis
 	 *        The robot's chassis.
@@ -57,11 +57,14 @@ public class ChassisMove extends CommandGroup {
 	public ChassisMove(Chassis chassis, ChassisController controller) {
 		this(chassis, controller, false);
 	}
-	
+
 	@Override
 	protected void initialize() {
 		for (Motor motor : motors) {
 			if (motor instanceof VelocitySensorMotor) {
+				// VelocitySensorMotors will attempt to very precisely achieve the speed set by this command when PID is enabled
+				// PositionSensorMotors will either attempt to maintain their previous position, or worse, will try to move to somewhere
+				// between -1.0 and 1.0, which is probably not the correct position regardless of the scaling.
 				if (usePID) {
 					((VelocitySensorMotor) motor).enableMotionController();
 				} else {
@@ -71,7 +74,7 @@ public class ChassisMove extends CommandGroup {
 		}
 		LogKitten.v("ChassisMove initialized");
 	}
-	
+
 	@Override
 	protected void execute() {
 		chassis.moveCartesian(controller.getX(), controller.getY(), controller.getTurnSpeed());
@@ -85,17 +88,17 @@ public class ChassisMove extends CommandGroup {
 		LogKitten.d("ChassisMove executing");
 		LogKitten.d("Motor speeds: " + motorSpeedsString);
 	}
-	
+
 	@Override
 	protected boolean isFinished() {
 		return false;
 	}
-	
+
 	@Override
 	protected void end() {
 		LogKitten.v("ChassisMove ended");
 	}
-	
+
 	@Override
 	protected void interrupted() {
 		LogKitten.w("ChassisMove interrupted");
