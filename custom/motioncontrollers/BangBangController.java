@@ -94,7 +94,7 @@ public class BangBangController extends MotionController {
 	public BangBangController(PIDSensor sensor, double A, double F) {
 		this(sensor, A, F, Util.EPSILON);
 	}
-
+	
 	/**
 	 * BangBang controller
 	 * A bang bang controller.

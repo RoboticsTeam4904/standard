@@ -49,7 +49,7 @@ public class Motor extends Subsystem implements SpeedController {
 		}
 		setInverted(isInverted);
 	}
-
+	
 	/**
 	 * A class that wraps around a variable number of SpeedController objects to give them Subsystem functionality.
 	 * Can also modify their speed with a SpeedModifier for things like scaling or brownout protection.
@@ -66,7 +66,7 @@ public class Motor extends Subsystem implements SpeedController {
 	public Motor(String name, boolean isInverted, SpeedController... motors) {
 		this(name, isInverted, new IdentityModifier(), motors);
 	}
-
+	
 	/**
 	 * A class that wraps around a variable number of SpeedController objects to give them Subsystem functionality.
 	 * Can also modify their speed with a SpeedModifier for things like scaling or brownout protection.
@@ -84,7 +84,7 @@ public class Motor extends Subsystem implements SpeedController {
 	public Motor(String name, SpeedModifier speedModifier, SpeedController... motors) {
 		this(name, false, speedModifier, motors);
 	}
-
+	
 	/**
 	 * A class that wraps around a variable number of SpeedController objects to give them Subsystem functionality.
 	 * Can also modify their speed with a SpeedModifier for things like scaling or brownout protection.
@@ -98,7 +98,7 @@ public class Motor extends Subsystem implements SpeedController {
 	public Motor(String name, SpeedController... motors) {
 		this(name, false, new IdentityModifier(), motors);
 	}
-
+	
 	/**
 	 * A class that wraps around a variable number of SpeedController objects to give them Subsystem functionality.
 	 * Can also modify their speed with a SpeedModifier for things like scaling or brownout protection.
@@ -117,7 +117,7 @@ public class Motor extends Subsystem implements SpeedController {
 	public Motor(boolean isInverted, SpeedModifier speedModifier, SpeedController... motors) {
 		this("Motor", isInverted, speedModifier, motors);
 	}
-
+	
 	/**
 	 * A class that wraps around a variable number of SpeedController objects to give them Subsystem functionality.
 	 * Can also modify their speed with a SpeedModifier for things like scaling or brownout protection.
@@ -138,7 +138,7 @@ public class Motor extends Subsystem implements SpeedController {
 	public Motor(boolean isInverted, SpeedController... motors) {
 		this("Motor", isInverted, motors);
 	}
-
+	
 	/**
 	 * A class that wraps around a variable number of SpeedController objects to give them Subsystem functionality.
 	 * Can also modify their speed with a SpeedModifier for things like scaling or brownout protection.
@@ -154,7 +154,7 @@ public class Motor extends Subsystem implements SpeedController {
 	public Motor(SpeedModifier speedModifier, SpeedController... motors) {
 		this("Motor", speedModifier, motors);
 	}
-
+	
 	/**
 	 * A class that wraps around a variable number of SpeedController objects to give them Subsystem functionality.
 	 * Can also modify their speed with a SpeedModifier for things like scaling or brownout protection.
@@ -166,12 +166,12 @@ public class Motor extends Subsystem implements SpeedController {
 	public Motor(SpeedController... motors) {
 		this("Motor", motors);
 	}
-
+	
 	@Override
 	protected void initDefaultCommand() {
 		setDefaultCommand(new MotorIdle(this));
 	}
-
+	
 	/**
 	 * Get a set value from a PIDController.
 	 *
@@ -186,7 +186,7 @@ public class Motor extends Subsystem implements SpeedController {
 			motor.pidWrite(newSpeed);
 		}
 	}
-
+	
 	/**
 	 * Disables the motor.
 	 * This function uses the underlying SpeedController's disable implementation.
@@ -197,7 +197,7 @@ public class Motor extends Subsystem implements SpeedController {
 			motor.disable();
 		}
 	}
-
+	
 	/**
 	 * Stops the motor.
 	 * This function uses the underlying SpeedController's stopMotor implementation.
@@ -210,7 +210,7 @@ public class Motor extends Subsystem implements SpeedController {
 			motor.stopMotor();
 		}
 	}
-
+	
 	/**
 	 * Get the most recently set speed.
 	 *
@@ -220,7 +220,7 @@ public class Motor extends Subsystem implements SpeedController {
 	public double get() {
 		return lastSpeed;
 	}
-
+	
 	/**
 	 * Set the motor speed. Passes through SpeedModifier.
 	 *
@@ -236,7 +236,7 @@ public class Motor extends Subsystem implements SpeedController {
 			motor.set(newSpeed);
 		}
 	}
-
+	
 	/**
 	 * Get whether this entire motor is inverted.
 	 *
@@ -247,7 +247,7 @@ public class Motor extends Subsystem implements SpeedController {
 	public boolean getInverted() {
 		return isInverted;
 	}
-
+	
 	/**
 	 * Sets the direction inversion of all motor substituents.
 	 * This respects the original inversion state of each SpeedController when constructed,
@@ -265,18 +265,18 @@ public class Motor extends Subsystem implements SpeedController {
 		}
 		this.isInverted = isInverted;
 	}
-
+	
 	protected class UnsynchronizedSpeedControllerRuntimeException extends RuntimeException {
 		private static final long serialVersionUID = 8688590919561059584L;
-
+		
 		public UnsynchronizedSpeedControllerRuntimeException(Motor motor) {
 			super(motor.getName() + "'s SpeedControllers report different speeds");
 		}
 	}
-
+	
 	protected class StrangeCANSpeedControllerModeRuntimeException extends RuntimeException {
 		private static final long serialVersionUID = -539917227288371271L;
-
+		
 		public StrangeCANSpeedControllerModeRuntimeException(Motor motor) {
 			super("One of " + motor.getName() + "'s SpeedControllers is a CANSpeedController with a non-zero mode. This might mess up it's .get(), so Motor cannot verify safety.");
 		}
