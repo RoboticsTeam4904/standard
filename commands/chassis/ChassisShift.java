@@ -13,15 +13,6 @@ public class ChassisShift extends Command {
 	protected final SolenoidShifters.ShiftState state;
 	
 	/**
-	 * Shifts the solenoids to the opposite state
-	 *
-	 * @param solenoids
-	 */
-	public ChassisShift(SolenoidShifters solenoids) {
-		this(solenoids, null);
-	}
-	
-	/**
 	 * Shifts the solenoids to the state state
 	 *
 	 * @param solenoids
@@ -37,16 +28,7 @@ public class ChassisShift extends Command {
 	
 	@Override
 	protected void initialize() {
-		switch (state) {
-			case UP:
-				solenoids.shift(SolenoidShifters.ShiftState.UP);
-				break;
-			case DOWN:
-				solenoids.shift(SolenoidShifters.ShiftState.DOWN);
-				break;
-			default:
-				solenoids.shift();
-		}
+		solenoids.shift(state);
 	}
 	
 	@Override
