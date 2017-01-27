@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj.command.Command;
  */
 public class ChassisShift extends Command {
 	protected final SolenoidShifters solenoids;
-	protected SolenoidShifters.ShiftState state;
+	protected final SolenoidShifters.ShiftState state;
 	
 	/**
 	 * Shifts the solenoids to the opposite state
@@ -18,11 +18,7 @@ public class ChassisShift extends Command {
 	 * @param solenoids
 	 */
 	public ChassisShift(SolenoidShifters solenoids) {
-		super("ChassisShift");
-		this.solenoids = solenoids;
-		requires(solenoids);
-		setInterruptible(true);
-		state = null;
+		this(solenoids, null);
 	}
 	
 	/**
@@ -32,7 +28,10 @@ public class ChassisShift extends Command {
 	 * @param state
 	 */
 	public ChassisShift(SolenoidShifters solenoids, SolenoidShifters.ShiftState state) {
-		this(solenoids);
+		super("ChassisShift");
+		this.solenoids = solenoids;
+		requires(solenoids);
+		setInterruptible(true);
 		this.state = state;
 	}
 	
