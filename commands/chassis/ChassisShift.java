@@ -13,7 +13,16 @@ public class ChassisShift extends Command {
 	protected final SolenoidShifters.ShiftState state;
 	
 	/**
-	 * Shifts the solenoids to the state state
+	 * Toggles the solenoids
+	 * 
+	 * @param solenoids
+	 */
+	public ChassisShift(SolenoidShifters solenoids) {
+		this(solenoids, null);
+	}
+	
+	/**
+	 * Shifts the solenoids to the provided state
 	 *
 	 * @param solenoids
 	 * @param state
@@ -28,7 +37,13 @@ public class ChassisShift extends Command {
 	
 	@Override
 	protected void initialize() {
-		solenoids.shift(state);
+		if (state == null) {
+			// null state means toggle
+			solenoids.shift();
+		} else {
+			// not null state means shift to it directly
+			solenoids.shift(state);
+		}
 	}
 	
 	@Override
