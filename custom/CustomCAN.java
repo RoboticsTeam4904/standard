@@ -33,7 +33,7 @@ public class CustomCAN {
 	public String getName() {
 		return name;
 	}
-
+	
 	/**
 	 * Used to write data to the device.
 	 * Will continue writing until read is called.
@@ -50,7 +50,7 @@ public class CustomCAN {
 		CANJNI.FRCNetCommCANSessionMuxSendMessage(messageID, null, CANJNI.CAN_SEND_PERIOD_STOP_REPEATING);
 		CANJNI.FRCNetCommCANSessionMuxSendMessage(messageID, canData, 1);
 	}
-
+	
 	protected ByteBuffer readBuffer() {
 		IntBuffer idBuffer = ByteBuffer.allocateDirect(4).asIntBuffer();
 		idBuffer.clear();
@@ -64,11 +64,17 @@ public class CustomCAN {
 				break;
 			}
 			catch (CANMessageNotFoundException e) {}
+			try {
+				Thread.sleep(1);
+			}
+			catch (InterruptedException e) {
+				break;
+			}
 		}
 		CANJNI.FRCNetCommCANSessionMuxSendMessage(messageID, null, CANJNI.CAN_SEND_PERIOD_STOP_REPEATING);
 		return response;
 	}
-
+	
 	/**
 	 * Reads data
 	 * Also stops repeating the last message.
