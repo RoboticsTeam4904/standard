@@ -366,7 +366,7 @@ public class LogKitten {
 		return LogKitten.TIMESTAMP_FORMAT.format(new Date());
 	}
 
-	public static enum KittenLevel implements Comparable<KittenLevel> {
+	public static enum KittenLevel {
 		// Defined in decreasing order of severity. Enum.compareTo uses the definition order to compare enum values.
 		WTF, FATAL, ERROR, WARN, VERBOSE, DEBUG;
 		/**
