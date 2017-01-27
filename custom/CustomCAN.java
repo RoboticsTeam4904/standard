@@ -28,7 +28,7 @@ public class CustomCAN {
 	 */
 	public CustomCAN(String name, int id) {
 		this.name = name;
-		messageID = 0x00000FFF & id; // Ensure that the messageID is zeroed (32 bit int should be default, but better to be careful)
+		messageID = id; // Ensure that the messageID is zeroed (32 bit int should be default, but better to be careful)
 	}
 
 	public String getName() {
@@ -63,7 +63,7 @@ public class CustomCAN {
 		long start = System.currentTimeMillis();
 		while (System.currentTimeMillis() - start < CustomCAN.CAN_MAX_READ_WAIT) {
 			try {
-				response = CANJNI.FRCNetCommCANSessionMuxReceiveMessage(idBuffer, 0x0fffffff, timestamp);
+				response = CANJNI.FRCNetCommCANSessionMuxReceiveMessage(idBuffer, 0x1fffffff, timestamp);
 				break;
 			}
 			catch (CANMessageNotFoundException e) {}
