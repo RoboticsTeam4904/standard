@@ -11,7 +11,7 @@ public class ChassisMinimumDistance extends ChassisConstant {
 	protected final ChassisConstant fallbackCommand;
 	protected double distance;
 	protected double[] initialDistances;
-	
+
 	/**
 	 * Constructor.
 	 * This command moves the chassis forward a known distance via a set of encoders.
@@ -27,14 +27,15 @@ public class ChassisMinimumDistance extends ChassisConstant {
 	 *        If the sensor fails for some reason, this command will be cancelled, then the fallbackCommand will start
 	 * @param encoders
 	 */
-	public ChassisMinimumDistance(Chassis chassis, double distance, double speed, ChassisConstant fallbackCommand, CustomEncoder... encoders) {
+	public ChassisMinimumDistance(Chassis chassis, double distance, double speed, ChassisConstant fallbackCommand,
+		CustomEncoder... encoders) {
 		super(chassis, 0.0, speed, 0.0, Double.MAX_VALUE);
 		this.encoders = encoders;
 		this.distance = distance;
 		this.fallbackCommand = fallbackCommand;
 		initialDistances = new double[encoders.length];
 	}
-	
+
 	/**
 	 * Constructor.
 	 * This command moves the chassis forward a known distance via a set of encoders.
@@ -51,7 +52,7 @@ public class ChassisMinimumDistance extends ChassisConstant {
 	public ChassisMinimumDistance(Chassis chassis, double distance, double speed, CustomEncoder... encoders) {
 		this(chassis, distance, speed, null, encoders);
 	}
-	
+
 	@Override
 	protected void initialize() {
 		super.initialize();
@@ -65,7 +66,7 @@ public class ChassisMinimumDistance extends ChassisConstant {
 			}
 		}
 	}
-	
+
 	@Override
 	protected boolean isFinished() {
 		double distanceSum = 0;
@@ -85,13 +86,13 @@ public class ChassisMinimumDistance extends ChassisConstant {
 		double distanceAvg = distanceSum / encoders.length;
 		return distanceAvg >= distance;
 	}
-	
+
 	@Override
 	protected void end() {
 		super.end();
 		LogKitten.v("Finished traveling " + distance + " units (as set by setDistancePerPulse)");
 	}
-	
+
 	@Override
 	protected void interrupted() {
 		super.interrupted();

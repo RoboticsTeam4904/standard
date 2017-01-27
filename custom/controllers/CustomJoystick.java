@@ -28,7 +28,7 @@ public class CustomJoystick extends Joystick implements Controller {
 	public final CustomButton button10;
 	public final CustomButton button11;
 	public final CustomButton button12;
-	
+
 	public CustomJoystick(int port) {
 		super(port);
 		this.port = port;
@@ -46,7 +46,7 @@ public class CustomJoystick extends Joystick implements Controller {
 		button11 = new CustomButton(this, 11);
 		button12 = new CustomButton(this, 12);
 	}
-	
+
 	/**
 	 * Returns true if a given axis is above the move threshold.
 	 *
@@ -62,7 +62,7 @@ public class CustomJoystick extends Joystick implements Controller {
 			return false;
 		}
 	}
-	
+
 	/**
 	 * Returns true if the joystick is actually connected.
 	 * It determines this by counting the number of buttons
@@ -73,7 +73,7 @@ public class CustomJoystick extends Joystick implements Controller {
 	public boolean connected() {
 		return DriverStation.getInstance().getStickButtonCount(port) > 0;
 	}
-	
+
 	/**
 	 * Returns the value of the given axis.
 	 */
@@ -84,7 +84,7 @@ public class CustomJoystick extends Joystick implements Controller {
 		}
 		return super.getRawAxis(axis);
 	}
-	
+
 	public void setDeadzone(double deadzone) {
 		this.deadzone = deadzone;
 	}

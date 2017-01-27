@@ -24,7 +24,7 @@ public class ChassisMove extends CommandGroup {
 	protected final boolean usePID;
 	protected final Chassis chassis;
 	protected final ChassisController controller;
-	
+
 	/**
 	 * @param chassis
 	 *        The robot's Chassis.
@@ -47,7 +47,7 @@ public class ChassisMove extends CommandGroup {
 		}
 		LogKitten.v("ChassisMove created for " + chassis.getName());
 	}
-	
+
 	/**
 	 * @param chassis
 	 *        The robot's chassis.
@@ -57,7 +57,7 @@ public class ChassisMove extends CommandGroup {
 	public ChassisMove(Chassis chassis, ChassisController controller) {
 		this(chassis, controller, false);
 	}
-	
+
 	@Override
 	protected void initialize() {
 		for (Motor motor : motors) {
@@ -71,7 +71,7 @@ public class ChassisMove extends CommandGroup {
 		}
 		LogKitten.v("ChassisMove initialized");
 	}
-	
+
 	@Override
 	protected void execute() {
 		chassis.moveCartesian(controller.getX(), controller.getY(), controller.getTurnSpeed());
@@ -87,17 +87,17 @@ public class ChassisMove extends CommandGroup {
 		LogKitten.d("ChassisMove executing");
 		LogKitten.d(motorSpeedsString.toString());
 	}
-	
+
 	@Override
 	protected boolean isFinished() {
 		return false;
 	}
-	
+
 	@Override
 	protected void end() {
 		LogKitten.v("ChassisMove ended");
 	}
-	
+
 	@Override
 	protected void interrupted() {
 		LogKitten.w("ChassisMove interrupted");

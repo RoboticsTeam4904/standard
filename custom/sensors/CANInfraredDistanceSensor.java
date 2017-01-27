@@ -9,7 +9,7 @@ import org.usfirst.frc4904.standard.LogKitten;
  */
 public class CANInfraredDistanceSensor extends CANSensor implements DistanceSensor {
 	public static final int DISTANCE_SENSOR_ARRAY_INDEX = 0;
-	
+
 	/**
 	 * Construct a new Infrared Distance Sensor connected via CAN
 	 *
@@ -21,7 +21,7 @@ public class CANInfraredDistanceSensor extends CANSensor implements DistanceSens
 	public CANInfraredDistanceSensor(String name, int id) {
 		super(name, id);
 	}
-	
+
 	@Override
 	public double getDistance() {
 		try {
@@ -32,7 +32,7 @@ public class CANInfraredDistanceSensor extends CANSensor implements DistanceSens
 			return 0;
 		}
 	}
-	
+
 	@Override
 	public double getDistanceSafely() throws InvalidSensorException {
 		int value = readSensor()[CANInfraredDistanceSensor.DISTANCE_SENSOR_ARRAY_INDEX];

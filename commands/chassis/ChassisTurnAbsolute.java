@@ -7,7 +7,6 @@ import org.usfirst.frc4904.standard.subsystems.chassis.Chassis;
 import edu.wpi.first.wpilibj.command.Command;
 
 public class ChassisTurnAbsolute extends ChassisTurn {
-	
 	/**
 	 * Constructor
 	 * This command rotates the chassis to a position relative to the starting point of the robot
@@ -21,7 +20,7 @@ public class ChassisTurnAbsolute extends ChassisTurn {
 	public ChassisTurnAbsolute(Chassis chassis, double finalAngle, IMU imu, MotionController motionController) {
 		super(chassis, (finalAngle % 360) - 180, imu, motionController);
 	}
-	
+
 	/**
 	 * Constructor
 	 * This command rotates the chassis to a position relative to the starting point of the robot
@@ -34,10 +33,11 @@ public class ChassisTurnAbsolute extends ChassisTurn {
 	 *        If the sensor fails for some reason, this command will be cancelled, then the fallbackCommand will start
 	 * @param motionController
 	 */
-	public ChassisTurnAbsolute(Chassis chassis, double finalAngle, IMU imu, Command fallbackCommand, MotionController motionController) {
+	public ChassisTurnAbsolute(Chassis chassis, double finalAngle, IMU imu, Command fallbackCommand,
+		MotionController motionController) {
 		super(chassis, (finalAngle % 360) - 180, imu, fallbackCommand, motionController);
 	}
-	
+
 	@Override
 	protected void initialize() {
 		// ChassisTurnDegrees measures an initial angle and compensates for it

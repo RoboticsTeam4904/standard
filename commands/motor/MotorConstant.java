@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj.command.Command;
 public class MotorConstant extends Command {
 	protected final double motorSpeed;
 	protected final Motor motor;
-	
+
 	/**
 	 *
 	 * @param motor
@@ -24,25 +24,25 @@ public class MotorConstant extends Command {
 		requires(motor);
 		setInterruptible(true);
 	}
-	
+
 	@Override
 	protected void initialize() {
 		motor.set(motorSpeed);
 	}
-	
+
 	@Override
 	protected void execute() {
 		motor.set(motorSpeed);
 	}
-	
+
 	@Override
 	protected boolean isFinished() {
 		return false;
 	}
-	
+
 	@Override
 	protected void end() {}
-	
+
 	@Override
 	protected void interrupted() {}
 }

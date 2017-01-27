@@ -9,7 +9,7 @@ public abstract class RunAll extends CommandGroup {
 	public RunAll(String name) {
 		super(name);
 	}
-	
+
 	protected static String joinNames(Command... commands) {
 		StringJoiner joiner = new StringJoiner(", ");
 		for (Command c : commands) {
