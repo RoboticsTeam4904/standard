@@ -13,7 +13,7 @@ public class ChassisShift extends Command {
 	protected final SolenoidShifters.ShiftState state;
 	
 	/**
-	 * Shifts the solenoids to the state state
+	 * Shifts the solenoids to the opposite state
 	 *
 	 * @param solenoids
 	 * @param state
