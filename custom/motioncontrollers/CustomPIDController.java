@@ -157,7 +157,11 @@ public class CustomPIDController extends MotionController {
 	 * 
 	 * @param minimumNominalOutput
 	 *        Minimum Nominal Output
-	 *        result will default to this value if less than this
+	 *        result will be set to
+	 *        ±this value if the absolute
+	 *        value of the result is less than
+	 *        this value. This is useful if
+	 *        the motor can only run well above a value.
 	 */
 	public void setMinimumNominalOutput(double minimumNominalOutput) {
 		this.minimumNominalOutput = minimumNominalOutput;
