@@ -15,11 +15,14 @@ import edu.wpi.first.wpilibj.PIDSourceType;
  */
 public class EncoderPair implements CustomEncoder {
 	private final CustomEncoder[] encoders;
+	private final int[] offset; // Do not reset encoders, just store an offset value
 	private PIDSourceType pidSource;
 	private boolean reverseDirection;
 	private double distancePerPulse;
-	private final double tolerance;
-	private static final double DEFAULT_TOLERANCE = 10;
+	private final double distanceTolerance;
+	private final double rateTolerance;
+	private static final double DEFAULT_DISTANCE_TOLERANCE = 10;
+	private static final double DEFAULT_RATE_TOLERANCE = 10;
 
 	/**
 	 * Amalgamates the data of two encoders for the purpose
@@ -31,12 +34,16 @@ public class EncoderPair implements CustomEncoder {
 	 *
 	 * @param encoders
 	 *        The encoders to amalgamate.
-	 * @param tolerance
-	 *        The amount by which the encoders can be different before isInSync() returns false
+	 * @param distanceTolerance
+	 *        The distance by which the encoders can be different before isInSync() returns false
+	 * @param rateTolerance
+	 *        The rate by which the encoders can be different before isInSync() returns false
 	 */
-	public EncoderPair(CustomEncoder encoder1, CustomEncoder encoder2, double tolerance) {
+	public EncoderPair(CustomEncoder encoder1, CustomEncoder encoder2, double distanceTolerance, double rateTolerance) {
 		encoders = new CustomEncoder[] {encoder1, encoder2};
-		this.tolerance = tolerance;
+		offset = new int[] {0, 0};
+		this.distanceTolerance = distanceTolerance;
+		this.rateTolerance = rateTolerance;
 		pidSource = PIDSourceType.kDisplacement;
 		reverseDirection = false;
 	}
@@ -53,7 +60,7 @@ public class EncoderPair implements CustomEncoder {
 	 *        The encoders to amalgamate.
 	 */
 	public EncoderPair(CustomEncoder encoder1, CustomEncoder encoder2) {
-		this(encoder1, encoder2, EncoderPair.DEFAULT_TOLERANCE);
+		this(encoder1, encoder2, EncoderPair.DEFAULT_DISTANCE_TOLERANCE, EncoderPair.DEFAULT_RATE_TOLERANCE);
 	}
 
 	@Override
@@ -240,21 +247,21 @@ public class EncoderPair implements CustomEncoder {
 	}
 
 	public boolean isInSyncSafely() throws InvalidSensorException {
-		return getDifferenceSafely() < tolerance;
+		return Math.abs(getDifferenceSafely()) < distanceTolerance && Math.abs(getRateDifferenceSafely()) < rateTolerance;
 	}
 
 	public class EncoderDifference implements PIDSensor {
-		private PIDSourceType pidSource;
+		private PIDSourceType pidSource; // Needs to be seperate in case of multiple threads changing source type
 		
 		public EncoderDifference() {
 			pidSource = PIDSourceType.kDisplacement;
 		}
-		
+
 		@Override
 		public void setPIDSourceType(PIDSourceType pidSource) {
 			this.pidSource = pidSource;
 		}
-		
+
 		@Override
 		public PIDSourceType getPIDSourceType() {
 			return pidSource;
