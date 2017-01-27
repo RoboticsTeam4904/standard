@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 public class SolenoidShifters extends Subsystem {
 	protected final DoubleSolenoid solenoid;
 	protected final boolean isInverted;
-	protected ShiftState state;
+	protected final ShiftState state;
 	
 	public enum ShiftState {
 		UP, DOWN;
