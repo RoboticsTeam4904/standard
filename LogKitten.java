@@ -17,9 +17,9 @@ public class LogKitten {
 	public final static KittenLevel LEVEL_WARN = KittenLevel.WARN;
 	public final static KittenLevel LEVEL_VERBOSE = KittenLevel.VERBOSE;
 	public final static KittenLevel LEVEL_DEBUG = KittenLevel.DEBUG;
-	public static KittenLevel DEFAULT_LOG_LEVEL = KittenLevel.VERBOSE;
-	public static KittenLevel DEFAULT_PRINT_LEVEL = KittenLevel.WARN;
-	public static KittenLevel DEFAULT_DS_LEVEL = LogKitten.DEFAULT_PRINT_LEVEL;
+	public final static KittenLevel DEFAULT_LOG_LEVEL = KittenLevel.VERBOSE;
+	public final static KittenLevel DEFAULT_PRINT_LEVEL = KittenLevel.WARN;
+	public final static KittenLevel DEFAULT_DS_LEVEL = LogKitten.DEFAULT_PRINT_LEVEL;
 	private static KittenLevel logLevel = LogKitten.DEFAULT_LOG_LEVEL;
 	private static KittenLevel printLevel = LogKitten.DEFAULT_PRINT_LEVEL;
 	private static KittenLevel dsLevel = LogKitten.DEFAULT_DS_LEVEL;
@@ -366,7 +366,7 @@ public class LogKitten {
 		return LogKitten.TIMESTAMP_FORMAT.format(new Date());
 	}
 
-	public static enum KittenLevel implements Comparable<KittenLevel> {
+	public static enum KittenLevel {
 		// Defined in decreasing order of severity. Enum.compareTo uses the definition order to compare enum values.
 		WTF, FATAL, ERROR, WARN, VERBOSE, DEBUG;
 		/**
