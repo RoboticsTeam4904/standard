@@ -13,17 +13,36 @@ import edu.wpi.first.wpilibj.PIDSourceType;
  *          before using this class that all the encoders will be rotating
  *          in the same direction with the same rate (before setDistancePerTick).
  */
-public class EncoderGroup implements CustomEncoder {
+public class EncoderPair implements CustomEncoder {
 	private final CustomEncoder[] encoders;
 	private PIDSourceType pidSource;
 	private boolean reverseDirection;
 	private double distancePerPulse;
 	private final double tolerance;
-	private int errorCount;
-	private final int MAX_ENCODER_ERRORS = 20;
+	private static final double DEFAULT_TOLERANCE = 10;
 
 	/**
-	 * Amalgamates the data of several encoders for the purpose
+	 * Amalgamates the data of two encoders for the purpose
+	 * of controlling a single motion controller.
+	 *
+	 * @warning The amalgamation will be the average. Verify
+	 *          before using this class that all the encoders will be rotating
+	 *          in the same direction with the same rate (before setDistancePerTick).
+	 *
+	 * @param encoders
+	 *        The encoders to amalgamate.
+	 * @param tolerance
+	 *        The amount by which the encoders can be different before isInSync() returns false
+	 */
+	public EncoderPair(CustomEncoder encoder1, CustomEncoder encoder2, double tolerance) {
+		encoders = new CustomEncoder[] {encoder1, encoder2};
+		this.tolerance = tolerance;
+		pidSource = PIDSourceType.kDisplacement;
+		reverseDirection = false;
+	}
+
+	/**
+	 * Amalgamates the data of two encoders for the purpose
 	 * of controlling a single motion controller.
 	 *
 	 * @warning The amalgamation will be the average. Verify
@@ -33,12 +52,8 @@ public class EncoderGroup implements CustomEncoder {
 	 * @param encoders
 	 *        The encoders to amalgamate.
 	 */
-	public EncoderGroup(double tolerance, CustomEncoder... encoders) {
-		this.encoders = encoders;
-		this.tolerance = tolerance;
-		pidSource = PIDSourceType.kDisplacement;
-		reverseDirection = false;
-		errorCount = 0;
+	public EncoderPair(CustomEncoder encoder1, CustomEncoder encoder2) {
+		this(encoder1, encoder2, EncoderPair.DEFAULT_TOLERANCE);
 	}
 
 	@Override
@@ -71,20 +86,7 @@ public class EncoderGroup implements CustomEncoder {
 
 	@Override
 	public int getSafely() throws InvalidSensorException {
-		int average = encoders[0].get();
-		for (int i = 1; i < encoders.length; i++) {
-			if (new Util.Range(average - tolerance, average + tolerance).contains(encoders[i].get())) {
-				errorCount++;
-				if (errorCount > MAX_ENCODER_ERRORS) {
-					errorCount = 0;
-					LogKitten.e("Encoders in group too different: " + average + " " + encoders[i].get());
-					throw new InvalidSensorException("Encoders in group too different: " + average + " " + encoders[i].get());
-				}
-			}
-			errorCount = 0;
-			average = (average * i + encoders[i].get()) / (i + 1);
-		}
-		return average / encoders.length;
+		return (int) Math.round(((double) encoders[0].getSafely() + (double) encoders[1].getSafely()) / 2.0);
 	}
 
 	@Override
@@ -100,20 +102,7 @@ public class EncoderGroup implements CustomEncoder {
 
 	@Override
 	public double getDistanceSafely() throws InvalidSensorException {
-		double average = encoders[0].getDistance();
-		for (int i = 1; i < encoders.length; i++) {
-			if (new Util.Range(average - tolerance, average + tolerance).contains(encoders[i].getDistance())) {
-				errorCount++;
-				if (errorCount > MAX_ENCODER_ERRORS) {
-					errorCount = 0;
-					LogKitten.e("Encoders in group too different: " + average + " " + encoders[i].getDistance());
-					throw new InvalidSensorException("Encoders in group too different: " + average + " " + encoders[i].getDistance());
-				}
-			}
-			errorCount = 0;
-			average = (average * i + encoders[i].getDistance()) / (i + 1);
-		}
-		return average / encoders.length;
+		return (encoders[0].getDistanceSafely() + encoders[1].getDistanceSafely()) / 2.0;
 	}
 
 	@Override
@@ -149,20 +138,7 @@ public class EncoderGroup implements CustomEncoder {
 
 	@Override
 	public double getRateSafely() throws InvalidSensorException {
-		double average = encoders[0].getRate();
-		for (int i = 1; i < encoders.length; i++) {
-			if (new Util.Range(average - tolerance, average + tolerance).contains(encoders[i].getRate())) {
-				errorCount++;
-				if (errorCount > MAX_ENCODER_ERRORS) {
-					errorCount = 0;
-					LogKitten.e("Encoders in group too different: " + average + " " + encoders[i].getRate());
-					throw new InvalidSensorException("Encoders in group too different: " + average + " " + encoders[i].getRate());
-				}
-			}
-			errorCount = 0;
-			average = (average * i + encoders[i].getRate()) / (i + 1);
-		}
-		return average / encoders.length;
+		return (encoders[0].getRateSafely() + encoders[1].getRateSafely()) / 2.0;
 	}
 
 	@Override
@@ -223,6 +199,84 @@ public class EncoderGroup implements CustomEncoder {
 		for (CustomEncoder encoder : encoders) {
 			encoder.reset();
 		}
-		errorCount = 0;
+	}
+	
+	public double getDifference() {
+		try {
+			return getDifferenceSafely();
+		}
+		catch (InvalidSensorException e) {
+			LogKitten.ex(e);
+			return 0.0; // TODO: is this a reasonable default
+		}
+	}
+	
+	public double getDifferenceSafely() throws InvalidSensorException {
+		return encoders[0].getDistanceSafely() - encoders[1].getDistanceSafely();
+	}
+	
+	public double getRateDifference() {
+		try {
+			return getRateDifferenceSafely();
+		}
+		catch (InvalidSensorException e) {
+			LogKitten.ex(e);
+			return 0.0; // TODO: is this a reasonable default
+		}
+	}
+	
+	public double getRateDifferenceSafely() throws InvalidSensorException {
+		return encoders[0].getRateSafely() - encoders[1].getRateSafely();
+	}
+
+	public boolean isInSync() {
+		try {
+			return isInSyncSafely();
+		}
+		catch (InvalidSensorException e) {
+			LogKitten.ex(e);
+			return false; // If a sensor is broken, it is not in sync.
+		}
+	}
+
+	public boolean isInSyncSafely() throws InvalidSensorException {
+		return getDifferenceSafely() < tolerance;
+	}
+
+	public class EncoderDifference implements PIDSensor {
+		private PIDSourceType pidSource;
+		
+		public EncoderDifference() {
+			pidSource = PIDSourceType.kDisplacement;
+		}
+		
+		@Override
+		public void setPIDSourceType(PIDSourceType pidSource) {
+			this.pidSource = pidSource;
+		}
+		
+		@Override
+		public PIDSourceType getPIDSourceType() {
+			return pidSource;
+		}
+		
+		@Override
+		public double pidGet() {
+			try {
+				return pidGetSafely();
+			}
+			catch (InvalidSensorException e) {
+				LogKitten.ex(e);
+				return 0.0;
+			}
+		}
+		
+		@Override
+		public double pidGetSafely() throws InvalidSensorException {
+			if (pidSource == PIDSourceType.kDisplacement) {
+				return getDifferenceSafely();
+			}
+			return getRateDifferenceSafely();
+		}
 	}
 }
