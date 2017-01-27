@@ -17,7 +17,7 @@ public class MotorPositionConstant extends Command {
 	protected double position;
 	protected boolean endOnArrival;
 	protected final Command fallbackCommand;
-
+	
 	/**
 	 * Constructor
 	 * MotorPositionConstant is a Command that runs while setting a SensorMotor's position

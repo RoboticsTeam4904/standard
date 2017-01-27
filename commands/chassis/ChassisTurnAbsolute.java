@@ -37,7 +37,7 @@ public class ChassisTurnAbsolute extends ChassisTurn {
 	public ChassisTurnAbsolute(Chassis chassis, double finalAngle, IMU imu, Command fallbackCommand, MotionController motionController) {
 		super(chassis, (finalAngle % 360) - 180, imu, fallbackCommand, motionController);
 	}
-
+	
 	@Override
 	protected void initialize() {
 		// ChassisTurnDegrees measures an initial angle and compensates for it
