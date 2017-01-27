@@ -254,7 +254,7 @@ public class CustomPIDController extends MotionController {
 		double error = setpoint - input;
 		// Account for continuous input ranges
 		if (continuous) {
-			double range = inputMax - inputMin;
+			double range = inputRange.getRange();
 			// If the error is more than half of the range, it is faster to increase the error and loop around the boundary
 			if (Math.abs(error) > range / 2) {
 				if (error > 0) {

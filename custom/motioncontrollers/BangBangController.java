@@ -19,7 +19,7 @@ public class BangBangController extends MotionController {
 	protected double A;
 	protected double F;
 	protected double threshold;
-	
+
 	/**
 	 * BangBang controller
 	 * A bang bang controller.
@@ -46,7 +46,7 @@ public class BangBangController extends MotionController {
 		this.threshold = threshold;
 		reset();
 	}
-	
+
 	/**
 	 * BangBang controller
 	 * A bang bang controller.
@@ -73,7 +73,7 @@ public class BangBangController extends MotionController {
 		this.threshold = threshold;
 		reset();
 	}
-	
+
 	/**
 	 * BangBang controller
 	 * A bang bang controller.
@@ -94,7 +94,7 @@ public class BangBangController extends MotionController {
 	public BangBangController(PIDSensor sensor, double A, double F) {
 		this(sensor, A, F, Util.EPSILON);
 	}
-
+	
 	/**
 	 * BangBang controller
 	 * A bang bang controller.
@@ -115,7 +115,7 @@ public class BangBangController extends MotionController {
 	public BangBangController(PIDSource source, double A, double F) {
 		this(source, A, F, Util.EPSILON);
 	}
-	
+
 	/**
 	 * Sets the setpoint to the current sensor value.
 	 */
@@ -124,7 +124,7 @@ public class BangBangController extends MotionController {
 		setpoint = sensor.pidGetSafely();
 		error = 0;
 	}
-	
+
 	/**
 	 * Sets the setpoint to the current sensor value.
 	 *
@@ -135,7 +135,7 @@ public class BangBangController extends MotionController {
 		setpoint = sensor.pidGet();
 		error = 0;
 	}
-	
+
 	/**
 	 * Get the current output of the bang bang controller.
 	 * This should be used to set the output.
@@ -154,7 +154,7 @@ public class BangBangController extends MotionController {
 		error = setpoint - input;
 		LogKitten.v(input + " " + setpoint + " " + error);
 		if (continuous) {
-			double range = inputMax - inputMin;
+			double range = inputRange.getRange();
 			// If the error is more than half of the range, it is faster to increase the error and loop around the boundary
 			if (Math.abs(error) > range / 2) {
 				if (error > 0) {
@@ -173,7 +173,7 @@ public class BangBangController extends MotionController {
 		}
 		return F * setpoint;
 	}
-	
+
 	/**
 	 * Get the current output of the bang bang controller.
 	 * This should be used to set the output.
@@ -192,7 +192,7 @@ public class BangBangController extends MotionController {
 			return 0;
 		}
 	}
-	
+
 	/**
 	 * @return
 	 * 		The most recent error.

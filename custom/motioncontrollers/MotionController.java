@@ -17,8 +17,7 @@ public abstract class MotionController {
 	protected double setpoint;
 	protected double absoluteTolerance;
 	protected boolean continuous;
-	protected double inputMax;
-	protected double inputMin;
+	protected Util.Range inputRange;
 	protected boolean capOutput;
 	protected double outputMax;
 	protected double outputMin;
@@ -38,8 +37,7 @@ public abstract class MotionController {
 		absoluteTolerance = Util.EPSILON; // Nonzero to avoid floating point errors
 		capOutput = false;
 		continuous = false;
-		inputMin = 0.0;
-		inputMax = 0.0;
+		inputRange = new Util.Range(0, 0);
 		outputMin = 0.0;
 		outputMax = 0.0;
 		reset();
@@ -139,7 +137,8 @@ public abstract class MotionController {
 	}
 
 	/**
-	 * Sets the input range of the motion controller.
+	 * Sets the input range of the motion controller to a
+	 * new instance of Util.Range with the specified boundaries.
 	 * This is only used to work with continuous inputs.
 	 * If minimum is greater than maximum, this will throw
 	 * an exception.
@@ -147,12 +146,29 @@ public abstract class MotionController {
 	 * @param minimum
 	 * @param maximum
 	 */
-	public void setInputRange(double minimum, double maximum) {
-		if (minimum > maximum) {
-			throw new BoundaryException("Minimum is greater than maximum");
-		}
-		inputMin = minimum;
-		inputMax = maximum;
+	public void setInputRange(double minimum, double maximum) throws BoundaryException {
+		setInputRange(new Util.Range(minimum, maximum));
+	}
+
+	/**
+	 * Sets the input range of the motion controller to an
+	 * existing instance of Util.Range. This is only used
+	 * to work with continuous inputs. If minimum is
+	 * greater than maximum, this will throw an exception.
+	 *
+	 * @param range
+	 */
+	public void setInputRange(Util.Range range) {
+		inputRange = range;
+	}
+
+	/**
+	 * Get the input range of the MotionController.
+	 *
+	 * @param range
+	 */
+	public Util.Range getInputRange() {
+		return inputRange;
 	}
 
 	/**

@@ -78,7 +78,7 @@ public abstract class SensorMotor extends Motor {
 	
 	/**
 	 * Set the position of a sensor motor
-	 * 
+	 *
 	 * @param position
 	 * @warning this does not indicate sensor failure
 	 */
@@ -94,20 +94,50 @@ public abstract class SensorMotor extends Motor {
 		return motionController.onTarget();
 	}
 	
+	/**
+	 * Set the velocity of a sensor motor
+	 *
+	 * @param distancePerSecond
+	 * @throws InvalidSensorException
+	 */
+	public void setVelocitySafely(double distancePerSecond) throws InvalidSensorException {
+		motionController.setSetpoint(distancePerSecond);
+		motionController.enable();
+		double speed = motionController.getSafely();
+		LogKitten.v(getName() + " set to velocity " + distancePerSecond + " at speed " + speed);
+		super.set(speed);
+	}
+	
+	/**
+	 * Set the velocity of a sensor motor
+	 *
+	 * @param distancePerSecond
+	 * @warning this does not indicate sensor failure
+	 */
+	public void setVelocity(double distancePerSecond) {
+		motionController.setSetpoint(distancePerSecond);
+		motionController.enable();
+		double speed = motionController.get();
+		LogKitten.v(getName() + " set to velocity " + distancePerSecond + " at speed " + speed);
+		super.set(speed);
+	}
+	
 	@Override
+	/***
+	 * Set the SensorMotor to a desired speed.
+	 */
 	public void set(double speed) {
 		LogKitten.v(speed + "");
 		if (isMotionControlEnabled) {
-			motionController.setSetpoint(speed);
+			motionController.setSetpoint(motionController.getInputRange().scaleValue(speed));
 			try {
 				super.set(motionController.getSafely());
+				return;
 			}
 			catch (InvalidSensorException e) {
 				LogKitten.ex(e);
-				super.set(speed);
 			}
-		} else {
-			super.set(speed);
 		}
+		super.set(speed);
 	}
 }
