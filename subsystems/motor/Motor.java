@@ -266,7 +266,7 @@ public class Motor extends Subsystem implements SpeedController {
 		this.isInverted = isInverted;
 	}
 
-	protected class UnsynchronizedSpeedControllerRuntimeException extends RuntimeException {
+	protected static class UnsynchronizedSpeedControllerRuntimeException extends RuntimeException {
 		private static final long serialVersionUID = 8688590919561059584L;
 
 		public UnsynchronizedSpeedControllerRuntimeException(Motor motor) {
@@ -274,7 +274,7 @@ public class Motor extends Subsystem implements SpeedController {
 		}
 	}
 
-	protected class StrangeCANSpeedControllerModeRuntimeException extends RuntimeException {
+	protected static class StrangeCANSpeedControllerModeRuntimeException extends RuntimeException {
 		private static final long serialVersionUID = -539917227288371271L;
 
 		public StrangeCANSpeedControllerModeRuntimeException(Motor motor) {
