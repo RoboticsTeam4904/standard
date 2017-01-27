@@ -28,5 +28,5 @@ public class CommandSendableChooser extends SendableChooser<Command> {
 	 */
 	public void addDefault(Command object) {
 		super.addDefault(object.getName() + " (default)", object);
-	}o
+	}
 }
