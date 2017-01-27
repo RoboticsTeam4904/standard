@@ -13,10 +13,7 @@ public class RunIfElse extends Command {
 	protected boolean hasRunOnce;
 	
 	public RunIfElse(Command ifCommand, Command elseCommand, BooleanSupplier... booleanSuppliers) {
-		super("RunIf[" + ifCommand.getName() + "]Else[" + elseCommand.getName() + "]");
-		this.ifCommand = ifCommand;
-		this.elseCommand = elseCommand;
-		this.booleanSuppliers = booleanSuppliers;
+		this("RunIf[" + ifCommand.getName() + "]Else[" + elseCommand.getName() + "]", ifCommand, elseCommand, booleanSuppliers);
 	}
 	
 	protected RunIfElse(String name, Command ifCommand, Command elseCommand, BooleanSupplier... booleanSuppliers) {

@@ -238,27 +238,6 @@ public class Motor extends Subsystem implements SpeedController {
 	}
 	
 	/**
-	 * Set the motor speed. Passes through SpeedModifier.
-	 *
-	 * @deprecated For compatibility with CANJaguar. Use set(double speed)
-	 * 
-	 * @param speed
-	 *        The speed to set. Value should be between -1.0 and 1.0.
-	 * @param syncGroup
-	 *        On CANJaguar, the update group to add this Set() to, pending UpdateSyncGroup().
-	 *        If 0, update immediately.
-	 */
-	@Deprecated
-	@Override
-	public void set(double speed, byte syncGroup) {
-		double newSpeed = speedModifier.modify(speed);
-		lastSpeed = newSpeed;
-		for (SpeedController motor : motors) {
-			motor.set(newSpeed, syncGroup);
-		}
-	}
-	
-	/**
 	 * Get whether this entire motor is inverted.
 	 *
 	 * @return isInverted
