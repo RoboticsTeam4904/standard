@@ -17,7 +17,7 @@ public class MotorPositionConstant extends Command {
 	protected double position;
 	protected boolean endOnArrival;
 	protected final Command fallbackCommand;
-	
+
 	/**
 	 * Constructor
 	 * MotorPositionConstant is a Command that runs while setting a SensorMotor's position
@@ -42,15 +42,15 @@ public class MotorPositionConstant extends Command {
 		requires(motor);
 		setInterruptible(true);
 	}
-	
+
 	public MotorPositionConstant(SensorMotor motor, double position, boolean endOnArrival) {
 		this(motor, position, endOnArrival, null);
 	}
-	
+
 	public MotorPositionConstant(SensorMotor motor, double position) {
 		this(motor, position, true, null);
 	}
-	
+
 	@Override
 	protected void initialize() {
 		try {
@@ -65,7 +65,7 @@ public class MotorPositionConstant extends Command {
 		}
 		motor.enablePID();
 	}
-	
+
 	@Override
 	protected void execute() {
 		try {
@@ -78,7 +78,7 @@ public class MotorPositionConstant extends Command {
 			}
 		}
 	}
-	
+
 	@Override
 	protected boolean isFinished() {
 		if (endOnArrival) {
@@ -86,10 +86,10 @@ public class MotorPositionConstant extends Command {
 		}
 		return false;
 	}
-	
+
 	@Override
 	protected void end() {}
-	
+
 	@Override
 	protected void interrupted() {}
 }

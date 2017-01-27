@@ -12,7 +12,7 @@ public class MotorPositionSet extends Command {
 	protected SensorMotor motor;
 	protected double position;
 	protected final Command fallbackCommand;
-	
+
 	/**
 	 * Constructor.
 	 * The MotorSensorHold command holds a motor to a position.
@@ -30,7 +30,7 @@ public class MotorPositionSet extends Command {
 		setInterruptible(true);
 		this.fallbackCommand = fallbackCommand;
 	}
-	
+
 	/**
 	 * Constructor.
 	 * The MotorSensorHold command holds a motor to a position.
@@ -41,7 +41,7 @@ public class MotorPositionSet extends Command {
 	public MotorPositionSet(SensorMotor motor) {
 		this(motor, null);
 	}
-	
+
 	/**
 	 * Sets the motor to this position.
 	 *
@@ -51,10 +51,10 @@ public class MotorPositionSet extends Command {
 	public void setPosition(double position) {
 		this.position = position;
 	}
-	
+
 	@Override
 	protected void initialize() {}
-	
+
 	@Override
 	protected void execute() {
 		try {
@@ -67,15 +67,15 @@ public class MotorPositionSet extends Command {
 			}
 		}
 	}
-	
+
 	@Override
 	protected boolean isFinished() {
 		return false;
 	}
-	
+
 	@Override
 	protected void end() {}
-	
+
 	@Override
 	protected void interrupted() {}
 }

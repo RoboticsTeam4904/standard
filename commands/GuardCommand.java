@@ -19,28 +19,28 @@ public class GuardCommand extends Command {
 	protected final Command backgroundCommand;
 	protected final Command primaryCommand;
 	private boolean hasRunOnce = false;
-	
+
 	public GuardCommand(Command backgroundCommand, Command primaryCommand) {
 		super();
 		this.backgroundCommand = backgroundCommand;
 		this.primaryCommand = primaryCommand;
 	}
-	
+
 	@Override
 	public synchronized boolean doesRequire(Subsystem system) {
 		return backgroundCommand.doesRequire(system) || primaryCommand.doesRequire(system);
 	}
-	
+
 	@Override
 	protected void initialize() {
 		backgroundCommand.start();
 		primaryCommand.start();
 		hasRunOnce = false;
 	}
-	
+
 	@Override
 	protected void execute() {}
-	
+
 	@Override
 	protected boolean isFinished() {
 		if (primaryCommand.isRunning() && !hasRunOnce) {
@@ -48,12 +48,12 @@ public class GuardCommand extends Command {
 		}
 		return !primaryCommand.isRunning() && hasRunOnce;
 	}
-	
+
 	@Override
 	protected void end() {
 		backgroundCommand.cancel();
 	}
-	
+
 	@Override
 	protected void interrupted() {
 		end();

@@ -25,19 +25,19 @@ public class ChassisIdle extends CommandGroup {
 			addParallel(new MotorIdle(motor));
 		}
 	}
-	
+
 	@Override
 	protected void initialize() {}
-	
+
 	@Override
 	protected void execute() {}
-	
+
 	@Override
 	protected void end() {}
-	
+
 	@Override
 	protected void interrupted() {}
-	
+
 	@Override
 	protected boolean isFinished() {
 		return false; // default command
