@@ -16,7 +16,7 @@ public class CustomCAN {
 	protected final int messageID;
 	protected final String name;
 	private static final int CAN_MAX_READ_WAIT = 5; // How long to wait for a CAN message before returning null (milliseconds)
-
+	
 	/**
 	 * Constructor for a CustomCAN device.
 	 * The name is local and for your convenience only.
@@ -30,7 +30,7 @@ public class CustomCAN {
 		this.name = name;
 		messageID = id; // Ensure that the messageID is zeroed (32 bit int should be default, but better to be careful)
 	}
-
+	
 	public String getName() {
 		return name;
 	}
