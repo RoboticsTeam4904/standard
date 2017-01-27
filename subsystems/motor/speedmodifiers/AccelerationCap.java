@@ -69,7 +69,7 @@ public class AccelerationCap implements SpeedModifier {
 			} else {
 				outputSpeed = currentSpeed;
 			}
-			LogKitten.d("AccelerationCap input: " + Double.toString(inputSpeed) + "\t" + "AccelerationCap output: " + Double.toString(outputSpeed));
+			LogKitten.d("AccelerationCap input: " + inputSpeed + "\t" + "AccelerationCap output: " + outputSpeed);
 		} else if (Math.abs(inputSpeed) > Math.abs(currentSpeed)) {
 			LogKitten.d("AccelerationCap voltage ramping");
 			outputSpeed = currentSpeed + ((double) (System.currentTimeMillis() - lastUpdate) / 64) * (inputSpeed - currentSpeed);
@@ -79,7 +79,7 @@ public class AccelerationCap implements SpeedModifier {
 		} else {
 			outputSpeed = inputSpeed;
 		}
-		LogKitten.d("AccelerationCap input: " + Double.toString(inputSpeed) + "\t" + "AccelerationCap output: " + Double.toString(outputSpeed));
+		LogKitten.d("AccelerationCap input: " + inputSpeed + "\t" + "AccelerationCap output: " + outputSpeed);
 		lastUpdate = System.currentTimeMillis();
 		currentSpeed = outputSpeed;
 		return outputSpeed;
