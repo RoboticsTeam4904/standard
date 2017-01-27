@@ -11,11 +11,12 @@ import edu.wpi.first.wpilibj.can.CANMessageNotFoundException;
  * of messages over CAN to a specific ID.
  *
  */
-public class CustomCAN implements Named {
+public class CustomCAN {
 	// Because CANJNI is basically static, we do not extend it.
 	protected final int messageID;
 	protected final String name;
-	
+	private static final int CAN_MAX_READ_WAIT = 5; // How long to wait for a CAN message before returning null (milliseconds)
+
 	/**
 	 * Constructor for a CustomCAN device.
 	 * The name is local and for your convenience only.
@@ -23,14 +24,13 @@ public class CustomCAN implements Named {
 	 *
 	 * @param name
 	 * @param id
-	 *        ID of CAN device (0x400 to 0x500, corresponds to a Teensy)
+	 *        ID of CAN device (0x600 to 0x700, corresponds to a Teensy)
 	 */
 	public CustomCAN(String name, int id) {
 		this.name = name;
-		messageID = id;
+		messageID = id; // Ensure that the messageID is zeroed (32 bit int should be default, but better to be careful)
 	}
-	
-	@Override
+
 	public String getName() {
 		return name;
 	}
@@ -44,27 +44,36 @@ public class CustomCAN implements Named {
 	 */
 	public void write(byte[] data) {
 		ByteBuffer canData = ByteBuffer.allocateDirect(8);
-		for (int i = 0; i < 8; i++) {
-			canData.put(i, data[i]);
-		}
-		CANJNI.FRCNetworkCommunicationCANSessionMuxSendMessage(messageID, canData, CANJNI.CAN_SEND_PERIOD_NO_REPEAT);
+		canData.put(data);
+		CANJNI.FRCNetCommCANSessionMuxSendMessage(messageID, canData, CANJNI.CAN_SEND_PERIOD_NO_REPEAT);
 	}
 	
+	/**
+	 * Read data as bytebuffer
+	 *
+	 * @return
+	 * 		ByteBuffer containing CAN message, or null
+	 */
 	protected ByteBuffer readBuffer() {
 		IntBuffer idBuffer = ByteBuffer.allocateDirect(4).asIntBuffer();
 		idBuffer.clear();
 		idBuffer.put(0, Integer.reverseBytes(messageID));
 		ByteBuffer timestamp = ByteBuffer.allocate(4);
-		try {
-			return CANJNI.FRCNetworkCommunicationCANSessionMuxReceiveMessage(idBuffer, CANJNI.CAN_MSGID_FULL_M, timestamp);
+		ByteBuffer response = null;
+		long start = System.currentTimeMillis();
+		while (System.currentTimeMillis() - start < CustomCAN.CAN_MAX_READ_WAIT) {
+			try {
+				response = CANJNI.FRCNetCommCANSessionMuxReceiveMessage(idBuffer, 0x1fffffff, timestamp);
+				break;
+			}
+			catch (CANMessageNotFoundException e) {}
 		}
-		catch (CANMessageNotFoundException e) {
-			return null;
-		}
+		return response;
 	}
 	
 	/**
 	 * Reads data
+	 * Also stops repeating the last message.
 	 *
 	 * @return byte[] (8 long)
 	 */
