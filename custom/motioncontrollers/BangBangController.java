@@ -19,7 +19,7 @@ public class BangBangController extends MotionController {
 	protected double A;
 	protected double F;
 	protected double threshold;
-	
+
 	/**
 	 * BangBang controller
 	 * A bang bang controller.
@@ -46,7 +46,7 @@ public class BangBangController extends MotionController {
 		this.threshold = threshold;
 		reset();
 	}
-	
+
 	/**
 	 * BangBang controller
 	 * A bang bang controller.
@@ -73,7 +73,7 @@ public class BangBangController extends MotionController {
 		this.threshold = threshold;
 		reset();
 	}
-	
+
 	/**
 	 * BangBang controller
 	 * A bang bang controller.
@@ -94,7 +94,7 @@ public class BangBangController extends MotionController {
 	public BangBangController(PIDSensor sensor, double A, double F) {
 		this(sensor, A, F, Util.EPSILON);
 	}
-	
+
 	/**
 	 * BangBang controller
 	 * A bang bang controller.
@@ -115,15 +115,15 @@ public class BangBangController extends MotionController {
 	public BangBangController(PIDSource source, double A, double F) {
 		this(source, A, F, Util.EPSILON);
 	}
-	
+
 	/**
-	 * Zeroes error
+	 * Sets the stored error value to zero (0)
 	 */
 	@Override
 	public void resetErrorToZero() {
 		error = 0;
 	}
-	
+
 	/**
 	 * Get the current output of the bang bang controller.
 	 * This should be used to set the output.
@@ -161,7 +161,7 @@ public class BangBangController extends MotionController {
 		}
 		return F * setpoint;
 	}
-	
+
 	/**
 	 * Get the current output of the bang bang controller.
 	 * This should be used to set the output.
@@ -180,7 +180,7 @@ public class BangBangController extends MotionController {
 			return 0;
 		}
 	}
-	
+
 	/**
 	 * @return
 	 * 		The most recent error.

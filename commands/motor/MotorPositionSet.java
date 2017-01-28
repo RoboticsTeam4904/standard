@@ -1,6 +1,7 @@
 package org.usfirst.frc4904.standard.commands.motor;
 
 
+import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.custom.sensors.InvalidSensorException;
 import org.usfirst.frc4904.standard.subsystems.motor.PositionSensorMotor;
 import edu.wpi.first.wpilibj.command.Command;
@@ -67,7 +68,15 @@ public class MotorPositionSet extends Command {
 	}
 	
 	@Override
-	protected void execute() {}
+	protected void execute() {
+		Exception potentialSensorException = motor.checkSensorException();
+		if (potentialSensorException != null) {
+			cancel();
+			if (fallbackCommand != null && !fallbackCommand.isRunning()) {
+				fallbackCommand.start();
+			}
+		}
+	}
 	
 	@Override
 	protected boolean isFinished() {
