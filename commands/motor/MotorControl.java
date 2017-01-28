@@ -17,7 +17,7 @@ public class MotorControl extends Command {
 	protected final Controller controller;
 	protected final int axis;
 	protected final double scale;
-	
+
 	/**
 	 * This Command directly controls a Motor based on an axis of the Controller.
 	 * This can allow an Operator to easily control a single Motor from an axis of the Controller.
@@ -37,7 +37,7 @@ public class MotorControl extends Command {
 		setInterruptible(true);
 		LogKitten.d("MotorControl created for " + motor.getName());
 	}
-	
+
 	/**
 	 * This Command directly controls a Motor based on an axis of the Controller.
 	 * This can allow an Operator to easily control a single Motor from an axis of the Controller.
@@ -50,7 +50,7 @@ public class MotorControl extends Command {
 	public MotorControl(Motor motor, Controller controller, int axis) {
 		this(motor, controller, axis, 1.0);
 	}
-	
+
 	@Override
 	protected void initialize() {
 		LogKitten.d("MotorControl initialized");
@@ -58,21 +58,21 @@ public class MotorControl extends Command {
 			((PositionSensorMotor) motor).disableMotionController();
 		}
 	}
-	
+
 	@Override
 	protected void execute() {
 		LogKitten.d("MotorControl executing: " + controller.getAxis(axis));
 		motor.set(controller.getAxis(axis) * scale);
 	}
-	
+
 	@Override
 	protected boolean isFinished() {
 		return false;
 	}
-	
+
 	@Override
 	protected void end() {}
-	
+
 	@Override
 	protected void interrupted() {
 		LogKitten.d("MotorControl interrupted");

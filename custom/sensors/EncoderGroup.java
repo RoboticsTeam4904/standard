@@ -107,7 +107,8 @@ public class EncoderGroup implements CustomEncoder {
 				if (errorCount > MAX_ENCODER_ERRORS) {
 					errorCount = 0;
 					LogKitten.e("Encoders in group too different: " + average + " " + encoders[i].getDistance());
-					throw new InvalidSensorException("Encoders in group too different: " + average + " " + encoders[i].getDistance());
+					throw new InvalidSensorException(
+						"Encoders in group too different: " + average + " " + encoders[i].getDistance());
 				}
 			}
 			errorCount = 0;
@@ -141,7 +142,7 @@ public class EncoderGroup implements CustomEncoder {
 	public boolean getStopped() {
 		return Util.isZero(getRate());
 	}
-	
+
 	@Override
 	public boolean getStoppedSafely() throws InvalidSensorException {
 		return Util.isZero(getRateSafely());
@@ -156,7 +157,8 @@ public class EncoderGroup implements CustomEncoder {
 				if (errorCount > MAX_ENCODER_ERRORS) {
 					errorCount = 0;
 					LogKitten.e("Encoders in group too different: " + average + " " + encoders[i].getRate());
-					throw new InvalidSensorException("Encoders in group too different: " + average + " " + encoders[i].getRate());
+					throw new InvalidSensorException(
+						"Encoders in group too different: " + average + " " + encoders[i].getRate());
 				}
 			}
 			errorCount = 0;

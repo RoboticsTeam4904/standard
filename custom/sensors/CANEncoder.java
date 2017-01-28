@@ -14,9 +14,14 @@ public class CANEncoder extends CANSensor implements CustomEncoder {
 	private PIDSourceType pidSource;
 	private double distancePerPulse;
 	private boolean reverseDirection;
+	/**
+	 * Sequence of bytes used to reset an encoder
+	 * Spells out "resetenc" in ASCII
+	 */
+	private static final byte[] RESET_ENCODER_BYTE_SEQUENCE = "resetenc".getBytes();
 
 	public CANEncoder(String name, int id, boolean reverseDirection, double distancePerPulse) {
-		super(name, id, 2);
+		super(name, id);
 		this.reverseDirection = reverseDirection;
 		this.distancePerPulse = distancePerPulse;
 		setPIDSourceType(PIDSourceType.kDisplacement);
@@ -94,7 +99,7 @@ public class CANEncoder extends CANSensor implements CustomEncoder {
 	 */
 	@Override
 	public int getSafely() throws InvalidSensorException {
-		return super.read(0); // TODO: what mode numbers will be position and direction?
+		return super.readSensor()[0];
 	}
 
 	/**
@@ -103,9 +108,9 @@ public class CANEncoder extends CANSensor implements CustomEncoder {
 	@Override
 	public double getDistanceSafely() throws InvalidSensorException {
 		if (reverseDirection) {
-			return distancePerPulse * super.read(0) * -1.0;
+			return distancePerPulse * super.readSensor()[0] * -1.0;
 		} else {
-			return distancePerPulse * super.read(0);
+			return distancePerPulse * super.readSensor()[0];
 		}
 	}
 
@@ -115,7 +120,7 @@ public class CANEncoder extends CANSensor implements CustomEncoder {
 	 */
 	@Override
 	public boolean getDirectionSafely() throws InvalidSensorException {
-		return !reverseDirection == (super.read(1) >= 0);
+		return !reverseDirection == (super.readSensor()[1] >= 0);
 	}
 
 	/**
@@ -124,9 +129,9 @@ public class CANEncoder extends CANSensor implements CustomEncoder {
 	@Override
 	public double getRateSafely() throws InvalidSensorException {
 		if (reverseDirection) {
-			return distancePerPulse * super.read(1) * -1.0;
+			return distancePerPulse * super.readSensor()[1] * -1.0;
 		} else {
-			return distancePerPulse * super.read(1);
+			return distancePerPulse * super.readSensor()[1];
 		}
 	}
 
@@ -143,8 +148,7 @@ public class CANEncoder extends CANSensor implements CustomEncoder {
 	 */
 	@Override
 	public void reset() {
-		super.write(new byte[] {0x72, 0x65, 0x73, 0x65, 0x74, 0x65, 0x6e, 0x63}); // resetenc
-		super.read(); // and stop transmitting resets once the teensy replies
+		super.write(CANEncoder.RESET_ENCODER_BYTE_SEQUENCE); // resetenc
 	}
 
 	@Override

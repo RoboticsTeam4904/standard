@@ -15,7 +15,8 @@ public class CustomCAN {
 	// Because CANJNI is basically static, we do not extend it.
 	protected final int messageID;
 	protected final String name;
-	
+	private static final int CAN_MAX_READ_WAIT = 5; // How long to wait for a CAN message before returning null (milliseconds)
+
 	/**
 	 * Constructor for a CustomCAN device.
 	 * The name is local and for your convenience only.
@@ -27,16 +28,15 @@ public class CustomCAN {
 	 */
 	public CustomCAN(String name, int id) {
 		this.name = name;
-		messageID = id;
+		messageID = id; // Ensure that the messageID is zeroed (32 bit int should be default, but better to be careful)
 	}
-	
+
 	public String getName() {
 		return name;
 	}
-	
+
 	/**
 	 * Used to write data to the device.
-	 * Will continue writing until read is called.
 	 *
 	 * @param data
 	 *        Data to be written. Should be EXACTLY 8 bytes long ONLY.
@@ -44,13 +44,16 @@ public class CustomCAN {
 	 */
 	public void write(byte[] data) {
 		ByteBuffer canData = ByteBuffer.allocateDirect(8);
-		for (int i = 0; i < 8; i++) {
-			canData.put(i, data[i]);
-		}
-		CANJNI.FRCNetCommCANSessionMuxSendMessage(messageID, null, CANJNI.CAN_SEND_PERIOD_STOP_REPEATING);
-		CANJNI.FRCNetCommCANSessionMuxSendMessage(messageID, canData, 1);
+		canData.put(data);
+		CANJNI.FRCNetCommCANSessionMuxSendMessage(messageID, canData, CANJNI.CAN_SEND_PERIOD_NO_REPEAT);
 	}
-	
+
+	/**
+	 * Read data as bytebuffer
+	 *
+	 * @return
+	 * 		ByteBuffer containing CAN message, or null
+	 */
 	protected ByteBuffer readBuffer() {
 		IntBuffer idBuffer = ByteBuffer.allocateDirect(4).asIntBuffer();
 		idBuffer.clear();
@@ -58,17 +61,16 @@ public class CustomCAN {
 		ByteBuffer timestamp = ByteBuffer.allocate(4);
 		ByteBuffer response = null;
 		long start = System.currentTimeMillis();
-		while (System.currentTimeMillis() - start < 10) {
+		while (System.currentTimeMillis() - start < CustomCAN.CAN_MAX_READ_WAIT) {
 			try {
-				response = CANJNI.FRCNetCommCANSessionMuxReceiveMessage(idBuffer, 0xffffffff, timestamp);
+				response = CANJNI.FRCNetCommCANSessionMuxReceiveMessage(idBuffer, 0x1fffffff, timestamp);
 				break;
 			}
 			catch (CANMessageNotFoundException e) {}
 		}
-		CANJNI.FRCNetCommCANSessionMuxSendMessage(messageID, null, CANJNI.CAN_SEND_PERIOD_STOP_REPEATING);
 		return response;
 	}
-	
+
 	/**
 	 * Reads data
 	 * Also stops repeating the last message.

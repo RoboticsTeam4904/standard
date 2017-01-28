@@ -79,14 +79,16 @@ public class ChassisMove extends CommandGroup {
 	protected void execute() {
 		chassis.moveCartesian(controller.getX(), controller.getY(), controller.getTurnSpeed());
 		motorSpeeds = chassis.getMotorSpeeds();
-		String motorSpeedsString = "";
+		StringBuilder motorSpeedsString = new StringBuilder();
+		motorSpeedsString.append("Motor speeds:");
 		for (int i = 0; i < motorSpins.length; i++) {
 			LogKitten.d(Double.toString(motorSpeeds[i]));
 			motorSpins[i].set(motorSpeeds[i]);
-			motorSpeedsString += Double.toString(motorSpeeds[i]) + " ";
+			motorSpeedsString.append(' ');
+			motorSpeedsString.append(motorSpeeds[i]);
 		}
 		LogKitten.d("ChassisMove executing");
-		LogKitten.d("Motor speeds: " + motorSpeedsString);
+		LogKitten.d(motorSpeedsString.toString());
 	}
 
 	@Override

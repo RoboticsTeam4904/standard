@@ -13,11 +13,11 @@ public class SolenoidShifters extends Subsystem {
 	protected final DoubleSolenoid solenoid;
 	protected final boolean isInverted;
 	protected ShiftState state;
-	
+
 	public enum ShiftState {
 		UP, DOWN;
 	}
-	
+
 	/**
 	 * A subsystem for managing a solenoid for a shifting drivetrain.
 	 *
@@ -36,7 +36,7 @@ public class SolenoidShifters extends Subsystem {
 			state = ShiftState.DOWN;
 		}
 	}
-	
+
 	/**
 	 * A subsystem for managing a solenoid for a shifting drivetrain.
 	 *
@@ -46,7 +46,7 @@ public class SolenoidShifters extends Subsystem {
 	public SolenoidShifters(DoubleSolenoid solenoid) {
 		this(solenoid, false);
 	}
-	
+
 	/**
 	 * A subsystem for managing a solenoid for a shifting drivetrain.
 	 *
@@ -58,7 +58,7 @@ public class SolenoidShifters extends Subsystem {
 	public SolenoidShifters(int portUp, int portDown) {
 		this(new DoubleSolenoid(portUp, portDown), false);
 	}
-	
+
 	/**
 	 * A subsystem for managing a solenoid for a shifting drivetrain.
 	 *
@@ -72,12 +72,12 @@ public class SolenoidShifters extends Subsystem {
 	public SolenoidShifters(int module, int portUp, int portDown) {
 		this(new DoubleSolenoid(module, portUp, portDown), false);
 	}
-	
+
 	@Override
 	protected void initDefaultCommand() {
 		setDefaultCommand(new ChassisShift(this, SolenoidShifters.ShiftState.DOWN));
 	}
-	
+
 	/**
 	 * Returns the current state of the solenoid shifters.
 	 * This is based on the set state, not a measured state.
@@ -85,7 +85,7 @@ public class SolenoidShifters extends Subsystem {
 	public ShiftState getShiftState() {
 		return state;
 	}
-	
+
 	/**
 	 * Shifts both gearboxes to up state or down state
 	 *
@@ -110,7 +110,7 @@ public class SolenoidShifters extends Subsystem {
 				return;
 		}
 	}
-	
+
 	/**
 	 * Toggles current shift state for both gearboxes
 	 */

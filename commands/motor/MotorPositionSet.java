@@ -1,7 +1,6 @@
 package org.usfirst.frc4904.standard.commands.motor;
 
 
-import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.custom.sensors.InvalidSensorException;
 import org.usfirst.frc4904.standard.subsystems.motor.PositionSensorMotor;
 import edu.wpi.first.wpilibj.command.Command;
@@ -13,7 +12,7 @@ public class MotorPositionSet extends Command {
 	protected PositionSensorMotor motor;
 	protected double position;
 	protected final Command fallbackCommand;
-	
+
 	/**
 	 * Constructor.
 	 * The MotorSensorHold command holds a motor to a position.
@@ -30,7 +29,7 @@ public class MotorPositionSet extends Command {
 		setInterruptible(true);
 		this.fallbackCommand = fallbackCommand;
 	}
-	
+
 	/**
 	 * Constructor.
 	 * The MotorSensorHold command holds a motor to a position.
@@ -41,7 +40,7 @@ public class MotorPositionSet extends Command {
 	public MotorPositionSet(PositionSensorMotor motor) {
 		this(motor, null);
 	}
-	
+
 	/**
 	 * Sets the motor to this position.
 	 *
@@ -51,7 +50,7 @@ public class MotorPositionSet extends Command {
 	public void setPosition(double position) {
 		this.position = position;
 	}
-	
+
 	@Override
 	protected void initialize() {
 		try {
@@ -66,7 +65,7 @@ public class MotorPositionSet extends Command {
 			}
 		}
 	}
-	
+
 	@Override
 	protected void execute() {
 		Exception potentialSensorException = motor.checkSensorException();
@@ -77,15 +76,15 @@ public class MotorPositionSet extends Command {
 			}
 		}
 	}
-	
+
 	@Override
 	protected boolean isFinished() {
 		return false;
 	}
-	
+
 	@Override
 	protected void end() {}
-	
+
 	@Override
 	protected void interrupted() {}
 }
