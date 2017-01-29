@@ -8,22 +8,16 @@ import edu.wpi.first.wpilibj.util.BoundaryException;
  */
 public class Util {
 	/**
-	 * A constant for dealing with floating point errors.
-	 * Add/subtract this from floats when doing equality comparisons.
-	 */
-	public static final double EPSILON = 0.0000001;
-
-	/**
 	 * A function for determining if floating point numbers are effectively zero.
 	 * Floating point arithmetic tends to introduce very small errors.
 	 *
 	 * @param var
 	 *        The floating point number you want to compare
 	 * @return
-	 * 		Whether or not it is within Constants.EPSILON of zero
+	 * 		Whether or not it is within Double.MIN_VALUE of zero
 	 */
 	public static boolean isZero(double var) {
-		return Math.abs(var) < Util.EPSILON;
+		return Math.abs(var) < Double.MIN_VALUE;
 	}
 
 	public static class Range {
@@ -61,7 +55,7 @@ public class Util {
 		/**
 		 * Scales a value (between -1 and 1) to the range.
 		 * Example: (new Range(0,6)).scaleValue(0.5) == 4.5
-		 * 
+		 *
 		 * @param value
 		 *        between -1 and 1 (will be limited to [-1, 1])
 		 * @return the scaled value
@@ -73,7 +67,7 @@ public class Util {
 		/**
 		 * Limits a value to the range.
 		 * Example: (new Range(0,6)).limitValue(7) == 6
-		 * 
+		 *
 		 * @param value
 		 *        the value to be limited
 		 * @return the limited value
