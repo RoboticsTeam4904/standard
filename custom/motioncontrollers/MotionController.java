@@ -138,6 +138,16 @@ public abstract class MotionController {
 	}
 	
 	/**
+	 * Returns the absolute tolerance set on the
+	 * motion controller. Will return {@link org.usfirst.frc4904.standard.Util#EPSILON Util.EPSILON}
+	 * 
+	 * @return absolute tolerance
+	 */
+	public double getAbsoluteTolerance() {
+		return absoluteTolerance;
+	}
+
+	/**
 	 * Sets the input range of the motion controller.
 	 * This is only used to work with continuous inputs.
 	 * If minimum is greater than maximum, this will throw
