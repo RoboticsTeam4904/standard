@@ -13,7 +13,7 @@ public class CANSensor extends CustomCAN {
 	private final int[] values;
 	private long lastRead; // data age
 	private static final long MAX_AGE = 100; // How long to keep the last CAN message before throwing an error (milliseconds)
-	
+
 	/**
 	 *
 	 * @param name
@@ -28,7 +28,7 @@ public class CANSensor extends CustomCAN {
 		values[1] = 0;
 		lastRead = System.currentTimeMillis();
 	}
-	
+
 	/**
 	 * Read the pair of ints from a CAN sensor
 	 *

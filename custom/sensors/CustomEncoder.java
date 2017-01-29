@@ -14,7 +14,7 @@ public interface CustomEncoder extends PIDSensor {
 	 * @warning does not indicate sensor errors
 	 */
 	int get();
-	
+
 	/**
 	 * Gets current count
 	 */

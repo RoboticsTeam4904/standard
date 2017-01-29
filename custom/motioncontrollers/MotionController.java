@@ -43,7 +43,7 @@ public abstract class MotionController {
 		outputMax = 0.0;
 		reset();
 	}
-	
+
 	/**
 	 * A MotionController modifies an output using a sensor
 	 * to precisely maintain a certain input.
@@ -55,7 +55,7 @@ public abstract class MotionController {
 	public MotionController(PIDSource source) {
 		this(new PIDSensor.PIDSourceWrapper(source));
 	}
-	
+
 	/**
 	 * This should return the motion controller
 	 * to a state such that it returns 0.
@@ -63,7 +63,7 @@ public abstract class MotionController {
 	 * @warning this does not indicate sensor errors
 	 */
 	public abstract void reset();
-	
+
 	/**
 	 * This should return the motion controller
 	 * to a state such that it returns 0.

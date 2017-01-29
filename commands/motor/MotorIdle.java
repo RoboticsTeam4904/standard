@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj.command.Command;
  */
 public class MotorIdle extends Command {
 	protected final Motor motor;
-	
+
 	/**
 	 * Constructor.
 	 *
@@ -24,29 +24,29 @@ public class MotorIdle extends Command {
 		setInterruptible(true); // default command
 		LogKitten.d("MotorIdle created");
 	}
-	
+
 	@Override
 	protected void initialize() {
 		motor.set(0);
 		LogKitten.d("MotorIdle initialized");
 	}
-	
+
 	@Override
 	protected void execute() {
 		motor.set(0);
 		LogKitten.d("MotorIdle executing");
 	}
-	
+
 	@Override
 	protected boolean isFinished() {
 		return false; // default command
 	}
-	
+
 	@Override
 	protected void end() {
 		LogKitten.d("MotorIdle ended");
 	}
-	
+
 	@Override
 	protected void interrupted() {
 		LogKitten.d("MotorIdle interupted");

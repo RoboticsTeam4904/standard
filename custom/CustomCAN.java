@@ -34,7 +34,7 @@ public class CustomCAN {
 	public String getName() {
 		return name;
 	}
-	
+
 	/**
 	 * Used to write data to the device.
 	 *
@@ -47,7 +47,7 @@ public class CustomCAN {
 		canData.put(data);
 		CANJNI.FRCNetCommCANSessionMuxSendMessage(messageID, canData, CANJNI.CAN_SEND_PERIOD_NO_REPEAT);
 	}
-	
+
 	/**
 	 * Read data as bytebuffer
 	 *
@@ -70,7 +70,7 @@ public class CustomCAN {
 		}
 		return response;
 	}
-	
+
 	/**
 	 * Reads data
 	 * Also stops repeating the last message.

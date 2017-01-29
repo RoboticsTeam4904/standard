@@ -22,7 +22,7 @@ public class MecanumChassis extends Chassis {
 	public MecanumChassis(String name, Motor frontLeftWheel, Motor frontRightWheel, Motor backLeftWheel, Motor backRightWheel) {
 		super(name, frontLeftWheel, frontRightWheel, backLeftWheel, backRightWheel);
 	}
-	
+
 	/**
 	 * Sets the movement to be calculated by the MecanumChassis using 2d polar coordinates.
 	 *
@@ -37,7 +37,7 @@ public class MecanumChassis extends Chassis {
 	public void movePolar(double speed, double angle, double turnSpeed) {
 		motorSpeeds = MecanumChassis.calculateWheels(speed, angle, turnSpeed);
 	}
-	
+
 	/**
 	 * Sets the movement to be calculated by the MecanumChassis using 2d cartesian coordinates.
 	 *
@@ -53,7 +53,7 @@ public class MecanumChassis extends Chassis {
 		double[] polar = MecanumChassis.cartesianToPolar(xSpeed, ySpeed);
 		movePolar(polar[0], polar[1], turnSpeed);
 	}
-	
+
 	/**
 	 * Calculates the speeds for each motor given polar coordinates.
 	 *
@@ -74,7 +74,8 @@ public class MecanumChassis extends Chassis {
 		double frontRight = -1 * speed * Math.cos(angle) + turnSpeed;
 		double backLeft = speed * Math.cos(angle) + turnSpeed;
 		double backRight = -1 * speed * Math.sin(angle) + turnSpeed;
-		double scaleFactor = Math.max(Math.max(Math.max(Math.abs(frontLeft), Math.abs(frontRight)), Math.abs(backLeft)), Math.abs(backRight));
+		double scaleFactor = Math.max(Math.max(Math.max(Math.abs(frontLeft), Math.abs(frontRight)), Math.abs(backLeft)),
+			Math.abs(backRight));
 		if (scaleFactor < 1) {
 			scaleFactor = 1;
 		}
@@ -84,7 +85,7 @@ public class MecanumChassis extends Chassis {
 		backRight /= scaleFactor;
 		return new double[] {frontLeft, frontRight, backLeft, backRight};
 	}
-	
+
 	/**
 	 * Converts an x and y coordinate into an array of speed and angle.
 	 *

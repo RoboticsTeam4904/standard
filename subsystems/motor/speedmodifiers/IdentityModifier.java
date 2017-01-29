@@ -6,7 +6,6 @@ package org.usfirst.frc4904.standard.subsystems.motor.speedmodifiers;
  * It extends LinearModifier to reduce code duplication.
  */
 public class IdentityModifier implements SpeedModifier {
-	
 	/**
 	 * A SpeedModifier that changes nothing.
 	 * It doesn't extend LinearModifier in order to reduce computation time

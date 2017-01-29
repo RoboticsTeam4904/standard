@@ -44,7 +44,7 @@ public class CustomPIDController extends MotionController {
 		this.F = F;
 		justReset = true;
 	}
-	
+
 	/**
 	 * An extremely basic PID controller.
 	 * It does not differentiate between rate and distance.
@@ -165,7 +165,7 @@ public class CustomPIDController extends MotionController {
 	public double getMinimumNominalOutput() {
 		return minimumNominalOutput;
 	}
-	
+
 	/**
 	 * Sets the parameters of the PID loop
 	 *
@@ -220,7 +220,7 @@ public class CustomPIDController extends MotionController {
 	public void setMinimumNominalOutput(double minimumNominalOutput) {
 		this.minimumNominalOutput = minimumNominalOutput;
 	}
-	
+
 	/**
 	 * Resets the PID controller.
 	 * This sets total error and last error to 0,

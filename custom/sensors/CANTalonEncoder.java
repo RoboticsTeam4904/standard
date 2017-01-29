@@ -10,14 +10,14 @@ public class CANTalonEncoder implements CustomEncoder {
 	protected PIDSourceType pidSource;
 	protected double distancePerPulse;
 	protected boolean reverseDirection;
-	
+
 	public CANTalonEncoder(String name, CANTalon talon, boolean reverseDirection, double distancePerPulse) {
 		this.talon = talon;
 		this.reverseDirection = reverseDirection;
 		this.distancePerPulse = distancePerPulse;
 		setPIDSourceType(PIDSourceType.kDisplacement);
 	}
-	
+
 	public CANTalonEncoder(String name, CANTalon talon, boolean reverseDirection) {
 		this(name, talon, reverseDirection, 1.0);
 	}

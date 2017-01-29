@@ -30,14 +30,15 @@ public class ChassisMoveDistance extends Command implements ChassisController {
 	 *        If the sensor fails for some reason, this command will be cancelled, then the fallbackCommand will start
 	 * @param encoders
 	 */
-	public ChassisMoveDistance(Chassis chassis, double distance, MotionController motionController, Command fallbackCommand, CustomEncoder... encoders) {
+	public ChassisMoveDistance(Chassis chassis, double distance, MotionController motionController, Command fallbackCommand,
+		CustomEncoder... encoders) {
 		chassisMove = new ChassisMove(chassis, this, false);
 		this.motionController = motionController;
 		this.encoders = encoders;
 		this.distance = distance;
 		this.fallbackCommand = fallbackCommand;
 	}
-	
+
 	/**
 	 * Constructor.
 	 * This command moves the chassis forward a known distance via a set of encoders.
