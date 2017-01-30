@@ -27,7 +27,8 @@ public class ChassisTurn extends Command implements ChassisController {
 	 *        If the sensor fails for some reason, this command will be cancelled, then the fallbackCommand will start
 	 * @param motionController
 	 */
-	public ChassisTurn(Chassis chassis, double finalAngle, IMU imu, Command fallbackCommand, MotionController motionController) {
+	public ChassisTurn(Chassis chassis, double finalAngle, IMU imu, Command fallbackCommand,
+		MotionController motionController) {
 		move = new ChassisMove(chassis, this);
 		this.finalAngle = -((finalAngle + 360) % 360 - 180);
 		this.imu = imu;

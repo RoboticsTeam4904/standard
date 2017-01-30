@@ -2,7 +2,6 @@ package org.usfirst.frc4904.standard.custom.motioncontrollers;
 
 
 import org.usfirst.frc4904.standard.LogKitten;
-import org.usfirst.frc4904.standard.Util;
 import org.usfirst.frc4904.standard.custom.sensors.InvalidSensorException;
 import org.usfirst.frc4904.standard.custom.sensors.PIDSensor;
 import edu.wpi.first.wpilibj.PIDSource;
@@ -19,7 +18,7 @@ public class BangBangController extends MotionController {
 	protected double A;
 	protected double F;
 	protected double threshold;
-	
+
 	/**
 	 * BangBang controller
 	 * A bang bang controller.
@@ -46,7 +45,7 @@ public class BangBangController extends MotionController {
 		this.threshold = threshold;
 		reset();
 	}
-	
+
 	/**
 	 * BangBang controller
 	 * A bang bang controller.
@@ -73,7 +72,7 @@ public class BangBangController extends MotionController {
 		this.threshold = threshold;
 		reset();
 	}
-	
+
 	/**
 	 * BangBang controller
 	 * A bang bang controller.
@@ -92,7 +91,7 @@ public class BangBangController extends MotionController {
 	 *        The scalar on the input.
 	 */
 	public BangBangController(PIDSensor sensor, double A, double F) {
-		this(sensor, A, F, Util.EPSILON);
+		this(sensor, A, F, Double.MIN_VALUE);
 	}
 
 	/**
@@ -113,9 +112,9 @@ public class BangBangController extends MotionController {
 	 *        The scalar on the input.
 	 */
 	public BangBangController(PIDSource source, double A, double F) {
-		this(source, A, F, Util.EPSILON);
+		this(source, A, F, Double.MIN_VALUE);
 	}
-	
+
 	/**
 	 * Sets the setpoint to the current sensor value.
 	 */
@@ -124,7 +123,7 @@ public class BangBangController extends MotionController {
 		setpoint = sensor.pidGetSafely();
 		error = 0;
 	}
-	
+
 	/**
 	 * Sets the setpoint to the current sensor value.
 	 *
@@ -135,7 +134,7 @@ public class BangBangController extends MotionController {
 		setpoint = sensor.pidGet();
 		error = 0;
 	}
-	
+
 	/**
 	 * Get the current output of the bang bang controller.
 	 * This should be used to set the output.
@@ -173,7 +172,7 @@ public class BangBangController extends MotionController {
 		}
 		return F * setpoint;
 	}
-	
+
 	/**
 	 * Get the current output of the bang bang controller.
 	 * This should be used to set the output.
@@ -192,7 +191,7 @@ public class BangBangController extends MotionController {
 			return 0;
 		}
 	}
-	
+
 	/**
 	 * @return
 	 * 		The most recent error.

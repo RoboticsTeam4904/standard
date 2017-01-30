@@ -38,16 +38,16 @@ public class CustomXbox extends XboxController implements Controller {
 	@Override
 	public double getAxis(int axis) {
 		switch (axis) {
-		case 0:
-			return leftStick.getX();
-		case 1:
-			return leftStick.getY();
-		case 2:
-			return rightStick.getX();
-		case 3:
-			return rightStick.getY();
-		default:
-			return super.getRawAxis(axis);
+			case 0:
+				return leftStick.getX();
+			case 1:
+				return leftStick.getY();
+			case 2:
+				return rightStick.getX();
+			case 3:
+				return rightStick.getY();
+			default:
+				return super.getRawAxis(axis);
 		}
 	}
 }

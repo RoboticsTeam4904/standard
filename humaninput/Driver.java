@@ -14,7 +14,7 @@ public abstract class Driver extends HumanInput implements Named, ChassisControl
 	public Driver(String name) {
 		super(name);
 	}
-	
+
 	/**
 	 *
 	 * @return
@@ -22,7 +22,7 @@ public abstract class Driver extends HumanInput implements Named, ChassisControl
 	 */
 	@Override
 	public abstract double getX();
-	
+
 	/**
 	 *
 	 * @return
@@ -30,7 +30,7 @@ public abstract class Driver extends HumanInput implements Named, ChassisControl
 	 */
 	@Override
 	public abstract double getY();
-	
+
 	/**
 	 *
 	 * @return

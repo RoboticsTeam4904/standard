@@ -4,8 +4,8 @@ package org.usfirst.frc4904.standard.custom.sensors;
 import org.usfirst.frc4904.standard.LogKitten;
 
 public class CANUltrasonicDistanceSensor extends CANSensor implements DistanceSensor {
-	protected static final int CAN_SENSOR_MODE = 0;
-	
+	public static final int DISTANCE_SENSOR_ARRAY_INDEX = 0;
+
 	/**
 	 * Construct a new Ultrasonic Distance Sensor connected via CAN
 	 *
@@ -17,20 +17,20 @@ public class CANUltrasonicDistanceSensor extends CANSensor implements DistanceSe
 	public CANUltrasonicDistanceSensor(String name, int id) {
 		super(name, id);
 	}
-	
+
 	@Override
-	public double getDistance() throws InvalidSensorException {
-		return super.read(CANUltrasonicDistanceSensor.CAN_SENSOR_MODE);
-	}
-	
-	@Override
-	public double getDistanceSafely() {
+	public double getDistance() {
 		try {
-			return getDistance();
+			return getDistanceSafely();
 		}
 		catch (Exception e) {
 			LogKitten.ex(e);
 			return 0;
 		}
+	}
+
+	@Override
+	public double getDistanceSafely() throws InvalidSensorException {
+		return super.readSensor()[CANInfraredDistanceSensor.DISTANCE_SENSOR_ARRAY_INDEX];
 	}
 }
