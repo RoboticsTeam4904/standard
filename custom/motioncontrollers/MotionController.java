@@ -3,7 +3,6 @@ package org.usfirst.frc4904.standard.custom.motioncontrollers;
 
 import java.util.Timer;
 import java.util.TimerTask;
-import org.usfirst.frc4904.standard.Util;
 import org.usfirst.frc4904.standard.custom.sensors.InvalidSensorException;
 import org.usfirst.frc4904.standard.custom.sensors.PIDSensor;
 import edu.wpi.first.wpilibj.PIDOutput;
@@ -47,7 +46,7 @@ public abstract class MotionController {
 		timer = new Timer();
 		task = new MotionControllerTask();
 		enable = true;
-		absoluteTolerance = Util.EPSILON; // Nonzero to avoid floating point errors
+		absoluteTolerance = Double.MIN_VALUE; // Nonzero to avoid floating point errors
 		capOutput = false;
 		continuous = false;
 		inputMin = 0.0;
@@ -178,6 +177,16 @@ public abstract class MotionController {
 			return;
 		}
 		throw new BoundaryException("Absolute tolerance negative");
+	}
+
+	/**
+	 * Returns the absolute tolerance set on the
+	 * motion controller. Will return {@link org.usfirst.frc4904.standard.Util#EPSILON Util.EPSILON}
+	 *
+	 * @return absolute tolerance
+	 */
+	public double getAbsoluteTolerance() {
+		return absoluteTolerance;
 	}
 
 	/**

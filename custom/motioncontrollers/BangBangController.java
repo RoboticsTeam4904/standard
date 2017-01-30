@@ -2,7 +2,6 @@ package org.usfirst.frc4904.standard.custom.motioncontrollers;
 
 
 import org.usfirst.frc4904.standard.LogKitten;
-import org.usfirst.frc4904.standard.Util;
 import org.usfirst.frc4904.standard.custom.sensors.InvalidSensorException;
 import org.usfirst.frc4904.standard.custom.sensors.PIDSensor;
 import edu.wpi.first.wpilibj.PIDSource;
@@ -92,7 +91,7 @@ public class BangBangController extends MotionController {
 	 *        The scalar on the input.
 	 */
 	public BangBangController(PIDSensor sensor, double A, double F) {
-		this(sensor, A, F, Util.EPSILON);
+		this(sensor, A, F, Double.MIN_VALUE);
 	}
 
 	/**
@@ -113,7 +112,7 @@ public class BangBangController extends MotionController {
 	 *        The scalar on the input.
 	 */
 	public BangBangController(PIDSource source, double A, double F) {
-		this(source, A, F, Util.EPSILON);
+		this(source, A, F, Double.MIN_VALUE);
 	}
 
 	/**
