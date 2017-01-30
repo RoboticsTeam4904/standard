@@ -8,7 +8,7 @@ import org.usfirst.frc4904.standard.custom.sensors.IMU;
 import org.usfirst.frc4904.standard.custom.sensors.InvalidSensorException;
 import edu.wpi.first.wpilibj.PIDSourceType;
 
-public class PIDChassisController implements ChassisController {
+public class MCChassisController implements ChassisController {
 	protected ChassisController controller;
 	protected double maxDegreesPerSecond;
 	protected double targetYaw;
@@ -16,7 +16,7 @@ public class PIDChassisController implements ChassisController {
 	protected IMU imu;
 	protected MotionController motionController;
 
-	public PIDChassisController(ChassisController controller, IMU imu, MotionController motionController,
+	public MCChassisController(ChassisController controller, IMU imu, MotionController motionController,
 		double maxDegreesPerSecond) {
 		this.controller = controller;
 		this.maxDegreesPerSecond = maxDegreesPerSecond;

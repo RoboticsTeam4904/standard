@@ -2,7 +2,7 @@ package org.usfirst.frc4904.standard.commands.motor;
 
 
 import org.usfirst.frc4904.standard.custom.sensors.InvalidSensorException;
-import org.usfirst.frc4904.standard.subsystems.motor.SensorMotor;
+import org.usfirst.frc4904.standard.subsystems.motor.PositionSensorMotor;
 import edu.wpi.first.wpilibj.command.Command;
 
 /**
@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj.command.Command;
  *
  */
 public class MotorPositionConstant extends Command {
-	protected SensorMotor motor;
+	protected PositionSensorMotor motor;
 	protected double position;
 	protected boolean endOnArrival;
 	protected final Command fallbackCommand;
@@ -33,7 +33,7 @@ public class MotorPositionConstant extends Command {
 	 * @param fallbackCommand
 	 *        If the sensor fails for some reason, this command will be cancelled, then the fallbackCommand will start
 	 */
-	public MotorPositionConstant(SensorMotor motor, double position, boolean endOnArrival, Command fallbackCommand) {
+	public MotorPositionConstant(PositionSensorMotor motor, double position, boolean endOnArrival, Command fallbackCommand) {
 		super("MotorPositionConstant");
 		this.motor = motor;
 		this.position = position;
@@ -43,11 +43,11 @@ public class MotorPositionConstant extends Command {
 		setInterruptible(true);
 	}
 
-	public MotorPositionConstant(SensorMotor motor, double position, boolean endOnArrival) {
+	public MotorPositionConstant(PositionSensorMotor motor, double position, boolean endOnArrival) {
 		this(motor, position, endOnArrival, null);
 	}
 
-	public MotorPositionConstant(SensorMotor motor, double position) {
+	public MotorPositionConstant(PositionSensorMotor motor, double position) {
 		this(motor, position, true, null);
 	}
 
@@ -55,6 +55,8 @@ public class MotorPositionConstant extends Command {
 	protected void initialize() {
 		try {
 			motor.reset();
+			motor.enableMotionController();
+			motor.setPositionSafely(position);
 		}
 		catch (InvalidSensorException e) {
 			cancel();
@@ -63,19 +65,13 @@ public class MotorPositionConstant extends Command {
 			}
 			return;
 		}
-		motor.enablePID();
 	}
 
 	@Override
 	protected void execute() {
-		try {
-			motor.setPositionSafely(position);
-		}
-		catch (InvalidSensorException e) {
+		if (motor.checkSensorException() != null) {
 			cancel();
-			if (fallbackCommand != null) {
-				fallbackCommand.start();
-			}
+			fallbackCommand.start();
 		}
 	}
 

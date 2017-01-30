@@ -55,7 +55,7 @@ public class MotorControl extends Command {
 	protected void initialize() {
 		LogKitten.d("MotorControl initialized");
 		if (motor instanceof PositionSensorMotor) {
-			((PositionSensorMotor) motor).disablePID();
+			((PositionSensorMotor) motor).disableMotionController();
 		}
 	}
 

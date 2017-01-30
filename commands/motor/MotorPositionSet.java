@@ -2,14 +2,14 @@ package org.usfirst.frc4904.standard.commands.motor;
 
 
 import org.usfirst.frc4904.standard.custom.sensors.InvalidSensorException;
-import org.usfirst.frc4904.standard.subsystems.motor.SensorMotor;
+import org.usfirst.frc4904.standard.subsystems.motor.PositionSensorMotor;
 import edu.wpi.first.wpilibj.command.Command;
 
 /**
  * Sets a motor to a position and keeps it there using an encoder.
  */
 public class MotorPositionSet extends Command {
-	protected SensorMotor motor;
+	protected PositionSensorMotor motor;
 	protected double position;
 	protected final Command fallbackCommand;
 
@@ -22,11 +22,10 @@ public class MotorPositionSet extends Command {
 	 * @param fallbackCommand
 	 *        If the sensor fails for some reason, this command will be cancelled, then the fallbackCommand will start
 	 */
-	public MotorPositionSet(SensorMotor motor, Command fallbackCommand) {
+	public MotorPositionSet(PositionSensorMotor motor, Command fallbackCommand) {
 		super("MotorPositionSet");
 		this.motor = motor;
 		requires(motor);
-		motor.enablePID();
 		setInterruptible(true);
 		this.fallbackCommand = fallbackCommand;
 	}
@@ -38,7 +37,7 @@ public class MotorPositionSet extends Command {
 	 * @param motor
 	 *        A Motor that also implements PositionSensorMotor.
 	 */
-	public MotorPositionSet(SensorMotor motor) {
+	public MotorPositionSet(PositionSensorMotor motor) {
 		this(motor, null);
 	}
 
@@ -53,16 +52,26 @@ public class MotorPositionSet extends Command {
 	}
 
 	@Override
-	protected void initialize() {}
-
-	@Override
-	protected void execute() {
+	protected void initialize() {
 		try {
+			motor.reset();
+			motor.enableMotionController();
 			motor.setPositionSafely(position);
 		}
 		catch (InvalidSensorException e) {
 			cancel();
 			if (fallbackCommand != null) {
+				fallbackCommand.start();
+			}
+		}
+	}
+
+	@Override
+	protected void execute() {
+		Exception potentialSensorException = motor.checkSensorException();
+		if (potentialSensorException != null) {
+			cancel();
+			if (fallbackCommand != null && !fallbackCommand.isRunning()) {
 				fallbackCommand.start();
 			}
 		}

@@ -3,8 +3,10 @@ package org.usfirst.frc4904.standard.custom.motioncontrollers;
 
 import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.custom.sensors.InvalidSensorException;
+import org.usfirst.frc4904.standard.custom.sensors.NativeDerivativeSensor;
 import org.usfirst.frc4904.standard.custom.sensors.PIDSensor;
 import edu.wpi.first.wpilibj.PIDSource;
+import edu.wpi.first.wpilibj.PIDSourceType;
 
 /**
  * An extremely basic PID controller.
@@ -18,8 +20,8 @@ public class CustomPIDController extends MotionController {
 	protected double F;
 	protected double totalError;
 	protected double lastError;
+	protected long lastTime;
 	protected double minimumNominalOutput = 0.0;
-	protected boolean justReset;
 
 	/**
 	 * An extremely basic PID controller.
@@ -42,7 +44,6 @@ public class CustomPIDController extends MotionController {
 		this.I = I;
 		this.D = D;
 		this.F = F;
-		justReset = true;
 	}
 
 	/**
@@ -66,7 +67,6 @@ public class CustomPIDController extends MotionController {
 		this.I = I;
 		this.D = D;
 		this.F = F;
-		justReset = true;
 	}
 
 	/**
@@ -158,7 +158,7 @@ public class CustomPIDController extends MotionController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 * 		The current minimumNominalOutput (minimum nominal output) value
 	 */
@@ -222,36 +222,12 @@ public class CustomPIDController extends MotionController {
 	}
 
 	/**
-	 * Resets the PID controller.
-	 * This sets total error and last error to 0,
-	 * as well as setting the setpoint to the current
-	 * sensor reading.
-	 *
-	 * @throws InvalidSensorException
-	 *         when a sensor fails
+	 * Resets the PID controller error to zero.
 	 */
 	@Override
-	public void resetSafely() throws InvalidSensorException {
-		setpoint = sensor.pidGet();
+	protected void resetErrorToZero() {
 		totalError = 0;
 		lastError = 0;
-		justReset = true;
-	}
-
-	/**
-	 * Resets the PID controller.
-	 * This sets total error and last error to 0,
-	 * as well as setting the setpoint to the current
-	 * sensor reading.
-	 *
-	 * @warning does not indicate sensor error
-	 */
-	@Override
-	public void reset() {
-		setpoint = sensor.pidGet();
-		totalError = 0;
-		lastError = 0;
-		justReset = true;
 	}
 
 	@Override
@@ -259,7 +235,6 @@ public class CustomPIDController extends MotionController {
 		return lastError;
 	}
 
-	@Override
 	/**
 	 * Get the current output of the PID loop.
 	 * This should be used to set the output (like a Motor).
@@ -268,6 +243,7 @@ public class CustomPIDController extends MotionController {
 	 * @throws InvalidSensorException
 	 *         when a sensor fails
 	 */
+	@Override
 	public double getSafely() throws InvalidSensorException {
 		// If PID is not enabled, use feedforward only
 		if (!enable) {
@@ -288,21 +264,24 @@ public class CustomPIDController extends MotionController {
 				}
 			}
 		}
-		// Calculate the approximation of the error's derivative
 		double errorDerivative;
-		// If we've just reset the error could jump from 0 to a very high number so just return 0
-		if (justReset) {
-			errorDerivative = 0;
+		long latestTime = System.currentTimeMillis();
+		long timeDiff = latestTime - lastTime;
+		// Check if the sensor supports native derivative calculations and that we're doing displacement PID
+		// (if we're doing rate PID, then getRate() would be the PID input rather then the input's derivative)
+		if (sensor instanceof NativeDerivativeSensor && sensor.getPIDSourceType() == PIDSourceType.kDisplacement) {
+			errorDerivative = ((NativeDerivativeSensor) sensor).getRateSafely();
 		} else {
-			errorDerivative = (error - lastError);
+			// Calculate the approximation of the derivative.
+			errorDerivative = (error - lastError) / timeDiff;
 		}
+		lastTime = latestTime;
 		// Calculate the approximation of the error's integral
-		totalError += error;
+		totalError += error * timeDiff;
 		// Calculate the result using the PIDF formula
 		double result = P * error + I * totalError + D * errorDerivative + F * setpoint;
 		// Save the error for calculating future derivatives
 		lastError = error;
-		justReset = false;
 		LogKitten.v(input + " " + setpoint + " " + result);
 		if (capOutput) {
 			// Limit the result to be within the output range [outputMin, outputMax]
@@ -314,7 +293,6 @@ public class CustomPIDController extends MotionController {
 		return result;
 	}
 
-	@Override
 	/**
 	 * Get the current output of the PID loop.
 	 * This should be used to set the output (like a Motor).
@@ -322,6 +300,7 @@ public class CustomPIDController extends MotionController {
 	 * @return The current output of the PID loop.
 	 * @warning does not indicate sensor error
 	 */
+	@Override
 	public double get() {
 		try {
 			return getSafely();
@@ -330,10 +309,5 @@ public class CustomPIDController extends MotionController {
 			LogKitten.ex(e);
 			return 0;
 		}
-	}
-
-	@Override
-	public boolean onTarget() {
-		return !justReset && super.onTarget();
 	}
 }

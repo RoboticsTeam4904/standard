@@ -5,7 +5,7 @@ import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.Util;
 import org.usfirst.frc4904.standard.custom.controllers.Controller;
 import org.usfirst.frc4904.standard.custom.sensors.InvalidSensorException;
-import org.usfirst.frc4904.standard.subsystems.motor.SensorMotor;
+import org.usfirst.frc4904.standard.subsystems.motor.PositionSensorMotor;
 import edu.wpi.first.wpilibj.command.Command;
 
 /**
@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj.command.Command;
  *
  */
 public class MotorPositionControl extends Command {
-	protected final SensorMotor motor;
+	protected final PositionSensorMotor motor;
 	protected final Controller controller;
 	protected final int axis;
 	protected final boolean invert;
@@ -31,8 +31,7 @@ public class MotorPositionControl extends Command {
 	 * @param fallbackCommand
 	 *        If the sensor fails for some reason, this command will be cancelled, then the fallbackCommand will start
 	 */
-	public MotorPositionControl(SensorMotor motor, Util.Range motorPositionRange, Controller controller, int axis,
-		boolean invert, Command fallbackCommand) {
+	public MotorPositionControl(PositionSensorMotor motor, Util.Range motorPositionRange, Controller controller, int axis, boolean invert, Command fallbackCommand) {
 		super("MotorPositionControl");
 		this.motor = motor;
 		this.motorPositionRange = motorPositionRange;
@@ -54,8 +53,8 @@ public class MotorPositionControl extends Command {
 	 * @param axis
 	 * @param invert
 	 */
-	public MotorPositionControl(SensorMotor motor, Util.Range motorPositionRange, Controller controller, int axis,
-		boolean invert) {
+
+	public MotorPositionControl(PositionSensorMotor motor, Util.Range motorPositionRange, Controller controller, int axis, boolean invert) {
 		this(motor, motorPositionRange, controller, axis, invert, null);
 	}
 

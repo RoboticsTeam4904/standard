@@ -41,4 +41,8 @@ public class PositionSensorMotor extends SensorMotor {
 	public PositionSensorMotor(MotionController motionController, SpeedController... motors) {
 		this("PositionSensorMotor", motionController, motors);
 	}
+	
+	public void setPosition(double position) {
+		motionController.setSetpoint(position);
+	}
 }
