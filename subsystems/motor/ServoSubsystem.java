@@ -10,8 +10,8 @@ public class ServoSubsystem extends Subsystem {
 	protected boolean isInverted;
 	protected double lastPosition;
 	// Constants from wpilib's Servo.java.
-	private static final double kMaxServoAngle = 180.0;
-	private static final double kMinServoAngle = 0.0;
+	protected static final double kMaxServoAngle = 180.0;
+	protected static final double kMinServoAngle = 0.0;
 
 	/**
 	 * A class that wraps around a variable number of Servo objects to give them Subsystem functionality.
