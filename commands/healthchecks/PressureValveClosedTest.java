@@ -17,7 +17,7 @@ public class PressureValveClosedTest extends AbstractHealthCheck {
 	protected final double currentThreshold;
 	protected final Compressor compressor;
 	public static final double DEFAULT_TIMEOUT = 2;
-	
+
 	/**
 	 * @param compressor
 	 *        The compressor to read current from
@@ -32,7 +32,7 @@ public class PressureValveClosedTest extends AbstractHealthCheck {
 		this.currentThreshold = currentThreshold;
 		this.compressor = compressor;
 	}
-	
+
 	/**
 	 * Will construct a new Compressor(0).
 	 *
@@ -44,7 +44,7 @@ public class PressureValveClosedTest extends AbstractHealthCheck {
 	public PressureValveClosedTest(double timeout, double currentThreshold) {
 		this(new Compressor(0), timeout, currentThreshold);
 	}
-	
+
 	/**
 	 * Will use PressureValveClosedTest.DEFAULT_TIMEOUT as the timeout.
 	 *
@@ -56,7 +56,7 @@ public class PressureValveClosedTest extends AbstractHealthCheck {
 	public PressureValveClosedTest(Compressor compressor, double currentThreshold) {
 		this(compressor, PressureValveClosedTest.DEFAULT_TIMEOUT, currentThreshold);
 	}
-	
+
 	/**
 	 * Will use PressureValveClosedTest.DEFAULT_TIMEOUT as the timeout.
 	 * Will construct a new Compressor(0).
@@ -67,17 +67,17 @@ public class PressureValveClosedTest extends AbstractHealthCheck {
 	public PressureValveClosedTest(double currentThreshold) {
 		this(PressureValveClosedTest.DEFAULT_TIMEOUT, currentThreshold);
 	}
-	
+
 	@Override
 	protected boolean finished() {
 		return isTimedOut();
 	}
-	
+
 	@Override
 	protected void initialize() {
 		setTimeout(timeout);
 	}
-	
+
 	@Override
 	protected HealthLevel getStatus() {
 		return compressor.getCompressorCurrent() < currentThreshold ? HealthLevel.DANGEROUS : HealthLevel.PERFECT;

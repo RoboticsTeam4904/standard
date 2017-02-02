@@ -11,15 +11,15 @@ import edu.wpi.first.wpilibj.buttons.Button;
  */
 public class CustomDigitalLimitSwitch extends Button implements CustomButton {
 	protected final DigitalInput limitSwitch;
-	
+
 	public CustomDigitalLimitSwitch(DigitalInput limitSwitch) {
 		this.limitSwitch = limitSwitch;
 	}
-	
+
 	public CustomDigitalLimitSwitch(int port) {
 		this(new DigitalInput(port));
 	}
-	
+
 	/**
 	 * Returns true when the limit switch is pressed.
 	 * This is based on the raw value of the limit

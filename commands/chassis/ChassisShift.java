@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj.command.Command;
 public class ChassisShift extends Command {
 	protected final SolenoidShifters solenoids;
 	protected final SolenoidShifters.ShiftState state;
-	
+
 	/**
 	 * Toggles the solenoids
 	 * 
@@ -20,7 +20,7 @@ public class ChassisShift extends Command {
 	public ChassisShift(SolenoidShifters solenoids) {
 		this(solenoids, null);
 	}
-	
+
 	/**
 	 * Shifts the solenoids to the provided state
 	 *
@@ -34,7 +34,7 @@ public class ChassisShift extends Command {
 		setInterruptible(true);
 		this.state = state;
 	}
-	
+
 	@Override
 	protected void initialize() {
 		if (state == null) {
@@ -45,16 +45,16 @@ public class ChassisShift extends Command {
 			solenoids.shift(state);
 		}
 	}
-	
+
 	@Override
 	protected void execute() {}
-	
+
 	@Override
 	protected void interrupted() {}
-	
+
 	@Override
 	protected void end() {}
-	
+
 	@Override
 	protected boolean isFinished() {
 		return false; // Encoders stay in whatever state until shifted elsewhere.

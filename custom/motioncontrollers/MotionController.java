@@ -1,9 +1,11 @@
 package org.usfirst.frc4904.standard.custom.motioncontrollers;
 
 
-import org.usfirst.frc4904.standard.Util;
+import java.util.Timer;
+import java.util.TimerTask;
 import org.usfirst.frc4904.standard.custom.sensors.InvalidSensorException;
 import org.usfirst.frc4904.standard.custom.sensors.PIDSensor;
+import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.util.BoundaryException;
 
@@ -13,6 +15,9 @@ import edu.wpi.first.wpilibj.util.BoundaryException;
  *
  */
 public abstract class MotionController {
+	protected PIDOutput output;
+	protected Timer timer;
+	protected MotionControllerTask task;
 	protected final PIDSensor sensor;
 	protected double setpoint;
 	protected double absoluteTolerance;
@@ -23,6 +28,9 @@ public abstract class MotionController {
 	protected double outputMax;
 	protected double outputMin;
 	protected boolean enable;
+	protected Exception sensorException;
+	private volatile boolean justReset;
+	private final Object lock = new Object();
 
 	/**
 	 * A MotionController modifies an output using a sensor
@@ -34,8 +42,11 @@ public abstract class MotionController {
 	 */
 	public MotionController(PIDSensor sensor) {
 		this.sensor = sensor;
+		output = null;
+		timer = new Timer();
+		task = new MotionControllerTask();
 		enable = true;
-		absoluteTolerance = Util.EPSILON; // Nonzero to avoid floating point errors
+		absoluteTolerance = Double.MIN_VALUE; // Nonzero to avoid floating point errors
 		capOutput = false;
 		continuous = false;
 		inputMin = 0.0;
@@ -43,8 +54,23 @@ public abstract class MotionController {
 		outputMin = 0.0;
 		outputMax = 0.0;
 		reset();
+		justReset = true;
+		sensorException = null;
 	}
-	
+
+	/**
+	 * Sets the output for this MotionController.
+	 * Once every MotionController tick, the output will
+	 * be set to the results from the motion control
+	 * calculation via the pidWrite function.
+	 *
+	 * @param output
+	 *        The output to control
+	 */
+	public void setOutput(PIDOutput output) {
+		this.output = output;
+	}
+
 	/**
 	 * A MotionController modifies an output using a sensor
 	 * to precisely maintain a certain input.
@@ -56,20 +82,35 @@ public abstract class MotionController {
 	public MotionController(PIDSource source) {
 		this(new PIDSensor.PIDSourceWrapper(source));
 	}
-	
+
 	/**
 	 * This should return the motion controller
 	 * to a state such that it returns 0.
 	 *
 	 * @warning this does not indicate sensor errors
 	 */
-	public abstract void reset();
-	
+	public final void reset() {
+		resetErrorToZero();
+		setpoint = sensor.pidGet();
+		justReset = true;
+	}
+
 	/**
 	 * This should return the motion controller
 	 * to a state such that it returns 0.
 	 */
-	public abstract void resetSafely() throws InvalidSensorException;
+	public final void resetSafely() throws InvalidSensorException {
+		resetErrorToZero();
+		setpoint = sensor.pidGetSafely();
+		justReset = true;
+	}
+
+	/**
+	 * Method-specific method for resetting the
+	 * motion controller without indicating sensor
+	 * errors.
+	 */
+	protected abstract void resetErrorToZero();
 
 	/**
 	 * The calculated output value to achieve the
@@ -139,6 +180,16 @@ public abstract class MotionController {
 	}
 
 	/**
+	 * Returns the absolute tolerance set on the
+	 * motion controller. Will return {@link org.usfirst.frc4904.standard.Util#EPSILON Util.EPSILON}
+	 *
+	 * @return absolute tolerance
+	 */
+	public double getAbsoluteTolerance() {
+		return absoluteTolerance;
+	}
+
+	/**
 	 * Sets the input range of the motion controller.
 	 * This is only used to work with continuous inputs.
 	 * If minimum is greater than maximum, this will throw
@@ -196,6 +247,14 @@ public abstract class MotionController {
 	 */
 	public void enable() {
 		enable = true;
+		try {
+			timer.scheduleAtFixedRate(task, 10, 20);
+			justReset = true;
+			// justReset is written to by both the main thread and the Task,
+			// so there is a 10 millisecond delay in the initial execution of
+			// the task, which should reduce blocking
+		}
+		catch (IllegalStateException e) {} // Do not die if the timer is already running
 	}
 
 	/**
@@ -205,7 +264,17 @@ public abstract class MotionController {
 	 */
 	public void disable() {
 		enable = false;
+		task.cancel();
+		timer.purge();
+		task = new MotionControllerTask();
 		setpoint = sensor.pidGet();
+	}
+
+	/**
+	 * Is motion control enabled?
+	 */
+	public boolean isEnabled() {
+		return enable;
 	}
 
 	/**
@@ -216,5 +285,42 @@ public abstract class MotionController {
 	 */
 	public boolean onTarget() {
 		return Math.abs(getError()) <= absoluteTolerance;
+	}
+
+	/**
+	 * Check if the motion controller has generated
+	 * an exception within the TimerTask. If there is
+	 * not an exception, the function returns null.
+	 *
+	 * @return the exception (probably null)
+	 */
+	public Exception checkException() {
+		return sensorException;
+	}
+
+	/**
+	 * The thread in which the output is updated with the
+	 * results of the motion controller calculation.
+	 *
+	 */
+	protected class MotionControllerTask extends TimerTask {
+		@Override
+		public void run() {
+			try {
+				double value = getSafely(); // Always calculate MC output
+				synchronized (lock) {
+					if (justReset) {
+						justReset = false;
+						return;
+					}
+				}
+				if (output != null && isEnabled()) {
+					output.pidWrite(value);
+				}
+			}
+			catch (Exception e) {
+				sensorException = e;
+			}
+		}
 	}
 }

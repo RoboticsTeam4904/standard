@@ -18,7 +18,7 @@ public class TypedNamedSendableChooser<T extends Named> extends SendableChooser<
 	public void addObject(T object) {
 		super.addObject(object.getName(), object);
 	}
-	
+
 	/**
 	 * Adds an object of the type
 	 * to the smart dashboard as

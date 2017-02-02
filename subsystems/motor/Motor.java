@@ -18,7 +18,7 @@ public class Motor extends Subsystem implements SpeedController {
 	protected final SpeedModifier speedModifier;
 	protected boolean isInverted;
 	protected double lastSpeed;
-	
+
 	/**
 	 * A class that wraps around a variable number of SpeedController objects to give them Subsystem functionality.
 	 * Can also modify their speed with a SpeedModifier for things like scaling or brownout protection.
@@ -278,7 +278,8 @@ public class Motor extends Subsystem implements SpeedController {
 		private static final long serialVersionUID = -539917227288371271L;
 		
 		public StrangeCANSpeedControllerModeRuntimeException(Motor motor) {
-			super("One of " + motor.getName() + "'s SpeedControllers is a CANSpeedController with a non-zero mode. This might mess up it's .get(), so Motor cannot verify safety.");
+			super("One of " + motor.getName()
+				+ "'s SpeedControllers is a CANSpeedController with a non-zero mode. This might mess up it's .get(), so Motor cannot verify safety.");
 		}
 	}
 }

@@ -19,7 +19,7 @@ public class CommandSendableChooser extends SendableChooser<Command> {
 	public void addObject(Command object) {
 		super.addObject(object.getName(), object);
 	}
-	
+
 	/**
 	 * Adds the command object to the smart dashboard
 	 * as the default command.
