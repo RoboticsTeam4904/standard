@@ -22,7 +22,8 @@ public class CustomDigitalEncoder extends Encoder implements CustomEncoder {
 		super(aSource, bSource, reverseDirection);
 	}
 
-	public CustomDigitalEncoder(DigitalSource aSource, DigitalSource bSource, boolean reverseDirection, CounterBase.EncodingType encodingType) {
+	public CustomDigitalEncoder(DigitalSource aSource, DigitalSource bSource, boolean reverseDirection,
+		CounterBase.EncodingType encodingType) {
 		super(aSource, bSource, reverseDirection, encodingType);
 	}
 
@@ -30,7 +31,8 @@ public class CustomDigitalEncoder extends Encoder implements CustomEncoder {
 		super(aSource, bSource, indexSource);
 	}
 
-	public CustomDigitalEncoder(DigitalSource aSource, DigitalSource bSource, DigitalSource indexSource, boolean reverseDirection) {
+	public CustomDigitalEncoder(DigitalSource aSource, DigitalSource bSource, DigitalSource indexSource,
+		boolean reverseDirection) {
 		super(aSource, bSource, indexSource, reverseDirection);
 	}
 
@@ -75,32 +77,32 @@ public class CustomDigitalEncoder extends Encoder implements CustomEncoder {
 		super.setReverseDirection(reverseDirection);
 		this.reverseDirection = reverseDirection;
 	}
-	
+
 	@Override
 	public double pidGetSafely() {
 		return pidGet();
 	}
-	
+
 	@Override
 	public int getSafely() {
 		return get();
 	}
-	
+
 	@Override
 	public double getDistanceSafely() {
 		return getDistance();
 	}
-	
+
 	@Override
 	public boolean getDirectionSafely() {
 		return getDirection();
 	}
-	
+
 	@Override
 	public boolean getStoppedSafely() {
 		return getStopped();
 	}
-	
+
 	@Override
 	public double getRateSafely() {
 		return getRate();

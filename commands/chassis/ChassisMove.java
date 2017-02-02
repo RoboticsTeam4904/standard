@@ -6,7 +6,7 @@ import org.usfirst.frc4904.standard.commands.motor.MotorSet;
 import org.usfirst.frc4904.standard.custom.ChassisController;
 import org.usfirst.frc4904.standard.subsystems.chassis.Chassis;
 import org.usfirst.frc4904.standard.subsystems.motor.Motor;
-import org.usfirst.frc4904.standard.subsystems.motor.SensorMotor;
+import org.usfirst.frc4904.standard.subsystems.motor.VelocitySensorMotor;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
 /**
@@ -24,7 +24,7 @@ public class ChassisMove extends CommandGroup {
 	protected final boolean usePID;
 	protected final Chassis chassis;
 	protected final ChassisController controller;
-	
+
 	/**
 	 * @param chassis
 	 *        The robot's Chassis.
@@ -47,7 +47,7 @@ public class ChassisMove extends CommandGroup {
 		}
 		LogKitten.v("ChassisMove created for " + chassis.getName());
 	}
-	
+
 	/**
 	 * @param chassis
 	 *        The robot's chassis.
@@ -57,45 +57,50 @@ public class ChassisMove extends CommandGroup {
 	public ChassisMove(Chassis chassis, ChassisController controller) {
 		this(chassis, controller, false);
 	}
-	
+
 	@Override
 	protected void initialize() {
 		for (Motor motor : motors) {
-			if (motor instanceof SensorMotor) {
+			if (motor instanceof VelocitySensorMotor) {
+				// VelocitySensorMotors will attempt to very precisely achieve the speed set by this command when PID is enabled
+				// PositionSensorMotors will either attempt to maintain their previous position, or worse, will try to move to somewhere
+				// between -1.0 and 1.0, which is probably not the correct position regardless of the scaling.
 				if (usePID) {
-					((SensorMotor) motor).enablePID();
+					((VelocitySensorMotor) motor).enableMotionController();
 				} else {
-					((SensorMotor) motor).disablePID();
+					((VelocitySensorMotor) motor).disableMotionController();
 				}
 			}
 		}
 		LogKitten.v("ChassisMove initialized");
 	}
-	
+
 	@Override
 	protected void execute() {
 		chassis.moveCartesian(controller.getX(), controller.getY(), controller.getTurnSpeed());
 		motorSpeeds = chassis.getMotorSpeeds();
-		String motorSpeedsString = "";
+		StringBuilder motorSpeedsString = new StringBuilder();
+		motorSpeedsString.append("Motor speeds:");
 		for (int i = 0; i < motorSpins.length; i++) {
 			LogKitten.d(Double.toString(motorSpeeds[i]));
 			motorSpins[i].set(motorSpeeds[i]);
-			motorSpeedsString += Double.toString(motorSpeeds[i]) + " ";
+			motorSpeedsString.append(' ');
+			motorSpeedsString.append(motorSpeeds[i]);
 		}
 		LogKitten.d("ChassisMove executing");
-		LogKitten.d("Motor speeds: " + motorSpeedsString);
+		LogKitten.d(motorSpeedsString.toString());
 	}
-	
+
 	@Override
 	protected boolean isFinished() {
 		return false;
 	}
-	
+
 	@Override
 	protected void end() {
 		LogKitten.v("ChassisMove ended");
 	}
-	
+
 	@Override
 	protected void interrupted() {
 		LogKitten.w("ChassisMove interrupted");

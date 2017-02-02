@@ -14,7 +14,7 @@ public class NavX extends AHRS implements IMU {
 	protected float lastRoll;
 	protected double lastYawRate;
 	protected final double MAX_DEGREES_PER_TICK = 90.0;
-	
+
 	public NavX(SerialPort.Port port) {
 		super(port);
 		super.zeroYaw();
@@ -22,12 +22,12 @@ public class NavX extends AHRS implements IMU {
 		lastPitch = 0.0f;
 		lastRoll = 0.0f;
 	}
-	
+
 	@Override
 	public double pidGet() {
 		return getYaw();
 	}
-	
+
 	@Override
 	public double getRate() {
 		double rate = super.getRate();
@@ -37,7 +37,7 @@ public class NavX extends AHRS implements IMU {
 		lastYawRate = rate;
 		return rate;
 	}
-	
+
 	/**
 	 * Returns an always positive yaw
 	 */
@@ -50,11 +50,11 @@ public class NavX extends AHRS implements IMU {
 		lastYaw = yaw;
 		return yaw;
 	}
-	
+
 	public float getRawYaw() {
 		return super.getYaw();
 	}
-	
+
 	/**
 	 * Returns an always positive pitch
 	 */
@@ -72,7 +72,7 @@ public class NavX extends AHRS implements IMU {
 			return pitch;
 		}
 	}
-	
+
 	/**
 	 * Returns an always positive roll
 	 */

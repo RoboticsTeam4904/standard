@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
  */
 public class CheckHealth extends CommandGroup {
 	protected final AbstractHealthCheck[] commands;
-	
+
 	/**
 	 * CheckHealth runs a series of health checks.
 	 * It also includes a reset for all of the health checks.
@@ -25,7 +25,7 @@ public class CheckHealth extends CommandGroup {
 		}
 		setRunWhenDisabled(true);
 	}
-	
+
 	/**
 	 * Resets all of the health checks.
 	 * Should be run on disable.
@@ -35,7 +35,7 @@ public class CheckHealth extends CommandGroup {
 			c.reset();
 		}
 	}
-	
+
 	/**
 	 * Returns current health status.
 	 *

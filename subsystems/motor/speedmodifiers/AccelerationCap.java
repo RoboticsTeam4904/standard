@@ -15,7 +15,7 @@ public class AccelerationCap implements SpeedModifier {
 	protected final PDP pdp;
 	protected final double softStopVoltage;
 	protected final double hardStopVoltage;
-	
+
 	/**
 	 * A SpeedModifier that does brownout protection and voltage ramping.
 	 * This is designed to reduce power consumption (via voltage ramping)
@@ -35,7 +35,7 @@ public class AccelerationCap implements SpeedModifier {
 		this.hardStopVoltage = hardStopVoltage;
 		lastUpdate = System.currentTimeMillis();
 	}
-	
+
 	/**
 	 * A SpeedModifier that does brownout protection and voltage ramping.
 	 * This is designed to reduce power consumption (via voltage ramping)
@@ -51,7 +51,7 @@ public class AccelerationCap implements SpeedModifier {
 	public AccelerationCap(PDP pdp) {
 		this(pdp, 11.0, 10.0);
 	}
-	
+
 	/**
 	 * Modify the input speed and get the new output. AccelerationCap does voltage ramping,
 	 * which means that motor speed changes take place over 1/16th of a second rather than
@@ -69,17 +69,18 @@ public class AccelerationCap implements SpeedModifier {
 			} else {
 				outputSpeed = currentSpeed;
 			}
-			LogKitten.d("AccelerationCap input: " + Double.toString(inputSpeed) + "\t" + "AccelerationCap output: " + Double.toString(outputSpeed));
+			LogKitten.d("AccelerationCap input: " + inputSpeed + "\t" + "AccelerationCap output: " + outputSpeed);
 		} else if (Math.abs(inputSpeed) > Math.abs(currentSpeed)) {
 			LogKitten.d("AccelerationCap voltage ramping");
-			outputSpeed = currentSpeed + ((double) (System.currentTimeMillis() - lastUpdate) / 64) * (inputSpeed - currentSpeed);
+			outputSpeed = currentSpeed
+				+ ((double) (System.currentTimeMillis() - lastUpdate) / 64) * (inputSpeed - currentSpeed);
 			if (outputSpeed > inputSpeed) {
 				outputSpeed = inputSpeed;
 			}
 		} else {
 			outputSpeed = inputSpeed;
 		}
-		LogKitten.d("AccelerationCap input: " + Double.toString(inputSpeed) + "\t" + "AccelerationCap output: " + Double.toString(outputSpeed));
+		LogKitten.d("AccelerationCap input: " + inputSpeed + "\t" + "AccelerationCap output: " + outputSpeed);
 		lastUpdate = System.currentTimeMillis();
 		currentSpeed = outputSpeed;
 		return outputSpeed;

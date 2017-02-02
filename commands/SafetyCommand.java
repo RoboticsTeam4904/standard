@@ -11,23 +11,23 @@ import edu.wpi.first.wpilibj.command.Command;
  */
 public abstract class SafetyCommand extends Command {
 	protected String reasonUnsafe;
-	
+
 	public SafetyCommand() {
 		super();
 	}
-	
+
 	public SafetyCommand(String name) {
 		super(name);
 	}
-	
+
 	public SafetyCommand(double timeout) {
 		super(timeout);
 	}
-	
+
 	public SafetyCommand(String name, double timeout) {
 		super(name, timeout);
 	}
-	
+
 	@Override
 	protected final void execute() {
 		if (isSafe()) {
@@ -40,17 +40,17 @@ public abstract class SafetyCommand extends Command {
 		}
 		LogKitten.e("SafetyCommand " + getName() + " cannot run because " + reasonUnsafe + ". Cancelling...");
 	}
-	
+
 	protected void setUnsafeReason(String reasonUnsafe) {
 		this.reasonUnsafe = reasonUnsafe;
 	}
-	
+
 	/**
 	 * This execute method is called the first time this Command is run after being started,
 	 * on the condition that isSafe() returns true.
 	 */
 	protected abstract void executeIfSafe();
-	
+
 	/**
 	 * Determines if the command is safe to run.
 	 * setUnsafeReason(String) should be called to describe a safety failure.
