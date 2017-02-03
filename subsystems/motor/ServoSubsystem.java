@@ -223,7 +223,7 @@ public class ServoSubsystem extends Subsystem {
 	 * @return the inverted value
 	 */
 	protected double invertPosition(double value) {
-		return -1 * value + 1;
+		return 1 - value;
 	}
 
 	/**
