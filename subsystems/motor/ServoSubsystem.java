@@ -10,8 +10,8 @@ public class ServoSubsystem extends Subsystem {
 	protected boolean isInverted;
 	protected double lastPosition;
 	// Constants from wpilib's Servo.java.
-	protected static final double kMaxServoAngle = 180.0;
-	protected static final double kMinServoAngle = 0.0;
+	protected static final double MIN_SERVO_ANGLE = 0.0;
+	protected static final double MAX_SERVO_ANGLE = 180.0;
 
 	/**
 	 * A class that wraps around a variable number of Servo objects to give them Subsystem functionality.
@@ -191,7 +191,7 @@ public class ServoSubsystem extends Subsystem {
 	 * @return the range of the servo in degrees
 	 */
 	protected double getServoAngleRange() {
-		return ServoSubsystem.kMaxServoAngle - ServoSubsystem.kMinServoAngle;
+		return ServoSubsystem.MAX_SERVO_ANGLE - ServoSubsystem.MIN_SERVO_ANGLE;
 	}
 
 	/**
@@ -202,7 +202,7 @@ public class ServoSubsystem extends Subsystem {
 	 * @return the value converted to degrees
 	 */
 	protected double convertPositionToAngle(double value) {
-		return value * getServoAngleRange() + ServoSubsystem.kMinServoAngle;
+		return value * getServoAngleRange() + ServoSubsystem.MIN_SERVO_ANGLE;
 	}
 
 	/**
@@ -213,7 +213,7 @@ public class ServoSubsystem extends Subsystem {
 	 * @return a servo set value in the range [0, 1] (as long as the input degree was in the servo's range)
 	 */
 	protected double convertDegreesToValue(double degrees) {
-		return ((degrees - ServoSubsystem.kMinServoAngle)) / getServoAngleRange();
+		return ((degrees - ServoSubsystem.MIN_SERVO_ANGLE)) / getServoAngleRange();
 	}
 
 	/**
@@ -228,7 +228,7 @@ public class ServoSubsystem extends Subsystem {
 	}
 
 	/**
-	 * Invert the given degree ({@link #kMinServoAngle kMinServoAngle} becomes {@link #kMaxServoAngle kMaxServoAngle}, {@link #kMaxServoAngle kMaxServoAngle} becomes {@link #kMinServoAngle kMinServoAngle})
+	 * Invert the given degree ({@link #MIN_SERVO_ANGLE kMinServoAngle} becomes {@link #MAX_SERVO_ANGLE kMaxServoAngle}, {@link #MAX_SERVO_ANGLE kMaxServoAngle} becomes {@link #MIN_SERVO_ANGLE kMinServoAngle})
 	 * 
 	 * @param degrees
 	 *        The degree to invert
