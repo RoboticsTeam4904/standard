@@ -12,7 +12,6 @@ public class CapSpeedModifier implements SpeedModifier {
 	
 	@Override
 	public double modify(double speed) {
-		// TODO Auto-generated method stub
 		if (speed > maxSpeed) {
 			speed = maxSpeed;
 		}
