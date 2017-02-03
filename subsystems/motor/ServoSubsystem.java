@@ -173,14 +173,14 @@ public class ServoSubsystem extends Subsystem {
 	 * and {@link #getAngle() getAngle()} to the new coordinate system, so anything continuously reading these methods
 	 * will see a discontinuity.
 	 * 
-	 * @param isInverted
-	 *        The state of inversion, true is inverted.
+	 * @param shouldBeInverted
+	 *        The desired state of inversion, true is inverted.
 	 */
-	public void setInverted(boolean isInverted) {
-		if (isInverted != this.isInverted) {
+	public void setInverted(boolean shouldBeInverted) {
+		if (shouldBeInverted != isInverted) {
 			lastPosition = invertPosition(lastPosition);
 		}
-		this.isInverted = isInverted;
+		isInverted = shouldBeInverted;
 	}
 
 	// Internal helper functions
