@@ -4,17 +4,14 @@ package org.usfirst.frc4904.standard.subsystems.motor.speedmodifiers;
 import org.usfirst.frc4904.standard.Util;
 
 public class CapSpeedModifier implements SpeedModifier {
-	public final double maxSpeed;
-	public final double minSpeed;
+	public final Util.Range speedCap;
 	
-	public CapSpeedModifier(double maxSpeed, double minSpeed) {
-		this.maxSpeed = maxSpeed;
-		this.minSpeed = minSpeed;
+	public CapSpeedModifier(double minSpeed, double maxSpeed) {
+		speedCap = new Util.Range(minSpeed, maxSpeed);
 	}
 	
 	@Override
 	public double modify(double speed) {
-		Util.Range SpeedCap = new Util.Range(minSpeed, maxSpeed);
-		return SpeedCap.limitValue(speed);
+		return speedCap.limitValue(speed);
 	}
 }
