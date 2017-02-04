@@ -60,11 +60,10 @@ public class ServoSubsystem extends Subsystem {
 	}
 
 	/**
-	 * A class that wraps around a variable number of SpeedController objects to give them Subsystem functionality.
-	 * Can also modify their speed with a SpeedModifier for things like scaling or brownout protection.
+	 * A class that wraps around a variable number of Servo objects to give them Subsystem functionality.
 	 *
-	 * @param motors
-	 *        The SpeedControllers in this subsystem.
+	 * @param servos
+	 *        The Servos in this subsystem.
 	 *        Can be a single Servo or multiple Servo.
 	 */
 	public ServoSubsystem(Servo... servos) {
