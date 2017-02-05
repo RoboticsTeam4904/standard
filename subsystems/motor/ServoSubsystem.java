@@ -28,7 +28,7 @@ public class ServoSubsystem extends Subsystem {
 	public ServoSubsystem(String name, boolean isInverted, Servo... servos) {
 		super(name);
 		this.servos = servos;
-		setInverted(isInverted);
+		this.isInverted = isInverted;
 		set(0);
 	}
 
