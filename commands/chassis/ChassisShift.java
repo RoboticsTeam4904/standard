@@ -10,43 +10,39 @@ import edu.wpi.first.wpilibj.command.Command;
  */
 public class ChassisShift extends Command {
 	protected final SolenoidShifters solenoids;
-	protected SolenoidShifters.ShiftState state;
+	protected final SolenoidShifters.ShiftState state;
 
 	/**
-	 * Shifts the solenoids to the opposite state
-	 *
+	 * Toggles the solenoids
+	 * 
 	 * @param solenoids
 	 */
 	public ChassisShift(SolenoidShifters solenoids) {
-		super("ChassisShift");
-		this.solenoids = solenoids;
-		requires(solenoids);
-		setInterruptible(true);
-		state = null;
+		this(solenoids, null);
 	}
 
 	/**
-	 * Shifts the solenoids to the state state
+	 * Shifts the solenoids to the provided state
 	 *
 	 * @param solenoids
 	 * @param state
 	 */
 	public ChassisShift(SolenoidShifters solenoids, SolenoidShifters.ShiftState state) {
-		this(solenoids);
+		super("ChassisShift");
+		this.solenoids = solenoids;
+		requires(solenoids);
+		setInterruptible(true);
 		this.state = state;
 	}
 
 	@Override
 	protected void initialize() {
-		switch (state) {
-			case UP:
-				solenoids.shift(SolenoidShifters.ShiftState.UP);
-				break;
-			case DOWN:
-				solenoids.shift(SolenoidShifters.ShiftState.DOWN);
-				break;
-			default:
-				solenoids.shift();
+		if (state == null) {
+			// null state means toggle
+			solenoids.shift();
+		} else {
+			// not null state means shift to it directly
+			solenoids.shift(state);
 		}
 	}
 
