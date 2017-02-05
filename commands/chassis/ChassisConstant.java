@@ -16,7 +16,6 @@ public class ChassisConstant extends Command implements ChassisController {
 		this.x = x;
 		this.y = y;
 		this.turn = turn;
-		setTimeout(timeout);
 	}
 
 	@Override
@@ -44,7 +43,7 @@ public class ChassisConstant extends Command implements ChassisController {
 
 	@Override
 	protected boolean isFinished() {
-		return move.isFinished() || isTimedOut();
+		return move.isFinished();
 	}
 
 	@Override
