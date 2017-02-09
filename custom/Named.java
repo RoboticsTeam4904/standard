@@ -2,5 +2,7 @@ package org.usfirst.frc4904.standard.custom;
 
 
 public interface Named {
-	public String getName();
+	default String getName() {
+		return getClass().getSimpleName();
+	};
 }
