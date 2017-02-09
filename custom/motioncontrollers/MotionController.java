@@ -28,6 +28,7 @@ public abstract class MotionController {
 	protected double outputMax;
 	protected double outputMin;
 	protected boolean enable;
+	protected boolean alive;
 	protected Exception sensorException;
 	private volatile boolean justReset;
 	private final Object lock = new Object();
@@ -46,6 +47,7 @@ public abstract class MotionController {
 		timer = new Timer();
 		task = new MotionControllerTask();
 		enable = true;
+		alive = true;
 		absoluteTolerance = Double.MIN_VALUE; // Nonzero to avoid floating point errors
 		capOutput = false;
 		continuous = false;
@@ -246,6 +248,9 @@ public abstract class MotionController {
 	 * Turns on the motion controller.
 	 */
 	public void enable() {
+		if (!isAlive()) {
+			return;
+		}
 		enable = true;
 		try {
 			timer.scheduleAtFixedRate(task, 10, 20);
@@ -263,6 +268,9 @@ public abstract class MotionController {
 	 * a feed forward term of the motion controller.
 	 */
 	public void disable() {
+		if (!isAlive()) {
+			return;
+		}
 		enable = false;
 		task.cancel();
 		timer.purge();
@@ -274,7 +282,34 @@ public abstract class MotionController {
 	 * Is motion control enabled?
 	 */
 	public boolean isEnabled() {
-		return enable;
+		return enable && isAlive();
+	}
+
+	/**
+	 * Disables the motor controller then kills it.
+	 * Enabling and disabling will no longer be allowed.
+	 * Once killed, a controller must
+	 * be resuscitated for it to work again.
+	 * 
+	 * @see resuscitate()
+	 */
+	public void kill() {
+		disable();
+		alive = false;
+	}
+
+	/**
+	 * Resuscitates a controller, allowing disable() and enable() to be called again.
+	 */
+	public void resuscitate() {
+		alive = true;
+	}
+
+	/**
+	 * is motion control alive?
+	 */
+	public boolean isAlive() {
+		return alive;
 	}
 
 	/**
