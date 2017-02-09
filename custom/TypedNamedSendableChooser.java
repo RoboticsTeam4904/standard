@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
  *
  * @param <T>
  */
-public class TypedNamedSendableChooser<T extends Named> extends SendableChooser<T> {
+public class TypedNamedSendableChooser<T extends Nameable> extends SendableChooser<T> {
 	/**
 	 * Adds an object of the type
 	 * to the smart dashboard.
