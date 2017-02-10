@@ -7,14 +7,14 @@ package org.usfirst.frc4904.standard.custom.sensors;
  * CAN encoder.
  *
  */
-public interface CustomEncoder extends PIDSensor {
+public interface CustomEncoder extends PIDSensor, NativeDerivativeSensor {
 	/**
 	 * Gets current count
 	 *
 	 * @warning does not indicate sensor errors
 	 */
 	int get();
-	
+
 	/**
 	 * Gets current count
 	 */
@@ -55,18 +55,6 @@ public interface CustomEncoder extends PIDSensor {
 	 * Returns true when stopped
 	 */
 	boolean getStoppedSafely() throws InvalidSensorException;
-
-	/**
-	 * Gets rate
-	 *
-	 * @warning does not indicate sensor errors
-	 */
-	double getRate();
-
-	/**
-	 * Gets rate
-	 */
-	double getRateSafely() throws InvalidSensorException;
 
 	/**
 	 * Gets the distance per pulse
