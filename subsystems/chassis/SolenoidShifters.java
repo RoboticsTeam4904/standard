@@ -13,8 +13,6 @@ public class SolenoidShifters extends Subsystem {
 	protected final DoubleSolenoid solenoid;
 	protected final boolean isInverted;
 	protected ShiftState state;
-	protected long lastManualShift;
-	protected long lastAutoShift;
 
 	public enum ShiftState {
 		UP, DOWN;
@@ -94,7 +92,6 @@ public class SolenoidShifters extends Subsystem {
 	 * @param state
 	 */
 	public void shift(ShiftState state) {
-		lastManualShift = System.currentTimeMillis();
 		switch (state) {
 			case UP:
 				if (!isInverted) {
@@ -114,34 +111,10 @@ public class SolenoidShifters extends Subsystem {
 		}
 	}
 
-	public void shift(ShiftState state, boolean isAutoShift) {
-		if (isAutoShift) {
-			lastAutoShift = System.currentTimeMillis();
-			switch (state) {
-				case UP:
-					if (!isInverted) {
-						solenoid.set(DoubleSolenoid.Value.kForward);
-					} else {
-						solenoid.set(DoubleSolenoid.Value.kReverse);
-					}
-					return;
-				case DOWN:
-				default:
-					if (!isInverted) {
-						solenoid.set(DoubleSolenoid.Value.kReverse);
-					} else {
-						solenoid.set(DoubleSolenoid.Value.kForward);
-					}
-					return;
-			}
-		}
-	}
-
 	/**
 	 * Toggles current shift state for both gearboxes
 	 */
 	public void shift() {
-		lastManualShift = System.currentTimeMillis();
 		switch (state) {
 			case UP:
 				shift(ShiftState.DOWN);
@@ -152,13 +125,5 @@ public class SolenoidShifters extends Subsystem {
 			default:
 				return;
 		}
-	}
-
-	public long timeSinceLastManualShift() {
-		return System.currentTimeMillis() - lastManualShift;
-	}
-
-	public long timeSinceLastAutoShift() {
-		return System.currentTimeMillis() - lastAutoShift;
 	}
 }
