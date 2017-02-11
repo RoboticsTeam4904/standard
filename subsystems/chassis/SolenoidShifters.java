@@ -113,28 +113,23 @@ public class SolenoidShifters extends Subsystem {
 		}
 	}
 
-	public void shift(boolean isAutoShift) {
+	public void shift(ShiftState state, boolean isAutoShift) {
 		if (isAutoShift) {
 			switch (state) {
 				case UP:
-					shift(ShiftState.DOWN);
+					if (!isInverted) {
+						solenoid.set(DoubleSolenoid.Value.kForward);
+					} else {
+						solenoid.set(DoubleSolenoid.Value.kReverse);
+					}
 					return;
 				case DOWN:
-					shift(ShiftState.UP);
-					return;
 				default:
-					return;
-			}
-		} else {
-			lastShift = System.currentTimeMillis();
-			switch (state) {
-				case UP:
-					shift(ShiftState.DOWN);
-					return;
-				case DOWN:
-					shift(ShiftState.UP);
-					return;
-				default:
+					if (!isInverted) {
+						solenoid.set(DoubleSolenoid.Value.kReverse);
+					} else {
+						solenoid.set(DoubleSolenoid.Value.kForward);
+					}
 					return;
 			}
 		}
