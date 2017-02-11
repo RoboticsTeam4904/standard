@@ -65,22 +65,33 @@ public abstract class SensorMotor extends Motor {
 	}
 
 	/**
-	 * Disables the motor controller then kills it.
-	 * Enabling and disabling will no longer be allowed.
-	 * Once killed, a controller must
-	 * be resuscitated for it to work again.
+	 * Starts overriding the controller.
+	 * The controller will disable and not be allowed
+	 * to enable until the override is turned off.
 	 * 
-	 * @see org.usfirst.frc4904.standard.custom.motioncontrollers.MotionController.resuscitate()
+	 * @see MotionController#startOverriding()
 	 */
-	public void killMotionController() {
-		motionController.kill();
+	public void startOverridingMotionController() {
+		motionController.startOverriding();
 	}
 
 	/**
-	 * Resuscitates a controller, allowing disable() and enable() to be called again.
+	 * Stops overriding the motion controller.
+	 * Enabling the controller will now be allowed.
+	 * 
+	 * @see MotionController#stopOverriding()
 	 */
-	public void resuscitateMotionController() {
-		motionController.resuscitate();
+	public void stopOverridingMotionController() {
+		motionController.stopOverriding();
+	}
+
+	/**
+	 * Has the motion controller been overridden?
+	 * 
+	 * @see MotionController#isOverridden()
+	 */
+	public boolean isMotorControllerOverridden() {
+		return motionController.isOverridden();
 	}
 
 	/**

@@ -42,7 +42,7 @@ public class VelocitySensorMotor extends SensorMotor {
 	public VelocitySensorMotor(MotionController motionController, SpeedController... motors) {
 		this("VelocitySensorMotor", motionController, motors);
 	}
-
+	
 	@Override
 	public void set(double speed) {
 		LogKitten.v(speed + "");
@@ -51,31 +51,5 @@ public class VelocitySensorMotor extends SensorMotor {
 		} else {
 			super.set(speed);
 		}
-	}
-
-	/**
-	 * Disables the motor controller then kills it.
-	 * Enabling and disabling will no longer be allowed.
-	 * Once killed, a controller must
-	 * be resuscitated for it to work again.
-	 * 
-	 * @see org.usfirst.frc4904.standard.custom.motioncontrollers.MotionController.resuscitate()
-	 */
-	public void kill() {
-		motionController.kill();
-	}
-
-	/**
-	 * Resuscitates a controller, allowing disable() and enable() to be called again.
-	 */
-	public void resuscitate() {
-		motionController.resuscitate();
-	}
-
-	/**
-	 * is motion control alive?
-	 */
-	public boolean isAlive() {
-		return motionController.isAlive();
 	}
 }

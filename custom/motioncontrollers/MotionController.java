@@ -28,7 +28,7 @@ public abstract class MotionController {
 	protected double outputMax;
 	protected double outputMin;
 	protected boolean enable;
-	protected boolean alive;
+	protected boolean overridden;
 	protected Exception sensorException;
 	private volatile boolean justReset;
 	private final Object lock = new Object();
@@ -47,7 +47,7 @@ public abstract class MotionController {
 		timer = new Timer();
 		task = new MotionControllerTask();
 		enable = true;
-		alive = true;
+		overridden = false;
 		absoluteTolerance = Double.MIN_VALUE; // Nonzero to avoid floating point errors
 		capOutput = false;
 		continuous = false;
@@ -248,7 +248,7 @@ public abstract class MotionController {
 	 * Turns on the motion controller.
 	 */
 	public void enable() {
-		if (!isAlive()) {
+		if (isOverridden()) {
 			return;
 		}
 		enable = true;
@@ -268,7 +268,7 @@ public abstract class MotionController {
 	 * a feed forward term of the motion controller.
 	 */
 	public void disable() {
-		if (!isAlive()) {
+		if (isOverridden()) {
 			return;
 		}
 		enable = false;
@@ -282,34 +282,48 @@ public abstract class MotionController {
 	 * Is motion control enabled?
 	 */
 	public boolean isEnabled() {
-		return enable && isAlive();
+		return enable;
 	}
 
 	/**
-	 * Disables the motor controller then kills it.
-	 * Enabling and disabling will no longer be allowed.
-	 * Once killed, a controller must
-	 * be resuscitated for it to work again.
+	 * Set whether or not the motion controller
+	 * is overridden.
 	 * 
-	 * @see resuscitate()
+	 * @see #startOverriding()
+	 * @see #stopOverriding()
 	 */
-	public void kill() {
-		disable();
-		alive = false;
+	public void setOverride(boolean overriden) {
+		this.overridden = overriden;
 	}
 
 	/**
-	 * Resuscitates a controller, allowing disable() and enable() to be called again.
+	 * Starts overriding the controller.
+	 * The controller will disable and not be allowed
+	 * to enable until the override is turned off.
+	 * 
+	 * @see #stopOverriding()
 	 */
-	public void resuscitate() {
-		alive = true;
+	public void startOverriding() {
+		setOverride(true);
 	}
 
 	/**
-	 * is motion control alive?
+	 * Stops overriding the motion controller.
+	 * Enabling the controller will now be allowed.
+	 * 
+	 * @see #startOverriding()
 	 */
-	public boolean isAlive() {
-		return alive;
+	public void stopOverriding() {
+		setOverride(false);
+	}
+
+	/**
+	 * Has the controller been overridden?
+	 * 
+	 * @see #setOverride(boolean)
+	 */
+	public boolean isOverridden() {
+		return overridden;
 	}
 
 	/**
