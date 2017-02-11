@@ -292,8 +292,8 @@ public abstract class MotionController {
 	 * @see #startOverriding()
 	 * @see #stopOverriding()
 	 */
-	public void setOverride(boolean overriden) {
-		this.overridden = overriden;
+	private void setOverride(boolean overridden) {
+		this.overridden = overridden;
 	}
 
 	/**
@@ -304,6 +304,7 @@ public abstract class MotionController {
 	 * @see #stopOverriding()
 	 */
 	public void startOverriding() {
+		disable();
 		setOverride(true);
 	}
 
