@@ -51,7 +51,8 @@ public class CANSensor extends CustomCAN {
 			return values;
 		}
 		if (System.currentTimeMillis() - lastRead > CANSensor.MAX_AGE) {
-			throw new InvalidSensorException("CAN data oudated For CAN sensor " + getName());
+			throw new InvalidSensorException(
+				"CAN data oudated For CAN sensor " + getName() + " with ID 0x" + Integer.toHexString(messageID));
 		}
 		LogKitten.v("Cached Sensor Value Used\n");
 		return values;
