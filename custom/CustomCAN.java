@@ -3,7 +3,6 @@ package org.usfirst.frc4904.standard.custom;
 
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
-import org.usfirst.frc4904.standard.LogKitten;
 import edu.wpi.first.wpilibj.can.CANJNI;
 import edu.wpi.first.wpilibj.can.CANMessageNotFoundException;
 
@@ -53,8 +52,11 @@ public class CustomCAN {
 	 *
 	 * @return
 	 * 		ByteBuffer containing CAN message, or null
+	 * @throws
+	 * 		CANMEssageNotFoundException
+	 *         when no new message is available
 	 */
-	protected ByteBuffer readBuffer() {
+	protected ByteBuffer readBuffer() throws CANMessageUnavailableException {
 		IntBuffer idBuffer = ByteBuffer.allocateDirect(4).asIntBuffer();
 		idBuffer.clear();
 		idBuffer.put(0, Integer.reverseBytes(messageID));
@@ -64,7 +66,8 @@ public class CustomCAN {
 			response = CANJNI.FRCNetCommCANSessionMuxReceiveMessage(idBuffer, 0x1fffffff, timestamp);
 		}
 		catch (CANMessageNotFoundException e) {
-			LogKitten.w(e.getMessage()); // We are not actually sure when this error is used (no docs), so just warn for now
+			throw new CANMessageUnavailableException(
+				"Unable to read CAN device " + getName() + " with ID 0x" + Integer.toHexString(messageID), e);
 		}
 		return response;
 	}
@@ -75,7 +78,7 @@ public class CustomCAN {
 	 *
 	 * @return byte[] (8 long)
 	 */
-	public byte[] read() {
+	public byte[] read() throws CANMessageUnavailableException {
 		ByteBuffer dataBuffer = readBuffer();
 		if (dataBuffer == null) {
 			return null;
