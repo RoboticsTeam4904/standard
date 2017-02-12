@@ -21,9 +21,9 @@ public class EncoderPair implements CustomEncoder {
 	private double distancePerPulse;
 	private final double distanceTolerance;
 	private final double rateTolerance;
-	private static final double DEFAULT_DISTANCE_TOLERANCE = 10;
-	private static final double DEFAULT_RATE_TOLERANCE = 10;
-	
+	protected static final double DEFAULT_DISTANCE_TOLERANCE = 10;
+	protected static final double DEFAULT_RATE_TOLERANCE = 10;
+
 	/**
 	 * Amalgamates the data of two encoders for the purpose
 	 * of controlling a single motion controller.
@@ -47,7 +47,7 @@ public class EncoderPair implements CustomEncoder {
 		pidSource = PIDSourceType.kDisplacement;
 		reverseDirection = false;
 	}
-	
+
 	/**
 	 * Amalgamates the data of two encoders for the purpose
 	 * of controlling a single motion controller.
@@ -62,12 +62,12 @@ public class EncoderPair implements CustomEncoder {
 	public EncoderPair(CustomEncoder encoder1, CustomEncoder encoder2) {
 		this(encoder1, encoder2, EncoderPair.DEFAULT_DISTANCE_TOLERANCE, EncoderPair.DEFAULT_RATE_TOLERANCE);
 	}
-	
+
 	@Override
 	public PIDSourceType getPIDSourceType() {
 		return pidSource;
 	}
-	
+
 	@Override
 	public double pidGet() {
 		if (pidSource == PIDSourceType.kDisplacement) {
@@ -75,7 +75,7 @@ public class EncoderPair implements CustomEncoder {
 		}
 		return getRate();
 	}
-	
+
 	@Override
 	public double pidGetSafely() throws InvalidSensorException {
 		if (pidSource == PIDSourceType.kDisplacement) {
@@ -83,56 +83,58 @@ public class EncoderPair implements CustomEncoder {
 		}
 		return getRateSafely();
 	}
-	
+
 	@Override
 	public void setPIDSourceType(PIDSourceType pidSource) {
 		if (pidSource != null) {
 			this.pidSource = pidSource;
 		}
 	}
-	
+
 	@Override
 	public int getSafely() throws InvalidSensorException {
-		return (int) Math.round(((double) (encoders[0].getSafely() - offset[0]) + (double) (encoders[1].getSafely() - offset[1])) / 2.0);
+		return (int) Math
+			.round(((double) (encoders[0].getSafely() - offset[0]) + (double) (encoders[1].getSafely() - offset[1])) / 2.0);
 	}
-	
+
 	@Override
 	public int get() {
 		try {
 			return getSafely();
 		}
-		catch (Exception e) {
+		catch (InvalidSensorException e) {
 			LogKitten.ex(e);
 			return 0;
 		}
 	}
-	
+
 	@Override
 	public double getDistanceSafely() throws InvalidSensorException {
-		return ((encoders[0].getDistanceSafely() - offset[0] * encoders[0].getDistancePerPulse()) + (encoders[1].getDistanceSafely() - offset[1] * encoders[1].getDistancePerPulse())) / 2.0;
+		return ((encoders[0].getDistanceSafely() - offset[0] * encoders[0].getDistancePerPulse())
+			+ (encoders[1].getDistanceSafely() - offset[1] * encoders[1].getDistancePerPulse())) / 2.0;
 	}
-	
+
 	@Override
 	public double getDistance() {
 		try {
 			return getDistanceSafely();
 		}
-		catch (Exception e) {
+		catch (InvalidSensorException e) {
 			LogKitten.ex(e);
 			return 0;
 		}
 	}
-	
+
 	@Override
 	public boolean getDirection() {
-		return (getRate() > 0);
+		return getRate() > 0;
 	}
-	
+
 	@Override
 	public boolean getDirectionSafely() throws InvalidSensorException {
-		return (getRateSafely() > 0);
+		return getRateSafely() > 0;
 	}
-	
+
 	@Override
 	public boolean getStopped() {
 		return Util.isZero(getRate());
@@ -142,23 +144,23 @@ public class EncoderPair implements CustomEncoder {
 	public boolean getStoppedSafely() throws InvalidSensorException {
 		return Util.isZero(getRateSafely());
 	}
-	
+
 	@Override
 	public double getRateSafely() throws InvalidSensorException {
 		return (encoders[0].getRateSafely() + encoders[1].getRateSafely()) / 2.0;
 	}
-	
+
 	@Override
 	public double getRate() {
 		try {
 			return getRateSafely();
 		}
-		catch (Exception e) {
+		catch (InvalidSensorException e) {
 			LogKitten.ex(e);
 			return 0;
 		}
 	}
-	
+
 	/**
 	 * Get whether this entire encoder is inverted.
 	 *
@@ -169,7 +171,7 @@ public class EncoderPair implements CustomEncoder {
 	public boolean getReverseDirection() {
 		return reverseDirection;
 	}
-	
+
 	/**
 	 * Sets the direction inversion of all encoder substituents.
 	 * This respects the original inversion state of each encoder when constructed,
@@ -187,12 +189,12 @@ public class EncoderPair implements CustomEncoder {
 		}
 		this.reverseDirection = reverseDirection;
 	}
-	
+
 	@Override
 	public double getDistancePerPulse() {
 		return distancePerPulse;
 	}
-	
+
 	@Override
 	public void setDistancePerPulse(double distancePerPulse) {
 		this.distancePerPulse = distancePerPulse;
@@ -200,7 +202,7 @@ public class EncoderPair implements CustomEncoder {
 			encoder.setDistancePerPulse(distancePerPulse);
 		}
 	}
-	
+
 	@Override
 	public void reset() {
 		for (int i = 0; i < 2; i++) {
@@ -219,7 +221,8 @@ public class EncoderPair implements CustomEncoder {
 	}
 
 	public double getDifferenceSafely() throws InvalidSensorException {
-		return (encoders[0].getDistanceSafely() - offset[0] * encoders[0].getDistancePerPulse()) - (encoders[1].getDistanceSafely() - offset[1] * encoders[1].getDistancePerPulse());
+		return (encoders[0].getDistanceSafely() - offset[0] * encoders[0].getDistancePerPulse())
+			- (encoders[1].getDistanceSafely() - offset[1] * encoders[1].getDistancePerPulse());
 	}
 
 	public double getRateDifference() {
@@ -235,7 +238,7 @@ public class EncoderPair implements CustomEncoder {
 	public double getRateDifferenceSafely() throws InvalidSensorException {
 		return encoders[0].getRateSafely() - encoders[1].getRateSafely();
 	}
-	
+
 	public boolean isInSync() {
 		try {
 			return isInSyncSafely();
@@ -245,23 +248,23 @@ public class EncoderPair implements CustomEncoder {
 			return false; // If a sensor is broken, it is not in sync.
 		}
 	}
-	
+
 	public boolean isInSyncSafely() throws InvalidSensorException {
 		return Math.abs(getDifferenceSafely()) < distanceTolerance && Math.abs(getRateDifferenceSafely()) < rateTolerance;
 	}
-	
+
 	public class EncoderDifference implements PIDSensor {
 		private PIDSourceType pidSource; // Needs to be seperate in case of multiple threads changing source type
 
 		public EncoderDifference() {
 			pidSource = PIDSourceType.kDisplacement;
 		}
-		
+
 		@Override
 		public void setPIDSourceType(PIDSourceType pidSource) {
 			this.pidSource = pidSource;
 		}
-		
+
 		@Override
 		public PIDSourceType getPIDSourceType() {
 			return pidSource;
