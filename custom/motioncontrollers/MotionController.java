@@ -28,6 +28,7 @@ public abstract class MotionController {
 	protected double outputMax;
 	protected double outputMin;
 	protected boolean enable;
+	protected boolean overridden;
 	protected Exception sensorException;
 	private volatile boolean justReset;
 	private final Object lock = new Object();
@@ -46,6 +47,7 @@ public abstract class MotionController {
 		timer = new Timer();
 		task = new MotionControllerTask();
 		enable = true;
+		overridden = false;
 		absoluteTolerance = Double.MIN_VALUE; // Nonzero to avoid floating point errors
 		capOutput = false;
 		continuous = false;
@@ -246,6 +248,9 @@ public abstract class MotionController {
 	 * Turns on the motion controller.
 	 */
 	public void enable() {
+		if (isOverridden()) {
+			return;
+		}
 		enable = true;
 		try {
 			timer.scheduleAtFixedRate(task, 10, 20);
@@ -263,6 +268,9 @@ public abstract class MotionController {
 	 * a feed forward term of the motion controller.
 	 */
 	public void disable() {
+		if (isOverridden()) {
+			return;
+		}
 		enable = false;
 		task.cancel();
 		timer.purge();
@@ -275,6 +283,48 @@ public abstract class MotionController {
 	 */
 	public boolean isEnabled() {
 		return enable;
+	}
+
+	/**
+	 * Set whether or not the motion controller
+	 * is overridden.
+	 * 
+	 * @see #startOverriding()
+	 * @see #stopOverriding()
+	 */
+	private void setOverride(boolean overridden) {
+		this.overridden = overridden;
+	}
+
+	/**
+	 * Starts overriding the controller.
+	 * The controller will disable and not be allowed
+	 * to enable until the override is turned off.
+	 * 
+	 * @see #stopOverriding()
+	 */
+	public void startOverriding() {
+		disable();
+		setOverride(true);
+	}
+
+	/**
+	 * Stops overriding the motion controller.
+	 * Enabling the controller will now be allowed.
+	 * 
+	 * @see #startOverriding()
+	 */
+	public void stopOverriding() {
+		setOverride(false);
+	}
+
+	/**
+	 * Has the controller been overridden?
+	 * 
+	 * @see #setOverride(boolean)
+	 */
+	public boolean isOverridden() {
+		return overridden;
 	}
 
 	/**
