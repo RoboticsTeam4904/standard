@@ -96,13 +96,28 @@ public class ChassisMove extends CommandGroup {
 		return false;
 	}
 
+	/**
+	 * It's important to stop motor spins before
+	 * the ChassisMove command stops. Otherwise,
+	 * the spins might briefly (for one tick) use the
+	 * previously set values if the ChassisMove command
+	 * is reused.
+	 */
+	protected void stopMotorSpins() {
+		for (int i = 0; i < motors.length; i++) {
+			motorSpins[i].set(0);
+		}
+	}
+
 	@Override
 	protected void end() {
+		stopMotorSpins();
 		LogKitten.v("ChassisMove ended");
 	}
 
 	@Override
 	protected void interrupted() {
+		stopMotorSpins();
 		LogKitten.w("ChassisMove interrupted");
 	}
 }
