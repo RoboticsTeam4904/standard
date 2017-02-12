@@ -246,7 +246,7 @@ public class CustomPIDController extends MotionController {
 	@Override
 	public double getSafely() throws InvalidSensorException {
 		// If PID is not enabled, use feedforward only
-		if (!enable) {
+		if (!isEnabled()) {
 			return F * setpoint;
 		}
 		double input = 0.0;
