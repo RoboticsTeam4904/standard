@@ -3,6 +3,7 @@ package org.usfirst.frc4904.standard.custom;
 
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
+import org.usfirst.frc4904.standard.LogKitten;
 import edu.wpi.first.wpilibj.can.CANJNI;
 import edu.wpi.first.wpilibj.can.CANMessageNotFoundException;
 
@@ -62,7 +63,9 @@ public class CustomCAN {
 		try {
 			response = CANJNI.FRCNetCommCANSessionMuxReceiveMessage(idBuffer, 0x1fffffff, timestamp);
 		}
-		catch (CANMessageNotFoundException e) {}
+		catch (CANMessageNotFoundException e) {
+			LogKitten.w(e.getMessage()); // We are not actually sure when this error is used (no docs), so just warn for now
+		}
 		return response;
 	}
 
