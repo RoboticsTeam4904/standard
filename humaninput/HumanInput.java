@@ -1,7 +1,7 @@
 package org.usfirst.frc4904.standard.humaninput;
 
 
-import org.usfirst.frc4904.standard.custom.Named;
+import org.usfirst.frc4904.standard.custom.Nameable;
 
 /**
  * A generic human interface class.
@@ -11,7 +11,7 @@ import org.usfirst.frc4904.standard.custom.Named;
  * during teleop init.
  *
  */
-public abstract class HumanInput implements Named {
+public abstract class HumanInput implements Nameable {
 	protected final String name;
 
 	public HumanInput(String name) {
