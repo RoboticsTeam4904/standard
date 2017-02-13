@@ -39,6 +39,10 @@ public class CANEncoder extends CANSensor implements CustomEncoder {
 		this("CANEncoder", id, reverseDirection, distancePerPulse);
 	}
 
+	public CANEncoder(String name, int id) {
+		this(name, id, false, 1.0);
+	}
+
 	public CANEncoder(int id, boolean reverseDirection) {
 		this("CANEncoder", id, reverseDirection, 1.0);
 	}
