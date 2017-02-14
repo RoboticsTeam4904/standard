@@ -366,7 +366,7 @@ public class LogKitten {
 	 *
 	 * @return timestamp as string in the format "YEAR-MONTH-DAY_HOUR:MIN:SEC"
 	 */
-	private static String timestamp() {
+	private static synchronized String timestamp() {
 		return LogKitten.TIMESTAMP_FORMAT.format(new Date());
 	}
 
