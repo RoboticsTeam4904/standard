@@ -47,7 +47,7 @@ public class CANSensor extends CustomCAN {
 			rawData = super.readBuffer();
 		}
 		catch (CANMessageUnavailableException e) {
-			throw new InvalidSensorException(e);
+			rawData = null; // Do not throw exception immediately, wait for timeout
 		}
 		if (rawData != null && rawData.remaining() >= 8) { // 8 is minimum CAN message length
 			rawData.rewind();
