@@ -22,6 +22,8 @@ public class PDP {
 	protected final CustomCAN statusEnergy;
 	protected double cachedVoltage;
 	protected double cachedAmperage;
+	protected long lastRead;
+	private static final long MAX_AGE = 100; // How long to keep the last CAN message before throwing an error (milliseconds)
 
 	/**
 	 * PDP constructor
@@ -66,12 +68,14 @@ public class PDP {
 	public double getVoltageSafely() throws InvalidSensorException {
 		byte[] rawArray = status3.read();
 		if (rawArray != null) {
-			int rawVoltage = rawArray[7] & 0xFF; // busVoltage is the 7th byte of the third status
-			double voltage = (rawVoltage) * 0.05 + 4.0;
-			return voltage;
-		} else {
+			int rawVoltage = rawArray[6] & 0xFF; // busVoltage is the 7th byte of the third status
+			cachedVoltage = (rawVoltage) * 0.05 + 4.0;
+			lastRead = System.currentTimeMillis();
+		}
+		if (System.currentTimeMillis() - lastRead > PDP.MAX_AGE) {
 			throw new InvalidSensorException("Can not read voltage from PDP");
 		}
+		return cachedVoltage;
 	}
 
 	/**
@@ -85,13 +89,15 @@ public class PDP {
 	public double getAmperage() throws InvalidSensorException {
 		byte[] rawArray = statusEnergy.read();
 		if (rawArray != null) {
-			int rawAmperage = rawArray[2] & 0xFF; // first part of current is the 2nd byte of the energy status
+			int rawAmperage = rawArray[1] & 0xFF; // first part of current is the 2nd byte of the energy status
 			rawAmperage = rawAmperage << 4;
-			rawAmperage += rawArray[3] & 0x0F; // second part of current is in the 3rd byte of the energy status
-			double amerage = (rawAmperage) * 0.125;
-			return amerage;
-		} else {
+			rawAmperage += (rawArray[2] & 0xF0) >> 4; // second part of current is in the 3rd byte of the energy status
+			cachedAmperage = (rawAmperage) * 0.125;
+			lastRead = System.currentTimeMillis();
+		}
+		if (System.currentTimeMillis() - lastRead > PDP.MAX_AGE) {
 			throw new InvalidSensorException("Can not read amperage from PDP");
 		}
+		return cachedAmperage;
 	}
 }
