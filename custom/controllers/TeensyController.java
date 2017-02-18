@@ -5,13 +5,15 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 
 public class TeensyController extends Joystick implements Controller {
-	public CustomButton[] buttons = new CustomButton[30];
+	public int numButtons;
+	public CustomButton[] buttons = new CustomButton[numButtons];
 	public final int port;
 
-	public TeensyController(int port) {
+	public TeensyController(int port, int numButtons) {
 		super(port);
 		this.port = port;
-		for (int index = 1; index < 31; index++) {
+		this.numButtons = numButtons;
+		for (int index = 0; index < numButtons; index++) {
 			buttons[index] = new CustomButton(this, index);
 		}
 	}
