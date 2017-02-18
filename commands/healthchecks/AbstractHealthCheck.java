@@ -9,21 +9,21 @@ import org.usfirst.frc4904.standard.commands.TimedCommand;
 public abstract class AbstractHealthCheck extends TimedCommand { // Many of our healthchecks will use timing, so a TimedCommand is needed
 	protected HashMap<HealthLevel, ArrayList<HealthProtectCommand>> commands;
 	protected volatile HealthLevel status;
-	
+
 	public AbstractHealthCheck(String name) {
 		super(name);
 		status = HealthLevel.UNKNOWN;
 		setRunWhenDisabled(true);
 		commands = new HashMap<HealthLevel, ArrayList<HealthProtectCommand>>();
 	}
-	
+
 	public void runCommandOnState(HealthLevel level, HealthProtectCommand toRun) {
 		if (commands.get(level) == null) {
 			commands.put(level, new ArrayList<HealthProtectCommand>());
 		}
 		commands.get(level).add(toRun);
 	}
-	
+
 	public void reset() {
 		for (HealthLevel level : commands.keySet()) {
 			if (commands.get(level) != null) {
@@ -37,9 +37,9 @@ public abstract class AbstractHealthCheck extends TimedCommand { // Many of our 
 		status = HealthLevel.UNKNOWN;
 		resetTimer();
 	}
-	
+
 	protected abstract HealthLevel getStatus();
-	
+
 	@Override
 	protected final void execute() { // It should not be possible to override this
 		status = getStatus();
@@ -62,12 +62,12 @@ public abstract class AbstractHealthCheck extends TimedCommand { // Many of our 
 			}
 		}
 	}
-	
+
 	@Override
 	protected final void interrupted() {
 		LogKitten.e("ERROR: " + getName() + " health check interrupted");
 	}
-	
+
 	@Override
 	protected final void end() {
 		for (HealthLevel level : commands.keySet()) {
@@ -80,9 +80,9 @@ public abstract class AbstractHealthCheck extends TimedCommand { // Many of our 
 			}
 		}
 	}
-	
+
 	protected abstract boolean finished();
-	
+
 	@Override
 	protected final boolean isFinished() {
 		if (!finished()) {

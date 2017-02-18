@@ -61,6 +61,7 @@ public abstract class CustomNeoPixels extends CustomCAN {
 	 * Writes LED pattern to Teensy.
 	 */
 	public void update() {
-		super.write(new byte[] {B, G, R, 0x00, (byte) (value >> 8), (byte) (value & 0xFF), (byte) (mode >> 8), (byte) (mode & 0xFF)});
+		super.write(
+			new byte[] {B, G, R, 0x00, (byte) (value >> 8), (byte) (value & 0xFF), (byte) (mode >> 8), (byte) (mode & 0xFF)});
 	}
 }

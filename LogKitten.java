@@ -145,11 +145,12 @@ public class LogKitten {
 	private static void reportErrorToDriverStation(String details, String errorMessage, KittenLevel logLevel) {
 		HAL.sendError(true, logLevel.getSeverity(), false, errorMessage, details, "", false);
 	}
-	
+
 	public static synchronized void logMessage(Object message, KittenLevel level, boolean override) {
 		message = message.toString(); // Not strictly needed, but good practice
 		if (LogKitten.logLevel.compareTo(level) >= 0) {
-			String content = LogKitten.timestamp() + " " + level.getName() + ": " + LogKitten.getLoggerMethodCallerMethodName() + ": " + message + " \n";
+			String content = LogKitten.timestamp() + " " + level.getName() + ": " + LogKitten.getLoggerMethodCallerMethodName()
+				+ ": " + message + " \n";
 			try {
 				if (LogKitten.fileOutput != null) {
 					LogKitten.fileOutput.write(content.getBytes());
@@ -164,12 +165,15 @@ public class LogKitten {
 			}
 		}
 		if (!LogKitten.PRINT_MUTE || override) {
-			String printContent = level.getName() + ": " + LogKitten.getLoggerMethodCallerClassName() + "#" + LogKitten.getLoggerMethodCallerMethodName() + ": " + message + " \n";
+			String printContent = level.getName() + ": " + LogKitten.getLoggerMethodCallerClassName() + "#"
+				+ LogKitten.getLoggerMethodCallerMethodName() + ": " + message + " \n";
 			if (LogKitten.printLevel.compareTo(level) >= 0) {
 				System.out.println(printContent);
 			}
 			if (LogKitten.dsLevel.compareTo(level) >= 0) {
-				LogKitten.reportErrorToDriverStation(LogKitten.getLoggerMethodCallerClassName() + "#" + LogKitten.getLoggerMethodCallerMethodName(), level.getName() + ": " + message, level);
+				LogKitten.reportErrorToDriverStation(
+					LogKitten.getLoggerMethodCallerClassName() + "#" + LogKitten.getLoggerMethodCallerMethodName(),
+					level.getName() + ": " + message, level);
 			}
 		}
 	}
@@ -362,11 +366,11 @@ public class LogKitten {
 	 *
 	 * @return timestamp as string in the format "YEAR-MONTH-DAY_HOUR:MIN:SEC"
 	 */
-	private static String timestamp() {
+	private static synchronized String timestamp() {
 		return LogKitten.TIMESTAMP_FORMAT.format(new Date());
 	}
 
-	public static enum KittenLevel implements Comparable<KittenLevel> {
+	public static enum KittenLevel {
 		// Defined in decreasing order of severity. Enum.compareTo uses the definition order to compare enum values.
 		WTF, FATAL, ERROR, WARN, VERBOSE, DEBUG;
 		/**

@@ -15,7 +15,6 @@ public class CustomCAN {
 	// Because CANJNI is basically static, we do not extend it.
 	protected final int messageID;
 	protected final String name;
-	private static final int CAN_MAX_READ_WAIT = 5; // How long to wait for a CAN message before returning null (milliseconds)
 
 	/**
 	 * Constructor for a CustomCAN device.
@@ -34,7 +33,7 @@ public class CustomCAN {
 	public String getName() {
 		return name;
 	}
-	
+
 	/**
 	 * Used to write data to the device.
 	 *
@@ -47,7 +46,7 @@ public class CustomCAN {
 		canData.put(data);
 		CANJNI.FRCNetCommCANSessionMuxSendMessage(messageID, canData, CANJNI.CAN_SEND_PERIOD_NO_REPEAT);
 	}
-	
+
 	/**
 	 * Read data as bytebuffer
 	 *
@@ -60,17 +59,13 @@ public class CustomCAN {
 		idBuffer.put(0, Integer.reverseBytes(messageID));
 		ByteBuffer timestamp = ByteBuffer.allocate(4);
 		ByteBuffer response = null;
-		long start = System.currentTimeMillis();
-		while (System.currentTimeMillis() - start < CustomCAN.CAN_MAX_READ_WAIT) {
-			try {
-				response = CANJNI.FRCNetCommCANSessionMuxReceiveMessage(idBuffer, 0x1fffffff, timestamp);
-				break;
-			}
-			catch (CANMessageNotFoundException e) {}
+		try {
+			response = CANJNI.FRCNetCommCANSessionMuxReceiveMessage(idBuffer, 0x1fffffff, timestamp);
 		}
+		catch (CANMessageNotFoundException e) {}
 		return response;
 	}
-	
+
 	/**
 	 * Reads data
 	 * Also stops repeating the last message.
