@@ -7,12 +7,14 @@ import edu.wpi.first.wpilibj.Joystick;
 public class TeensyController extends Joystick implements Controller {
 	public int numButtons;
 	public final int port;
+	public CustomButton[] buttons;
 
 	public TeensyController(int port, int numButtons) {
 		super(port);
 		this.port = port;
 		this.numButtons = numButtons;
 		CustomButton[] buttons = new CustomButton[numButtons];
+		this.buttons = buttons;
 		for (int index = 0; index < numButtons; index++) {
 			buttons[index] = new CustomButton(this, index);
 		}
@@ -35,6 +37,7 @@ public class TeensyController extends Joystick implements Controller {
 	}
 
 	public double getNumButtons() {
+		buttons[1] = new CustomButton(this, 1);
 		return numButtons;
 	}
 }
