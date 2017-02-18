@@ -2,6 +2,7 @@ package org.usfirst.frc4904.standard.custom.sensors;
 
 
 import org.usfirst.frc4904.standard.LogKitten;
+import org.usfirst.frc4904.standard.custom.CANMessageUnavailableException;
 import org.usfirst.frc4904.standard.custom.CustomCAN;
 import edu.wpi.first.wpilibj.DriverStation;
 
@@ -40,7 +41,7 @@ public class PDP {
 
 	/**
 	 * PDP constructor
-	 * 
+	 *
 	 * This defaults to the PDP at ID 0.
 	 */
 	public PDP() {
@@ -75,7 +76,13 @@ public class PDP {
 	 *         If PDP connection is lost, InvalidSensorException will be thrown.
 	 */
 	public double getVoltageSafely() throws InvalidSensorException {
-		byte[] rawArray = status3.read();
+		byte[] rawArray;
+		try {
+			rawArray = status3.read();
+		}
+		catch (CANMessageUnavailableException e) {
+			throw new InvalidSensorException(e);
+		}
 		if (rawArray != null) {
 			int rawVoltage = rawArray[6] & 0xFF; // busVoltage is the 7th byte of the third status
 			cachedVoltage = (rawVoltage) * 0.05 + 4.0;
@@ -96,7 +103,13 @@ public class PDP {
 	 *         If PDP connection is lost, InvalidSensorException will be thrown.
 	 */
 	public double getAmperage() throws InvalidSensorException {
-		byte[] rawArray = statusEnergy.read();
+		byte[] rawArray;
+		try {
+			rawArray = statusEnergy.read();
+		}
+		catch (CANMessageUnavailableException e) {
+			throw new InvalidSensorException(e);
+		}
 		if (rawArray != null) {
 			int rawAmperage = rawArray[1] & 0xFF; // first part of current is the 2nd byte of the energy status
 			rawAmperage = rawAmperage << 4;
