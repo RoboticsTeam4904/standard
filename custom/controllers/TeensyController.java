@@ -33,4 +33,8 @@ public class TeensyController extends Joystick implements Controller {
 	public double getAxis(int axis) {
 		return super.getRawAxis(axis);
 	}
+
+	public double getNumButtons() {
+		return numButtons;
+	}
 }
