@@ -25,7 +25,7 @@ public class PDP {
 	protected double cachedResistance;
 	protected long lastRead;
 	private static final long MAX_AGE = 100; // How long to keep the last CAN message before throwing an error (milliseconds)
-	
+
 	/**
 	 * PDP constructor
 	 *
@@ -38,7 +38,7 @@ public class PDP {
 		status3 = new CustomCAN("PDP STATUS 2", PDP.PDP_ID_STATUS_3 | ID);
 		statusEnergy = new CustomCAN("PDP STATUS ENERGY", PDP.PDP_ID_STATUS_ENERGY | ID);
 	}
-	
+
 	/**
 	 * PDP constructor
 	 * 
@@ -47,7 +47,7 @@ public class PDP {
 	public PDP() {
 		this(0);
 	}
-	
+
 	/**
 	 * Gets the current voltage. This is the same for all channels.
 	 * This function defaults to the Driver Station voltage if the PDP becomes disconnected.
@@ -66,18 +66,18 @@ public class PDP {
 			return DriverStation.getInstance().getBatteryVoltage();
 		}
 	}
-	
+
 	private void readStatus3() {
 		byte[] rawArray = status3.read();
 		if (rawArray != null) {
 			int rawVoltage = rawArray[6] & 0xFF; // busVoltage is the 7th byte of the third status
 			cachedVoltage = (rawVoltage) * 0.05 + 4.0;
 			int rawResistance = rawArray[5] & 0xFF; // battery internal resistance is the 6th byte of the third status
-			cachedResistance = rawResistance; // in milliOhms
+			cachedResistance = rawResistance / 1000.0; // in milliOhms
 			lastRead = System.currentTimeMillis();
 		}
 	}
-	
+
 	/**
 	 * Gets the voltage on the battery.
 	 *
@@ -93,7 +93,7 @@ public class PDP {
 		}
 		return cachedVoltage;
 	}
-	
+
 	public double getBatteryResistance() {
 		try {
 			return getBatteryResistanceSafely();
@@ -103,7 +103,7 @@ public class PDP {
 			return 80.0; // High estimate
 		}
 	}
-	
+
 	public double getBatteryResistanceSafely() throws InvalidSensorException {
 		readStatus3();
 		if (System.currentTimeMillis() - lastRead > PDP.MAX_AGE) {
@@ -111,7 +111,7 @@ public class PDP {
 		}
 		return cachedResistance;
 	}
-	
+
 	/**
 	 * Gets the total amperage used by the entire robot.
 	 *
