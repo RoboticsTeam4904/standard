@@ -13,7 +13,8 @@ import edu.wpi.first.wpilibj.SpeedController;
  */
 public class AccelerationCap implements SpeedModifier {
 	public final static double MINIMUM_OPERATING_VOLTAGE = 7.0;
-	public final static double MAXIMUM_MOTOR_DELTA_PER_SECOND = 4.0;
+	public final static double MAXIMUM_MOTOR_INCREASE_PER_SECOND = 1.6;
+	public final static double MAXIMUM_MOTOR_DECREASE_PER_SECOND = 6.4;
 	public final static double ANTI_BROWNOUT_BACKOFF = 0.25; // How much to throttle a motor down to avoid brownout
 	public final static double DEFAULT_HARD_STOP_VOLTAGE = 9.0;
 	// Motor constants
@@ -29,7 +30,7 @@ public class AccelerationCap implements SpeedModifier {
 	protected final double hardStopVoltage;
 	protected final double motorAmpsPerPercent;
 	protected final double motorBaseAmperage;
-	protected double currentSpeed;
+	protected double outputSpeed;
 
 	/**
 	 * A SpeedModifier that does brownout protection and voltage ramping.
@@ -49,7 +50,7 @@ public class AccelerationCap implements SpeedModifier {
 		this.hardStopVoltage = hardStopVoltage;
 		this.motorAmpsPerPercent = motorAmpsPerPercent;
 		this.motorBaseAmperage = motorBaseAmperage;
-		currentSpeed = 0;
+		outputSpeed = 0;
 		lastUpdate = System.currentTimeMillis();
 	}
 
@@ -78,12 +79,19 @@ public class AccelerationCap implements SpeedModifier {
 	 */
 	@Override
 	public double modify(double inputSpeed) {
-		double outputSpeed = inputSpeed;
+		double currentSpeed = outputSpeed;
+		outputSpeed = inputSpeed;
 		double deltaTime = (System.currentTimeMillis() - lastUpdate) / 1000.0;
 		lastUpdate = System.currentTimeMillis();
 		if (Math.abs(inputSpeed) < Math.abs(currentSpeed) && Math.signum(inputSpeed) == Math.signum(currentSpeed)) {
-			// If we are slowing down the motor, feel free to do so
-			outputSpeed = inputSpeed;
+			// Ramp down (faster) for the sake of the gearboxes
+			if (Math.abs(currentSpeed - inputSpeed) < AccelerationCap.MAXIMUM_MOTOR_DECREASE_PER_SECOND * deltaTime) {
+				outputSpeed = inputSpeed;
+			} else if (inputSpeed > currentSpeed) {
+				outputSpeed = currentSpeed + AccelerationCap.MAXIMUM_MOTOR_DECREASE_PER_SECOND * deltaTime;
+			} else if (inputSpeed < currentSpeed) {
+				outputSpeed = currentSpeed - AccelerationCap.MAXIMUM_MOTOR_DECREASE_PER_SECOND * deltaTime;
+			}
 		} else {
 			// Brown-out protection
 			try {
@@ -93,28 +101,36 @@ public class AccelerationCap implements SpeedModifier {
 					if (Math.abs(outputSpeed) <= AccelerationCap.ANTI_BROWNOUT_BACKOFF) {
 						outputSpeed = 0;
 					}
-				}
-				double currentCurrent = pdp.getAmperage();
-				double batteryResistance = pdp.getBatteryResistanceSafely();
-				double baseVoltage = currentCurrent * batteryResistance + currentVoltage; // Battery voltage without drop due to power
-				double nextCurrent = currentCurrent
-					+ AccelerationCap.MAXIMUM_MOTOR_DELTA_PER_SECOND * deltaTime * motorAmpsPerPercent; // Simulate increasing motor speed
-				if (baseVoltage - nextCurrent * batteryResistance < hardStopVoltage) { // If we will go below hardStopVoltage, prevent increase
-					outputSpeed = currentSpeed;
+				} else {
+					double currentCurrent = pdp.getAmperage();
+					double batteryResistance = pdp.getBatteryResistanceSafely();
+					double baseVoltage = currentCurrent * batteryResistance + currentVoltage; // Battery voltage without drop due to power
+					double nextCurrent = currentCurrent
+						+ AccelerationCap.MAXIMUM_MOTOR_INCREASE_PER_SECOND * deltaTime * motorAmpsPerPercent; // Simulate increasing motor speed
+					LogKitten.wtf(currentCurrent + " " + nextCurrent + " " + baseVoltage + " " + batteryResistance);
+					if (baseVoltage - nextCurrent * batteryResistance < hardStopVoltage) { // If we will go below hardStopVoltage, prevent increase
+						outputSpeed = currentSpeed;
+					}
 				}
 			}
-			catch (InvalidSensorException e) {
-				// TODO: how to handle PDP failure
+			catch (InvalidSensorException e) { // Can't get data from PDP
+				LogKitten.ex(e);
 			}
 			// Ramping
-			if (inputSpeed > currentSpeed) {
-				outputSpeed = currentSpeed + AccelerationCap.MAXIMUM_MOTOR_DELTA_PER_SECOND * deltaTime;
-			} else if (inputSpeed < currentSpeed) {
-				outputSpeed = currentSpeed - AccelerationCap.MAXIMUM_MOTOR_DELTA_PER_SECOND * deltaTime;
+			if (outputSpeed == inputSpeed) { // If we did not do any anti-brownout, just ramp
+				LogKitten.wtf("Ramping");
+				if (Math.abs(currentSpeed - inputSpeed) < AccelerationCap.MAXIMUM_MOTOR_INCREASE_PER_SECOND * deltaTime) {
+					outputSpeed = inputSpeed;
+				} else if (inputSpeed > currentSpeed) {
+					outputSpeed = currentSpeed + AccelerationCap.MAXIMUM_MOTOR_INCREASE_PER_SECOND * deltaTime;
+				} else if (inputSpeed < currentSpeed) {
+					outputSpeed = currentSpeed - AccelerationCap.MAXIMUM_MOTOR_INCREASE_PER_SECOND * deltaTime;
+				}
 			}
 		}
-		currentSpeed = outputSpeed;
-		LogKitten.wtf(outputSpeed);
+		if (outputSpeed != inputSpeed) {
+			LogKitten.wtf(outputSpeed);
+		}
 		return outputSpeed;
 	}
 }
