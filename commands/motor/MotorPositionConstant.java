@@ -71,7 +71,9 @@ public class MotorPositionConstant extends Command {
 	protected void execute() {
 		if (motor.checkSensorException() != null) {
 			cancel();
-			fallbackCommand.start();
+			if (fallbackCommand != null) {
+				fallbackCommand.start();
+			}
 		}
 	}
 
