@@ -39,4 +39,8 @@ public class TeensyController extends Joystick implements Controller {
 	public double getNumButtons() {
 		return numButtons;
 	}
+
+	public CustomButton getButton(int id) {
+		return buttons[id];
+	}
 }
