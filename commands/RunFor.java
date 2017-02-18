@@ -48,6 +48,7 @@ public class RunFor extends Command {
 	@Override
 	protected void end() {
 		command.cancel();
+		firstTick = true;
 	}
 
 	@Override
