@@ -1,6 +1,7 @@
 package org.usfirst.frc4904.standard.subsystems.motor.speedmodifiers;
 
 
+import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.custom.sensors.InvalidSensorException;
 import org.usfirst.frc4904.standard.custom.sensors.PDP;
 import edu.wpi.first.wpilibj.SpeedController;
@@ -89,6 +90,9 @@ public class AccelerationCap implements SpeedModifier {
 				double currentVoltage = pdp.getVoltageSafely();
 				if (currentVoltage < hardStopVoltage) { // If we are below hardStopVoltage, start backing off
 					outputSpeed = currentSpeed - AccelerationCap.ANTI_BROWNOUT_BACKOFF * Math.signum(currentSpeed);
+					if (Math.abs(outputSpeed) <= AccelerationCap.ANTI_BROWNOUT_BACKOFF) {
+						outputSpeed = 0;
+					}
 				}
 				double currentCurrent = pdp.getAmperage();
 				double batteryResistance = pdp.getBatteryResistanceSafely();
@@ -110,6 +114,7 @@ public class AccelerationCap implements SpeedModifier {
 			}
 		}
 		currentSpeed = outputSpeed;
+		LogKitten.wtf(outputSpeed);
 		return outputSpeed;
 	}
 }
