@@ -39,6 +39,15 @@ public class PDP {
 	}
 
 	/**
+	 * PDP constructor
+	 * 
+	 * This defaults to the PDP at ID 0.
+	 */
+	public PDP() {
+		this(0);
+	}
+
+	/**
 	 * Gets the current voltage. This is the same for all channels.
 	 * This function defaults to the Driver Station voltage if the PDP becomes disconnected.
 	 * Note that this data will then be invalid. If you care, use the getVoltageSafely function and catch the exceptions.
