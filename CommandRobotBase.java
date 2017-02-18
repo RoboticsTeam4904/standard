@@ -52,7 +52,6 @@ public abstract class CommandRobotBase extends IterativeRobot {
 		if (healthcheckCommand != null) {
 			healthcheckCommand.cancel();
 		}
-		Scheduler.getInstance().removeAll();
 		if (healthcheckCommand != null) {
 			healthcheckCommand.start();
 		}
