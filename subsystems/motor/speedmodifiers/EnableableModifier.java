@@ -1,7 +1,7 @@
 package org.usfirst.frc4904.standard.subsystems.motor.speedmodifiers;
 
 
-import org.usfirst.frc4904.standard.commands.motor.speedmodifiers.SetEnableableModifier;
+import org.usfirst.frc4904.standard.commands.Idle;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 public class EnableableModifier extends Subsystem implements SpeedModifier {
@@ -39,6 +39,6 @@ public class EnableableModifier extends Subsystem implements SpeedModifier {
 
 	@Override
 	protected void initDefaultCommand() {
-		setDefaultCommand(new SetEnableableModifier(this, false));
+		setDefaultCommand(new Idle(this));
 	}
 }
