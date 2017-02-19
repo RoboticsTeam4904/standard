@@ -85,7 +85,7 @@ public class NavX extends AHRS implements IMU {
 	@Override
 	public float getRoll() {
 		float roll = super.getRoll();
-		if (Math.abs(roll lastRoll) > NavX.MAX_DEGREES_PER_TICK) {
+		if (Math.abs(roll - lastRoll) > NavX.MAX_DEGREES_PER_TICK) {
 			return lastRoll;
 		}
 		if (roll < 0) {
