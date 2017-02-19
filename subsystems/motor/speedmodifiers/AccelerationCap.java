@@ -13,23 +13,20 @@ import edu.wpi.first.wpilibj.SpeedController;
  */
 public class AccelerationCap implements SpeedModifier {
 	public final static double MINIMUM_OPERATING_VOLTAGE = 7.0;
-	public final static double MAXIMUM_MOTOR_INCREASE_PER_SECOND = 1.6;
-	public final static double MAXIMUM_MOTOR_DECREASE_PER_SECOND = 3.2;
-	public final static double ANTI_BROWNOUT_BACKOFF = 0.25; // How much to throttle a motor down to avoid brownout
+	public final static double MAXIMUM_MOTOR_INCREASE_PER_SECOND = 2.4;
+	public final static double MAXIMUM_MOTOR_DECREASE_PER_SECOND = 4.8;
+	public final static double ANTI_BROWNOUT_BACKOFF = 0.05; // How much to throttle a motor down to avoid brownout
 	public final static double DEFAULT_HARD_STOP_VOLTAGE = 9.0;
 	// Motor constants
-	public final static double CIM_AMPS_PER_PERCENT = 12.83;
-	public final static double CIM_BASE_AMPS = 2.7;
-	public final static double PRO_775_AMPS_PER_PERCENT = 13.33;
-	public final static double PRO_775_BASE_AMPS = 0.7;
-	public final static double BAG_AMPS_PER_PERCENT = 5.12;
-	public final static double BAG_BASE_AMPS = 1.8;
+	protected final static double STALL_AMPERAGE_RESCALE = 5.0; // TODO: why does this work?
+	public final static double CIM_AMPS_PER_PERCENT = 12.83 * AccelerationCap.STALL_AMPERAGE_RESCALE;
+	public final static double PRO_775_AMPS_PER_PERCENT = 13.33 * AccelerationCap.STALL_AMPERAGE_RESCALE;
+	public final static double BAG_AMPS_PER_PERCENT = 5.12 * AccelerationCap.STALL_AMPERAGE_RESCALE;
 	protected long lastUpdate; // in milliseconds
 	protected final PDP pdp;
 	protected SpeedController motor;
 	protected final double hardStopVoltage;
 	protected final double motorAmpsPerPercent;
-	protected final double motorBaseAmperage;
 	protected double outputSpeed;
 
 	/**
@@ -45,11 +42,10 @@ public class AccelerationCap implements SpeedModifier {
 	 * @param hardStopVoltage
 	 *        Voltage to begin decreasing motor speed at.
 	 */
-	public AccelerationCap(PDP pdp, double hardStopVoltage, double motorAmpsPerPercent, double motorBaseAmperage) {
+	public AccelerationCap(PDP pdp, double hardStopVoltage, double motorAmpsPerPercent) {
 		this.pdp = pdp;
 		this.hardStopVoltage = hardStopVoltage;
 		this.motorAmpsPerPercent = motorAmpsPerPercent;
-		this.motorBaseAmperage = motorBaseAmperage;
 		outputSpeed = 0;
 		lastUpdate = System.currentTimeMillis();
 	}
@@ -66,8 +62,7 @@ public class AccelerationCap implements SpeedModifier {
 	 *        This is used to monitor the battery voltage.
 	 */
 	public AccelerationCap(PDP pdp) {
-		this(pdp, AccelerationCap.DEFAULT_HARD_STOP_VOLTAGE, AccelerationCap.PRO_775_AMPS_PER_PERCENT,
-			AccelerationCap.PRO_775_BASE_AMPS);
+		this(pdp, AccelerationCap.DEFAULT_HARD_STOP_VOLTAGE, AccelerationCap.PRO_775_AMPS_PER_PERCENT);
 	}
 
 	/**
@@ -107,7 +102,7 @@ public class AccelerationCap implements SpeedModifier {
 					double baseVoltage = currentCurrent * batteryResistance + currentVoltage; // Battery voltage without drop due to power
 					double nextCurrent = currentCurrent
 						+ AccelerationCap.MAXIMUM_MOTOR_INCREASE_PER_SECOND * deltaTime * motorAmpsPerPercent; // Simulate increasing motor speed
-					LogKitten.wtf(currentCurrent + " " + nextCurrent + " " + baseVoltage + " " + batteryResistance);
+					LogKitten.wtf(currentCurrent + " " + nextCurrent + " " + (baseVoltage - nextCurrent * batteryResistance));
 					if (baseVoltage - nextCurrent * batteryResistance < hardStopVoltage) { // If we will go below hardStopVoltage, prevent increase
 						outputSpeed = currentSpeed;
 					}
