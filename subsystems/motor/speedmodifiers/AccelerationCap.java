@@ -16,21 +16,11 @@ public class AccelerationCap implements SpeedModifier {
 	public final static double ANTI_BROWNOUT_BACKOFF = 0.1; // How much to throttle a motor down to avoid brownout
 	public final static double DEFAULT_HARD_STOP_VOLTAGE = 7.0;
 	protected final static double TIMEOUT_SECONDS = 0.5; // If we do not get a value for this long, set the motor to zero (this is designed to handle the case where the robot is disabled with the motors still running_
+	protected final static double VOLTAGE_DROP_SCALE = 1.2;
 	protected long lastUpdate; // in milliseconds
 	protected final PDP pdp;
 	protected final double hardStopVoltage;
 	protected double currentSpeed;
-
-	protected enum VOLTAGE_DROP_THRESHOLDS {
-		NO_DROP(0.5, 0.0), MEDIUM_DROP(2.5, 0.5), HIGH_DROP(7.5, 1.0);
-		double voltageDrop;
-		double softStopDelta;
-
-		private VOLTAGE_DROP_THRESHOLDS(double voltageDrop, double softStopDelta) {
-			this.voltageDrop = voltageDrop;
-			this.softStopDelta = softStopDelta;
-		}
-	}
 
 	/**
 	 * A SpeedModifier that does brownout protection and voltage ramping.
@@ -106,13 +96,9 @@ public class AccelerationCap implements SpeedModifier {
 		// Even if we are still above the hard stop voltage, try to avoid going below next tick
 		try {
 			double voltageDrop = pdp.getAmperage() * pdp.getBatteryResistanceSafely();
-			if (voltageDrop < VOLTAGE_DROP_THRESHOLDS.NO_DROP.voltageDrop) {
-				return rampedSpeed;
-			} else if (voltageDrop < VOLTAGE_DROP_THRESHOLDS.MEDIUM_DROP.voltageDrop
-				&& currentVoltage < hardStopVoltage + VOLTAGE_DROP_THRESHOLDS.MEDIUM_DROP.softStopDelta) {
-				return currentSpeed;
-			} else if (voltageDrop < VOLTAGE_DROP_THRESHOLDS.HIGH_DROP.voltageDrop
-				&& currentVoltage < hardStopVoltage + VOLTAGE_DROP_THRESHOLDS.HIGH_DROP.softStopDelta) {
+			if (currentVoltage < hardStopVoltage
+				+ Math.min(Math.log10(voltageDrop), 0.0) * AccelerationCap.VOLTAGE_DROP_SCALE) {
+				// This is tested experimentally, but does not really have a basis in theory
 				return currentSpeed;
 			}
 		}
