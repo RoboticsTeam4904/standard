@@ -132,7 +132,7 @@ public class AccelerationCap implements SpeedModifier {
 	@Override
 	public double modify(double inputSpeed) {
 		currentSpeed = calculate(inputSpeed);
-		LogKitten.wtf(currentSpeed);
+		LogKitten.d("AccelerationCap outputed: " + currentSpeed);
 		return currentSpeed;
 	}
 }
