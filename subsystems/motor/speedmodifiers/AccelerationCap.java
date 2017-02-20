@@ -13,7 +13,7 @@ import org.usfirst.frc4904.standard.custom.sensors.PDP;
 public class AccelerationCap implements SpeedModifier {
 	public final static double MAXIMUM_MOTOR_INCREASE_PER_SECOND = 2.4;
 	public final static double MAXIMUM_MOTOR_DECREASE_PER_SECOND = 4.8;
-	public final static double ANTI_BROWNOUT_BACKOFF = 0.05; // How much to throttle a motor down to avoid brownout
+	public final static double ANTI_BROWNOUT_BACKOFF = 0.1; // How much to throttle a motor down to avoid brownout
 	public final static double DEFAULT_HARD_STOP_VOLTAGE = 9.0;
 	protected final static double TIMEOUT_SECONDS = 0.5; // If we do not get a value for this long, set the motor to zero (this is designed to handle the case where the robot is disabled with the motors still running_
 	protected long lastUpdate; // in milliseconds
