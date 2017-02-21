@@ -31,27 +31,14 @@ public class AutoSolenoidShifters extends SolenoidShifters {
 		lastManualShift = System.currentTimeMillis();
 	}
 
-	public void shift(ShiftState state, boolean isAutoShift) {
-		if (isAutoShift) {
-			lastAutoShift = System.currentTimeMillis();
-			switch (state) {
-				case UP:
-					if (!isInverted) {
-						solenoid.set(DoubleSolenoid.Value.kForward);
-					} else {
-						solenoid.set(DoubleSolenoid.Value.kReverse);
-					}
-					return;
-				case DOWN:
-				default:
-					if (!isInverted) {
-						solenoid.set(DoubleSolenoid.Value.kReverse);
-					} else {
-						solenoid.set(DoubleSolenoid.Value.kForward);
-					}
-					return;
-			}
-		}
+	public void shiftAuto() {
+		super.shift();
+		lastAutoShift = System.currentTimeMillis();
+	}
+
+	public void shiftAuto(ShiftState state) {
+		super.shift(state);
+		lastAutoShift = System.currentTimeMillis();
 	}
 
 	public long timeSinceLastManualShift() {
