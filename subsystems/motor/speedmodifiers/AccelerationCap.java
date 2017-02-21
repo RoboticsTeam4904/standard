@@ -108,7 +108,8 @@ public class AccelerationCap implements SpeedModifier {
 			double voltageDrop = currentCurrent * pdp.getBatteryResistanceSafely();
 			double deltaVoltageDrop = voltageDrop - lastVoltageDrop;
 			if (currentVoltage < hardStopVoltage + voltageDrop + deltaVoltageDrop * AccelerationCap.TICKS_PER_PDP_DATA) {
-				return currentSpeed;
+				return currentSpeed
+					- AccelerationCap.ANTI_BROWNOUT_BACKOFF_PER_SECOND * Math.signum(currentSpeed) * deltaTime;
 			}
 		}
 		catch (InvalidSensorException e) { // Can't get data from PDP, we just hope drivers do not drive too hard
