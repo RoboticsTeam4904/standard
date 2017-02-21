@@ -13,14 +13,17 @@ import org.usfirst.frc4904.standard.custom.sensors.PDP;
 public class AccelerationCap implements SpeedModifier {
 	public final static double MAXIMUM_MOTOR_INCREASE_PER_SECOND = 2.4;
 	public final static double MAXIMUM_MOTOR_DECREASE_PER_SECOND = 4.8;
-	public final static double ANTI_BROWNOUT_BACKOFF = 0.1; // How much to throttle a motor down to avoid brownout
+	public final static double ANTI_BROWNOUT_BACKOFF_PER_SECOND = 6.4; // How much to throttle a motor down to avoid brownout
 	public final static double DEFAULT_HARD_STOP_VOLTAGE = 7.0;
 	protected final static double TIMEOUT_SECONDS = 0.5; // If we do not get a value for this long, set the motor to zero (this is designed to handle the case where the robot is disabled with the motors still running_
 	protected final static double VOLTAGE_DROP_SCALE = 1.2;
+	protected final static double TICKS_PER_PDP_DATA = 5; // PDP update speed (100ms) / Scheduler loop time (20ms)
 	protected long lastUpdate; // in milliseconds
 	protected final PDP pdp;
 	protected final double hardStopVoltage;
+	protected final int channels[];
 	protected double currentSpeed;
+	protected double lastVoltageDrop;
 
 	/**
 	 * A SpeedModifier that does brownout protection and voltage ramping.
@@ -35,10 +38,12 @@ public class AccelerationCap implements SpeedModifier {
 	 * @param hardStopVoltage
 	 *        Voltage to begin decreasing motor speed at.
 	 */
-	public AccelerationCap(PDP pdp, double hardStopVoltage) {
+	public AccelerationCap(PDP pdp, double hardStopVoltage, int... channels) {
 		this.pdp = pdp;
 		this.hardStopVoltage = hardStopVoltage;
+		this.channels = channels;
 		currentSpeed = 0;
+		lastVoltageDrop = 0;
 		lastUpdate = System.currentTimeMillis();
 	}
 
@@ -53,8 +58,8 @@ public class AccelerationCap implements SpeedModifier {
 	 *        The robot's power distribution panel.
 	 *        This is used to monitor the battery voltage.
 	 */
-	public AccelerationCap(PDP pdp) {
-		this(pdp, AccelerationCap.DEFAULT_HARD_STOP_VOLTAGE);
+	public AccelerationCap(PDP pdp, int... channels) {
+		this(pdp, AccelerationCap.DEFAULT_HARD_STOP_VOLTAGE, channels);
 	}
 
 	protected double calculate(double inputSpeed) {
@@ -87,18 +92,22 @@ public class AccelerationCap implements SpeedModifier {
 		// After ramping, apply brown-out protection
 		double currentVoltage = pdp.getVoltage(); // Allow fallback to DS voltage
 		if (currentVoltage < hardStopVoltage) { // If we are below hardStopVoltage, start backing off
-			rampedSpeed = currentSpeed - AccelerationCap.ANTI_BROWNOUT_BACKOFF * Math.signum(currentSpeed);
-			if (Math.abs(rampedSpeed) <= AccelerationCap.ANTI_BROWNOUT_BACKOFF) {
+			rampedSpeed = currentSpeed
+				- AccelerationCap.ANTI_BROWNOUT_BACKOFF_PER_SECOND * Math.signum(currentSpeed) * deltaTime;
+			if (Math.abs(rampedSpeed) <= AccelerationCap.ANTI_BROWNOUT_BACKOFF_PER_SECOND) {
 				return 0;
 			}
 			return rampedSpeed;
 		}
 		// Even if we are still above the hard stop voltage, try to avoid going below next tick
 		try {
-			double voltageDrop = pdp.getAmperage() * pdp.getBatteryResistanceSafely();
-			if (currentVoltage < hardStopVoltage
-				+ Math.min(Math.log10(voltageDrop), 0.0) * AccelerationCap.VOLTAGE_DROP_SCALE) {
-				// This is tested experimentally, but does not really have a basis in theory
+			double currentCurrent = 0.0;
+			for (int channel : channels) {
+				currentCurrent += pdp.getCurrent(channel);
+			}
+			double voltageDrop = currentCurrent * pdp.getBatteryResistanceSafely();
+			double deltaVoltageDrop = voltageDrop - lastVoltageDrop;
+			if (currentVoltage < hardStopVoltage + voltageDrop + deltaVoltageDrop * AccelerationCap.TICKS_PER_PDP_DATA) {
 				return currentSpeed;
 			}
 		}
