@@ -140,7 +140,7 @@ public class PDP {
 	public double getBatteryResistanceSafely() throws InvalidSensorException {
 		readStatus3();
 		if (System.currentTimeMillis() - lastRead > PDP.MAX_AGE) {
-			throw new InvalidSensorException("Can not read voltage from PDP");
+			throw new InvalidSensorException("Can not read battery resistance from PDP");
 		}
 		return cachedResistance;
 	}
@@ -153,7 +153,7 @@ public class PDP {
 	 * @throws InvalidSensorException
 	 *         If PDP connection is lost, InvalidSensorException will be thrown.
 	 */
-	public double getTotalCurrent() throws InvalidSensorException {
+	public double getTotalCurrentSafely() throws InvalidSensorException {
 		byte[] rawArray = statusEnergy.read();
 		if (rawArray != null) {
 			int rawAmperage = rawArray[1] & 0xFF; // first part of current is the 2nd byte of the energy status
@@ -178,22 +178,21 @@ public class PDP {
 	 * @throws InvalidSensorException
 	 *         if the PDP is not sending data
 	 */
-	public double getCurrent(int channel) throws InvalidSensorException {
+	public double getCurrentSafely(int channel) throws InvalidSensorException {
 		if (channel < 0) {
 			return 0.0;
-		}
-		if (channel <= 5) {
+		} else if (channel <= 5) {
 			readStatus1();
-			return cachedChannelCurrents[channel];
-		}
-		if (channel <= 11) {
+		} else if (channel <= 11) {
 			readStatus2();
-			return cachedChannelCurrents[channel];
-		}
-		if (channel <= 15) {
+		} else if (channel <= 15) {
 			readStatus3();
-			return cachedChannelCurrents[channel];
+		} else {
+			return 0.0;
 		}
-		return 0.0;
+		if (System.currentTimeMillis() - lastRead > PDP.MAX_AGE) {
+			throw new InvalidSensorException("Can not read current for port " + channel + " from PDP");
+		}
+		return cachedChannelCurrents[channel];
 	}
 }

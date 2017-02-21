@@ -103,7 +103,7 @@ public class AccelerationCap implements SpeedModifier {
 		try {
 			double currentCurrent = 0.0;
 			for (int channel : channels) {
-				currentCurrent += pdp.getCurrent(channel);
+				currentCurrent += pdp.getCurrentSafely(channel);
 			}
 			double voltageDrop = currentCurrent * pdp.getBatteryResistanceSafely();
 			double deltaVoltageDrop = voltageDrop - lastVoltageDrop;
