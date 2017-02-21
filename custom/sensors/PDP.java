@@ -38,6 +38,10 @@ public class PDP {
 		status2 = new CustomCAN("PDP STATUS 2", PDP.PDP_ID_STATUS_2 | ID);
 		status3 = new CustomCAN("PDP STATUS 2", PDP.PDP_ID_STATUS_3 | ID);
 		statusEnergy = new CustomCAN("PDP STATUS ENERGY", PDP.PDP_ID_STATUS_ENERGY | ID);
+		cachedVoltage = 11.5;
+		cachedCurrent = 0;
+		cachedChannelCurrents = new double[] {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+		cachedResistance = 80.0;
 	}
 
 	/**
@@ -129,7 +133,7 @@ public class PDP {
 		}
 		catch (InvalidSensorException e) {
 			LogKitten.ex(e);
-			return 80.0; // High estimate
+			return cachedResistance;
 		}
 	}
 
