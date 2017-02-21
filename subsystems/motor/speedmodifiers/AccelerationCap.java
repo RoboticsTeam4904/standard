@@ -3,6 +3,7 @@ package org.usfirst.frc4904.standard.subsystems.motor.speedmodifiers;
 
 import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.custom.sensors.PDP;
+import edu.wpi.first.wpilibj.DriverStation;
 
 /**
  * A SpeedModifier that does brownout protection and voltage ramping.
@@ -61,10 +62,11 @@ public class AccelerationCap implements SpeedModifier {
 	 */
 	@Override
 	public double modify(double inputSpeed) {
+		double voltage = DriverStation.getInstance().getBatteryVoltage(); // TODO add default for when data isn't available
 		double outputSpeed;
-		if (Math.abs(inputSpeed) > Math.abs(currentSpeed) && pdp.getVoltage() < softStopVoltage) {
+		if (Math.abs(inputSpeed) > Math.abs(currentSpeed) && voltage < softStopVoltage) {
 			LogKitten.d("AccelerationCap brownout protecting");
-			if (pdp.getVoltage() < hardStopVoltage) {
+			if (voltage < hardStopVoltage) {
 				outputSpeed = currentSpeed - 0.3 * currentSpeed;
 			} else {
 				outputSpeed = currentSpeed;
