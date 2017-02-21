@@ -16,7 +16,7 @@ public class TeensyController extends Joystick implements Controller {
 		CustomButton[] buttons = new CustomButton[numButtons]; // array of any length
 		this.buttons = buttons;
 		for (int index = 0; index < numButtons; index++) { // sets each button in buttons
-			buttons[index] = new CustomButton(this, index);
+			buttons[index] = new CustomButton(this, index + 1);
 		}
 	}
 
