@@ -16,7 +16,7 @@ public class AccelerationCap implements SpeedModifier {
 	public final static double MAXIMUM_MOTOR_DECREASE_PER_SECOND = 4.8;
 	public final static double ANTI_BROWNOUT_BACKOFF_PER_SECOND = 5.6; // How much to throttle a motor down to avoid brownout
 	public final static double ANTI_BROWNOUT_WEAK_BACKOFF_PER_SECOND = 1.2;
-	public final static double DEFAULT_HARD_STOP_VOLTAGE = 10.0;
+	public final static double DEFAULT_HARD_STOP_VOLTAGE = 7.0;
 	protected final static double TIMEOUT_SECONDS = 0.5; // If we do not get a value for this long, set the motor to zero (this is designed to handle the case where the robot is disabled with the motors still running_
 	protected final static double VOLTAGE_DROP_SCALE = 0.4;
 	protected final static double TICKS_PER_PDP_DATA = 5; // PDP update speed (100ms) / Scheduler loop time (20ms)
