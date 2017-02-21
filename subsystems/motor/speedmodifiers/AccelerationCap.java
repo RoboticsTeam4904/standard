@@ -52,7 +52,7 @@ public class AccelerationCap implements SpeedModifier {
 	 * This is designed to reduce power consumption (via voltage ramping)
 	 * and prevent RoboRIO/router brownouts.
 	 *
-	 * Default hard stop voltage is 9.0 volts.
+	 * Default hard stop voltage is 7.0 volts.
 	 *
 	 * @param pdp
 	 *        The robot's power distribution panel.
