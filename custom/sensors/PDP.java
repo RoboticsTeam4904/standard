@@ -58,7 +58,6 @@ public class PDP {
 		if (rawArray != null) {
 			double[] tempCurrents = new double[6];
 			tempCurrents[0] = ((rawArray[0] & 0xFF) << 2 | ((rawArray[1] & 0xC0) >> 6)) * 0.125;
-			// LogKitten.wtf(Integer.toBinaryString(rawArray[0]) + " " + Integer.toBinaryString(rawArray[1]));
 			tempCurrents[1] = (((rawArray[1] & 0x3F) << 4) | ((rawArray[2] & 0xF0) >> 4)) * 0.125;
 			tempCurrents[2] = (((rawArray[2] & 0x0F) << 6) | ((rawArray[3] & 0x3F) >> 2)) * 0.125;
 			tempCurrents[3] = (((rawArray[3] & 0xC0) << 8) | ((rawArray[4] & 0xFF))) * 0.125;

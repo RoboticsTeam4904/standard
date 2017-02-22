@@ -75,10 +75,7 @@ public class AccelerationCap implements SpeedModifier {
 		if (!disableCurrent) {
 			newVoltageDrop = voltageDrop;
 			try {
-				double currentCurrent = pdp.getTotalCurrentSafely() - pdp.getCurrentSafely(0);
-				double batteryResistance = pdp.getBatteryResistanceSafely();
-				LogKitten.wtf(currentCurrent + " " + batteryResistance);
-				newVoltageDrop = currentCurrent * batteryResistance;
+				newVoltageDrop = pdp.getTotalCurrentSafely() * pdp.getBatteryResistanceSafely();
 			}
 			catch (InvalidSensorException e) {
 				LogKitten.ex(e);
@@ -126,7 +123,7 @@ public class AccelerationCap implements SpeedModifier {
 			double deltaVoltageDrop = newVoltageDrop - lastVoltageDrop;
 			if (currentVoltage < hardStopVoltage + newVoltageDrop
 				+ deltaVoltageDrop * AccelerationCap.TICKS_PER_PDP_DATA / 2.0) {
-				LogKitten.wtf("Preventative capping to " + (currentSpeed
+				LogKitten.w("Preventative capping to " + (currentSpeed
 					- AccelerationCap.ANTI_BROWNOUT_BACKOFF_PER_SECOND * Math.signum(currentSpeed) * deltaTime) + " from "
 					+ inputSpeed);
 				return currentSpeed
@@ -146,7 +143,7 @@ public class AccelerationCap implements SpeedModifier {
 	@Override
 	public double modify(double inputSpeed) {
 		currentSpeed = calculate(inputSpeed);
-		// LogKitten.wtf("AccelerationCap outputed: " + currentSpeed);
+		LogKitten.w("AccelerationCap outputed: " + currentSpeed);
 		return currentSpeed;
 	}
 }
