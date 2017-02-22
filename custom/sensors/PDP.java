@@ -56,12 +56,12 @@ public class PDP {
 	private void readStatus1() {
 		byte[] rawArray = status1.read();
 		if (rawArray != null) {
-			cachedChannelCurrents[0] = (((rawArray[0] & 0xFF) << 2) | rawArray[1] & 0xC0) * 0.125;
-			cachedChannelCurrents[1] = (((rawArray[1] & 0x3F) << 4) | rawArray[2] & 0xF0) * 0.125;
-			cachedChannelCurrents[2] = (((rawArray[2] & 0x0F) << 6) | rawArray[3] & 0x3F) * 0.125;
-			cachedChannelCurrents[3] = (((rawArray[3] & 0xC0) << 8) | rawArray[4] & 0xFF) * 0.125;
-			cachedChannelCurrents[4] = (((rawArray[5] & 0xFF) << 2) | rawArray[6] & 0xC0) * 0.125;
-			cachedChannelCurrents[5] = (((rawArray[6] & 0x3F) << 4) | rawArray[7] & 0xF0) * 0.125;
+			cachedChannelCurrents[0] = (((rawArray[0] & 0xFF) << 2) | ((rawArray[1] & 0xC0) >> 6)) * 0.125;
+			cachedChannelCurrents[1] = (((rawArray[1] & 0x3F) << 4) | ((rawArray[2] & 0xF0) >> 4)) * 0.125;
+			cachedChannelCurrents[2] = (((rawArray[2] & 0x0F) << 6) | ((rawArray[3] & 0x3F) >> 2)) * 0.125;
+			cachedChannelCurrents[3] = (((rawArray[3] & 0xC0) << 8) | ((rawArray[4] & 0xFF))) * 0.125;
+			cachedChannelCurrents[4] = (((rawArray[5] & 0xFF) << 2) | ((rawArray[6] & 0xC0) >> 6)) * 0.125;
+			cachedChannelCurrents[5] = (((rawArray[6] & 0x3F) << 4) | ((rawArray[7] & 0xF0) >> 4)) * 0.125;
 			lastRead = System.currentTimeMillis();
 		}
 	}
@@ -69,12 +69,12 @@ public class PDP {
 	private void readStatus2() {
 		byte[] rawArray = status2.read();
 		if (rawArray != null) {
-			cachedChannelCurrents[6] = (((rawArray[0] & 0xFF) << 2) | rawArray[1] & 0xC0) * 0.125;
-			cachedChannelCurrents[7] = (((rawArray[1] & 0x3F) << 4) | rawArray[2] & 0xF0) * 0.125;
-			cachedChannelCurrents[8] = (((rawArray[2] & 0x0F) << 6) | rawArray[3] & 0x3F) * 0.125;
-			cachedChannelCurrents[9] = (((rawArray[3] & 0xC0) << 8) | rawArray[4] & 0xFF) * 0.125;
-			cachedChannelCurrents[10] = (((rawArray[5] & 0xFF) << 2) | rawArray[6] & 0xC0) * 0.125;
-			cachedChannelCurrents[11] = (((rawArray[6] & 0x3F) << 4) | rawArray[7] & 0xF0) * 0.125;
+			cachedChannelCurrents[6] = (((rawArray[0] & 0xFF) << 2) | ((rawArray[1] & 0xC0) >> 6)) * 0.125;
+			cachedChannelCurrents[7] = (((rawArray[1] & 0x3F) << 4) | ((rawArray[2] & 0xF0) >> 4)) * 0.125;
+			cachedChannelCurrents[8] = (((rawArray[2] & 0x0F) << 6) | ((rawArray[3] & 0x3F) >> 2)) * 0.125;
+			cachedChannelCurrents[9] = (((rawArray[3] & 0xC0) << 8) | ((rawArray[4] & 0xFF))) * 0.125;
+			cachedChannelCurrents[10] = (((rawArray[5] & 0xFF) << 2) | ((rawArray[6] & 0xC0) >> 6)) * 0.125;
+			cachedChannelCurrents[11] = (((rawArray[6] & 0x3F) << 4) | ((rawArray[7] & 0xF0) >> 4)) * 0.125;
 			lastRead = System.currentTimeMillis();
 		}
 	}
@@ -82,10 +82,10 @@ public class PDP {
 	private void readStatus3() {
 		byte[] rawArray = status3.read();
 		if (rawArray != null) {
-			cachedChannelCurrents[12] = (((rawArray[0] & 0xFF) << 2) | rawArray[1] & 0xC0) * 0.125;
-			cachedChannelCurrents[13] = (((rawArray[1] & 0x3F) << 4) | rawArray[2] & 0xF0) * 0.125;
-			cachedChannelCurrents[14] = (((rawArray[2] & 0x0F) << 6) | rawArray[3] & 0x3F) * 0.125;
-			cachedChannelCurrents[15] = (((rawArray[3] & 0xC0) << 8) | rawArray[4] & 0xFF) * 0.125;
+			cachedChannelCurrents[12] = (((rawArray[0] & 0xFF) << 2) | ((rawArray[1] & 0xC0) >> 6)) * 0.125;
+			cachedChannelCurrents[13] = (((rawArray[1] & 0x3F) << 4) | ((rawArray[2] & 0xF0) >> 4)) * 0.125;
+			cachedChannelCurrents[14] = (((rawArray[2] & 0x0F) << 6) | ((rawArray[3] & 0x3F) >> 2)) * 0.125;
+			cachedChannelCurrents[15] = (((rawArray[3] & 0xC0) << 8) | ((rawArray[4] & 0xFF))) * 0.125;
 			cachedVoltage = (rawArray[6] & 0xFF) * 0.05 + 4.0;
 			cachedResistance = (rawArray[5] & 0xFF) / 1000.0; // in milliOhms
 			lastRead = System.currentTimeMillis();
@@ -143,6 +143,16 @@ public class PDP {
 			throw new InvalidSensorException("Can not read battery resistance from PDP");
 		}
 		return cachedResistance;
+	}
+
+	public double getTotalCurrent() {
+		try {
+			return getTotalCurrentSafely();
+		}
+		catch (InvalidSensorException e) {
+			LogKitten.ex(e);
+			return cachedCurrent;
+		}
 	}
 
 	/**
