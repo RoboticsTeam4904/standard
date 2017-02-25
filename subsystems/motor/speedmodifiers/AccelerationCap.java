@@ -46,6 +46,9 @@ public class AccelerationCap implements SpeedModifier {
 		this.hardStopVoltage = hardStopVoltage;
 		this.channels = channels;
 		disableCurrent = pdp.getTotalCurrent() > AccelerationCap.REASONABLE_RESTING_CURRENT;
+		if (disableCurrent) {
+			LogKitten.w("Disabling current for AccelerationCap, PDP seems unreliable");
+		}
 		currentSpeed = 0;
 		voltageDrop = 0;
 		lastUpdate = System.currentTimeMillis();
@@ -67,6 +70,7 @@ public class AccelerationCap implements SpeedModifier {
 	}
 
 	protected double calculate(double inputSpeed) {
+		LogKitten.wtf(disableCurrent);
 		double deltaTime = (System.currentTimeMillis() - lastUpdate) / 1000.0;
 		lastUpdate = System.currentTimeMillis();
 		// Update current data
@@ -92,6 +96,7 @@ public class AccelerationCap implements SpeedModifier {
 		// After doing updates, check for low battery voltage first
 		double currentVoltage = pdp.getVoltage(); // Allow fallback to DS voltage
 		if (currentVoltage < hardStopVoltage) { // If we are below hardStopVoltage, stop motors
+			LogKitten.w("Low voltage, AccelerationCap stopping motors");
 			return 0;
 		}
 		if (Math.abs(inputSpeed) < Math.abs(currentSpeed) && Math.signum(inputSpeed) == Math.signum(currentSpeed)) {
@@ -143,7 +148,7 @@ public class AccelerationCap implements SpeedModifier {
 	@Override
 	public double modify(double inputSpeed) {
 		currentSpeed = calculate(inputSpeed);
-		LogKitten.w("AccelerationCap outputed: " + currentSpeed);
+		LogKitten.d("AccelerationCap outputed: " + currentSpeed);
 		return currentSpeed;
 	}
 }
