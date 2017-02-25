@@ -53,8 +53,15 @@ public class PDP {
 		this(0);
 	}
 
-	private void readStatus1() {
-		byte[] rawArray = status1.read();
+	private void readStatus(int status) {
+		byte[] rawArray = null;
+		if (status == 1) {
+			rawArray = status1.read();
+		} else if (status == 2) {
+			rawArray = status1.read();
+		} else if (status == 3) {
+			readStatus3();
+		}
 		if (rawArray != null) {
 			double[] tempCurrents = new double[6];
 			tempCurrents[0] = ((rawArray[0] & 0xFF) << 2 | ((rawArray[1] & 0xC0) >> 6)) * 0.125;
@@ -65,33 +72,14 @@ public class PDP {
 			tempCurrents[5] = (((rawArray[6] & 0x3F) << 4) | ((rawArray[7] & 0xF0) >> 4)) * 0.125;
 			for (int i = 0; i < 6; i++) {
 				if (tempCurrents[i] < 128) { // deals with occasional issue with PDP reporting 1000+ amps (this is not a bug in this code, it was observed in PowerDistributionPanel as well
-					cachedChannelCurrents[i] = tempCurrents[i];
+					cachedChannelCurrents[i + (status - 1) * 6] = tempCurrents[i];
 				}
 			}
 			lastRead = System.currentTimeMillis();
 		}
 	}
 
-	private void readStatus2() {
-		byte[] rawArray = status2.read();
-		if (rawArray != null) {
-			double[] tempCurrents = new double[6];
-			tempCurrents[0] = (((rawArray[0] & 0xFF) << 2) | ((rawArray[1] & 0xC0) >> 6)) * 0.125;
-			tempCurrents[1] = (((rawArray[1] & 0x3F) << 4) | ((rawArray[2] & 0xF0) >> 4)) * 0.125;
-			tempCurrents[2] = (((rawArray[2] & 0x0F) << 6) | ((rawArray[3] & 0x3F) >> 2)) * 0.125;
-			tempCurrents[3] = (((rawArray[3] & 0xC0) << 8) | ((rawArray[4] & 0xFF))) * 0.125;
-			tempCurrents[4] = (((rawArray[5] & 0xFF) << 2) | ((rawArray[6] & 0xC0) >> 6)) * 0.125;
-			tempCurrents[5] = (((rawArray[6] & 0x3F) << 4) | ((rawArray[7] & 0xF0) >> 4)) * 0.125;
-			for (int i = 0; i < 6; i++) {
-				if (tempCurrents[i] < 128) {
-					cachedChannelCurrents[i + 6] = tempCurrents[i];
-				}
-			}
-			lastRead = System.currentTimeMillis();
-		}
-	}
-
-	private void readStatus3() {
+	private void readStatus3() { // Status 3 broken out for voltage and resistance
 		byte[] rawArray = status3.read();
 		if (rawArray != null) {
 			double[] tempCurrents = new double[4];
@@ -210,11 +198,11 @@ public class PDP {
 		if (channel < 0) {
 			return 0.0;
 		} else if (channel <= 5) {
-			readStatus1();
+			readStatus(1);
 		} else if (channel <= 11) {
-			readStatus2();
+			readStatus(2);
 		} else if (channel <= 15) {
-			readStatus3();
+			readStatus(3);
 		} else {
 			return 0.0;
 		}
