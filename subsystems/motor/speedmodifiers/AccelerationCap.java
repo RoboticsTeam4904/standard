@@ -70,7 +70,6 @@ public class AccelerationCap implements SpeedModifier {
 	}
 
 	protected double calculate(double inputSpeed) {
-		LogKitten.wtf(disableCurrent);
 		double deltaTime = (System.currentTimeMillis() - lastUpdate) / 1000.0;
 		lastUpdate = System.currentTimeMillis();
 		// Update current data
