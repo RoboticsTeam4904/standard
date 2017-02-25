@@ -1,8 +1,11 @@
 package org.usfirst.frc4904.standard.custom;
 
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
+import org.usfirst.frc4904.standard.LogKitten;
 import edu.wpi.first.wpilibj.can.CANJNI;
 import edu.wpi.first.wpilibj.can.CANMessageNotFoundException;
 
@@ -39,9 +42,26 @@ public class CustomCAN {
 	 *
 	 * @param data
 	 *        Data to be written. Should be EXACTLY 8 bytes long ONLY.
-	 * @throws IllegalArgumentException
 	 */
 	public void write(byte[] data) {
+		try {
+			writeSafely(data);
+		}
+		catch (Exception e) {
+			StringWriter sw = new StringWriter();
+			e.printStackTrace(new PrintWriter(sw));
+			LogKitten.e(sw.toString());
+		}
+	}
+
+	/**
+	 * Used to write data to the device.
+	 *
+	 * @param data
+	 *        Data to be written. Should be EXACTLY 8 bytes long ONLY.
+	 * @throws IllegalArgumentException
+	 */
+	public void writeSafely(byte[] data) {
 		ByteBuffer canData = ByteBuffer.allocateDirect(8);
 		canData.put(data);
 		CANJNI.FRCNetCommCANSessionMuxSendMessage(messageID, canData, CANJNI.CAN_SEND_PERIOD_NO_REPEAT);
