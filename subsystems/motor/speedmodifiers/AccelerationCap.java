@@ -12,8 +12,7 @@ import org.usfirst.frc4904.standard.custom.sensors.PDP;
  * and prevent RoboRIO/router brownouts.
  */
 public class AccelerationCap implements SpeedModifier {
-	public final static double MAXIMUM_MOTOR_INCREASE_PER_SECOND = 2.4;
-	public final static double MAXIMUM_MOTOR_DECREASE_PER_SECOND = 4.8;
+	public final static double MAXIMUM_MOTOR_INCREASE_PER_SECOND = 3.6;
 	public final static double ANTI_BROWNOUT_BACKOFF_PER_SECOND = 2.4; // How much to throttle a motor down to avoid brownout
 	public final static double DEFAULT_HARD_STOP_VOLTAGE = 7.0;
 	protected final static double TIMEOUT_SECONDS = 0.5; // If we do not get a value for this long, set the motor to zero (this is designed to handle the case where the robot is disabled with the motors still running_
@@ -95,16 +94,7 @@ public class AccelerationCap implements SpeedModifier {
 			return 0;
 		}
 		if (Math.abs(inputSpeed) < Math.abs(currentSpeed) && Math.signum(inputSpeed) == Math.signum(currentSpeed)) {
-			// Ramp down (faster) for the sake of the gearboxes
-			if (Math.abs(currentSpeed - inputSpeed) < AccelerationCap.MAXIMUM_MOTOR_DECREASE_PER_SECOND * deltaTime) {
-				return inputSpeed;
-			}
-			if (inputSpeed > currentSpeed) {
-				return currentSpeed + AccelerationCap.MAXIMUM_MOTOR_DECREASE_PER_SECOND * deltaTime;
-			}
-			if (inputSpeed < currentSpeed) {
-				return currentSpeed - AccelerationCap.MAXIMUM_MOTOR_DECREASE_PER_SECOND * deltaTime;
-			}
+			return inputSpeed;
 		}
 		double rampedSpeed = inputSpeed;
 		// Ramping
