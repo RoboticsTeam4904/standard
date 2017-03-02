@@ -12,12 +12,12 @@ import org.usfirst.frc4904.standard.custom.sensors.PDP;
  * and prevent RoboRIO/router brownouts.
  */
 public class AccelerationCap implements SpeedModifier {
-	public final static double MAXIMUM_MOTOR_INCREASE_PER_SECOND = 3.6;
+	public final static double MAXIMUM_MOTOR_INCREASE_PER_SECOND = 2.0;
 	public final static double ANTI_BROWNOUT_BACKOFF_PER_SECOND = 2.4; // How much to throttle a motor down to avoid brownout
 	public final static double DEFAULT_HARD_STOP_VOLTAGE = 7.0;
 	protected final static double TIMEOUT_SECONDS = 0.5; // If we do not get a value for this long, set the motor to zero (this is designed to handle the case where the robot is disabled with the motors still running_
 	protected final static double TICKS_PER_PDP_DATA = 1.25; // PDP update speed (25ms) / Scheduler loop time (20ms)
-	protected final static double AVAILABLE_VOLTAGE_TO_RAMPING_SCALE = 0.35; // Experimentally determined (but estimated as full speed above 11.8 volts)
+	protected final static double AVAILABLE_VOLTAGE_TO_RAMPING_SCALE = 0.55; // Experimentally determined (but estimated as full speed above 11.8 volts)
 	protected long lastUpdate; // in milliseconds
 	protected final static double REASONABLE_RESTING_CURRENT = 10.0;
 	protected final boolean disableCurrent; // If we detect a PDP error, stop trying to use current
