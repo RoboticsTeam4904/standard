@@ -103,7 +103,11 @@ public class CANEncoder extends CANSensor implements CustomEncoder {
 	 */
 	@Override
 	public int getSafely() throws InvalidSensorException {
-		return super.readSensor()[0];
+		if (reverseDirection) {
+			return super.readSensor()[0] * -1;
+		} else {
+			return super.readSensor()[0];
+		}
 	}
 
 	/**
