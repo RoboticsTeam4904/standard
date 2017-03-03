@@ -1,8 +1,6 @@
 package org.usfirst.frc4904.standard.custom;
 
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 import org.usfirst.frc4904.standard.LogKitten;
@@ -48,9 +46,7 @@ public class CustomCAN {
 			writeSafely(data);
 		}
 		catch (Exception e) {
-			StringWriter sw = new StringWriter();
-			e.printStackTrace(new PrintWriter(sw));
-			LogKitten.e(sw.toString());
+			LogKitten.ex(e);
 		}
 	}
 
