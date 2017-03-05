@@ -26,6 +26,7 @@ public class AccelerationCap implements SpeedModifier {
 	protected final int channels[];
 	protected double currentSpeed;
 	protected double voltageDrop;
+	protected double lastVoltageDrop;
 
 	/**
 	 * A SpeedModifier that does brownout protection and voltage ramping.
@@ -50,6 +51,7 @@ public class AccelerationCap implements SpeedModifier {
 		}
 		currentSpeed = 0;
 		voltageDrop = 0;
+		lastVoltageDrop = 0;
 		lastUpdate = System.currentTimeMillis();
 	}
 
@@ -73,7 +75,6 @@ public class AccelerationCap implements SpeedModifier {
 		lastUpdate = System.currentTimeMillis();
 		// Update current data
 		double newVoltageDrop = 0.0;
-		double lastVoltageDrop = 0.0;
 		if (!disableCurrent) {
 			newVoltageDrop = voltageDrop;
 			try {
@@ -82,10 +83,10 @@ public class AccelerationCap implements SpeedModifier {
 			catch (InvalidSensorException e) {
 				LogKitten.ex(e);
 			}
-			lastVoltageDrop = voltageDrop;
 			if (!new Util.Range(lastVoltageDrop - PDP.PDP_CURRENT_PRECISION, lastVoltageDrop + PDP.PDP_CURRENT_PRECISION)
 				.contains(newVoltageDrop)) {
 				voltageDrop = newVoltageDrop; // This prevents the delta voltage drop from going to zero if multiple ticks go by between PDP reads
+				lastVoltageDrop = voltageDrop;
 			}
 		}
 		// If we have not called this function in a while, we were probably disabled, so we should just output zero
@@ -115,8 +116,8 @@ public class AccelerationCap implements SpeedModifier {
 		// After ramping, apply brown-out protection
 		// Even if we are still above the hard stop voltage, try to avoid going below next tick
 		if (!disableCurrent) {
-			double deltaVoltageDrop = newVoltageDrop - lastVoltageDrop;
-			if (currentVoltage < hardStopVoltage + newVoltageDrop
+			double deltaVoltageDrop = voltageDrop - lastVoltageDrop;
+			if (currentVoltage < hardStopVoltage + voltageDrop
 				+ deltaVoltageDrop * AccelerationCap.TICKS_PER_PDP_DATA / 2.0) {
 				LogKitten.w("Preventative capping to " + (currentSpeed
 					- AccelerationCap.ANTI_BROWNOUT_BACKOFF_PER_SECOND * Math.signum(currentSpeed) * deltaTime) + " from "
