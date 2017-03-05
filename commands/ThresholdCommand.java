@@ -27,7 +27,7 @@ public class ThresholdCommand<T extends Comparable<T>> extends Command {
 	}
 
 	protected boolean pastThreshold() {
-		return ((supplier.get().compareTo(threshold) >= 0) ^ invert);
+		return ((supplier.get().compareTo(threshold) >= 0) != invert);
 	}
 
 	@Override
