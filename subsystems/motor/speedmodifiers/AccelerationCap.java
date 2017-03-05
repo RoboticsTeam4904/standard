@@ -83,7 +83,8 @@ public class AccelerationCap implements SpeedModifier {
 				LogKitten.ex(e);
 			}
 			lastVoltageDrop = voltageDrop;
-			if (!new Util.Range(lastVoltageDrop - 0.01, lastVoltageDrop + 0.01).contains(newVoltageDrop)) {
+			if (!new Util.Range(lastVoltageDrop - PDP.PDP_CURRENT_PRECISION, lastVoltageDrop + PDP.PDP_CURRENT_PRECISION)
+				.contains(newVoltageDrop)) {
 				voltageDrop = newVoltageDrop; // This prevents the delta voltage drop from going to zero if multiple ticks go by between PDP reads
 			}
 		}
