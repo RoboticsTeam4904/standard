@@ -14,6 +14,8 @@ import edu.wpi.first.wpilibj.DriverStation;
 public class PDP {
 	public static final double PDP_CURRENT_PRECISION = 0.01;
 	public static final double PDP_VOLTAGE_PRECISION = 0.125;
+	protected final static double DEFAULT_VOLTAGE = 11.5;
+	protected final static double DEFAULT_RESISTANCE = 80.0;
 	protected final static int PDP_ID_STATUS_1 = 0x8041400;
 	protected final static int PDP_ID_STATUS_2 = 0x8041440;
 	protected final static int PDP_ID_STATUS_3 = 0x8041480;
@@ -40,10 +42,10 @@ public class PDP {
 		status2 = new CustomCAN("PDP STATUS 2", PDP.PDP_ID_STATUS_2 | ID);
 		status3 = new CustomCAN("PDP STATUS 2", PDP.PDP_ID_STATUS_3 | ID);
 		statusEnergy = new CustomCAN("PDP STATUS ENERGY", PDP.PDP_ID_STATUS_ENERGY | ID);
-		cachedVoltage = 11.5;
+		cachedVoltage = PDP.DEFAULT_VOLTAGE;
 		cachedCurrent = 0;
 		cachedChannelCurrents = new double[] {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-		cachedResistance = 80.0;
+		cachedResistance = PDP.DEFAULT_RESISTANCE;
 	}
 
 	/**
@@ -55,7 +57,7 @@ public class PDP {
 		this(0);
 	}
 
-	private void readStatus(int status) {
+	private void readStatus(int status) throws InvalidSensorException {
 		byte[] rawArray = null;
 		int numberCurrents = 6;
 		if (status == 1) {
@@ -65,6 +67,9 @@ public class PDP {
 		} else if (status == 3) {
 			rawArray = status3.read();
 			numberCurrents = 4;
+		} else {
+			LogKitten.w("Trying to read PDP status " + status + ", which does not exist!");
+			return;
 		}
 		if (rawArray != null) {
 			double[] tempCurrents = new double[numberCurrents];
@@ -85,6 +90,8 @@ public class PDP {
 				}
 			}
 			lastRead = System.currentTimeMillis();
+		} else if (System.currentTimeMillis() - lastRead > PDP.MAX_AGE) {
+			throw new InvalidSensorException("Can not read voltage from PDP");
 		}
 	}
 
@@ -117,9 +124,6 @@ public class PDP {
 	 */
 	public double getVoltageSafely() throws InvalidSensorException {
 		readStatus(3);
-		if (System.currentTimeMillis() - lastRead > PDP.MAX_AGE) {
-			throw new InvalidSensorException("Can not read voltage from PDP");
-		}
 		return cachedVoltage;
 	}
 
@@ -135,9 +139,6 @@ public class PDP {
 
 	public double getBatteryResistanceSafely() throws InvalidSensorException {
 		readStatus(3);
-		if (System.currentTimeMillis() - lastRead > PDP.MAX_AGE) {
-			throw new InvalidSensorException("Can not read battery resistance from PDP");
-		}
 		return cachedResistance;
 	}
 
@@ -193,9 +194,6 @@ public class PDP {
 		} else {
 			LogKitten.w("Trying to read PDP channel " + channel + ", which does not exist!");
 			return 0.0;
-		}
-		if (System.currentTimeMillis() - lastRead > PDP.MAX_AGE) {
-			throw new InvalidSensorException("Can not read current for port " + channel + " from PDP");
 		}
 		return cachedChannelCurrents[channel];
 	}
