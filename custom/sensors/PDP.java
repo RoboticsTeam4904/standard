@@ -58,7 +58,7 @@ public class PDP {
 		if (status == 1) {
 			rawArray = status1.read();
 		} else if (status == 2) {
-			rawArray = status1.read();
+			rawArray = status2.read();
 		} else if (status == 3) {
 			readStatus3();
 		}
@@ -92,8 +92,8 @@ public class PDP {
 					cachedChannelCurrents[i + 12] = tempCurrents[i];
 				}
 			}
-			cachedVoltage = (rawArray[6] & 0xFF) * 0.05 + 4.0;
 			cachedResistance = (rawArray[5] & 0xFF) / 1000.0; // in milliOhms
+			cachedVoltage = (rawArray[6] & 0xFF) * 0.05 + 4.0;
 			lastRead = System.currentTimeMillis();
 		}
 	}
