@@ -3,7 +3,6 @@ package org.usfirst.frc4904.standard.subsystems.motor.speedmodifiers;
 
 import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.Util;
-import org.usfirst.frc4904.standard.custom.sensors.InvalidSensorException;
 import org.usfirst.frc4904.standard.custom.sensors.PDP;
 
 /**
@@ -25,8 +24,8 @@ public class AccelerationCap implements SpeedModifier {
 	protected final double hardStopVoltage;
 	protected final int channels[];
 	protected double currentSpeed;
-	protected double voltageDrop;
-	protected double lastVoltageDrop;
+	protected double voltage;
+	protected double lastVoltage;
 
 	/**
 	 * A SpeedModifier that does brownout protection and voltage ramping.
@@ -50,8 +49,8 @@ public class AccelerationCap implements SpeedModifier {
 			LogKitten.w("Disabling current for AccelerationCap, PDP seems unreliable");
 		}
 		currentSpeed = 0;
-		voltageDrop = 0;
-		lastVoltageDrop = 0;
+		voltage = pdp.getVoltage();
+		lastVoltage = voltage;
 		lastUpdate = System.currentTimeMillis();
 	}
 
@@ -73,21 +72,10 @@ public class AccelerationCap implements SpeedModifier {
 	protected double calculate(double inputSpeed) {
 		double deltaTime = (System.currentTimeMillis() - lastUpdate) / 1000.0;
 		lastUpdate = System.currentTimeMillis();
-		// Update current data
-		if (!disableCurrent) {
-			double newVoltageDrop = 0.0;
-			newVoltageDrop = voltageDrop;
-			try {
-				newVoltageDrop = pdp.getTotalCurrentSafely() * pdp.getBatteryResistanceSafely();
-			}
-			catch (InvalidSensorException e) {
-				LogKitten.ex(e);
-			}
-			if (!new Util.Range(lastVoltageDrop - PDP.PDP_CURRENT_PRECISION, lastVoltageDrop + PDP.PDP_CURRENT_PRECISION)
-				.contains(newVoltageDrop)) {
-				voltageDrop = newVoltageDrop; // This prevents the delta voltage drop from going to zero if multiple ticks go by between PDP reads
-				lastVoltageDrop = voltageDrop;
-			}
+		double newVoltage = pdp.getVoltage();
+		if (!new Util.Range(voltage - PDP.PDP_VOLTAGE_PRECISION, voltage + PDP.PDP_VOLTAGE_PRECISION).contains(newVoltage)) {
+			lastVoltage = voltage;
+			voltage = newVoltage;
 		}
 		// If we have not called this function in a while, we were probably disabled, so we should just output zero
 		if (deltaTime > AccelerationCap.TIMEOUT_SECONDS) {
@@ -115,16 +103,13 @@ public class AccelerationCap implements SpeedModifier {
 		}
 		// After ramping, apply brown-out protection
 		// Even if we are still above the hard stop voltage, try to avoid going below next tick
-		if (!disableCurrent) {
-			double deltaVoltageDrop = voltageDrop - lastVoltageDrop;
-			if (currentVoltage < hardStopVoltage + voltageDrop
-				+ deltaVoltageDrop * AccelerationCap.TICKS_PER_PDP_DATA / 2.0) {
-				LogKitten.w("Preventative capping to " + (currentSpeed
-					- AccelerationCap.ANTI_BROWNOUT_BACKOFF_PER_SECOND * Math.signum(currentSpeed) * deltaTime) + " from "
-					+ inputSpeed);
-				return currentSpeed
-					- AccelerationCap.ANTI_BROWNOUT_BACKOFF_PER_SECOND * Math.signum(currentSpeed) * deltaTime;
-			}
+		if (currentVoltage < hardStopVoltage
+			+ (lastVoltage - voltage) * AccelerationCap.TICKS_PER_PDP_DATA / 2.0) {
+			LogKitten.w("Preventative capping to " + (currentSpeed
+				- AccelerationCap.ANTI_BROWNOUT_BACKOFF_PER_SECOND * Math.signum(currentSpeed) * deltaTime) + " from "
+				+ inputSpeed);
+			return currentSpeed
+				- AccelerationCap.ANTI_BROWNOUT_BACKOFF_PER_SECOND * Math.signum(currentSpeed) * deltaTime;
 		}
 		return rampedSpeed;
 	}

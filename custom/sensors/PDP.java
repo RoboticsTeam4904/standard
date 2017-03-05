@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.DriverStation;
  */
 public class PDP {
 	public static final double PDP_CURRENT_PRECISION = 0.01;
+	public static final double PDP_VOLTAGE_PRECISION = 0.125;
 	protected final static int PDP_ID_STATUS_1 = 0x8041400;
 	protected final static int PDP_ID_STATUS_2 = 0x8041440;
 	protected final static int PDP_ID_STATUS_3 = 0x8041480;
