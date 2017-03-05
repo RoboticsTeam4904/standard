@@ -190,6 +190,7 @@ public class PDP {
 		} else if (channel <= 15) {
 			readStatus(3);
 		} else {
+			LogKitten.w("Trying to read PDP channel " + channel + ", which does not exist!");
 			return 0.0;
 		}
 		if (System.currentTimeMillis() - lastRead > PDP.MAX_AGE) {
