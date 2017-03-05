@@ -55,45 +55,33 @@ public class PDP {
 
 	private void readStatus(int status) {
 		byte[] rawArray = null;
+		int numberCurrents = 6;
 		if (status == 1) {
 			rawArray = status1.read();
 		} else if (status == 2) {
 			rawArray = status2.read();
 		} else if (status == 3) {
-			readStatus3();
+			rawArray = status3.read();
+			numberCurrents = 4;
 		}
 		if (rawArray != null) {
-			double[] tempCurrents = new double[6];
+			double[] tempCurrents = new double[numberCurrents];
 			tempCurrents[0] = ((rawArray[0] & 0xFF) << 2 | ((rawArray[1] & 0xC0) >> 6)) * 0.125;
 			tempCurrents[1] = (((rawArray[1] & 0x3F) << 4) | ((rawArray[2] & 0xF0) >> 4)) * 0.125;
 			tempCurrents[2] = (((rawArray[2] & 0x0F) << 6) | ((rawArray[3] & 0x3F) >> 2)) * 0.125;
 			tempCurrents[3] = (((rawArray[3] & 0xC0) << 8) | ((rawArray[4] & 0xFF))) * 0.125;
-			tempCurrents[4] = (((rawArray[5] & 0xFF) << 2) | ((rawArray[6] & 0xC0) >> 6)) * 0.125;
-			tempCurrents[5] = (((rawArray[6] & 0x3F) << 4) | ((rawArray[7] & 0xF0) >> 4)) * 0.125;
-			for (int i = 0; i < 6; i++) {
+			if (numberCurrents == 6) {
+				tempCurrents[4] = (((rawArray[5] & 0xFF) << 2) | ((rawArray[6] & 0xC0) >> 6)) * 0.125;
+				tempCurrents[5] = (((rawArray[6] & 0x3F) << 4) | ((rawArray[7] & 0xF0) >> 4)) * 0.125;
+			} else {
+				cachedResistance = (rawArray[5] & 0xFF) / 1000.0; // in milliOhms
+				cachedVoltage = (rawArray[6] & 0xFF) * 0.05 + 4.0;
+			}
+			for (int i = 0; i < numberCurrents; i++) {
 				if (tempCurrents[i] < 128) { // deals with occasional issue with PDP reporting 1000+ amps (this is not a bug in this code, it was observed in PowerDistributionPanel as well
 					cachedChannelCurrents[i + (status - 1) * 6] = tempCurrents[i];
 				}
 			}
-			lastRead = System.currentTimeMillis();
-		}
-	}
-
-	private void readStatus3() { // Status 3 broken out for voltage and resistance
-		byte[] rawArray = status3.read();
-		if (rawArray != null) {
-			double[] tempCurrents = new double[4];
-			tempCurrents[0] = (((rawArray[0] & 0xFF) << 2) | ((rawArray[1] & 0xC0) >> 6)) * 0.125;
-			tempCurrents[1] = (((rawArray[1] & 0x3F) << 4) | ((rawArray[2] & 0xF0) >> 4)) * 0.125;
-			tempCurrents[2] = (((rawArray[2] & 0x0F) << 6) | ((rawArray[3] & 0x3F) >> 2)) * 0.125;
-			tempCurrents[3] = (((rawArray[3] & 0xC0) << 8) | ((rawArray[4] & 0xFF))) * 0.125;
-			for (int i = 0; i < 4; i++) {
-				if (tempCurrents[i] < 128) {
-					cachedChannelCurrents[i + 12] = tempCurrents[i];
-				}
-			}
-			cachedResistance = (rawArray[5] & 0xFF) / 1000.0; // in milliOhms
-			cachedVoltage = (rawArray[6] & 0xFF) * 0.05 + 4.0;
 			lastRead = System.currentTimeMillis();
 		}
 	}
@@ -126,7 +114,7 @@ public class PDP {
 	 *         If PDP connection is lost, InvalidSensorException will be thrown.
 	 */
 	public double getVoltageSafely() throws InvalidSensorException {
-		readStatus3();
+		readStatus(3);
 		if (System.currentTimeMillis() - lastRead > PDP.MAX_AGE) {
 			throw new InvalidSensorException("Can not read voltage from PDP");
 		}
@@ -144,7 +132,7 @@ public class PDP {
 	}
 
 	public double getBatteryResistanceSafely() throws InvalidSensorException {
-		readStatus3();
+		readStatus(3);
 		if (System.currentTimeMillis() - lastRead > PDP.MAX_AGE) {
 			throw new InvalidSensorException("Can not read battery resistance from PDP");
 		}
@@ -172,10 +160,7 @@ public class PDP {
 	public double getTotalCurrentSafely() throws InvalidSensorException {
 		byte[] rawArray = statusEnergy.read();
 		if (rawArray != null) {
-			int rawAmperage = rawArray[1] & 0xFF; // first part of current is the 2nd byte of the energy status
-			rawAmperage = rawAmperage << 4;
-			rawAmperage += (rawArray[2] & 0xF0) >> 4; // second part of current is in the 3rd byte of the energy status
-			cachedCurrent = (rawAmperage) * 0.125;
+			cachedCurrent = (((rawArray[1] & 0xFF) << 4) | ((rawArray[2] & 0xF0) >> 4)) * 0.125;
 			lastRead = System.currentTimeMillis();
 		}
 		if (System.currentTimeMillis() - lastRead > PDP.MAX_AGE) {
