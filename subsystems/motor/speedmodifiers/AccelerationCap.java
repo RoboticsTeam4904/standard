@@ -74,8 +74,8 @@ public class AccelerationCap implements SpeedModifier {
 		double deltaTime = (System.currentTimeMillis() - lastUpdate) / 1000.0;
 		lastUpdate = System.currentTimeMillis();
 		// Update current data
-		double newVoltageDrop = 0.0;
 		if (!disableCurrent) {
+			double newVoltageDrop = 0.0;
 			newVoltageDrop = voltageDrop;
 			try {
 				newVoltageDrop = pdp.getTotalCurrentSafely() * pdp.getBatteryResistanceSafely();
