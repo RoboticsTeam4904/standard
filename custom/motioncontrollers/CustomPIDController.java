@@ -268,7 +268,12 @@ public class CustomPIDController extends MotionController {
 		long latestTime = System.currentTimeMillis();
 		long timeDiff = latestTime - lastTime;
 		lastTime = latestTime;
-		if (justReset) { // Deals with I getting huge due to timeDiffs
+		// If we just reset, then the lastTime could be way before the latestTime and so timeDiff would be huge.
+		// This would lead to a very big I (and a big D, briefly).
+		// Also, D could be unpredictable because lastError could be wildly different than error (since they're
+		// separated by more than a tick in time).
+		// Hence, if we just reset, just pretend we're still disabled and record the lastTime and lastError for next tick.
+		if (justReset) {
 			lastError = error;
 			return F * setpoint;
 		}
