@@ -147,6 +147,26 @@ public abstract class MotionController {
 	public abstract double getError();
 
 	/**
+	 * Get the current input to the PID loop.
+	 *
+	 * @return the current value of the sensor
+	 * 
+	 * @warning this does not indicate sensor errors
+	 */
+	public double getInput() {
+		return sensor.pidGet();
+	}
+
+	/**
+	 * Get the current input to the PID loop.
+	 *
+	 * @return the current value of the sensor
+	 */
+	public double getInputSafely() throws InvalidSensorException {
+		return sensor.pidGetSafely();
+	}
+
+	/**
 	 * The most recent setpoint.
 	 *
 	 * @return

@@ -4,7 +4,6 @@ package org.usfirst.frc4904.standard.commands.chassis;
 import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.custom.ChassisController;
 import org.usfirst.frc4904.standard.custom.motioncontrollers.MotionController;
-import org.usfirst.frc4904.standard.custom.sensors.CustomEncoder;
 import org.usfirst.frc4904.standard.custom.sensors.InvalidSensorException;
 import org.usfirst.frc4904.standard.subsystems.chassis.Chassis;
 import edu.wpi.first.wpilibj.command.Command;
@@ -14,7 +13,6 @@ public class ChassisMoveDistance extends Command implements ChassisController {
 	protected final MotionController motionController;
 	protected final Command fallbackCommand;
 	protected final double distance;
-	protected final CustomEncoder encoder;
 	protected boolean runOnce;
 
 	/**
@@ -31,11 +29,9 @@ public class ChassisMoveDistance extends Command implements ChassisController {
 	 *        If the sensor fails for some reason, this command will be cancelled, then the fallbackCommand will start
 	 * @param encoders
 	 */
-	public ChassisMoveDistance(Chassis chassis, double distance, MotionController motionController, Command fallbackCommand,
-		CustomEncoder encoder) {
+	public ChassisMoveDistance(Chassis chassis, double distance, MotionController motionController, Command fallbackCommand) {
 		chassisMove = new ChassisMove(chassis, this, false);
 		this.motionController = motionController;
-		this.encoder = encoder;
 		this.distance = distance;
 		this.fallbackCommand = fallbackCommand;
 		runOnce = false;
@@ -53,8 +49,8 @@ public class ChassisMoveDistance extends Command implements ChassisController {
 	 * @param motionController
 	 * @param encoders
 	 */
-	public ChassisMoveDistance(Chassis chassis, double distance, MotionController motionController, CustomEncoder encoder) {
-		this(chassis, distance, motionController, null, encoder);
+	public ChassisMoveDistance(Chassis chassis, double distance, MotionController motionController) {
+		this(chassis, distance, motionController, null);
 	}
 
 	@Override
@@ -72,7 +68,7 @@ public class ChassisMoveDistance extends Command implements ChassisController {
 			}
 			return;
 		}
-		motionController.setSetpoint(encoder.getDistance() + distance);
+		motionController.setSetpoint(motionController.getInput() + distance);
 		motionController.enable();
 	}
 
