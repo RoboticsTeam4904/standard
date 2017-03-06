@@ -30,7 +30,7 @@ public abstract class MotionController {
 	protected boolean enable;
 	protected boolean overridden;
 	protected Exception sensorException;
-	protected volatile boolean justReset;
+	private volatile boolean justReset;
 	private final Object lock = new Object();
 
 	/**
@@ -164,6 +164,10 @@ public abstract class MotionController {
 	 */
 	public void setSetpoint(double setpoint) {
 		this.setpoint = setpoint;
+	}
+
+	public boolean didJustReset() {
+		return justReset;
 	}
 
 	/**

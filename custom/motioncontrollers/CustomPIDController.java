@@ -272,7 +272,7 @@ public class CustomPIDController extends MotionController {
 		// Also, D could be unpredictable because lastError could be wildly different than error (since they're
 		// separated by more than a tick in time).
 		// Hence, if we just reset, just pretend we're still disabled and record the lastTime and lastError for next tick.
-		if (justReset) {
+		if (didJustReset()) {
 			lastError = error;
 			return F * setpoint;
 		}
