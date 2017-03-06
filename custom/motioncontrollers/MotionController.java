@@ -30,7 +30,7 @@ public abstract class MotionController {
 	protected boolean enable;
 	protected boolean overridden;
 	protected Exception sensorException;
-	private volatile boolean justReset;
+	protected volatile boolean justReset;
 	private final Object lock = new Object();
 
 	/**
@@ -46,7 +46,7 @@ public abstract class MotionController {
 		output = null;
 		timer = new Timer();
 		task = new MotionControllerTask();
-		enable = true;
+		enable = false;
 		overridden = false;
 		absoluteTolerance = Double.MIN_VALUE; // Nonzero to avoid floating point errors
 		capOutput = false;
