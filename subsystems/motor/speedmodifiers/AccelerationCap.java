@@ -19,10 +19,8 @@ public class AccelerationCap implements SpeedModifier {
 	protected final static double AVAILABLE_VOLTAGE_TO_RAMPING_SCALE = 0.55; // Experimentally determined (but estimated as full speed above 11.8 volts)
 	protected long lastUpdate; // in milliseconds
 	protected final static double REASONABLE_RESTING_CURRENT = 10.0;
-	protected final boolean disableCurrent; // If we detect a PDP error, stop trying to use current
 	protected final PDP pdp;
 	protected final double hardStopVoltage;
-	protected final int channels[];
 	protected double currentSpeed;
 	protected double voltage;
 	protected double lastVoltage;
@@ -40,14 +38,9 @@ public class AccelerationCap implements SpeedModifier {
 	 * @param hardStopVoltage
 	 *        Voltage to begin decreasing motor speed at.
 	 */
-	public AccelerationCap(PDP pdp, double hardStopVoltage, int... channels) {
+	public AccelerationCap(PDP pdp, double hardStopVoltage) {
 		this.pdp = pdp;
 		this.hardStopVoltage = hardStopVoltage;
-		this.channels = channels;
-		disableCurrent = pdp.getTotalCurrent() > AccelerationCap.REASONABLE_RESTING_CURRENT;
-		if (disableCurrent) {
-			LogKitten.w("Disabling current for AccelerationCap, PDP seems unreliable");
-		}
 		currentSpeed = 0;
 		voltage = pdp.getVoltage();
 		lastVoltage = voltage;
@@ -65,8 +58,8 @@ public class AccelerationCap implements SpeedModifier {
 	 *        The robot's power distribution panel.
 	 *        This is used to monitor the battery voltage.
 	 */
-	public AccelerationCap(PDP pdp, int... channels) {
-		this(pdp, AccelerationCap.DEFAULT_HARD_STOP_VOLTAGE, channels);
+	public AccelerationCap(PDP pdp) {
+		this(pdp, AccelerationCap.DEFAULT_HARD_STOP_VOLTAGE);
 	}
 
 	protected double calculate(double inputSpeed) {
