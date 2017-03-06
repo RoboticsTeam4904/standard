@@ -156,7 +156,9 @@ public class CANEncoder extends CANSensor implements CustomEncoder {
 	 */
 	@Override
 	public void reset() {
-		super.write(CANEncoder.RESET_ENCODER_BYTE_SEQUENCE); // resetenc
+		for (int i = 0; i < 30; i++) {
+			super.write(CANEncoder.RESET_ENCODER_BYTE_SEQUENCE); // resetenc
+		}
 	}
 
 	@Override
