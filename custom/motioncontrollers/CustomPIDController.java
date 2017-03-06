@@ -264,7 +264,6 @@ public class CustomPIDController extends MotionController {
 				}
 			}
 		}
-		double errorDerivative;
 		long latestTime = System.currentTimeMillis();
 		long timeDiff = latestTime - lastTime;
 		lastTime = latestTime;
@@ -277,6 +276,7 @@ public class CustomPIDController extends MotionController {
 			lastError = error;
 			return F * setpoint;
 		}
+		double errorDerivative;
 		// Check if the sensor supports native derivative calculations and that we're doing displacement PID
 		// (if we're doing rate PID, then getRate() would be the PID input rather then the input's derivative)
 		if (sensor instanceof NativeDerivativeSensor && sensor.getPIDSourceType() == PIDSourceType.kDisplacement) {
