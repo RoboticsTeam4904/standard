@@ -68,7 +68,7 @@ public class ChassisMoveDistance extends Command implements ChassisController {
 			}
 			return;
 		}
-		motionController.setSetpoint(motionController.getInput() + distance);
+		motionController.setSetpoint(motionController.getSensorValue() + distance);
 		motionController.enable();
 	}
 

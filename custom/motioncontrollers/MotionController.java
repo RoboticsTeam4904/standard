@@ -153,7 +153,7 @@ public abstract class MotionController {
 	 * 
 	 * @warning this does not indicate sensor errors
 	 */
-	public double getInput() {
+	public double getSensorValue() {
 		return sensor.pidGet();
 	}
 
