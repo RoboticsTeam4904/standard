@@ -46,7 +46,7 @@ public abstract class MotionController {
 		output = null;
 		timer = new Timer();
 		task = new MotionControllerTask();
-		enable = true;
+		enable = false;
 		overridden = false;
 		absoluteTolerance = Double.MIN_VALUE; // Nonzero to avoid floating point errors
 		capOutput = false;
@@ -164,6 +164,10 @@ public abstract class MotionController {
 	 */
 	public void setSetpoint(double setpoint) {
 		this.setpoint = setpoint;
+	}
+
+	public boolean didJustReset() {
+		return justReset;
 	}
 
 	/**
