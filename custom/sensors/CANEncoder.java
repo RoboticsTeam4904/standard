@@ -19,6 +19,7 @@ public class CANEncoder extends CANSensor implements CustomEncoder {
 	 * Spells out "resetenc" in ASCII
 	 */
 	private static final byte[] RESET_ENCODER_BYTE_SEQUENCE = "resetenc".getBytes();
+	protected static final int RESET_NUMBER_TRIES = 30;
 
 	public CANEncoder(String name, int id, boolean reverseDirection, double distancePerPulse) {
 		super(name, id);
@@ -156,7 +157,9 @@ public class CANEncoder extends CANSensor implements CustomEncoder {
 	 */
 	@Override
 	public void reset() {
-		super.write(CANEncoder.RESET_ENCODER_BYTE_SEQUENCE); // resetenc
+		for (int i = 0; i < CANEncoder.RESET_NUMBER_TRIES; i++) {
+			super.write(CANEncoder.RESET_ENCODER_BYTE_SEQUENCE); // resetenc
+		}
 	}
 
 	@Override
