@@ -265,4 +265,22 @@ public class PDP {
 		}
 		return cachedChannelCurrents[channel];
 	}
+
+	/**
+	 * Gets the current used by a single channel.
+	 *
+	 * @param channel
+	 *        the channel to read the current for
+	 * @return
+	 * 		the current from that channel
+	 */
+	public double getCurrent(int channel) {
+		try {
+			return getCurrentSafely(channel);
+		}
+		catch (InvalidSensorException e) {
+			LogKitten.ex(e);
+			return cachedChannelCurrents[channel];
+		}
+	}
 }
