@@ -108,7 +108,7 @@ public class PDP {
 				* rawArray[0];
 			lastRead = System.currentTimeMillis();
 		} else if (System.currentTimeMillis() - lastRead > PDP.MAX_AGE) {
-			throw new InvalidSensorException("Can not read voltage from PDP");
+			throw new InvalidSensorException("Can not read energy from PDP");
 		}
 	}
 
