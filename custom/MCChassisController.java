@@ -28,7 +28,6 @@ public class MCChassisController implements ChassisController {
 		motionController.setOutputRange(-1.0f, 1.0f);
 		motionController.setContinuous(true);
 		motionController.reset();
-		motionController.enable();
 		targetYaw = imu.getYaw();
 		lastUpdate = System.currentTimeMillis() / 1000.0;
 	}
@@ -53,6 +52,9 @@ public class MCChassisController implements ChassisController {
 
 	@Override
 	public double getTurnSpeed() {
+		if (!motionController.isEnabled()) {
+			motionController.enable();
+		}
 		if (Util.isZero(controller.getY()) && Util.isZero(controller.getX())) {
 			motionController.setSetpoint(imu.getYaw());
 			targetYaw = imu.getYaw();
