@@ -28,6 +28,8 @@ public class PDP {
 	protected double cachedCurrent;
 	protected double[] cachedChannelCurrents = new double[16];
 	protected double cachedResistance;
+	protected double cachedEnergy;
+	protected double cachedPower;
 	protected long lastRead;
 	private static final long MAX_AGE = 100; // How long to keep the last CAN message before throwing an error (milliseconds)
 
@@ -46,6 +48,8 @@ public class PDP {
 		cachedCurrent = 0;
 		cachedChannelCurrents = new double[] {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 		cachedResistance = PDP.DEFAULT_RESISTANCE;
+		cachedEnergy = 0;
+		cachedPower = 0;
 	}
 
 	/**
@@ -92,6 +96,19 @@ public class PDP {
 			lastRead = System.currentTimeMillis();
 		} else if (System.currentTimeMillis() - lastRead > PDP.MAX_AGE) {
 			throw new InvalidSensorException("Can not read voltage from PDP");
+		}
+	}
+
+	private void readEnergy() throws InvalidSensorException {
+		byte[] rawArray = statusEnergy.read();
+		if (rawArray != null) {
+			cachedCurrent = (((rawArray[1] & 0xFF) << 4) | ((rawArray[2] & 0xF0) >> 4)) * 0.125;
+			cachedPower = (((rawArray[1] & 0x0F) << 12) | (rawArray[2] << 4) | ((rawArray[4] & 0xF0) >> 4)) * 0.125;
+			cachedEnergy = (((rawArray[4] & 0x0F) << 24) | (rawArray[5] << 16) | (rawArray[6] << 8) | (rawArray[7])) * 0.000125
+				* rawArray[0];
+			lastRead = System.currentTimeMillis();
+		} else if (System.currentTimeMillis() - lastRead > PDP.MAX_AGE) {
+			throw new InvalidSensorException("Can not read energy from PDP");
 		}
 	}
 
@@ -153,7 +170,7 @@ public class PDP {
 	}
 
 	/**
-	 * Gets the total current used by the entire robot.
+	 * Gets the total current used by channels 0-15 of the PDP.
 	 *
 	 * @return
 	 * 		Total robot current used.
@@ -161,15 +178,66 @@ public class PDP {
 	 *         If PDP connection is lost, InvalidSensorException will be thrown.
 	 */
 	public double getTotalCurrentSafely() throws InvalidSensorException {
-		byte[] rawArray = statusEnergy.read();
-		if (rawArray != null) {
-			cachedCurrent = (((rawArray[1] & 0xFF) << 4) | ((rawArray[2] & 0xF0) >> 4)) * 0.125;
-			lastRead = System.currentTimeMillis();
-		}
-		if (System.currentTimeMillis() - lastRead > PDP.MAX_AGE) {
-			throw new InvalidSensorException("Can not read amperage from PDP");
-		}
+		readEnergy();
 		return cachedCurrent;
+	}
+
+	/**
+	 * Gets the total power used by channels 0-15 of the PDP.
+	 * 
+	 * @return
+	 * 		Total robot power
+	 */
+	public double getTotalPower() {
+		try {
+			return getTotalPowerSafely();
+		}
+		catch (InvalidSensorException e) {
+			LogKitten.ex(e);
+			return cachedPower;
+		}
+	}
+
+	/**
+	 * Gets the total power used by channels 0-15 of the PDP, throwing an exception when the PDP is disconnected.
+	 * 
+	 * @return
+	 * 		Total robot power
+	 * @throws InvalidSensorException
+	 *         If PDP connection is lost, InvalidSensorException will be thrown.
+	 */
+	public double getTotalPowerSafely() throws InvalidSensorException {
+		readEnergy();
+		return cachedPower;
+	}
+
+	/**
+	 * Gets the total energy used by channels 0-15 of the PDP.
+	 * 
+	 * @return
+	 * 		Total robot energy used
+	 */
+	public double getTotalEnergy() {
+		try {
+			return getTotalEnergySafely();
+		}
+		catch (InvalidSensorException e) {
+			LogKitten.ex(e);
+			return cachedEnergy;
+		}
+	}
+
+	/**
+	 * Gets the total energy used by channels 0-15 of the PDP, throwing an exception when the PDP is disconnected.
+	 * 
+	 * @return
+	 * 		Total robot energy used
+	 * @throws InvalidSensorException
+	 *         If PDP connection is lost, InvalidSensorException will be thrown.
+	 */
+	public double getTotalEnergySafely() throws InvalidSensorException {
+		readEnergy();
+		return cachedEnergy;
 	}
 
 	/**
@@ -196,5 +264,23 @@ public class PDP {
 			return 0.0;
 		}
 		return cachedChannelCurrents[channel];
+	}
+
+	/**
+	 * Gets the current used by a single channel.
+	 *
+	 * @param channel
+	 *        the channel to read the current for
+	 * @return
+	 * 		the current from that channel
+	 */
+	public double getCurrent(int channel) {
+		try {
+			return getCurrentSafely(channel);
+		}
+		catch (InvalidSensorException e) {
+			LogKitten.ex(e);
+			return cachedChannelCurrents[channel];
+		}
 	}
 }
