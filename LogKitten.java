@@ -19,7 +19,7 @@ public class LogKitten {
 	public final static KittenLevel LEVEL_WARN = KittenLevel.WARN;
 	public final static KittenLevel LEVEL_VERBOSE = KittenLevel.VERBOSE;
 	public final static KittenLevel LEVEL_DEBUG = KittenLevel.DEBUG;
-	public final static KittenLevel DEFAULT_LOG_LEVEL = KittenLevel.VERBOSE;
+	public final static KittenLevel DEFAULT_LOG_LEVEL = KittenLevel.DEBUG;
 	public final static KittenLevel DEFAULT_PRINT_LEVEL = KittenLevel.WARN;
 	public final static KittenLevel DEFAULT_DS_LEVEL = LogKitten.DEFAULT_PRINT_LEVEL;
 	private static KittenLevel logLevel = LogKitten.DEFAULT_LOG_LEVEL;
