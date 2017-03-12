@@ -1,6 +1,5 @@
 package org.usfirst.frc4904.standard.subsystems.motor.speedmodifiers;
 
-
 /**
  * An interface for SpeedModifiers.
  * A speed modifier changes the input value of the motor.
