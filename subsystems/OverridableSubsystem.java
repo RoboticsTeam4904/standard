@@ -1,7 +1,7 @@
 package org.usfirst.frc4904.standard.subsystems;
 
 
-import org.usfirst.frc4904.robot.commands.Overridable;
+import org.usfirst.frc4904.standard.custom.Overridable;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 public abstract class OverridableSubsystem extends Subsystem implements Overridable {
