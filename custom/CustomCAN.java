@@ -3,8 +3,10 @@ package org.usfirst.frc4904.standard.custom;
 
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
+import org.usfirst.frc4904.standard.LogKitten;
 import edu.wpi.first.wpilibj.can.CANJNI;
 import edu.wpi.first.wpilibj.can.CANMessageNotFoundException;
+import edu.wpi.first.wpilibj.util.UncleanStatusException;
 
 /**
  * This class allows sending and receiving
@@ -15,7 +17,7 @@ public class CustomCAN {
 	// Because CANJNI is basically static, we do not extend it.
 	protected final int messageID;
 	protected final String name;
-
+	
 	/**
 	 * Constructor for a CustomCAN device.
 	 * The name is local and for your convenience only.
@@ -29,24 +31,39 @@ public class CustomCAN {
 		this.name = name;
 		messageID = id; // Ensure that the messageID is zeroed (32 bit int should be default, but better to be careful)
 	}
-
+	
 	public String getName() {
 		return name;
 	}
-
+	
 	/**
 	 * Used to write data to the device.
 	 *
 	 * @param data
 	 *        Data to be written. Should be EXACTLY 8 bytes long ONLY.
-	 * @throws IllegalArgumentException
 	 */
 	public void write(byte[] data) {
+		try {
+			writeSafely(data);
+		}
+		catch (UncleanStatusException e) {
+			LogKitten.ex(e);
+		}
+	}
+	
+	/**
+	 * Used to write data to the device.
+	 *
+	 * @param data
+	 *        Data to be written. Should be EXACTLY 8 bytes long ONLY.
+	 * @throws UncleanStatusException
+	 */
+	public void writeSafely(byte[] data) {
 		ByteBuffer canData = ByteBuffer.allocateDirect(8);
 		canData.put(data);
 		CANJNI.FRCNetCommCANSessionMuxSendMessage(messageID, canData, CANJNI.CAN_SEND_PERIOD_NO_REPEAT);
 	}
-
+	
 	/**
 	 * Read data as bytebuffer
 	 *
@@ -65,7 +82,7 @@ public class CustomCAN {
 		catch (CANMessageNotFoundException e) {}
 		return response;
 	}
-
+	
 	/**
 	 * Reads data
 	 * Also stops repeating the last message.
