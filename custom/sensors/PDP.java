@@ -2,6 +2,7 @@ package org.usfirst.frc4904.standard.custom.sensors;
 
 
 import org.usfirst.frc4904.standard.LogKitten;
+import org.usfirst.frc4904.standard.custom.CANMessageUnavailableException;
 import org.usfirst.frc4904.standard.custom.CustomCAN;
 import edu.wpi.first.wpilibj.DriverStation;
 
@@ -32,7 +33,7 @@ public class PDP {
 	protected double cachedPower;
 	protected long lastRead;
 	private static final long MAX_AGE = 100; // How long to keep the last CAN message before throwing an error (milliseconds)
-
+	
 	/**
 	 * PDP constructor
 	 *
@@ -51,7 +52,7 @@ public class PDP {
 		cachedEnergy = 0;
 		cachedPower = 0;
 	}
-
+	
 	/**
 	 * PDP constructor
 	 *
@@ -60,19 +61,24 @@ public class PDP {
 	public PDP() {
 		this(0);
 	}
-
+	
 	private void readStatus(int status) throws InvalidSensorException {
 		byte[] rawArray = null;
 		int numberCurrents = 6;
-		if (status == 1) {
-			rawArray = status1.read();
-		} else if (status == 2) {
-			rawArray = status2.read();
-		} else if (status == 3) {
-			rawArray = status3.read();
-			numberCurrents = 4;
-		} else {
-			LogKitten.w("Trying to read PDP status " + status + ", which does not exist!");
+		try {
+			if (status == 1) {
+				rawArray = status1.read();
+			} else if (status == 2) {
+				rawArray = status2.read();
+			} else if (status == 3) {
+				rawArray = status3.read();
+				numberCurrents = 4;
+			} else {
+				LogKitten.w("Trying to read PDP status " + status + ", which does not exist!");
+				return;
+			}
+		}
+		catch (CANMessageUnavailableException e) {
 			return;
 		}
 		if (rawArray != null) {
@@ -98,20 +104,25 @@ public class PDP {
 			throw new InvalidSensorException("Can not read voltage from PDP");
 		}
 	}
-
+	
 	private void readEnergy() throws InvalidSensorException {
-		byte[] rawArray = statusEnergy.read();
+		byte[] rawArray;
+		try {
+			rawArray = statusEnergy.read();
+		}
+		catch (CANMessageUnavailableException e) {
+			throw new InvalidSensorException(e);
+		}
 		if (rawArray != null) {
 			cachedCurrent = (((rawArray[1] & 0xFF) << 4) | ((rawArray[2] & 0xF0) >> 4)) * 0.125;
 			cachedPower = (((rawArray[1] & 0x0F) << 12) | (rawArray[2] << 4) | ((rawArray[4] & 0xF0) >> 4)) * 0.125;
-			cachedEnergy = (((rawArray[4] & 0x0F) << 24) | (rawArray[5] << 16) | (rawArray[6] << 8) | (rawArray[7])) * 0.000125
-				* rawArray[0];
+			cachedEnergy = (((rawArray[4] & 0x0F) << 24) | (rawArray[5] << 16) | (rawArray[6] << 8) | (rawArray[7])) * 0.000125 * rawArray[0];
 			lastRead = System.currentTimeMillis();
 		} else if (System.currentTimeMillis() - lastRead > PDP.MAX_AGE) {
 			throw new InvalidSensorException("Can not read energy from PDP");
 		}
 	}
-
+	
 	/**
 	 * Gets the current voltage. This is the same for all channels.
 	 * This function defaults to the Driver Station voltage if the PDP becomes disconnected.
@@ -130,7 +141,7 @@ public class PDP {
 			return DriverStation.getInstance().getBatteryVoltage();
 		}
 	}
-
+	
 	/**
 	 * Gets the voltage on the battery.
 	 *
@@ -143,7 +154,7 @@ public class PDP {
 		readStatus(3);
 		return cachedVoltage;
 	}
-
+	
 	public double getBatteryResistance() {
 		try {
 			return getBatteryResistanceSafely();
@@ -153,12 +164,12 @@ public class PDP {
 			return cachedResistance;
 		}
 	}
-
+	
 	public double getBatteryResistanceSafely() throws InvalidSensorException {
 		readStatus(3);
 		return cachedResistance;
 	}
-
+	
 	public double getTotalCurrent() {
 		try {
 			return getTotalCurrentSafely();
@@ -168,7 +179,7 @@ public class PDP {
 			return cachedCurrent;
 		}
 	}
-
+	
 	/**
 	 * Gets the total current used by channels 0-15 of the PDP.
 	 *
@@ -181,7 +192,7 @@ public class PDP {
 		readEnergy();
 		return cachedCurrent;
 	}
-
+	
 	/**
 	 * Gets the total power used by channels 0-15 of the PDP.
 	 * 
@@ -197,7 +208,7 @@ public class PDP {
 			return cachedPower;
 		}
 	}
-
+	
 	/**
 	 * Gets the total power used by channels 0-15 of the PDP, throwing an exception when the PDP is disconnected.
 	 * 
@@ -210,7 +221,7 @@ public class PDP {
 		readEnergy();
 		return cachedPower;
 	}
-
+	
 	/**
 	 * Gets the total energy used by channels 0-15 of the PDP.
 	 * 
@@ -226,7 +237,7 @@ public class PDP {
 			return cachedEnergy;
 		}
 	}
-
+	
 	/**
 	 * Gets the total energy used by channels 0-15 of the PDP, throwing an exception when the PDP is disconnected.
 	 * 
@@ -239,7 +250,7 @@ public class PDP {
 		readEnergy();
 		return cachedEnergy;
 	}
-
+	
 	/**
 	 * Gets the current used by a single channel.
 	 *
@@ -265,7 +276,7 @@ public class PDP {
 		}
 		return cachedChannelCurrents[channel];
 	}
-
+	
 	/**
 	 * Gets the current used by a single channel.
 	 *

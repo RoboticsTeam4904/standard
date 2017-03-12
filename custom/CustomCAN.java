@@ -69,18 +69,21 @@ public class CustomCAN {
 	 *
 	 * @return
 	 * 		ByteBuffer containing CAN message, or null
+	 * @throws
+	 * 		CANMEssageNotFoundException
+	 *         when no new message is available
 	 */
-	protected ByteBuffer readBuffer() {
+	protected ByteBuffer readBuffer() throws CANMessageUnavailableException {
 		IntBuffer idBuffer = ByteBuffer.allocateDirect(4).asIntBuffer();
 		idBuffer.clear();
 		idBuffer.put(0, Integer.reverseBytes(messageID));
 		ByteBuffer timestamp = ByteBuffer.allocate(4);
-		ByteBuffer response = null;
 		try {
-			response = CANJNI.FRCNetCommCANSessionMuxReceiveMessage(idBuffer, 0x1fffffff, timestamp);
+			return CANJNI.FRCNetCommCANSessionMuxReceiveMessage(idBuffer, 0x1fffffff, timestamp);
 		}
-		catch (CANMessageNotFoundException e) {}
-		return response;
+		catch (CANMessageNotFoundException e) {
+			throw new CANMessageUnavailableException("Unable to read CAN device " + getName() + " with ID 0x" + Integer.toHexString(messageID), e);
+		}
 	}
 	
 	/**
@@ -89,7 +92,7 @@ public class CustomCAN {
 	 *
 	 * @return byte[] (8 long)
 	 */
-	public byte[] read() {
+	public byte[] read() throws CANMessageUnavailableException {
 		ByteBuffer dataBuffer = readBuffer();
 		if (dataBuffer == null) {
 			return null;
