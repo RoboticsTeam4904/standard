@@ -3,8 +3,10 @@ package org.usfirst.frc4904.standard.custom;
 
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
+import org.usfirst.frc4904.standard.LogKitten;
 import edu.wpi.first.wpilibj.can.CANJNI;
 import edu.wpi.first.wpilibj.can.CANMessageNotFoundException;
+import edu.wpi.first.wpilibj.util.UncleanStatusException;
 
 /**
  * This class allows sending and receiving
@@ -15,8 +17,7 @@ public class CustomCAN {
 	// Because CANJNI is basically static, we do not extend it.
 	protected final int messageID;
 	protected final String name;
-	private static final int CAN_MAX_READ_WAIT = 5; // How long to wait for a CAN message before returning null (milliseconds)
-
+	
 	/**
 	 * Constructor for a CustomCAN device.
 	 * The name is local and for your convenience only.
@@ -30,54 +31,68 @@ public class CustomCAN {
 		this.name = name;
 		messageID = id; // Ensure that the messageID is zeroed (32 bit int should be default, but better to be careful)
 	}
-
+	
 	public String getName() {
 		return name;
 	}
-
+	
 	/**
 	 * Used to write data to the device.
 	 *
 	 * @param data
 	 *        Data to be written. Should be EXACTLY 8 bytes long ONLY.
-	 * @throws IllegalArgumentException
 	 */
 	public void write(byte[] data) {
+		try {
+			writeSafely(data);
+		}
+		catch (UncleanStatusException e) {
+			LogKitten.ex(e);
+		}
+	}
+	
+	/**
+	 * Used to write data to the device.
+	 *
+	 * @param data
+	 *        Data to be written. Should be EXACTLY 8 bytes long ONLY.
+	 * @throws UncleanStatusException
+	 */
+	public void writeSafely(byte[] data) {
 		ByteBuffer canData = ByteBuffer.allocateDirect(8);
 		canData.put(data);
 		CANJNI.FRCNetCommCANSessionMuxSendMessage(messageID, canData, CANJNI.CAN_SEND_PERIOD_NO_REPEAT);
 	}
-
+	
 	/**
 	 * Read data as bytebuffer
 	 *
 	 * @return
 	 * 		ByteBuffer containing CAN message, or null
+	 * @throws
+	 * 		CANMEssageNotFoundException
+	 *         when no new message is available
 	 */
-	protected ByteBuffer readBuffer() {
+	protected ByteBuffer readBuffer() throws CANMessageUnavailableException {
 		IntBuffer idBuffer = ByteBuffer.allocateDirect(4).asIntBuffer();
 		idBuffer.clear();
 		idBuffer.put(0, Integer.reverseBytes(messageID));
 		ByteBuffer timestamp = ByteBuffer.allocate(4);
-		ByteBuffer response = null;
-		long start = System.currentTimeMillis();
-		while (System.currentTimeMillis() - start < CustomCAN.CAN_MAX_READ_WAIT) {
-			try {
-				response = CANJNI.FRCNetCommCANSessionMuxReceiveMessage(idBuffer, 0x1fffffff, timestamp);
-				break;
-			}
-			catch (CANMessageNotFoundException e) {}
+		try {
+			return CANJNI.FRCNetCommCANSessionMuxReceiveMessage(idBuffer, 0x1fffffff, timestamp);
 		}
-		return response;
+		catch (CANMessageNotFoundException e) {
+			throw new CANMessageUnavailableException("Unable to read CAN device " + getName() + " with ID 0x" + Integer.toHexString(messageID), e);
+		}
 	}
-
+	
 	/**
 	 * Reads data
 	 * Also stops repeating the last message.
 	 *
 	 * @return byte[] (8 long)
 	 */
-	public byte[] read() {
+	public byte[] read() throws CANMessageUnavailableException {
 		ByteBuffer dataBuffer = readBuffer();
 		if (dataBuffer == null) {
 			return null;

@@ -133,7 +133,7 @@ public class BangBangController extends MotionController {
 	 */
 	@Override
 	public double getSafely() throws InvalidSensorException {
-		if (!enable) {
+		if (!isEnabled()) {
 			return F * setpoint;
 		}
 		double input = 0.0;

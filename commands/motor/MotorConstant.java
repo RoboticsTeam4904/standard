@@ -12,6 +12,22 @@ public class MotorConstant extends Command {
 	protected final Motor motor;
 
 	/**
+	 * @param name
+	 *        The name of this command.
+	 * @param motor
+	 *        The motor to set the speed of.
+	 * @param motorSpeed
+	 *        The speed to set the motor to.
+	 */
+	public MotorConstant(String name, Motor motor, double motorSpeed) {
+		super(name);
+		this.motor = motor;
+		this.motorSpeed = motorSpeed;
+		requires(motor);
+		setInterruptible(true);
+	}
+
+	/**
 	 *
 	 * @param motor
 	 *        The motor to set the speed of.
@@ -19,10 +35,7 @@ public class MotorConstant extends Command {
 	 *        The speed to set the motor to.
 	 */
 	public MotorConstant(Motor motor, double motorSpeed) {
-		this.motor = motor;
-		this.motorSpeed = motorSpeed;
-		requires(motor);
-		setInterruptible(true);
+		this("MotorConstant", motor, motorSpeed);
 	}
 
 	@Override
