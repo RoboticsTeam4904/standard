@@ -264,9 +264,19 @@ public class CustomPIDController extends MotionController {
 				}
 			}
 		}
-		double errorDerivative;
 		long latestTime = System.currentTimeMillis();
 		long timeDiff = latestTime - lastTime;
+		lastTime = latestTime;
+		// If we just reset, then the lastTime could be way before the latestTime and so timeDiff would be huge.
+		// This would lead to a very big I (and a big D, briefly).
+		// Also, D could be unpredictable because lastError could be wildly different than error (since they're
+		// separated by more than a tick in time).
+		// Hence, if we just reset, just pretend we're still disabled and record the lastTime and lastError for next tick.
+		if (didJustReset()) {
+			lastError = error;
+			return F * setpoint;
+		}
+		double errorDerivative;
 		// Check if the sensor supports native derivative calculations and that we're doing displacement PID
 		// (if we're doing rate PID, then getRate() would be the PID input rather then the input's derivative)
 		if (sensor instanceof NativeDerivativeSensor && sensor.getPIDSourceType() == PIDSourceType.kDisplacement) {
@@ -275,7 +285,6 @@ public class CustomPIDController extends MotionController {
 			// Calculate the approximation of the derivative.
 			errorDerivative = (error - lastError) / timeDiff;
 		}
-		lastTime = latestTime;
 		// Calculate the approximation of the error's integral
 		totalError += error * timeDiff;
 		// Calculate the result using the PIDF formula
