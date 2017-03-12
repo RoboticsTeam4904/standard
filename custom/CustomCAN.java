@@ -78,15 +78,12 @@ public class CustomCAN {
 		idBuffer.clear();
 		idBuffer.put(0, Integer.reverseBytes(messageID));
 		ByteBuffer timestamp = ByteBuffer.allocate(4);
-		ByteBuffer response = null;
 		try {
-			response = CANJNI.FRCNetCommCANSessionMuxReceiveMessage(idBuffer, 0x1fffffff, timestamp);
+			return CANJNI.FRCNetCommCANSessionMuxReceiveMessage(idBuffer, 0x1fffffff, timestamp);
 		}
 		catch (CANMessageNotFoundException e) {
-			throw new CANMessageUnavailableException(
-				"Unable to read CAN device " + getName() + " with ID 0x" + Integer.toHexString(messageID), e);
+			throw new CANMessageUnavailableException("Unable to read CAN device " + getName() + " with ID 0x" + Integer.toHexString(messageID), e);
 		}
-		return response;
 	}
 	
 	/**
