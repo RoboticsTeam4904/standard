@@ -2,6 +2,7 @@ package org.usfirst.frc4904.standard.subsystems.motor.speedmodifiers;
 
 
 import org.usfirst.frc4904.standard.LogKitten;
+import org.usfirst.frc4904.standard.Util;
 import org.usfirst.frc4904.standard.custom.sensors.PDP;
 
 /**
@@ -10,11 +11,19 @@ import org.usfirst.frc4904.standard.custom.sensors.PDP;
  * and prevent RoboRIO/router brownouts.
  */
 public class AccelerationCap implements SpeedModifier {
-	protected double currentSpeed;
+	public final static double MAXIMUM_MOTOR_INCREASE_PER_SECOND = 2.0;
+	public final static double ANTI_BROWNOUT_BACKOFF_PER_SECOND = 2.4; // How much to throttle a motor down to avoid brownout
+	public final static double DEFAULT_HARD_STOP_VOLTAGE = 7.0;
+	protected final static double TIMEOUT_SECONDS = 0.5; // If we do not get a value for this long, set the motor to zero (this is designed to handle the case where the robot is disabled with the motors still running_
+	protected final static double TICKS_PER_PDP_DATA = 1.25; // PDP update speed (25ms) / Scheduler loop time (20ms)
+	protected final static double AVAILABLE_VOLTAGE_TO_RAMPING_SCALE = 0.55; // Experimentally determined (but estimated as full speed above 11.8 volts)
 	protected long lastUpdate; // in milliseconds
+	protected final static double REASONABLE_RESTING_CURRENT = 10.0;
 	protected final PDP pdp;
-	protected final double softStopVoltage;
 	protected final double hardStopVoltage;
+	protected double currentSpeed;
+	protected double voltage;
+	protected double lastVoltage;
 
 	/**
 	 * A SpeedModifier that does brownout protection and voltage ramping.
@@ -29,10 +38,12 @@ public class AccelerationCap implements SpeedModifier {
 	 * @param hardStopVoltage
 	 *        Voltage to begin decreasing motor speed at.
 	 */
-	public AccelerationCap(PDP pdp, double softStopVoltage, double hardStopVoltage) {
+	public AccelerationCap(PDP pdp, double hardStopVoltage) {
 		this.pdp = pdp;
-		this.softStopVoltage = softStopVoltage;
 		this.hardStopVoltage = hardStopVoltage;
+		currentSpeed = 0;
+		voltage = pdp.getVoltage();
+		lastVoltage = voltage;
 		lastUpdate = System.currentTimeMillis();
 	}
 
@@ -41,15 +52,59 @@ public class AccelerationCap implements SpeedModifier {
 	 * This is designed to reduce power consumption (via voltage ramping)
 	 * and prevent RoboRIO/router brownouts.
 	 *
-	 * Default soft stop voltage is 11 volts.
-	 * Default hard stop voltage is 10 volts.
+	 * Default hard stop voltage is 7.0 volts.
 	 *
 	 * @param pdp
 	 *        The robot's power distribution panel.
 	 *        This is used to monitor the battery voltage.
 	 */
 	public AccelerationCap(PDP pdp) {
-		this(pdp, 11.0, 10.0);
+		this(pdp, AccelerationCap.DEFAULT_HARD_STOP_VOLTAGE);
+	}
+
+	protected double calculate(double inputSpeed) {
+		double deltaTime = (System.currentTimeMillis() - lastUpdate) / 1000.0;
+		lastUpdate = System.currentTimeMillis();
+		double newVoltage = pdp.getVoltage();
+		if (!new Util.Range(voltage - PDP.PDP_VOLTAGE_PRECISION, voltage + PDP.PDP_VOLTAGE_PRECISION).contains(newVoltage)) {
+			lastVoltage = voltage;
+			voltage = newVoltage;
+		}
+		// If we have not called this function in a while, we were probably disabled, so we should just output zero
+		if (deltaTime > AccelerationCap.TIMEOUT_SECONDS) {
+			return 0;
+		}
+		// After doing updates, check for low battery voltage first
+		double currentVoltage = pdp.getVoltage(); // Allow fallback to DS voltage
+		if (currentVoltage < hardStopVoltage) { // If we are below hardStopVoltage, stop motors
+			LogKitten.w("Low voltage, AccelerationCap stopping motors");
+			return 0;
+		}
+		if (Math.abs(inputSpeed) < Math.abs(currentSpeed) && Math.signum(inputSpeed) == Math.signum(currentSpeed)) {
+			return inputSpeed;
+		}
+		double rampedSpeed = inputSpeed;
+		// Ramping
+		if (Math.abs(currentSpeed - inputSpeed) > AccelerationCap.MAXIMUM_MOTOR_INCREASE_PER_SECOND * deltaTime) {
+			if (inputSpeed > currentSpeed) {
+				rampedSpeed = currentSpeed + AccelerationCap.MAXIMUM_MOTOR_INCREASE_PER_SECOND * deltaTime
+					* AccelerationCap.AVAILABLE_VOLTAGE_TO_RAMPING_SCALE * (currentVoltage - hardStopVoltage);
+			} else if (inputSpeed < currentSpeed) {
+				rampedSpeed = currentSpeed - AccelerationCap.MAXIMUM_MOTOR_INCREASE_PER_SECOND * deltaTime
+					* AccelerationCap.AVAILABLE_VOLTAGE_TO_RAMPING_SCALE * (currentVoltage - hardStopVoltage);
+			}
+		}
+		// After ramping, apply brown-out protection
+		// Even if we are still above the hard stop voltage, try to avoid going below next tick
+		if (currentVoltage < hardStopVoltage
+			+ (lastVoltage - voltage) * AccelerationCap.TICKS_PER_PDP_DATA / 2.0) {
+			LogKitten.w("Preventative capping to " + (currentSpeed
+				- AccelerationCap.ANTI_BROWNOUT_BACKOFF_PER_SECOND * Math.signum(currentSpeed) * deltaTime) + " from "
+				+ inputSpeed);
+			return currentSpeed
+				- AccelerationCap.ANTI_BROWNOUT_BACKOFF_PER_SECOND * Math.signum(currentSpeed) * deltaTime;
+		}
+		return rampedSpeed;
 	}
 
 	/**
@@ -61,28 +116,8 @@ public class AccelerationCap implements SpeedModifier {
 	 */
 	@Override
 	public double modify(double inputSpeed) {
-		double outputSpeed;
-		if (Math.abs(inputSpeed) > Math.abs(currentSpeed) && pdp.getVoltage() < softStopVoltage) {
-			LogKitten.d("AccelerationCap brownout protecting");
-			if (pdp.getVoltage() < hardStopVoltage) {
-				outputSpeed = currentSpeed - 0.3 * currentSpeed;
-			} else {
-				outputSpeed = currentSpeed;
-			}
-			LogKitten.d("AccelerationCap input: " + inputSpeed + "\t" + "AccelerationCap output: " + outputSpeed);
-		} else if (Math.abs(inputSpeed) > Math.abs(currentSpeed)) {
-			LogKitten.d("AccelerationCap voltage ramping");
-			outputSpeed = currentSpeed
-				+ ((double) (System.currentTimeMillis() - lastUpdate) / 64) * (inputSpeed - currentSpeed);
-			if (outputSpeed > inputSpeed) {
-				outputSpeed = inputSpeed;
-			}
-		} else {
-			outputSpeed = inputSpeed;
-		}
-		LogKitten.d("AccelerationCap input: " + inputSpeed + "\t" + "AccelerationCap output: " + outputSpeed);
-		lastUpdate = System.currentTimeMillis();
-		currentSpeed = outputSpeed;
-		return outputSpeed;
+		currentSpeed = calculate(inputSpeed);
+		LogKitten.d("AccelerationCap outputed: " + currentSpeed);
+		return currentSpeed;
 	}
 }
