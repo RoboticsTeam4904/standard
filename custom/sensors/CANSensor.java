@@ -3,6 +3,7 @@ package org.usfirst.frc4904.standard.custom.sensors;
 
 import java.nio.ByteBuffer;
 import org.usfirst.frc4904.standard.LogKitten;
+import org.usfirst.frc4904.standard.custom.CANMessageUnavailableException;
 import org.usfirst.frc4904.standard.custom.CustomCAN;
 
 /**
@@ -41,7 +42,13 @@ public class CANSensor extends CustomCAN {
 	 *         to indicate that.
 	 */
 	public int[] readSensor() throws InvalidSensorException {
-		ByteBuffer rawData = super.readBuffer();
+		ByteBuffer rawData;
+		try {
+			rawData = super.readBuffer();
+		}
+		catch (CANMessageUnavailableException e) {
+			rawData = null; // Do not throw exception immediately, wait for timeout
+		}
 		if (rawData != null && rawData.remaining() >= 8) { // 8 is minimum CAN message length
 			rawData.rewind();
 			long data = Long.reverseBytes(rawData.getLong());
@@ -51,7 +58,8 @@ public class CANSensor extends CustomCAN {
 			return values;
 		}
 		if (System.currentTimeMillis() - lastRead > CANSensor.MAX_AGE) {
-			throw new InvalidSensorException("CAN data oudated For CAN sensor " + getName());
+			throw new InvalidSensorException(
+				"CAN data oudated For CAN sensor " + getName() + " with ID 0x" + Integer.toHexString(messageID));
 		}
 		LogKitten.v("Cached Sensor Value Used\n");
 		return values;

@@ -10,8 +10,8 @@ public class ServoSubsystem extends Subsystem {
 	protected boolean isInverted;
 	protected double lastPosition;
 	// Constants from wpilib's Servo.java.
-	protected static final double kMaxServoAngle = 180.0;
-	protected static final double kMinServoAngle = 0.0;
+	protected static final double MIN_SERVO_ANGLE = 0.0;
+	protected static final double MAX_SERVO_ANGLE = 180.0;
 
 	/**
 	 * A class that wraps around a variable number of Servo objects to give them Subsystem functionality.
@@ -27,9 +27,8 @@ public class ServoSubsystem extends Subsystem {
 	 */
 	public ServoSubsystem(String name, boolean isInverted, Servo... servos) {
 		super(name);
-		this.isInverted = false;
 		this.servos = servos;
-		setInverted(isInverted);
+		this.isInverted = isInverted;
 		set(0);
 	}
 
@@ -61,11 +60,10 @@ public class ServoSubsystem extends Subsystem {
 	}
 
 	/**
-	 * A class that wraps around a variable number of SpeedController objects to give them Subsystem functionality.
-	 * Can also modify their speed with a SpeedModifier for things like scaling or brownout protection.
+	 * A class that wraps around a variable number of Servo objects to give them Subsystem functionality.
 	 *
-	 * @param motors
-	 *        The SpeedControllers in this subsystem.
+	 * @param servos
+	 *        The Servos in this subsystem.
 	 *        Can be a single Servo or multiple Servo.
 	 */
 	public ServoSubsystem(Servo... servos) {
@@ -108,7 +106,7 @@ public class ServoSubsystem extends Subsystem {
 	 * @return The angle in degrees to which the servo is set.
 	 */
 	public double getAngle() {
-		return convertPositionToAngle(get());
+		return ServoSubsystem.convertPositionToAngle(get());
 	}
 
 	/**
@@ -122,7 +120,7 @@ public class ServoSubsystem extends Subsystem {
 	 */
 	public void set(double position) {
 		if (isInverted) {
-			position = invertPosition(lastPosition);
+			position = ServoSubsystem.invertPosition(position);
 		}
 		for (Servo servo : servos) {
 			servo.set(position);
@@ -151,7 +149,7 @@ public class ServoSubsystem extends Subsystem {
 	 */
 	public void setAngle(double degrees) {
 		if (isInverted) {
-			degrees = invertDegree(degrees);
+			degrees = ServoSubsystem.invertDegree(degrees);
 		}
 		for (Servo servo : servos) {
 			servo.setAngle(degrees);
@@ -174,14 +172,14 @@ public class ServoSubsystem extends Subsystem {
 	 * and {@link #getAngle() getAngle()} to the new coordinate system, so anything continuously reading these methods
 	 * will see a discontinuity.
 	 * 
-	 * @param isInverted
-	 *        The state of inversion, true is inverted.
+	 * @param shouldBeInverted
+	 *        The desired state of inversion, true is inverted.
 	 */
-	public void setInverted(boolean isInverted) {
-		if (isInverted != this.isInverted) {
-			lastPosition = invertPosition(lastPosition);
+	public void setInverted(boolean shouldBeInverted) {
+		if (shouldBeInverted != isInverted) {
+			lastPosition = ServoSubsystem.invertPosition(lastPosition);
 		}
-		this.isInverted = isInverted;
+		isInverted = shouldBeInverted;
 	}
 
 	// Internal helper functions
@@ -190,8 +188,8 @@ public class ServoSubsystem extends Subsystem {
 	 * 
 	 * @return the range of the servo in degrees
 	 */
-	protected double getServoAngleRange() {
-		return ServoSubsystem.kMaxServoAngle - ServoSubsystem.kMinServoAngle;
+	protected static double getServoAngleRange() {
+		return ServoSubsystem.MAX_SERVO_ANGLE - ServoSubsystem.MIN_SERVO_ANGLE;
 	}
 
 	/**
@@ -201,8 +199,8 @@ public class ServoSubsystem extends Subsystem {
 	 *        servo set value to convert to degrees. Should be in the range [0, 1]
 	 * @return the value converted to degrees
 	 */
-	protected double convertPositionToAngle(double value) {
-		return value * getServoAngleRange() + ServoSubsystem.kMinServoAngle;
+	protected static double convertPositionToAngle(double value) {
+		return value * ServoSubsystem.getServoAngleRange() + ServoSubsystem.MIN_SERVO_ANGLE;
 	}
 
 	/**
@@ -212,8 +210,8 @@ public class ServoSubsystem extends Subsystem {
 	 *        the servo degree to convert to a servo set
 	 * @return a servo set value in the range [0, 1] (as long as the input degree was in the servo's range)
 	 */
-	protected double convertDegreesToValue(double degrees) {
-		return ((degrees - ServoSubsystem.kMinServoAngle)) / getServoAngleRange();
+	protected static double convertDegreesToValue(double degrees) {
+		return ((degrees - ServoSubsystem.MIN_SERVO_ANGLE)) / ServoSubsystem.getServoAngleRange();
 	}
 
 	/**
@@ -223,20 +221,20 @@ public class ServoSubsystem extends Subsystem {
 	 *        The value to invert. Should be in the range [0, 1]
 	 * @return the inverted value
 	 */
-	protected double invertPosition(double value) {
-		return -1 * value + 1;
+	protected static double invertPosition(double value) {
+		return 1 - value;
 	}
 
 	/**
-	 * Invert the given degree ({@link #kMinServoAngle kMinServoAngle} becomes {@link #kMaxServoAngle kMaxServoAngle}, {@link #kMaxServoAngle kMaxServoAngle} becomes {@link #kMinServoAngle kMinServoAngle})
+	 * Invert the given degree ({@link #MIN_SERVO_ANGLE kMinServoAngle} becomes {@link #MAX_SERVO_ANGLE kMaxServoAngle}, {@link #MAX_SERVO_ANGLE kMaxServoAngle} becomes {@link #MIN_SERVO_ANGLE kMinServoAngle})
 	 * 
 	 * @param degrees
 	 *        The degree to invert
 	 * @return the inverted degree
 	 */
-	protected double invertDegree(double degrees) {
-		double value = convertDegreesToValue(degrees);
-		value = invertPosition(value);
-		return convertPositionToAngle(value);
+	protected static double invertDegree(double degrees) {
+		double value = ServoSubsystem.convertDegreesToValue(degrees);
+		value = ServoSubsystem.invertPosition(value);
+		return ServoSubsystem.convertPositionToAngle(value);
 	}
 }

@@ -4,6 +4,8 @@ package org.usfirst.frc4904.standard;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -17,7 +19,7 @@ public class LogKitten {
 	public final static KittenLevel LEVEL_WARN = KittenLevel.WARN;
 	public final static KittenLevel LEVEL_VERBOSE = KittenLevel.VERBOSE;
 	public final static KittenLevel LEVEL_DEBUG = KittenLevel.DEBUG;
-	public final static KittenLevel DEFAULT_LOG_LEVEL = KittenLevel.VERBOSE;
+	public final static KittenLevel DEFAULT_LOG_LEVEL = KittenLevel.DEBUG;
 	public final static KittenLevel DEFAULT_PRINT_LEVEL = KittenLevel.WARN;
 	public final static KittenLevel DEFAULT_DS_LEVEL = LogKitten.DEFAULT_PRINT_LEVEL;
 	private static KittenLevel logLevel = LogKitten.DEFAULT_LOG_LEVEL;
@@ -326,13 +328,8 @@ public class LogKitten {
 	 *        whether or not to override
 	 */
 	public static void ex(Exception ex, boolean override) {
-		StringBuilder stackTraceString = new StringBuilder();
-		stackTraceString.append(ex.toString());
-		stackTraceString.append('\n');
-		for (StackTraceElement element : ex.getStackTrace()) {
-			stackTraceString.append(element.toString());
-			stackTraceString.append('\n');
-		}
+		StringWriter stackTraceString = new StringWriter();
+		ex.printStackTrace(new PrintWriter(stackTraceString));
 		LogKitten.logMessage(stackTraceString.toString(), KittenLevel.ERROR, override);
 	}
 
@@ -366,7 +363,7 @@ public class LogKitten {
 	 *
 	 * @return timestamp as string in the format "YEAR-MONTH-DAY_HOUR:MIN:SEC"
 	 */
-	private static String timestamp() {
+	private static synchronized String timestamp() {
 		return LogKitten.TIMESTAMP_FORMAT.format(new Date());
 	}
 

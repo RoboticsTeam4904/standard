@@ -23,6 +23,7 @@ public abstract class Chassis extends Subsystem {
 	public Chassis(String name, Motor... motors) {
 		super(name);
 		this.motors = motors;
+		motorSpeeds = new double[motors.length];
 	}
 
 	@Override
