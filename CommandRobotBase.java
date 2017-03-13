@@ -20,7 +20,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * Robot should extend this instead of iterative robot.
  */
 public abstract class CommandRobotBase extends IterativeRobot {
-	private Command autonomousCommand;
+	protected Command autonomousCommand;
 	protected CheckHealth healthcheckCommand;
 	protected Command teleopCommand;
 	protected CommandSendableChooser autoChooser;
