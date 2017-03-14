@@ -312,12 +312,6 @@ public class CustomPIDController extends MotionController {
 
 	@Override
 	public boolean onTarget() {
-		if (!super.onTarget()) {
-			return false;
-		}
-		if (!enable || ignoreDerivativeTolerance) {
-			return true;
-		}
-		return Math.abs(errorDerivative) < derivativeTolerance;
+		return super.onTarget() && derivativeTolerance != 0 && Math.abs(errorDerivative) < derivativeTolerance;
 	}
 }
