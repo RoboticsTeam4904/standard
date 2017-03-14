@@ -24,33 +24,6 @@ public class CustomPIDController extends MotionController {
 	protected double errorDerivative;
 	protected double absoluteDerivativeStopTolerance;
 	protected boolean ignoreDerivativeTolerance = true;
-	
-	/**
-	 * An extremely basic PID controller.
-	 * It does not differentiate between rate and distance.
-	 *
-	 * @param P
-	 *        Initial P constant
-	 * @param I
-	 *        Initial I constant
-	 * @param D
-	 *        Initial D constant
-	 * @param F
-	 *        Initial F (feed forward) constant
-	 * @param sensor
-	 *        The sensor linked to the output
-	 * @param absoluteDerivativeStopTolerance
-	 *        The maximum value of the calculated derivative in order for onTarget() to return true
-	 */
-	public CustomPIDController(double P, double I, double D, double F, PIDSensor sensor, double absoluteDerivativeStopTolerance) {
-		super(sensor);
-		this.P = P;
-		this.I = I;
-		this.D = D;
-		this.F = F;
-		this.absoluteDerivativeStopTolerance = absoluteDerivativeStopTolerance;
-		ignoreDerivativeTolerance = false;
-	}
 
 	/**
 	 * An extremely basic PID controller.
