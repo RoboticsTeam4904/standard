@@ -21,7 +21,7 @@ public class CustomPIDController extends MotionController {
 	protected double totalError;
 	protected double lastError;
 	protected long lastTime;
-	protected double errorDerivative;
+	protected double lastErrorDerivative;
 	protected double derivativeTolerance;
 
 	/**
@@ -268,6 +268,7 @@ public class CustomPIDController extends MotionController {
 		long latestTime = System.currentTimeMillis();
 		long timeDiff = latestTime - lastTime;
 		// Check if the sensor supports native derivative calculations.
+		double errorDerivative;
 		if (sensor instanceof NativeDerivativeSensor && sensor.getPIDSourceType() == PIDSourceType.kDisplacement) {
 			sensor.setPIDSourceType(PIDSourceType.kRate);
 			errorDerivative = sensor.pidGet();
@@ -283,6 +284,7 @@ public class CustomPIDController extends MotionController {
 		double result = P * error + I * totalError + D * errorDerivative + F * setpoint;
 		// Save the error for calculating future derivatives
 		lastError = error;
+		lastErrorDerivative = errorDerivative;
 		LogKitten.v(input + " " + setpoint + " " + result);
 		if (capOutput) {
 			// Limit the result to be within the output range [outputMin, outputMax]
@@ -311,6 +313,6 @@ public class CustomPIDController extends MotionController {
 
 	@Override
 	public boolean onTarget() {
-		return super.onTarget() && derivativeTolerance != 0 && Math.abs(errorDerivative) < derivativeTolerance;
+		return super.onTarget() && derivativeTolerance != 0 && Math.abs(lastErrorDerivative) < derivativeTolerance;
 	}
 }
