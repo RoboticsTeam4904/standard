@@ -23,7 +23,6 @@ public class CustomPIDController extends MotionController {
 	protected long lastTime;
 	protected double errorDerivative;
 	protected double derivativeTolerance;
-	protected boolean ignoreDerivativeTolerance = true;
 
 	/**
 	 * An extremely basic PID controller.
