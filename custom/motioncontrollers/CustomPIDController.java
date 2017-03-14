@@ -205,20 +205,20 @@ public class CustomPIDController extends MotionController {
 	 * given that the source suggests that the setpoint has been reached. Set this value to a
 	 * higher value if overshoot due to high velocity is a problem.
 	 *
-	 * @param absoluteDerivativeStopTolerance
+	 * @param derivativeTolerance
 	 *        the maximum derivative value for onTarget() to return true
 	 */
-	public void setDerivativeStopTolerance(double absoluteDerivativeStopTolerance) {
-		this.derivativeTolerance = absoluteDerivativeStopTolerance;
+	public void setDerivativeTolerance(double derivativeTolerance) {
+		this.derivativeTolerance = derivativeTolerance;
 	}
 
 	/**
 	 * Get the absolute derivative value stop condition.
 	 *
-	 * @see #setDerivativeStopCondition(double)
+	 * @see #setDerivativeTolerance(double)
 	 * @return the maximum derivative value for onTarget() to return true
 	 */
-	public double getDerivativeStopTolerance() {
+	public double getDerivativeTolerance() {
 		return derivativeTolerance;
 	}
 
