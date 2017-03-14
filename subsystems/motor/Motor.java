@@ -43,7 +43,7 @@ public class Motor extends Subsystem implements SpeedController {
 		lastSpeed = 0;
 		for (SpeedController motor : motors) {
 			if (motor instanceof CANSpeedController && ((CANSpeedController) motor).getControlMode().getValue() != 0) { // 0 is hopefully normal motor controller mode (Like CANTalon's PercentVBus mode)
-				throw new StrangeCANSpeedControllerModeRuntimeException(this);
+				throw new StrangeCANSpeedControllerModeRuntimeException();
 			}
 			motor.set(0); // Start all motors with 0 speed.
 		}
@@ -229,7 +229,7 @@ public class Motor extends Subsystem implements SpeedController {
 	 */
 	@Override
 	public void set(double speed) {
-		LogKitten.v(getName() + " " + speed + " " + Thread.currentThread().getStackTrace()[2].getMethodName());
+		LogKitten.v("Motor " + getName() + " @ " + speed);
 		double newSpeed = speedModifier.modify(speed);
 		lastSpeed = newSpeed;
 		for (SpeedController motor : motors) {
@@ -269,16 +269,16 @@ public class Motor extends Subsystem implements SpeedController {
 	protected class UnsynchronizedSpeedControllerRuntimeException extends RuntimeException {
 		private static final long serialVersionUID = 8688590919561059584L;
 		
-		public UnsynchronizedSpeedControllerRuntimeException(Motor motor) {
-			super(motor.getName() + "'s SpeedControllers report different speeds");
+		public UnsynchronizedSpeedControllerRuntimeException() {
+			super(getName() + "'s SpeedControllers report different speeds");
 		}
 	}
 	
 	protected class StrangeCANSpeedControllerModeRuntimeException extends RuntimeException {
 		private static final long serialVersionUID = -539917227288371271L;
 		
-		public StrangeCANSpeedControllerModeRuntimeException(Motor motor) {
-			super("One of " + motor.getName() + "'s SpeedControllers is a CANSpeedController with a non-zero mode. This might mess up it's .get(), so Motor cannot verify safety.");
+		public StrangeCANSpeedControllerModeRuntimeException() {
+			super("One of " + getName() + "'s SpeedControllers is a CANSpeedController with a non-zero mode. This might mess up it's .get(), so Motor cannot verify safety.");
 		}
 	}
 }

@@ -9,7 +9,7 @@ public interface Controller {
 	public static final int X_AXIS = 0;
 	public static final int Y_AXIS = 1;
 	public static final int TWIST_AXIS = 2;
-	
+
 	/**
 	 * Allows a generic controller to return an individual axis
 	 *

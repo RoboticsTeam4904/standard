@@ -15,8 +15,9 @@ public class MCChassisController implements ChassisController {
 	protected double lastUpdate;
 	protected IMU imu;
 	protected MotionController motionController;
-	
-	public MCChassisController(ChassisController controller, IMU imu, MotionController motionController, double maxDegreesPerSecond) {
+
+	public MCChassisController(ChassisController controller, IMU imu, MotionController motionController,
+		double maxDegreesPerSecond) {
 		this.controller = controller;
 		this.maxDegreesPerSecond = maxDegreesPerSecond;
 		this.imu = imu;
@@ -31,7 +32,7 @@ public class MCChassisController implements ChassisController {
 		targetYaw = imu.getYaw();
 		lastUpdate = System.currentTimeMillis() / 1000.0;
 	}
-	
+
 	public void reset() throws InvalidSensorException {
 		targetYaw = imu.getYaw();
 		lastUpdate = System.currentTimeMillis() / 1000.0;
@@ -39,17 +40,17 @@ public class MCChassisController implements ChassisController {
 		motionController.reset();
 		motionController.enable();
 	}
-	
+
 	@Override
 	public double getX() {
 		return controller.getX();
 	}
-	
+
 	@Override
 	public double getY() {
 		return controller.getY();
 	}
-	
+
 	@Override
 	public double getTurnSpeed() {
 		if (Util.isZero(controller.getY()) && Util.isZero(controller.getX())) {
@@ -61,7 +62,8 @@ public class MCChassisController implements ChassisController {
 			LogKitten.v(motionController.getSetpoint() + " " + imu.getYaw() + " " + motionController.getSafely());
 		}
 		catch (InvalidSensorException e) {}
-		targetYaw = targetYaw + ((controller.getTurnSpeed() * maxDegreesPerSecond) * ((System.currentTimeMillis() / 1000.0) - lastUpdate));
+		targetYaw = targetYaw
+			+ ((controller.getTurnSpeed() * maxDegreesPerSecond) * ((System.currentTimeMillis() / 1000.0) - lastUpdate));
 		lastUpdate = System.currentTimeMillis() / 1000.0;
 		if (targetYaw > 180) {
 			targetYaw = -180 + (Math.abs(targetYaw) - 180);

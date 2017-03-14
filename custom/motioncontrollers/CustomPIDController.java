@@ -23,6 +23,7 @@ public class CustomPIDController extends MotionController {
 	protected long lastTime;
 	protected double lastErrorDerivative;
 	protected double derivativeTolerance;
+	protected double minimumNominalOutput = 0.0;
 
 	/**
 	 * An extremely basic PID controller.
@@ -159,6 +160,15 @@ public class CustomPIDController extends MotionController {
 	}
 
 	/**
+	 *
+	 * @return
+	 * 		The current minimumNominalOutput (minimum nominal output) value
+	 */
+	public double getMinimumNominalOutput() {
+		return minimumNominalOutput;
+	}
+
+	/**
 	 * Sets the parameters of the PID loop
 	 *
 	 * @param P
@@ -222,8 +232,21 @@ public class CustomPIDController extends MotionController {
 	}
 
 	/**
-	 * Resets the PID controller.
-	 *
+	 * 
+	 * @param minimumNominalOutput
+	 *        Minimum Nominal Output
+	 *        result will be set to
+	 *        ±this value if the absolute
+	 *        value of the result is less than
+	 *        this value. This is useful if
+	 *        the motor can only run well above a value.
+	 */
+	public void setMinimumNominalOutput(double minimumNominalOutput) {
+		this.minimumNominalOutput = minimumNominalOutput;
+	}
+
+	/**
+	 * Resets the PID controller error to zero.
 	 */
 	@Override
 	protected void resetErrorToZero() {
@@ -247,7 +270,7 @@ public class CustomPIDController extends MotionController {
 	@Override
 	public double getSafely() throws InvalidSensorException {
 		// If PID is not enabled, use feedforward only
-		if (!enable) {
+		if (!isEnabled()) {
 			return F * setpoint;
 		}
 		double input = 0.0;
@@ -267,17 +290,25 @@ public class CustomPIDController extends MotionController {
 		}
 		long latestTime = System.currentTimeMillis();
 		long timeDiff = latestTime - lastTime;
-		// Check if the sensor supports native derivative calculations.
+		lastTime = latestTime;
+		// If we just reset, then the lastTime could be way before the latestTime and so timeDiff would be huge.
+		// This would lead to a very big I (and a big D, briefly).
+		// Also, D could be unpredictable because lastError could be wildly different than error (since they're
+		// separated by more than a tick in time).
+		// Hence, if we just reset, just pretend we're still disabled and record the lastTime and lastError for next tick.
+		if (didJustReset()) {
+			lastError = error;
+			return F * setpoint;
+		}
+		// Check if the sensor supports native derivative calculations and that we're doing displacement PID
+		// (if we're doing rate PID, then getRate() would be the PID input rather then the input's derivative)
 		double errorDerivative;
 		if (sensor instanceof NativeDerivativeSensor && sensor.getPIDSourceType() == PIDSourceType.kDisplacement) {
-			sensor.setPIDSourceType(PIDSourceType.kRate);
-			errorDerivative = sensor.pidGet();
-			sensor.setPIDSourceType(PIDSourceType.kDisplacement);
+			errorDerivative = ((NativeDerivativeSensor) sensor).getRateSafely();
 		} else {
 			// Calculate the approximation of the derivative.
 			errorDerivative = (error - lastError) / timeDiff;
 		}
-		lastTime = latestTime;
 		// Calculate the approximation of the error's integral
 		totalError += error * timeDiff;
 		// Calculate the result using the PIDF formula
@@ -289,6 +320,9 @@ public class CustomPIDController extends MotionController {
 		if (capOutput) {
 			// Limit the result to be within the output range [outputMin, outputMax]
 			result = Math.max(Math.min(result, outputMax), outputMin);
+		}
+		if (Math.abs(result) < minimumNominalOutput) {
+			result = Math.signum(result) * minimumNominalOutput;
 		}
 		return result;
 	}

@@ -15,7 +15,8 @@ public class ChassisTurn extends Command implements ChassisController {
 	protected final MotionController motionController;
 	protected final Command fallbackCommand;
 	protected final IMU imu;
-	
+	protected boolean runOnce;
+
 	/**
 	 * Constructor
 	 * This command rotates the chassis to a position relative to the current angle of the robot
@@ -27,14 +28,15 @@ public class ChassisTurn extends Command implements ChassisController {
 	 *        If the sensor fails for some reason, this command will be cancelled, then the fallbackCommand will start
 	 * @param motionController
 	 */
-	public ChassisTurn(Chassis chassis, double finalAngle, IMU imu, Command fallbackCommand, MotionController motionController) {
+	public ChassisTurn(Chassis chassis, double finalAngle, IMU imu, Command fallbackCommand,
+		MotionController motionController) {
 		move = new ChassisMove(chassis, this);
 		this.finalAngle = -((finalAngle + 360) % 360 - 180);
 		this.imu = imu;
 		this.motionController = motionController;
 		this.fallbackCommand = fallbackCommand;
 	}
-	
+
 	/**
 	 * Constructor
 	 * This command rotates the chassis to a position relative to the current angle of the robot
@@ -47,17 +49,17 @@ public class ChassisTurn extends Command implements ChassisController {
 	public ChassisTurn(Chassis chassis, double finalAngle, IMU imu, MotionController motionController) {
 		this(chassis, finalAngle, imu, null, motionController);
 	}
-	
+
 	@Override
 	public double getX() {
 		return 0.0;
 	}
-	
+
 	@Override
 	public double getY() {
 		return 0.0;
 	}
-	
+
 	@Override
 	public double getTurnSpeed() {
 		try {
@@ -72,7 +74,7 @@ public class ChassisTurn extends Command implements ChassisController {
 			return 0;
 		}
 	}
-	
+
 	@Override
 	protected void initialize() {
 		move.start();
@@ -86,24 +88,31 @@ public class ChassisTurn extends Command implements ChassisController {
 			if (fallbackCommand != null) {
 				fallbackCommand.start();
 			}
+			return;
 		}
 	}
-	
+
 	@Override
 	protected void execute() {
 		motionController.setSetpoint(((finalAngle + initialAngle) + 360) % 360 - 180);
+		if (!motionController.isEnabled()) {
+			motionController.enable();
+		}
 	}
-	
+
 	@Override
 	protected boolean isFinished() {
-		return motionController.onTarget() || !move.isRunning();
+		if (move.isRunning() && !runOnce) {
+			runOnce = true;
+		}
+		return (motionController.onTarget() || !move.isRunning()) && runOnce;
 	}
-	
+
 	@Override
 	protected void end() {
 		move.cancel();
 	}
-	
+
 	@Override
 	protected void interrupted() {
 		move.cancel();

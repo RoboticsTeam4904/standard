@@ -3,25 +3,20 @@ package org.usfirst.frc4904.standard.commands;
 
 import edu.wpi.first.wpilibj.command.Command;
 
-public abstract class SingleOp extends Command {
-	abstract protected void runOp();
-	
+public class SingleOp extends Command {
+	protected Runnable op;
+
+	public SingleOp(Runnable op) {
+		this.op = op;
+	}
+
 	@Override
 	protected void initialize() {
-		runOp();
+		op.run();
 	}
-	
-	@Override
-	protected void execute() {}
-	
+
 	@Override
 	protected boolean isFinished() {
 		return true;
 	}
-	
-	@Override
-	protected void end() {}
-	
-	@Override
-	protected void interrupted() {}
 }

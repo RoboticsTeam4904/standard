@@ -78,7 +78,7 @@ public class XboxController extends Joystick {
 	public CustomButton rb;
 	public CustomButton back;
 	public CustomButton start;
-	
+
 	/**
 	 * (Constructor #1)
 	 * There are two ways to make an XboxController. With this constructor,
@@ -105,7 +105,7 @@ public class XboxController extends Joystick {
 		back = new CustomButton(controller, XboxController.BACK_BUTTON_ID);
 		start = new CustomButton(controller, XboxController.START_BUTTON_ID);
 	}
-	
+
 	/**
 	 * (Constructor #2) This is the other constructor. I would recommend using this one instead
 	 * as it is unlikely that anything else but the XboxController will be
@@ -114,7 +114,7 @@ public class XboxController extends Joystick {
 	public XboxController() {
 		this(0);
 	}
-	
+
 	/**
 	 * Rather than use an integer (which might not be what we expect)
 	 * we use an enum which has a set amount of possibilities.
@@ -122,7 +122,7 @@ public class XboxController extends Joystick {
 	public static enum HAND {
 		LEFT, RIGHT
 	}
-	
+
 	/**
 	 * This is the relation of direction and number for .getPOV() used
 	 * in the DirectionalPad class.
@@ -131,7 +131,7 @@ public class XboxController extends Joystick {
 		UP(0), UP_RIGHT(45), RIGHT(90), DOWN_RIGHT(135), DOWN(180), DOWN_LEFT(225), LEFT(270), UP_LEFT(315);
 		/* Instance Value */
 		private int value;
-		
+
 		/**
 		 * Constructor
 		 * 
@@ -140,7 +140,7 @@ public class XboxController extends Joystick {
 		DPAD(final int value) {
 			this.value = value;
 		}
-		
+
 		/**
 		 * Convert integers to DPAD values
 		 * 
@@ -163,7 +163,7 @@ public class XboxController extends Joystick {
 			return DPAD.UP;
 		}
 	}
-	
+
 	/**
 	 * This class is used to represent the thumbsticks on the
 	 * Xbox360 controller.
@@ -177,7 +177,7 @@ public class XboxController extends Joystick {
 		private final int pressedID;
 		private double xDeadZone;
 		private double yDeadZone;
-		
+
 		/**
 		 * Constructor
 		 * 
@@ -200,7 +200,7 @@ public class XboxController extends Joystick {
 				pressedID = XboxController.RIGHT_THUMBSTICK_BUTTON_ID;
 			}
 		}
-		
+
 		/**
 		 * + = right
 		 * - = left
@@ -211,7 +211,7 @@ public class XboxController extends Joystick {
 			final double rawInput = parent.getRawAxis(xAxisID);
 			return XboxController.createDeadZone(rawInput, xDeadZone);
 		}
-		
+
 		/**
 		 * + = up
 		 * - = down
@@ -222,7 +222,7 @@ public class XboxController extends Joystick {
 			final double rawInput = -parent.getRawAxis(yAxisID); // -Y was up on our thumbsticks. Consider this a fix?
 			return XboxController.createDeadZone(rawInput, yDeadZone);
 		}
-		
+
 		/**
 		 * magnitude
 		 * 
@@ -235,7 +235,7 @@ public class XboxController extends Joystick {
 			final double ySquared = Math.pow(y, 2);
 			return Math.sqrt(xSquared + ySquared);
 		}
-		
+
 		/**
 		 * angleToSquareSpace
 		 * 
@@ -249,7 +249,7 @@ public class XboxController extends Joystick {
 			final double modulus = absAngle % halfPi;
 			return -Math.abs(modulus - quarterPi) + quarterPi;
 		}
-		
+
 		/**
 		 * scaleMagnitude
 		 * 
@@ -264,13 +264,13 @@ public class XboxController extends Joystick {
 			final double scaleFactor = Math.cos(newAngle);
 			return magnitude * scaleFactor;
 		}
-		
+
 		/* Extended Methods */
 		@Override
 		public boolean get() {
 			return parent.getRawButton(pressedID);
 		}
-		
+
 		/* Get Methods */
 		/**
 		 * Used to see which side of the controller this thumbstick is
@@ -280,7 +280,7 @@ public class XboxController extends Joystick {
 		public HAND getHand() {
 			return hand;
 		}
-		
+
 		/**
 		 * getRawX
 		 * 
@@ -289,7 +289,7 @@ public class XboxController extends Joystick {
 		public double getX() {
 			return rawX();
 		}
-		
+
 		/**
 		 * getRawY
 		 * 
@@ -298,7 +298,7 @@ public class XboxController extends Joystick {
 		public double getY() {
 			return rawY();
 		}
-		
+
 		/**
 		 * 0 = Up;
 		 * 90 = Right;
@@ -310,7 +310,7 @@ public class XboxController extends Joystick {
 			final double angle = Math.atan2(rawX(), rawY());
 			return Math.toDegrees(angle);
 		}
-		
+
 		/**
 		 * getMagnitude
 		 * 
@@ -323,7 +323,7 @@ public class XboxController extends Joystick {
 			}
 			return magnitude;
 		}
-		
+
 		/**
 		 * Get the adjusted thumbstick position (Magnitude <= 1)
 		 * 
@@ -335,7 +335,7 @@ public class XboxController extends Joystick {
 			final double angle = Math.atan2(x, y);
 			return scaleMagnitude(x, y) * Math.sin(angle);
 		}
-		
+
 		/**
 		 * Get the adjusted thumbstick position (Magnitude <= 1)
 		 * 
@@ -347,7 +347,7 @@ public class XboxController extends Joystick {
 			final double angle = Math.atan2(x, y);
 			return scaleMagnitude(x, y) * Math.cos(angle);
 		}
-		
+
 		/* Set Methods */
 		/**
 		 * Set the X axis deadzone of this thumbstick
@@ -357,7 +357,7 @@ public class XboxController extends Joystick {
 		public void setXDeadZone(double number) {
 			xDeadZone = number;
 		}
-		
+
 		/**
 		 * Set the Y axis deadzone of this thumbstick
 		 * 
@@ -366,7 +366,7 @@ public class XboxController extends Joystick {
 		public void setYDeadZone(double number) {
 			yDeadZone = number;
 		}
-		
+
 		/**
 		 * Set both axis deadzones of this thumbstick
 		 * 
@@ -377,7 +377,7 @@ public class XboxController extends Joystick {
 			yDeadZone = number;
 		}
 	}
-	
+
 	/**
 	 * This class is used to represent one of the two
 	 * Triggers on an Xbox360 controller.
@@ -388,7 +388,7 @@ public class XboxController extends Joystick {
 		private final HAND hand;
 		private double deadZone;
 		private double sensitivity;
-		
+
 		/**
 		 * Constructor
 		 * 
@@ -402,13 +402,13 @@ public class XboxController extends Joystick {
 			deadZone = XboxController.DEFAULT_TRIGGER_DEADZONE;
 			sensitivity = XboxController.DEFAULT_TRIGGER_SENSITIVITY;
 		}
-		
+
 		/* Extended Methods */
 		@Override
 		public boolean get() {
 			return getX() > sensitivity;
 		}
-		
+
 		/* Get Methods */
 		/**
 		 * getHand
@@ -420,7 +420,7 @@ public class XboxController extends Joystick {
 		public HAND getHand() {
 			return hand;
 		}
-		
+
 		/**
 		 * 0 = Not pressed
 		 * 1 = Completely pressed
@@ -436,11 +436,11 @@ public class XboxController extends Joystick {
 			}
 			return XboxController.createDeadZone(rawInput, deadZone);
 		}
-		
+
 		public double getY() {
 			return getX(); // Triggers have one dimensional movement. Use getX() instead
 		}
-		
+
 		/* Set Methods */
 		/**
 		 * Set the deadzone of this trigger
@@ -450,7 +450,7 @@ public class XboxController extends Joystick {
 		public void setTriggerDeadZone(double number) {
 			deadZone = number;
 		}
-		
+
 		/**
 		 * How far you need to press this trigger to activate a button press
 		 * 
@@ -460,7 +460,7 @@ public class XboxController extends Joystick {
 			sensitivity = number;
 		}
 	}
-	
+
 	/**
 	 * This is a weird object which is essentially just 8 buttons.
 	 */
@@ -475,7 +475,7 @@ public class XboxController extends Joystick {
 		public final Button downLeft;
 		public final Button left;
 		public final Button upLeft;
-		
+
 		/**
 		 * Constructor
 		 * 
@@ -493,7 +493,7 @@ public class XboxController extends Joystick {
 			left = new DPadButton(this, DPAD.LEFT);
 			upLeft = new DPadButton(this, DPAD.UP_LEFT);
 		}
-		
+
 		/**
 		 * This class is used to represent each of the 8 values a
 		 * dPad has as a button.
@@ -502,7 +502,7 @@ public class XboxController extends Joystick {
 			/* Instance Values */
 			private final DPAD direction;
 			private final DirectionalPad parent;
-			
+
 			/**
 			 * Constructor
 			 * 
@@ -514,24 +514,24 @@ public class XboxController extends Joystick {
 				direction = dPadDirection;
 				this.parent = parent;
 			}
-			
+
 			/* Extended Methods */
 			@Override
 			public boolean get() {
 				return parent.getAngle() == direction.value;
 			}
 		}
-		
+
 		private int angle() {
 			return parent.getPOV();
 		}
-		
+
 		/* Extended Methods */
 		@Override
 		public boolean get() {
 			return angle() != -1;
 		}
-		
+
 		/* Get Methods */
 		/**
 		 * UP 0;
@@ -548,7 +548,7 @@ public class XboxController extends Joystick {
 		public int getAngle() {
 			return angle();
 		}
-		
+
 		/**
 		 * Just like getAngle, but returns a direction instead of an angle
 		 * 
@@ -558,7 +558,7 @@ public class XboxController extends Joystick {
 			return DPAD.getEnum(angle());
 		}
 	}
-	
+
 	/**
 	 * Creates a deadzone, but without clipping the lower values.
 	 * turns this
@@ -583,7 +583,7 @@ public class XboxController extends Joystick {
 		adjusted = adjusted / (1 - deadZoneSizeClamp); // Adjust the adjustment so it can max at 1
 		return negative * adjusted;
 	}
-	
+
 	/* Get Methods */
 	/**
 	 * @return The port of this XboxController
@@ -591,14 +591,14 @@ public class XboxController extends Joystick {
 	public int getPort() {
 		return port;
 	}
-	
+
 	/**
 	 * @return The Joystick of this XboxController
 	 */
 	public Joystick getJoystick() {
 		return controller;
 	}
-	
+
 	/* Set Methods */
 	/**
 	 * Make the controller vibrate
@@ -616,7 +616,7 @@ public class XboxController extends Joystick {
 			controller.setRumble(RumbleType.kRightRumble, amount);
 		}
 	}
-	
+
 	/**
 	 * Make the controller vibrate
 	 * 
@@ -628,7 +628,7 @@ public class XboxController extends Joystick {
 		controller.setRumble(RumbleType.kLeftRumble, amount);
 		controller.setRumble(RumbleType.kRightRumble, amount);
 	}
-	
+
 	/*
 	 * Set both axis deadzones of both thumbsticks
 	 * @param number
