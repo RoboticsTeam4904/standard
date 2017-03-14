@@ -11,7 +11,17 @@ public class ChassisConstant extends Command implements ChassisController {
 	protected final double y;
 	protected final double turn;
 
+	public ChassisConstant(String name, Chassis chassis, double x, double y, double turn, double timeout) {
+		super(name);
+		move = new ChassisMove(chassis, this);
+		this.x = x;
+		this.y = y;
+		this.turn = turn;
+		setTimeout(timeout);
+	}
+
 	public ChassisConstant(Chassis chassis, double x, double y, double turn, double timeout) {
+		super();
 		move = new ChassisMove(chassis, this);
 		this.x = x;
 		this.y = y;
