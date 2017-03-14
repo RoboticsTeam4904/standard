@@ -22,7 +22,7 @@ public class CustomPIDController extends MotionController {
 	protected double lastError;
 	protected long lastTime;
 	protected double errorDerivative;
-	protected double absoluteDerivativeStopTolerance;
+	protected double derivativeTolerance;
 	protected boolean ignoreDerivativeTolerance = true;
 
 	/**
@@ -209,7 +209,7 @@ public class CustomPIDController extends MotionController {
 	 *        the maximum derivative value for onTarget() to return true
 	 */
 	public void setDerivativeStopTolerance(double absoluteDerivativeStopTolerance) {
-		this.absoluteDerivativeStopTolerance = absoluteDerivativeStopTolerance;
+		this.derivativeTolerance = absoluteDerivativeStopTolerance;
 	}
 
 	/**
@@ -219,7 +219,7 @@ public class CustomPIDController extends MotionController {
 	 * @return the maximum derivative value for onTarget() to return true
 	 */
 	public double getDerivativeStopTolerance() {
-		return absoluteDerivativeStopTolerance;
+		return derivativeTolerance;
 	}
 
 	/**
@@ -318,6 +318,6 @@ public class CustomPIDController extends MotionController {
 		if (!enable || ignoreDerivativeTolerance) {
 			return true;
 		}
-		return Math.abs(errorDerivative) < absoluteDerivativeStopTolerance;
+		return Math.abs(errorDerivative) < derivativeTolerance;
 	}
 }
