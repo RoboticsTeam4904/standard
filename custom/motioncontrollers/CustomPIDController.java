@@ -222,8 +222,26 @@ public class CustomPIDController extends MotionController {
 		this.minimumNominalOutput = minimumNominalOutput;
 	}
 
+	/**
+	 * Sets the threshold below which the I term becomes active.
+	 * When the I term is active, the error sum increases. When
+	 * the I term is not active, the error sum is set to zero.
+	 * 
+	 * @param integralThreshold
+	 */
 	public void setIThreshold(double integralThreshold) {
 		this.integralThreshold = integralThreshold;
+	}
+
+	/**
+	 * Gets the threshold below which the I term becomes active.
+	 * When the I term is active, the error sum increases. When
+	 * the I term is not active, the error sum is set to zero.
+	 * 
+	 * @return
+	 */
+	public double getIThreshold() {
+		return integralThreshold;
 	}
 
 	/**
