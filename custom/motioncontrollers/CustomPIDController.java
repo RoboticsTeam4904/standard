@@ -19,7 +19,7 @@ public class CustomPIDController extends MotionController {
 	protected double I;
 	protected double D;
 	protected double F;
-	protected double integralThreshold;
+	protected double integralThreshold = 0.0;
 	protected double totalError;
 	protected double lastError;
 	protected long lastTime;
@@ -312,7 +312,7 @@ public class CustomPIDController extends MotionController {
 			// Calculate the approximation of the derivative.
 			errorDerivative = (error - lastError) / timeDiff;
 		}
-		if (integralThreshold > Double.MIN_VALUE && Math.abs(error) < integralThreshold) {
+		if (integralThreshold != 0 && Math.abs(error) < integralThreshold) {
 			// Calculate the approximation of the error's integral
 			totalError += error * timeDiff;
 		} else {
