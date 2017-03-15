@@ -18,6 +18,7 @@ public class CustomPIDController extends MotionController {
 	protected double I;
 	protected double D;
 	protected double F;
+	protected double I_threshold;
 	protected double totalError;
 	protected double lastError;
 	protected long lastTime;
@@ -221,6 +222,10 @@ public class CustomPIDController extends MotionController {
 		this.minimumNominalOutput = minimumNominalOutput;
 	}
 
+	public void setIThreshold(double I_threshold) {
+		this.I_threshold = I_threshold;
+	}
+
 	/**
 	 * Resets the PID controller error to zero.
 	 */
@@ -285,8 +290,12 @@ public class CustomPIDController extends MotionController {
 			// Calculate the approximation of the derivative.
 			errorDerivative = (error - lastError) / timeDiff;
 		}
-		// Calculate the approximation of the error's integral
-		totalError += error * timeDiff;
+		if (error < I_threshold) {
+			// Calculate the approximation of the error's integral
+			totalError += error * timeDiff;
+		} else {
+			totalError = 0.0;
+		}
 		// Calculate the result using the PIDF formula
 		double result = P * error + I * totalError + D * errorDerivative + F * setpoint;
 		// Save the error for calculating future derivatives
