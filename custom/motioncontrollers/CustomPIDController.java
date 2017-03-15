@@ -7,6 +7,7 @@ import org.usfirst.frc4904.standard.custom.sensors.NativeDerivativeSensor;
 import org.usfirst.frc4904.standard.custom.sensors.PIDSensor;
 import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
+import edu.wpi.first.wpilibj.util.BoundaryException;
 
 /**
  * An extremely basic PID controller.
@@ -230,6 +231,9 @@ public class CustomPIDController extends MotionController {
 	 * @param integralThreshold
 	 */
 	public void setIThreshold(double integralThreshold) {
+		if (integralThreshold < 0) {
+			throw new BoundaryException("I threshold negative");
+		}
 		this.integralThreshold = integralThreshold;
 	}
 
@@ -308,7 +312,7 @@ public class CustomPIDController extends MotionController {
 			// Calculate the approximation of the derivative.
 			errorDerivative = (error - lastError) / timeDiff;
 		}
-		if (Math.abs(error) < integralThreshold) {
+		if (integralThreshold > Double.MIN_VALUE && Math.abs(error) < integralThreshold) {
 			// Calculate the approximation of the error's integral
 			totalError += error * timeDiff;
 		} else {
