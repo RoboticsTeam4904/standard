@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.PIDSourceType;
  *
  */
 public class CustomPIDController extends MotionController {
+	protected static final int OFF_TARGET = -1;
 	protected double P;
 	protected double I;
 	protected double D;
@@ -22,6 +23,8 @@ public class CustomPIDController extends MotionController {
 	protected double lastError;
 	protected long lastTime;
 	protected double minimumNominalOutput = 0.0;
+	protected long onTargetSince = CustomPIDController.OFF_TARGET;
+	protected int minimumTimeOnTargetMillis = 0;
 
 	/**
 	 * An extremely basic PID controller.
@@ -222,6 +225,40 @@ public class CustomPIDController extends MotionController {
 	}
 
 	/**
+	 * Set the minimum about of time the input must remain within tolerance
+	 * before the controller can be considered "on-target."
+	 * Set this value to a higher value if overshoot is a problem.
+	 *
+	 * @param minimumOnTargetTime
+	 *        the minimum amount of time (ms) for onTarget() to return true
+	 */
+	public void setMinimumOnTargetTime(int minimumOnTargetTime) {
+		minimumTimeOnTargetMillis = minimumOnTargetTime;
+	}
+
+	/**
+	 * Get the minimum on-target time. This represents the minimum
+	 * about of time the input must remain within tolerance
+	 * before the controller can be considered "on-target."
+	 *
+	 * @see #setDerivativeTolerance(double)
+	 * @return the maximum derivative value for onTarget() to return true
+	 */
+	public int getMinimumOnTargetTime() {
+		return minimumTimeOnTargetMillis;
+	}
+
+	protected boolean onTargetLongEnough() {
+		return onTargetSince != CustomPIDController.OFF_TARGET
+			&& (System.currentTimeMillis() - onTargetSince) >= getMinimumOnTargetTime();
+	}
+
+	@Override
+	public boolean onTarget() {
+		return onTargetLongEnough() && super.onTarget();
+	}
+
+	/**
 	 * Resets the PID controller error to zero.
 	 */
 	@Override
@@ -298,6 +335,14 @@ public class CustomPIDController extends MotionController {
 		}
 		if (Math.abs(result) < minimumNominalOutput) {
 			result = Math.signum(result) * minimumNominalOutput;
+		}
+		// Update on-target time
+		if (super.onTarget()) {
+			if (onTargetSince == CustomPIDController.OFF_TARGET) {
+				onTargetSince = System.currentTimeMillis();
+			}
+		} else if (onTargetSince != CustomPIDController.OFF_TARGET) {
+			onTargetSince = CustomPIDController.OFF_TARGET;
 		}
 		return result;
 	}
