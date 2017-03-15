@@ -222,8 +222,8 @@ public class CustomPIDController extends MotionController {
 		this.minimumNominalOutput = minimumNominalOutput;
 	}
 
-	public void setIThreshold(double I_threshold) {
-		this.integralThreshold = I_threshold;
+	public void setIThreshold(double integralThreshold) {
+		this.integralThreshold = integralThreshold;
 	}
 
 	/**
