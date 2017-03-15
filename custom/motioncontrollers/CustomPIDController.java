@@ -290,7 +290,7 @@ public class CustomPIDController extends MotionController {
 			// Calculate the approximation of the derivative.
 			errorDerivative = (error - lastError) / timeDiff;
 		}
-		if (error < I_threshold) {
+		if (Math.abs(error) < I_threshold) {
 			// Calculate the approximation of the error's integral
 			totalError += error * timeDiff;
 		} else {
