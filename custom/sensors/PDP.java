@@ -78,9 +78,7 @@ public class PDP {
 				return;
 			}
 		}
-		catch (CANMessageUnavailableException e) {
-			return;
-		}
+		catch (CANMessageUnavailableException e) {}
 		if (rawArray != null) {
 			double[] tempCurrents = new double[numberCurrents];
 			tempCurrents[0] = ((rawArray[0] & 0xFF) << 2 | ((rawArray[1] & 0xC0) >> 6)) * 0.125;
@@ -106,13 +104,11 @@ public class PDP {
 	}
 
 	private void readEnergy() throws InvalidSensorException {
-		byte[] rawArray;
+		byte[] rawArray = null;
 		try {
 			rawArray = statusEnergy.read();
 		}
-		catch (CANMessageUnavailableException e) {
-			return;
-		}
+		catch (CANMessageUnavailableException e) {}
 		if (rawArray != null) {
 			cachedCurrent = (((rawArray[1] & 0xFF) << 4) | ((rawArray[2] & 0xF0) >> 4)) * 0.125;
 			cachedPower = (((rawArray[1] & 0x0F) << 12) | (rawArray[2] << 4) | ((rawArray[4] & 0xF0) >> 4)) * 0.125;
