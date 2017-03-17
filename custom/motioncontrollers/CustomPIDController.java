@@ -17,7 +17,7 @@ import edu.wpi.first.wpilibj.util.BoundaryException;
 public class CustomPIDController extends MotionController {
 	protected double P;
 	protected double I;
-	protected double IPrime;
+	protected double IPrime = 0.0;
 	protected double D;
 	protected double F;
 	protected double integralThreshold = 0.0;
