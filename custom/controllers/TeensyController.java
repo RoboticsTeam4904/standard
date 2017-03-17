@@ -41,6 +41,6 @@ public class TeensyController extends Joystick implements Controller {
 	}
 
 	public CustomButton getButton(int id) { // allows for indirect access to array
-		return buttons[id];
+		return buttons[id - 1];
 	}
 }
