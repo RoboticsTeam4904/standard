@@ -17,11 +17,13 @@ import edu.wpi.first.wpilibj.util.BoundaryException;
 public class CustomPIDController extends MotionController {
 	protected double P;
 	protected double I;
+	protected double IPrime;
 	protected double D;
 	protected double F;
 	protected double integralThreshold = 0.0;
 	protected double totalError;
 	protected double lastError;
+	protected double accumulatedOutput;
 	protected long lastTime;
 	protected double minimumNominalOutput = 0.0;
 
@@ -157,6 +159,22 @@ public class CustomPIDController extends MotionController {
 	 */
 	public double getF() {
 		return F;
+	}
+
+	/**
+	 * @return
+	 * 		The current I' (ouput integral) value
+	 */
+	public double getIPrime() {
+		return IPrime;
+	}
+
+	/**
+	 * @param IPrime
+	 *        Integral of the PID output
+	 */
+	public void setIPrime(double IPrime) {
+		this.IPrime = IPrime;
 	}
 
 	/**
@@ -319,18 +337,20 @@ public class CustomPIDController extends MotionController {
 			totalError = 0.0;
 		}
 		// Calculate the result using the PIDF formula
-		double result = P * error + I * totalError + D * errorDerivative + F * setpoint;
+		double PIDresult = P * error + I * totalError + D * errorDerivative + F * setpoint;
+		double output = PIDresult + IPrime * accumulatedOutput;
+		accumulatedOutput += PIDresult * timeDiff;
 		// Save the error for calculating future derivatives
 		lastError = error;
-		LogKitten.v(input + " " + setpoint + " " + result);
+		LogKitten.v(input + " " + setpoint + " " + output);
 		if (capOutput) {
 			// Limit the result to be within the output range [outputMin, outputMax]
-			result = Math.max(Math.min(result, outputMax), outputMin);
+			output = Math.max(Math.min(output, outputMax), outputMin);
 		}
-		if (Math.abs(result) < minimumNominalOutput) {
-			result = Math.signum(result) * minimumNominalOutput;
+		if (Math.abs(output) < minimumNominalOutput) {
+			output = Math.signum(output) * minimumNominalOutput;
 		}
-		return result;
+		return output;
 	}
 
 	/**
