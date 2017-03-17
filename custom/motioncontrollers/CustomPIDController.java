@@ -7,6 +7,7 @@ import org.usfirst.frc4904.standard.custom.sensors.NativeDerivativeSensor;
 import org.usfirst.frc4904.standard.custom.sensors.PIDSensor;
 import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
+import edu.wpi.first.wpilibj.util.BoundaryException;
 
 /**
  * An extremely basic PID controller.
@@ -18,6 +19,7 @@ public class CustomPIDController extends MotionController {
 	protected double I;
 	protected double D;
 	protected double F;
+	protected double integralThreshold = 0.0;
 	protected double totalError;
 	protected double lastError;
 	protected long lastTime;
@@ -222,6 +224,31 @@ public class CustomPIDController extends MotionController {
 	}
 
 	/**
+	 * Sets the threshold below which the I term becomes active.
+	 * When the I term is active, the error sum increases. When
+	 * the I term is not active, the error sum is set to zero.
+	 * 
+	 * @param integralThreshold
+	 */
+	public void setIThreshold(double integralThreshold) {
+		if (integralThreshold < 0) {
+			throw new BoundaryException("I threshold negative");
+		}
+		this.integralThreshold = integralThreshold;
+	}
+
+	/**
+	 * Gets the threshold below which the I term becomes active.
+	 * When the I term is active, the error sum increases. When
+	 * the I term is not active, the error sum is set to zero.
+	 * 
+	 * @return
+	 */
+	public double getIThreshold() {
+		return integralThreshold;
+	}
+
+	/**
 	 * Resets the PID controller error to zero.
 	 */
 	@Override
@@ -285,8 +312,12 @@ public class CustomPIDController extends MotionController {
 			// Calculate the approximation of the derivative.
 			errorDerivative = (error - lastError) / timeDiff;
 		}
-		// Calculate the approximation of the error's integral
-		totalError += error * timeDiff;
+		if (integralThreshold != 0 && Math.abs(error) < integralThreshold) {
+			// Calculate the approximation of the error's integral
+			totalError += error * timeDiff;
+		} else {
+			totalError = 0.0;
+		}
 		// Calculate the result using the PIDF formula
 		double result = P * error + I * totalError + D * errorDerivative + F * setpoint;
 		// Save the error for calculating future derivatives
