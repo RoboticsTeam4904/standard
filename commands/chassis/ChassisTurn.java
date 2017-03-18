@@ -115,6 +115,7 @@ public class ChassisTurn extends Command implements ChassisController {
 		if (fallbackCommand.isRunning()) {
 			fallbackCommand.cancel();
 		}
+		runOnce = false;
 	}
 
 	@Override
