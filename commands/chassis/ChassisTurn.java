@@ -112,7 +112,7 @@ public class ChassisTurn extends Command implements ChassisController {
 	protected void end() {
 		motionController.disable();
 		move.cancel();
-		if (fallbackCommand.isRunning()) {
+		if (fallbackCommand != null && fallbackCommand.isRunning()) {
 			fallbackCommand.cancel();
 		}
 		runOnce = false;
