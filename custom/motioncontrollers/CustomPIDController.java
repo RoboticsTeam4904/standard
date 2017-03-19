@@ -363,10 +363,11 @@ public class CustomPIDController extends MotionController {
 	 *        The prefix to use when putting things on SmartDashboard.
 	 */
 	public void putToSmartDashboard(String prefix) {
-		SmartDashboard.putNumber(prefix + "_Error", getError());
-		SmartDashboard.putNumber(prefix + "_Setpoint", getSetpoint());
-		SmartDashboard.putNumber(prefix + "_Sensor", getSensorValue());
-		SmartDashboard.putNumber(prefix + "_Output", get());
+		double noise = (Math.random() - 0.5) * 0.0000001; // Generate very small noise centered at zero
+		SmartDashboard.putNumber(prefix + "_Error", getError() + noise);
+		SmartDashboard.putNumber(prefix + "_Setpoint", getSetpoint() + noise);
+		SmartDashboard.putNumber(prefix + "_Sensor", getSensorValue() + noise);
+		SmartDashboard.putNumber(prefix + "_Output", get() + noise);
 	}
 
 	/**
