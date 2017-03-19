@@ -362,6 +362,7 @@ public class CustomPIDController extends MotionController {
 	 * @param prefix
 	 *        The prefix to use when putting things on SmartDashboard.
 	 */
+	@Override
 	public void putToSmartDashboard(String prefix) {
 		double noise = (Math.random() - 0.5) * 0.0000001; // Generate very small noise centered at zero
 		SmartDashboard.putNumber(prefix + "_Error", getError() + noise);
@@ -376,6 +377,7 @@ public class CustomPIDController extends MotionController {
 	 * This method adds a very small random value to everything
 	 * so that graphs show properly on SmartDashboard.
 	 */
+	@Override
 	public void putToSmartDashboard() {
 		putToSmartDashboard(CustomPIDController.DEFAULT_SMARTDASHBOARD_PREFIX);
 	}
@@ -388,6 +390,7 @@ public class CustomPIDController extends MotionController {
 	 * @param prefix
 	 *        The prefix to use when putting things on SmartDashboard.
 	 */
+	@Override
 	public void updateFromSmartDashboard(String prefix) {
 		// If we're missing any constants on SmartDashboard, put the current ones
 		if (!(SmartDashboard.containsKey(prefix + "_P") && SmartDashboard.containsKey(prefix + "_I")
@@ -409,6 +412,7 @@ public class CustomPIDController extends MotionController {
 	 * Gets the P, I, D, and F constants from SmartDashboard,
 	 * or puts the current ones there if there's no constants.
 	 */
+	@Override
 	public void updateFromSmartDashboard() {
 		updateFromSmartDashboard(CustomPIDController.DEFAULT_SMARTDASHBOARD_PREFIX);
 	}
