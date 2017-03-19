@@ -398,7 +398,7 @@ public class CustomPIDController extends MotionController {
 			SmartDashboard.putNumber(prefix + "_P", getP());
 			SmartDashboard.putNumber(prefix + "_I", getI());
 			SmartDashboard.putNumber(prefix + "_D", getD());
-			SmartDashboard.putNumber(prefix + "_F", getD());
+			SmartDashboard.putNumber(prefix + "_F", getF());
 			return;
 		}
 		setPIDF(SmartDashboard.getNumber(prefix + "_P", getP()),
