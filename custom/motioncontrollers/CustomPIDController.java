@@ -24,6 +24,7 @@ public class CustomPIDController extends MotionController {
 	protected double lastError;
 	protected long lastTime;
 	protected double minimumNominalOutput = 0.0;
+	protected double deadband = 0.0;
 
 	/**
 	 * An extremely basic PID controller.
@@ -168,6 +169,17 @@ public class CustomPIDController extends MotionController {
 		return minimumNominalOutput;
 	}
 
+
+	/**
+	 *
+	 * @return
+	 * 		The current deadband value
+	 */
+	public double getDeadband() {
+		return deadband;
+	}
+
+
 	/**
 	 * Sets the parameters of the PID loop
 	 *
@@ -222,6 +234,15 @@ public class CustomPIDController extends MotionController {
 	public void setMinimumNominalOutput(double minimumNominalOutput) {
 		this.minimumNominalOutput = minimumNominalOutput;
 	}
+
+	/**
+	 * 
+	 * @param deadband
+	 */
+	public void setDeadband(double deadband) {
+		this.deadband = deadband;
+	}
+
 
 	/**
 	 * Sets the threshold below which the I term becomes active.
@@ -329,6 +350,8 @@ public class CustomPIDController extends MotionController {
 		}
 		if (Math.abs(result) < minimumNominalOutput) {
 			result = Math.signum(result) * minimumNominalOutput;
+		} else if (Math.abs(result) < deadband) {
+			result = 0;
 		}
 		return result;
 	}
