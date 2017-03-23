@@ -169,7 +169,6 @@ public class CustomPIDController extends MotionController {
 		return minimumNominalOutput;
 	}
 
-
 	/**
 	 *
 	 * @return
@@ -178,7 +177,6 @@ public class CustomPIDController extends MotionController {
 	public double getDeadband() {
 		return deadband;
 	}
-
 
 	/**
 	 * Sets the parameters of the PID loop
@@ -232,14 +230,23 @@ public class CustomPIDController extends MotionController {
 	 *        the motor can only run well above a value.
 	 */
 	public void setMinimumNominalOutput(double minimumNominalOutput) {
+		if(deadband > 0) {
+			LogKitten.ex("Cannot set both PID deadband and minimum nominal output");
+		}
+		deadband = 0;
 		this.minimumNominalOutput = minimumNominalOutput;
 	}
 
 	/**
 	 * 
 	 * @param deadband
+	 *        PID output will be set to 0 if it is lower than the deadband
 	 */
 	public void setDeadband(double deadband) {
+		if(minimumNominalOutput > 0) {
+			LogKitten.ex("Cannot set both PID deadband and minimum nominal output");
+		}
+		minimumNominalOutput = 0;
 		this.deadband = deadband;
 	}
 
