@@ -1,17 +1,17 @@
 package org.usfirst.frc4904.standard.custom.motioncontrollers;
 
+
 import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.custom.sensors.InvalidSensorException;
 import org.usfirst.frc4904.standard.custom.sensors.NativeDerivativeSensor;
 import org.usfirst.frc4904.standard.custom.sensors.PIDSensor;
-
 import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.util.BoundaryException;
 
 /**
- * An extremely basic PID controller. It does not differentiate between rate and
- * distance.
+ * An extremely basic PID controller.
+ * It does not differentiate between rate and distance.
  *
  */
 public class CustomPIDController extends MotionController {
@@ -27,19 +27,19 @@ public class CustomPIDController extends MotionController {
 	protected double deadband = 0.0;
 
 	/**
-	 * An extremely basic PID controller. It does not differentiate between rate
-	 * and distance.
+	 * An extremely basic PID controller.
+	 * It does not differentiate between rate and distance.
 	 *
 	 * @param P
-	 *            Initial P constant
+	 *        Initial P constant
 	 * @param I
-	 *            Initial I constant
+	 *        Initial I constant
 	 * @param D
-	 *            Initial D constant
+	 *        Initial D constant
 	 * @param F
-	 *            Initial F (feed forward) constant
+	 *        Initial F (feed forward) constant
 	 * @param sensor
-	 *            The sensor linked to the output
+	 *        The sensor linked to the output
 	 */
 	public CustomPIDController(double P, double I, double D, double F, PIDSensor sensor) {
 		super(sensor);
@@ -50,19 +50,19 @@ public class CustomPIDController extends MotionController {
 	}
 
 	/**
-	 * An extremely basic PID controller. It does not differentiate between rate
-	 * and distance.
+	 * An extremely basic PID controller.
+	 * It does not differentiate between rate and distance.
 	 *
 	 * @param P
-	 *            Initial P constant
+	 *        Initial P constant
 	 * @param I
-	 *            Initial I constant
+	 *        Initial I constant
 	 * @param D
-	 *            Initial D constant
+	 *        Initial D constant
 	 * @param F
-	 *            Initial F (feed forward) constant
+	 *        Initial F (feed forward) constant
 	 * @param sensor
-	 *            The sensor linked to the output
+	 *        The sensor linked to the output
 	 */
 	public CustomPIDController(double P, double I, double D, double F, PIDSource source) {
 		super(source);
@@ -73,100 +73,104 @@ public class CustomPIDController extends MotionController {
 	}
 
 	/**
-	 * An extremely basic PID controller. It does not differentiate between rate
-	 * and distance.
+	 * An extremely basic PID controller.
+	 * It does not differentiate between rate and distance.
 	 *
 	 * @param P
-	 *            Initial P constant
+	 *        Initial P constant
 	 * @param I
-	 *            Initial I constant
+	 *        Initial I constant
 	 * @param D
-	 *            Initial D constant
+	 *        Initial D constant
 	 * @param sensor
-	 *            The sensor linked to the output
+	 *        The sensor linked to the output
 	 */
 	public CustomPIDController(double P, double I, double D, PIDSensor sensor) {
 		this(P, I, D, 0.0, sensor);
 	}
 
 	/**
-	 * An extremely basic PID controller. It does not differentiate between rate
-	 * and distance.
+	 * An extremely basic PID controller.
+	 * It does not differentiate between rate and distance.
 	 *
 	 * @param P
-	 *            Initial P constant
+	 *        Initial P constant
 	 * @param I
-	 *            Initial I constant
+	 *        Initial I constant
 	 * @param D
-	 *            Initial D constant
+	 *        Initial D constant
 	 * @param sensor
-	 *            The sensor linked to the output
+	 *        The sensor linked to the output
 	 */
 	public CustomPIDController(double P, double I, double D, PIDSource source) {
 		this(P, I, D, 0.0, source);
 	}
 
 	/**
-	 * An extremely basic PID controller. It does not differentiate between rate
-	 * and distance.
+	 * An extremely basic PID controller.
+	 * It does not differentiate between rate and distance.
 	 *
 	 * @param sensor
-	 *            The sensor linked to the output
+	 *        The sensor linked to the output
 	 */
 	public CustomPIDController(PIDSensor sensor) {
 		this(0, 0, 0, sensor);
 	}
 
 	/**
-	 * An extremely basic PID controller. It does not differentiate between rate
-	 * and distance.
+	 * An extremely basic PID controller.
+	 * It does not differentiate between rate and distance.
 	 *
 	 * @param sensor
-	 *            The sensor linked to the output
+	 *        The sensor linked to the output
 	 */
 	public CustomPIDController(PIDSource source) {
 		this(0, 0, 0, source);
 	}
 
 	/**
-	 * @return The current P value
+	 * @return
+	 * 		The current P value
 	 */
 	public double getP() {
 		return P;
 	}
 
 	/**
-	 * @return The current I value
+	 * @return
+	 * 		The current I value
 	 */
 	public double getI() {
 		return I;
 	}
 
 	/**
-	 * @return The current D value
+	 * @return
+	 * 		The current D value
 	 */
 	public double getD() {
 		return D;
 	}
 
 	/**
-	 * @return The current F (feed forward) value
+	 * @return
+	 * 		The current F (feed forward) value
 	 */
 	public double getF() {
 		return F;
 	}
 
 	/**
-	 *
-	 * @return The current minimumNominalOutput (minimum nominal output) value
+	 * @return
+	 * 		The current minimumNominalOutput (minimum nominal output) value
 	 */
 	public double getMinimumNominalOutput() {
 		return minimumNominalOutput;
 	}
 
 	/**
-	 *
-	 * @return The current deadband value
+	 * @return
+	 * 		The current deadband value
 	 */
 	public double getDeadband() {
 		return deadband;
@@ -176,14 +180,14 @@ public class CustomPIDController extends MotionController {
 	 * Sets the parameters of the PID loop
 	 *
 	 * @param P
-	 *            Proportional
+	 *        Proportional
 	 * @param I
-	 *            Integral
+	 *        Integral
 	 * @param D
-	 *            Derivative
+	 *        Derivative
 	 *
-	 *            If you do not know what these mean, please refer to this link:
-	 *            https://en.wikipedia.org/wiki/PID_controller
+	 *        If you do not know what these mean, please refer
+	 *        to this link: https://en.wikipedia.org/wiki/PID_controller
 	 */
 	public void setPID(double P, double I, double D) {
 		this.P = P;
@@ -195,16 +199,16 @@ public class CustomPIDController extends MotionController {
 	 * Sets the parameters of the PID loop
 	 *
 	 * @param P
-	 *            Proportional
+	 *        Proportional
 	 * @param I
-	 *            Integral
+	 *        Integral
 	 * @param D
-	 *            Derivative
+	 *        Derivative
 	 * @param F
-	 *            Feed forward (scalar on input added to output)
+	 *        Feed forward (scalar on input added to output)
 	 *
-	 *            If you do not know what these mean, please refer to this link:
-	 *            https://en.wikipedia.org/wiki/PID_controller
+	 *        If you do not know what these mean, please refer
+	 *        to this link: https://en.wikipedia.org/wiki/PID_controller
 	 */
 	public void setPIDF(double P, double I, double D, double F) {
 		this.P = P;
@@ -214,11 +218,13 @@ public class CustomPIDController extends MotionController {
 	}
 
 	/**
-	 * 
 	 * @param minimumNominalOutput
-	 *            Minimum Nominal Output result will be set to ±this value if
-	 *            the absolute value of the result is less than this value. This
-	 *            is useful if the motor can only run well above a value.
+	 *        Minimum Nominal Output
+	 *        result will be set to
+	 *        ±this value if the absolute
+	 *        value of the result is less than
+	 *        this value. This is useful if
+	 *        the motor can only run well above a value.
 	 */
 	public void setMinimumNominalOutput(double minimumNominalOutput) {
 		if (deadband > 0) {
@@ -229,9 +235,8 @@ public class CustomPIDController extends MotionController {
 	}
 
 	/**
-	 * 
 	 * @param deadband
-	 *            PID output will be set to 0 if it is lower than the deadband
+	 *        PID output will be set to 0 if it is lower than the deadband
 	 */
 	public void setDeadband(double deadband) {
 		if (minimumNominalOutput > 0) {
@@ -242,9 +247,9 @@ public class CustomPIDController extends MotionController {
 	}
 
 	/**
-	 * Sets the threshold below which the I term becomes active. When the I term
-	 * is active, the error sum increases. When the I term is not active, the
-	 * error sum is set to zero.
+	 * Sets the threshold below which the I term becomes active.
+	 * When the I term is active, the error sum increases. When
+	 * the I term is not active, the error sum is set to zero.
 	 * 
 	 * @param integralThreshold
 	 */
@@ -256,9 +261,9 @@ public class CustomPIDController extends MotionController {
 	}
 
 	/**
-	 * Gets the threshold below which the I term becomes active. When the I term
-	 * is active, the error sum increases. When the I term is not active, the
-	 * error sum is set to zero.
+	 * Gets the threshold below which the I term becomes active.
+	 * When the I term is active, the error sum increases. When
+	 * the I term is not active, the error sum is set to zero.
 	 * 
 	 * @return
 	 */
@@ -281,12 +286,12 @@ public class CustomPIDController extends MotionController {
 	}
 
 	/**
-	 * Get the current output of the PID loop. This should be used to set the
-	 * output (like a Motor).
+	 * Get the current output of the PID loop.
+	 * This should be used to set the output (like a Motor).
 	 *
 	 * @return The current output of the PID loop.
 	 * @throws InvalidSensorException
-	 *             when a sensor fails
+	 *         when a sensor fails
 	 */
 	@Override
 	public double getSafely() throws InvalidSensorException {
@@ -300,8 +305,7 @@ public class CustomPIDController extends MotionController {
 		// Account for continuous input ranges
 		if (continuous) {
 			double range = inputMax - inputMin;
-			// If the error is more than half of the range, it is faster to
-			// increase the error and loop around the boundary
+			// If the error is more than half of the range, it is faster to increase the error and loop around the boundary
 			if (Math.abs(error) > range / 2) {
 				if (error > 0) {
 					error -= range;
@@ -313,23 +317,18 @@ public class CustomPIDController extends MotionController {
 		long latestTime = System.currentTimeMillis();
 		long timeDiff = latestTime - lastTime;
 		lastTime = latestTime;
-		// If we just reset, then the lastTime could be way before the
-		// latestTime and so timeDiff would be huge.
+		// If we just reset, then the lastTime could be way before the latestTime and so timeDiff would be huge.
 		// This would lead to a very big I (and a big D, briefly).
-		// Also, D could be unpredictable because lastError could be wildly
-		// different than error (since they're
+		// Also, D could be unpredictable because lastError could be wildly different than error (since they're
 		// separated by more than a tick in time).
-		// Hence, if we just reset, just pretend we're still disabled and record
-		// the lastTime and lastError for next tick.
+		// Hence, if we just reset, just pretend we're still disabled and record the lastTime and lastError for next tick.
 		if (didJustReset()) {
 			lastError = error;
 			return F * setpoint;
 		}
 		double errorDerivative;
-		// Check if the sensor supports native derivative calculations and that
-		// we're doing displacement PID
-		// (if we're doing rate PID, then getRate() would be the PID input
-		// rather then the input's derivative)
+		// Check if the sensor supports native derivative calculations and that we're doing displacement PID
+		// (if we're doing rate PID, then getRate() would be the PID input rather then the input's derivative)
 		if (sensor instanceof NativeDerivativeSensor && sensor.getPIDSourceType() == PIDSourceType.kDisplacement) {
 			errorDerivative = ((NativeDerivativeSensor) sensor).getRateSafely();
 		} else {
@@ -348,8 +347,7 @@ public class CustomPIDController extends MotionController {
 		lastError = error;
 		LogKitten.v(input + " " + setpoint + " " + result);
 		if (capOutput) {
-			// Limit the result to be within the output range [outputMin,
-			// outputMax]
+			// Limit the result to be within the output range [outputMin, outputMax]
 			result = Math.max(Math.min(result, outputMax), outputMin);
 		}
 		if (Math.abs(result) < minimumNominalOutput) {
@@ -361,8 +359,8 @@ public class CustomPIDController extends MotionController {
 	}
 
 	/**
-	 * Get the current output of the PID loop. This should be used to set the
-	 * output (like a Motor).
+	 * Get the current output of the PID loop.
+	 * This should be used to set the output (like a Motor).
 	 *
 	 * @return The current output of the PID loop.
 	 * @warning does not indicate sensor error
@@ -371,7 +369,8 @@ public class CustomPIDController extends MotionController {
 	public double get() {
 		try {
 			return getSafely();
-		} catch (Exception e) {
+		}
+		catch (Exception e) {
 			LogKitten.ex(e);
 			return 0;
 		}
