@@ -228,7 +228,7 @@ public class CustomPIDController extends MotionController {
 	 */
 	public void setMinimumNominalOutput(double minimumNominalOutput) {
 		if (deadband > 0) {
-			LogKitten.e("Removing deadband in favor of minimum nominal output");
+			LogKitten.w("Removing deadband in favor of minimum nominal output");
 		}
 		deadband = 0;
 		this.minimumNominalOutput = minimumNominalOutput;
@@ -240,7 +240,7 @@ public class CustomPIDController extends MotionController {
 	 */
 	public void setDeadband(double deadband) {
 		if (minimumNominalOutput > 0) {
-			LogKitten.e("Removing minimum nominal output in favor of deadband");
+			LogKitten.w("Removing minimum nominal output in favor of deadband");
 		}
 		minimumNominalOutput = 0;
 		this.deadband = deadband;
