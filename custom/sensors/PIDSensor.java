@@ -39,7 +39,9 @@ public interface PIDSensor {
 	 * @throws InvalidSensorException
 	 *         when sensor data should not be used for PID due to potential inaccuracy
 	 */
-	public double pidGetSafely() throws InvalidSensorException;
+	default public double pidGetSafely() throws InvalidSensorException {
+		return pidGet();
+	}
 
 	/**
 	 * Class to wrap a PIDSource to a PIDSensor
@@ -51,22 +53,17 @@ public interface PIDSensor {
 		public PIDSourceWrapper(PIDSource source) {
 			this.source = source;
 		}
-		
+
 		@Override
 		public void setPIDSourceType(PIDSourceType pidSource) {
 			source.setPIDSourceType(pidSource);
 		}
-		
+
 		@Override
 		public PIDSourceType getPIDSourceType() {
 			return source.getPIDSourceType();
 		}
-		
-		@Override
-		public double pidGetSafely() throws InvalidSensorException { // No exception possible anyway
-			return source.pidGet();
-		}
-		
+
 		@Override
 		public double pidGet() {
 			return source.pidGet();
