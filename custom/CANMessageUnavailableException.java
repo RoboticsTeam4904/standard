@@ -7,6 +7,8 @@ package org.usfirst.frc4904.standard.custom;
  * exception being thrown.
  */
 public class CANMessageUnavailableException extends Exception {
+	private static final long serialVersionUID = 8066629002370614378L;
+
 	public CANMessageUnavailableException() {
 		super();
 	}
