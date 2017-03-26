@@ -10,7 +10,6 @@ import edu.wpi.first.wpilibj.SpeedController;
 
 public abstract class SensorMotor extends Motor {
 	protected final MotionController motionController;
-	private boolean isMotionControlEnabled;
 
 	public SensorMotor(String name, boolean inverted, SpeedModifier speedModifier, MotionController motionController,
 		SpeedController... motors) {
