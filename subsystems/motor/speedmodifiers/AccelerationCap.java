@@ -3,6 +3,7 @@ package org.usfirst.frc4904.standard.subsystems.motor.speedmodifiers;
 
 import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.Util;
+import org.usfirst.frc4904.standard.custom.sensors.InvalidSensorException;
 import org.usfirst.frc4904.standard.custom.sensors.PDP;
 
 /**
@@ -65,7 +66,21 @@ public class AccelerationCap implements SpeedModifier {
 	protected double calculate(double inputSpeed) {
 		double deltaTime = (System.currentTimeMillis() - lastUpdate) / 1000.0;
 		lastUpdate = System.currentTimeMillis();
-		double newVoltage = pdp.getVoltage();
+		double newVoltage;
+		try {
+			newVoltage = pdp.getVoltageSafely();
+		}
+		catch (InvalidSensorException e) {
+			// Apply more naive ramping, then return
+			if (Math.abs(currentSpeed - inputSpeed) > AccelerationCap.MAXIMUM_MOTOR_INCREASE_PER_SECOND * deltaTime) {
+				if (inputSpeed > currentSpeed) {
+					return currentSpeed + AccelerationCap.MAXIMUM_MOTOR_INCREASE_PER_SECOND * deltaTime;
+				} else if (inputSpeed < currentSpeed) {
+					return currentSpeed - AccelerationCap.MAXIMUM_MOTOR_INCREASE_PER_SECOND * deltaTime;
+				}
+			}
+			return inputSpeed;
+		}
 		if (!new Util.Range(voltage - PDP.PDP_VOLTAGE_PRECISION, voltage + PDP.PDP_VOLTAGE_PRECISION).contains(newVoltage)) {
 			lastVoltage = voltage;
 			voltage = newVoltage;
@@ -75,7 +90,7 @@ public class AccelerationCap implements SpeedModifier {
 			return 0;
 		}
 		// After doing updates, check for low battery voltage first
-		double currentVoltage = pdp.getVoltage(); // Allow fallback to DS voltage
+		double currentVoltage = newVoltage; // Allow fallback to DS voltage
 		if (currentVoltage < hardStopVoltage) { // If we are below hardStopVoltage, stop motors
 			LogKitten.w("Low voltage, AccelerationCap stopping motors");
 			return 0;
