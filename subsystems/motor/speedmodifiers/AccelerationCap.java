@@ -90,7 +90,7 @@ public class AccelerationCap implements SpeedModifier {
 			return 0;
 		}
 		// After doing updates, check for low battery voltage first
-		double currentVoltage = newVoltage; // Allow fallback to DS voltage
+		double currentVoltage = newVoltage;
 		if (currentVoltage < hardStopVoltage) { // If we are below hardStopVoltage, stop motors
 			LogKitten.w("Low voltage, AccelerationCap stopping motors");
 			return 0;
