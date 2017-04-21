@@ -1,8 +1,8 @@
 package org.usfirst.frc4904.standard.commands.motor;
 
 
+import java.util.function.Supplier;
 import org.usfirst.frc4904.standard.LogKitten;
-import org.usfirst.frc4904.standard.custom.controllers.Controller;
 import org.usfirst.frc4904.standard.subsystems.motor.Motor;
 import org.usfirst.frc4904.standard.subsystems.motor.PositionSensorMotor;
 import edu.wpi.first.wpilibj.command.Command;
@@ -14,13 +14,12 @@ import edu.wpi.first.wpilibj.command.Command;
  */
 public class MotorControl extends Command {
 	protected final Motor motor;
-	protected final Controller controller;
-	protected final int axis;
+	protected final Supplier<Double> speedSupplier;
 	protected final double scale;
 	protected final double offset;
 
 	/**
-	 * This Command directly controls a Motor based on an axis of the Controller.
+	 * This Command directly controls a Motor based on a double supplier;
 	 * This can allow an Operator to easily control a single Motor from an axis of the Controller.
 	 *
 	 * @param name
@@ -32,11 +31,10 @@ public class MotorControl extends Command {
 	 *        A constant to add to the motor's speed
 	 *        Useful for using a controller for fine-tuning a constant speed
 	 */
-	public MotorControl(String name, Motor motor, Controller controller, int axis, double scale, double offset) {
+	public MotorControl(String name, Motor motor, Supplier<Double> speedSupplier, double scale, double offset) {
 		super(name);
 		this.motor = motor;
-		this.controller = controller;
-		this.axis = axis;
+		this.speedSupplier = speedSupplier;
 		this.scale = scale;
 		this.offset = offset;
 		requires(motor);
@@ -53,8 +51,8 @@ public class MotorControl extends Command {
 	 * @param controller
 	 * @param axis
 	 */
-	public MotorControl(String name, Motor motor, Controller controller, int axis) {
-		this(name, motor, controller, axis, 1.0, 0.0);
+	public MotorControl(String name, Motor motor, Supplier<Double> speedSupplier) {
+		this(name, motor, speedSupplier, 1.0, 0.0);
 	}
 
 	/**
@@ -66,8 +64,8 @@ public class MotorControl extends Command {
 	 * @param axis
 	 * @param scale
 	 */
-	public MotorControl(Motor motor, Controller controller, int axis, double scale) {
-		this("MotorControl", motor, controller, axis, 1.0, 0.0);
+	public MotorControl(Motor motor, Supplier<Double> speedSupplier, double scale) {
+		this("MotorControl", motor, speedSupplier, 1.0, 0.0);
 	}
 
 	/**
@@ -79,8 +77,8 @@ public class MotorControl extends Command {
 	 * @param axis
 	 * @param scale
 	 */
-	public MotorControl(Motor motor, Controller controller, int axis) {
-		this(motor, controller, axis, 1.0);
+	public MotorControl(Motor motor, Supplier<Double> speedSupplier) {
+		this(motor, speedSupplier, 1.0);
 	}
 
 	@Override
@@ -93,8 +91,8 @@ public class MotorControl extends Command {
 
 	@Override
 	protected void execute() {
-		LogKitten.d("MotorControl executing: " + controller.getAxis(axis));
-		motor.set(controller.getAxis(axis) * scale + offset);
+		LogKitten.d("MotorControl executing: " + speedSupplier.get());
+		motor.set(speedSupplier.get() * scale + offset);
 	}
 
 	@Override
