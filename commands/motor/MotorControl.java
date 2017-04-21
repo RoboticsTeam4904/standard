@@ -91,8 +91,9 @@ public class MotorControl extends Command {
 
 	@Override
 	protected void execute() {
-		LogKitten.d("MotorControl executing: " + speedSupplier.get());
-		motor.set(speedSupplier.get() * scale + offset);
+		double speed = speedSupplier.get() + offset;
+		LogKitten.d("MotorControl executing: " + speed);
+		motor.set(speed);
 	}
 
 	@Override
