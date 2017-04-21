@@ -17,6 +17,31 @@ public class MotorControl extends Command {
 	protected final Controller controller;
 	protected final int axis;
 	protected final double scale;
+	protected final double offset;
+
+	/**
+	 * This Command directly controls a Motor based on an axis of the Controller.
+	 * This can allow an Operator to easily control a single Motor from an axis of the Controller.
+	 *
+	 * @param motor
+	 * @param controller
+	 * @param axis
+	 * @param scale
+	 * @param offset
+	 *        A constant to add to the motor's speed
+	 *        Useful for using a controller for fine-tuning a constant speed
+	 */
+	public MotorControl(Motor motor, Controller controller, int axis, double scale, double offset) {
+		super("MotorControl");
+		this.motor = motor;
+		this.controller = controller;
+		this.axis = axis;
+		this.scale = scale;
+		this.offset = offset;
+		requires(motor);
+		setInterruptible(true);
+		LogKitten.d("MotorControl created for " + motor.getName());
+	}
 
 	/**
 	 * This Command directly controls a Motor based on an axis of the Controller.
@@ -28,14 +53,7 @@ public class MotorControl extends Command {
 	 * @param scale
 	 */
 	public MotorControl(Motor motor, Controller controller, int axis, double scale) {
-		super("MotorControl");
-		this.motor = motor;
-		this.controller = controller;
-		this.axis = axis;
-		this.scale = scale;
-		requires(motor);
-		setInterruptible(true);
-		LogKitten.d("MotorControl created for " + motor.getName());
+		this(motor, controller, axis, 1.0, 0.0);
 	}
 
 	/**
@@ -62,7 +80,7 @@ public class MotorControl extends Command {
 	@Override
 	protected void execute() {
 		LogKitten.d("MotorControl executing: " + controller.getAxis(axis));
-		motor.set(controller.getAxis(axis) * scale);
+		motor.set(controller.getAxis(axis) * scale + offset);
 	}
 
 	@Override
