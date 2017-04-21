@@ -2,6 +2,7 @@ package org.usfirst.frc4904.standard.subsystems.motor;
 
 
 import org.usfirst.frc4904.standard.LogKitten;
+import org.usfirst.frc4904.standard.custom.motioncontrollers.CustomPIDController;
 import org.usfirst.frc4904.standard.custom.motioncontrollers.MotionController;
 import org.usfirst.frc4904.standard.custom.sensors.InvalidSensorException;
 import org.usfirst.frc4904.standard.subsystems.motor.speedmodifiers.IdentityModifier;
@@ -127,8 +128,16 @@ public abstract class SensorMotor extends Motor {
 	public void setPosition(double position) {
 		motionController.setSetpoint(position);
 		motionController.enable();
+		boolean shouldIgnore = false;
+		if (motionController instanceof CustomPIDController) {
+			shouldIgnore = ((CustomPIDController) motionController).justReset;
+		}
 		double speed = motionController.get();
 		LogKitten.v(getName() + " set to position " + position + " at speed " + speed);
+		if (shouldIgnore) {
+			LogKitten.w("Tim tried to twitch. Not writing to Tim because justReset");
+			return;
+		}
 		super.set(speed);
 	}
 
