@@ -23,7 +23,16 @@ public class MotorSuppliedConstant extends Command {
 		this.speedSupply = speedSupply;
 		this.scale = scale;
 		this.offset = offset;
+		setInterruptible(true);
 		LogKitten.d("MotorSuppliedConstant created for " + motor.getName());
+	}
+
+	public MotorSuppliedConstant(String name, Motor motor, Supplier<Double> speedSupply, double scale) {
+		this(name, motor, speedSupply, scale, 0.0);
+	}
+
+	public MotorSuppliedConstant(Motor motor, Supplier<Double> speedSupply) {
+		this("MotorSuppliedConstant", motor, speedSupply, 1.0);
 	}
 
 	@Override

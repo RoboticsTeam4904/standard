@@ -21,13 +21,17 @@ public class MotorSet extends Command {
 	protected final SpeedController motor;
 	protected double speed;
 
-	public MotorSet(Motor motor) {
-		super("MotorSet");
+	public MotorSet(String name, Motor motor) {
+		super(name);
 		this.motor = motor;
 		speed = 0;
 		LogKitten.d("MotorSet created for " + motor.getName());
 		requires(motor);
 		setInterruptible(true);
+	}
+
+	public MotorSet(Motor motor) {
+		this("MotorSet", motor);
 	}
 
 	@Override

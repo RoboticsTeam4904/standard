@@ -23,6 +23,7 @@ public class MotorControl extends Command {
 	 * This Command directly controls a Motor based on an axis of the Controller.
 	 * This can allow an Operator to easily control a single Motor from an axis of the Controller.
 	 *
+	 * @param name
 	 * @param motor
 	 * @param controller
 	 * @param axis
@@ -31,8 +32,8 @@ public class MotorControl extends Command {
 	 *        A constant to add to the motor's speed
 	 *        Useful for using a controller for fine-tuning a constant speed
 	 */
-	public MotorControl(Motor motor, Controller controller, int axis, double scale, double offset) {
-		super("MotorControl");
+	public MotorControl(String name, Motor motor, Controller controller, int axis, double scale, double offset) {
+		super(name);
 		this.motor = motor;
 		this.controller = controller;
 		this.axis = axis;
@@ -47,13 +48,26 @@ public class MotorControl extends Command {
 	 * This Command directly controls a Motor based on an axis of the Controller.
 	 * This can allow an Operator to easily control a single Motor from an axis of the Controller.
 	 *
+	 * @param name
+	 * @param motor
+	 * @param controller
+	 * @param axis
+	 */
+	public MotorControl(String name, Motor motor, Controller controller, int axis) {
+		this(name, motor, controller, axis, 1.0, 0.0);
+	}
+
+	/**
+	 * This Command directly controls a Motor based on an axis of the Controller.
+	 * This can allow an Operator to easily control a single Motor from an axis of the Controller.
+	 *
 	 * @param motor
 	 * @param controller
 	 * @param axis
 	 * @param scale
 	 */
 	public MotorControl(Motor motor, Controller controller, int axis, double scale) {
-		this(motor, controller, axis, 1.0, 0.0);
+		this("MotorControl", motor, controller, axis, 1.0, 0.0);
 	}
 
 	/**
