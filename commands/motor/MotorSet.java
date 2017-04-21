@@ -40,7 +40,7 @@ public class MotorSet extends Command {
 	 */
 	public void set(double speed) {
 		this.speed = speed;
-		LogKitten.d("MotorSet writePipe set to " + speed);
+		LogKitten.d("MotorSet set to " + speed);
 	}
 
 	@Override
