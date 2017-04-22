@@ -3,10 +3,12 @@ package org.usfirst.frc4904.standard.custom.motioncontrollers;
 
 import java.util.Timer;
 import java.util.TimerTask;
+import org.usfirst.frc4904.standard.Util;
 import org.usfirst.frc4904.standard.custom.sensors.InvalidSensorException;
 import org.usfirst.frc4904.standard.custom.sensors.PIDSensor;
 import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.PIDSource;
+import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.util.BoundaryException;
 
 /**
@@ -22,8 +24,7 @@ public abstract class MotionController {
 	protected double setpoint;
 	protected double absoluteTolerance;
 	protected boolean continuous;
-	protected double inputMax;
-	protected double inputMin;
+	protected Util.Range inputRange;
 	protected boolean capOutput;
 	protected double outputMax;
 	protected double outputMin;
@@ -51,8 +52,7 @@ public abstract class MotionController {
 		absoluteTolerance = Double.MIN_VALUE; // Nonzero to avoid floating point errors
 		capOutput = false;
 		continuous = false;
-		inputMin = 0.0;
-		inputMax = 0.0;
+		inputRange = new Util.Range(0, 0);
 		outputMin = 0.0;
 		outputMax = 0.0;
 		reset();
@@ -206,6 +206,9 @@ public abstract class MotionController {
 	}
 
 	/**
+	 * Sets the input range of the motion controller to a
+	 * new instance of Util.Range with the specified boundaries.
+	 * 
 	 * Returns the absolute tolerance set on the
 	 * motion controller. Will return {@link org.usfirst.frc4904.standard.Util#EPSILON Util.EPSILON}
 	 *
@@ -217,6 +220,7 @@ public abstract class MotionController {
 
 	/**
 	 * Sets the input range of the motion controller.
+	 * 
 	 * This is only used to work with continuous inputs.
 	 * If minimum is greater than maximum, this will throw
 	 * an exception.
@@ -224,12 +228,29 @@ public abstract class MotionController {
 	 * @param minimum
 	 * @param maximum
 	 */
-	public void setInputRange(double minimum, double maximum) {
-		if (minimum > maximum) {
-			throw new BoundaryException("Minimum is greater than maximum");
-		}
-		inputMin = minimum;
-		inputMax = maximum;
+	public void setInputRange(double minimum, double maximum) throws BoundaryException {
+		setInputRange(new Util.Range(minimum, maximum));
+	}
+
+	/**
+	 * Sets the input range of the motion controller to an
+	 * existing instance of Util.Range. This is only used
+	 * to work with continuous inputs. If minimum is
+	 * greater than maximum, this will throw an exception.
+	 *
+	 * @param range
+	 */
+	public void setInputRange(Util.Range range) {
+		inputRange = range;
+	}
+
+	/**
+	 * Get the input range of the MotionController.
+	 *
+	 * @param range
+	 */
+	public Util.Range getInputRange() {
+		return inputRange;
 	}
 
 	/**
@@ -266,6 +287,25 @@ public abstract class MotionController {
 	 */
 	public void setContinuous(boolean continuous) {
 		this.continuous = continuous;
+	}
+
+	/**
+	 * Set the PIDSourceType (rate or displacement)
+	 * of this input sensor.
+	 * 
+	 * @param sourceType
+	 */
+	public void setSensorSourceType(PIDSourceType sourceType) {
+		sensor.setPIDSourceType(sourceType);
+	}
+
+	/**
+	 * Get the currently set PIDSourceType of the input sensor.
+	 * 
+	 * @return PIDSourceType
+	 */
+	public PIDSourceType getSensorSourceType() {
+		return sensor.getPIDSourceType();
 	}
 
 	/**

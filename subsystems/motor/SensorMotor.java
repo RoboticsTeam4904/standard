@@ -6,6 +6,7 @@ import org.usfirst.frc4904.standard.custom.motioncontrollers.MotionController;
 import org.usfirst.frc4904.standard.custom.sensors.InvalidSensorException;
 import org.usfirst.frc4904.standard.subsystems.motor.speedmodifiers.IdentityModifier;
 import org.usfirst.frc4904.standard.subsystems.motor.speedmodifiers.SpeedModifier;
+import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.SpeedController;
 
 public abstract class SensorMotor extends Motor {
@@ -57,10 +58,12 @@ public abstract class SensorMotor extends Motor {
 
 	public void enableMotionController() {
 		motionController.setOutput(this);
+		isMotionControlEnabled = true;
 		motionController.enable();
 	}
 
 	public void disableMotionController() {
+		isMotionControlEnabled = false;
 		motionController.disable();
 	}
 
@@ -111,9 +114,12 @@ public abstract class SensorMotor extends Motor {
 	 * @throws InvalidSensorException
 	 */
 	public void setPositionSafely(double position) throws InvalidSensorException {
+		PIDSourceType previousSensorSourceType = motionController.getSensorSourceType();
+		motionController.setSensorSourceType(PIDSourceType.kDisplacement);
 		motionController.setSetpoint(position);
 		motionController.enable();
 		double speed = motionController.getSafely();
+		motionController.setSensorSourceType(previousSensorSourceType);
 		LogKitten.v(getName() + " set to position " + position + " at speed " + speed);
 		super.set(speed);
 	}
@@ -125,14 +131,74 @@ public abstract class SensorMotor extends Motor {
 	 * @warning this does not indicate sensor failure
 	 */
 	public void setPosition(double position) {
+		PIDSourceType previousSensorSourceType = motionController.getSensorSourceType();
+		motionController.setSensorSourceType(PIDSourceType.kDisplacement);
 		motionController.setSetpoint(position);
 		motionController.enable();
 		double speed = motionController.get();
+		motionController.setSensorSourceType(previousSensorSourceType);
 		LogKitten.v(getName() + " set to position " + position + " at speed " + speed);
 		super.set(speed);
 	}
 
 	public boolean onTarget() {
 		return motionController.onTarget();
+	}
+
+	/**
+	 * Set the velocity of a sensor motor
+	 *
+	 * @param distancePerSecond
+	 * @throws InvalidSensorException
+	 */
+	public void setVelocitySafely(double distancePerSecond) throws InvalidSensorException {
+		PIDSourceType previousSensorSourceType = motionController.getSensorSourceType();
+		motionController.setSensorSourceType(PIDSourceType.kRate);
+		motionController.setSetpoint(distancePerSecond);
+		motionController.enable();
+		double speed = motionController.getSafely();
+		motionController.setSensorSourceType(previousSensorSourceType);
+		LogKitten.v(getName() + " set to velocity " + distancePerSecond + " at speed " + speed);
+		super.set(speed);
+	}
+
+	/**
+	 * Set the velocity of a sensor motor
+	 *
+	 * @param distancePerSecond
+	 * @warning this does not indicate sensor failure
+	 */
+	public void setVelocity(double distancePerSecond) {
+		PIDSourceType previousSensorSourceType = motionController.getSensorSourceType();
+		motionController.setSensorSourceType(PIDSourceType.kRate);
+		motionController.setSetpoint(distancePerSecond);
+		motionController.enable();
+		double speed = motionController.get();
+		motionController.setSensorSourceType(previousSensorSourceType);
+		LogKitten.v(getName() + " set to velocity " + distancePerSecond + " at speed " + speed);
+		super.set(speed);
+	}
+
+	@Override
+	/***
+	 * Set the SensorMotor to a desired speed.
+	 */
+	public void set(double speed) {
+		PIDSourceType previousSensorSourceType = motionController.getSensorSourceType();
+		motionController.setSensorSourceType(PIDSourceType.kRate);
+		LogKitten.v(speed + "");
+		if (isMotionControlEnabled) {
+			motionController.setSetpoint(motionController.getInputRange().scaleValue(speed));
+			try {
+				super.set(motionController.getSafely());
+				motionController.setSensorSourceType(previousSensorSourceType);
+				return;
+			}
+			catch (InvalidSensorException e) {
+				LogKitten.ex(e);
+			}
+		}
+		super.set(speed);
+		motionController.setSensorSourceType(previousSensorSourceType);
 	}
 }
