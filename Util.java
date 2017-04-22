@@ -73,7 +73,7 @@ public class Util {
 		 * @return the limited value
 		 */
 		public double limitValue(double value) {
-			return Math.max(Math.min(value, max), min);
+			return value >= max ? max : value <= min ? min : value;
 		}
 	}
 }
