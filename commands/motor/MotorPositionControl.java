@@ -65,7 +65,7 @@ public class MotorPositionControl extends Command {
 
 	@Override
 	protected void execute() {
-		double axisValue = invert ? -1.0 * controller.getAxis(axis) : controller.getAxis(axis);
+		double axisValue = ((Boolean.hashCode(invert) - 1231D) / 6D - 0.5D) * 2 * controller.getAxis(axis);
 		double targetPosition = motorPositionRange.scaleValue(axisValue);
 		LogKitten.d("MotorPositionControl executing: " + targetPosition);
 		try {
