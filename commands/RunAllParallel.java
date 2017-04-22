@@ -1,6 +1,7 @@
 package org.usfirst.frc4904.standard.commands;
 
 
+import java.util.stream.Stream;
 import edu.wpi.first.wpilibj.command.Command;
 
 public class RunAllParallel extends RunAll {
@@ -16,8 +17,6 @@ public class RunAllParallel extends RunAll {
 	 */
 	public RunAllParallel(Command... commands) {
 		super("RunAllParallel[" + RunAll.joinNames(commands) + "]");
-		for (Command command : commands) {
-			addParallel(command);
-		}
+		Stream.of(commands).forEach(this::addParallel);
 	}
 }
