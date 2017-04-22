@@ -3,6 +3,7 @@ package org.usfirst.frc4904.standard.commands.healthchecks;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.commands.TimedCommand;
 
@@ -25,9 +26,9 @@ public abstract class AbstractHealthCheck extends TimedCommand { // Many of our 
 	}
 
 	public void reset() {
-		for (HealthLevel level : commands.keySet()) {
-			if (commands.get(level) != null) {
-				for (HealthProtectCommand hpc : commands.get(level)) {
+		for (Map.Entry<HealthLevel, ArrayList<HealthProtectCommand>> entry : commands.entrySet()) {
+			if (entry.getValue() != null) {
+				for (HealthProtectCommand hpc : entry.getValue()) {
 					if (hpc.isRunning()) {
 						hpc.reset();
 					}
@@ -44,9 +45,9 @@ public abstract class AbstractHealthCheck extends TimedCommand { // Many of our 
 	protected final void execute() { // It should not be possible to override this
 		status = getStatus();
 		LogKitten.v(getName() + " healthCheck: " + status);
-		for (HealthLevel other : commands.keySet()) {
-			if (other != status) {
-				for (HealthProtectCommand hpc : commands.get(other)) {
+		for (Map.Entry<HealthLevel, ArrayList<HealthProtectCommand>> entry : commands.entrySet()) {
+			if (entry.getKey() != status) {
+				for (HealthProtectCommand hpc : entry.getValue()) {
 					if (hpc.isRunning()) {
 						hpc.cancel();// stop all the ones for other states
 					}
@@ -70,9 +71,9 @@ public abstract class AbstractHealthCheck extends TimedCommand { // Many of our 
 
 	@Override
 	protected final void end() {
-		for (HealthLevel level : commands.keySet()) {
-			if (commands.get(level) != null) {
-				for (HealthProtectCommand hpc : commands.get(level)) {
+		for (Map.Entry<HealthLevel, ArrayList<HealthProtectCommand>> entry : commands.entrySet()) {
+			if (entry.getValue() != null) {
+				for (HealthProtectCommand hpc : entry.getValue()) {
 					if (hpc.isRunning()) {
 						hpc.cancel();
 					}
@@ -88,9 +89,9 @@ public abstract class AbstractHealthCheck extends TimedCommand { // Many of our 
 		if (!finished()) {
 			return false;
 		}
-		for (HealthLevel level : commands.keySet()) {
-			if (commands.get(level) != null) {
-				for (HealthProtectCommand hpc : commands.get(level)) {
+		for (Map.Entry<HealthLevel, ArrayList<HealthProtectCommand>> entry : commands.entrySet()) {
+			if (entry.getValue() != null) {
+				for (HealthProtectCommand hpc : entry.getValue()) {
 					if (hpc.isRunning()) {
 						return false;
 					}
