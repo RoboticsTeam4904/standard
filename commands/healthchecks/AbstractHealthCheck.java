@@ -2,6 +2,7 @@ package org.usfirst.frc4904.standard.commands.healthchecks;
 
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.commands.TimedCommand;
@@ -25,15 +26,7 @@ public abstract class AbstractHealthCheck extends TimedCommand { // Many of our 
 	}
 
 	public void reset() {
-		for (HealthLevel level : commands.keySet()) {
-			if (commands.get(level) != null) {
-				for (HealthProtectCommand hpc : commands.get(level)) {
-					if (hpc.isRunning()) {
-						hpc.reset();
-					}
-				}
-			}
-		}
+		commands.keySet().stream().map(commands::get).filter(x -> x != null).flatMap(Collection::stream).filter(HealthProtectCommand::isRunning).forEach(HealthProtectCommand::reset);
 		status = HealthLevel.UNKNOWN;
 		resetTimer();
 	}
