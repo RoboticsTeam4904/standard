@@ -8,12 +8,9 @@ import edu.wpi.first.wpilibj.command.Command;
 
 /**
  * Sets a motor to a speed.
- * The speed can change through
- * use of the set command.
- * This is better than setting
- * the motor because it uses
- * requires to avoid having
- * multiple attempts to set a
+ * The speed can change through use of the set command.
+ * This is better than setting the motor because it uses
+ * requires to avoid having multiple attempts to set a
  * motor simultaneously.
  *
  */
@@ -21,6 +18,12 @@ public class MotorSet extends Command {
 	protected final SpeedController motor;
 	protected double speed;
 
+	/**
+	 * Command that wraps the set function of a motor.
+	 * 
+	 * @param name
+	 * @param motor
+	 */
 	public MotorSet(String name, Motor motor) {
 		super(name);
 		this.motor = motor;
@@ -30,6 +33,11 @@ public class MotorSet extends Command {
 		setInterruptible(true);
 	}
 
+	/**
+	 * Command that wraps the set function of a motor.
+	 * 
+	 * @param motor
+	 */
 	public MotorSet(Motor motor) {
 		this("MotorSet", motor);
 	}
@@ -40,7 +48,7 @@ public class MotorSet extends Command {
 	}
 
 	/**
-	 * Set the speed of the motor
+	 * Set the speed of the motor in this class
 	 */
 	public void set(double speed) {
 		this.speed = speed;
