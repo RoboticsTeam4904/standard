@@ -5,8 +5,9 @@ import org.usfirst.frc4904.standard.LogKitten;
 import edu.wpi.first.wpilibj.command.Command;
 
 /**
- *
+ * Log a message using LogKitten
  */
+
 public class KittenCommand extends Command {
 	protected final String message;
 	protected final LogKitten.KittenLevel level;

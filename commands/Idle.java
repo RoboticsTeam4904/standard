@@ -3,7 +3,9 @@ package org.usfirst.frc4904.standard.commands;
 
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Subsystem;
-
+/*
+ * Do nothing
+ */
 public class Idle extends Command {
 	public Idle() {
 		super("Idle(No Subsystem)");
