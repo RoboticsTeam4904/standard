@@ -92,6 +92,7 @@ public class SolenoidShifters extends Subsystem {
 	 * @param state
 	 */
 	public void shift(ShiftState state) {
+		this.state = state;
 		switch (state) {
 			case UP:
 				if (!isInverted) {
