@@ -157,7 +157,6 @@ public class LogKitten {
 			try {
 				if (LogKitten.fileOutput != null) {
 					LogKitten.fileOutput.write(content.getBytes());
-					//LogKitten.fileOutput.flush();
 				} else {
 					System.out.println("Error logging: logfile not open");
 				}
