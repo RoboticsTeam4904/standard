@@ -2,6 +2,7 @@ package org.usfirst.frc4904.standard.custom;
 
 
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import java.util.function.Supplier;
 
 /**
  * A sendable chooser for any named object.
