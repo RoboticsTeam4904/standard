@@ -2,6 +2,7 @@ package org.usfirst.frc4904.standard;
 
 
 import java.io.File;
+import java.io.BufferedOutputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -12,7 +13,7 @@ import java.util.Date;
 import edu.wpi.first.wpilibj.hal.HAL;
 
 public class LogKitten {
-	private static FileOutputStream fileOutput;
+	private static BufferedOutputStream fileOutput;
 	public final static KittenLevel LEVEL_WTF = KittenLevel.WTF;
 	public final static KittenLevel LEVEL_FATAL = KittenLevel.FATAL;
 	public final static KittenLevel LEVEL_ERROR = KittenLevel.ERROR;
@@ -46,7 +47,7 @@ public class LogKitten {
 			// Create new file if it doesn't exist (this should happen)
 			file.createNewFile(); // creates if does not exist
 			// Create FileOutputStream to actually write to the file.
-			LogKitten.fileOutput = new FileOutputStream(file);
+			LogKitten.fileOutput = new BufferedOutputStream(new FileOutputStream(file));
 		}
 		catch (IOException ioe) {
 			System.out.println("Could not open logfile");
@@ -156,7 +157,6 @@ public class LogKitten {
 			try {
 				if (LogKitten.fileOutput != null) {
 					LogKitten.fileOutput.write(content.getBytes());
-					LogKitten.fileOutput.flush();
 				} else {
 					System.out.println("Error logging: logfile not open");
 				}
