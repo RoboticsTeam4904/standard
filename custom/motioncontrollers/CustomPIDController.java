@@ -24,6 +24,7 @@ public class CustomPIDController extends MotionController {
 	protected double lastError;
 	protected long lastTime;
 	protected double minimumNominalOutput = 0.0;
+	protected double deadband = 0.0;
 
 	/**
 	 * An extremely basic PID controller.
@@ -160,12 +161,19 @@ public class CustomPIDController extends MotionController {
 	}
 
 	/**
-	 *
 	 * @return
 	 * 		The current minimumNominalOutput (minimum nominal output) value
 	 */
 	public double getMinimumNominalOutput() {
 		return minimumNominalOutput;
+	}
+
+	/**
+	 * @return
+	 * 		The current deadband value
+	 */
+	public double getDeadband() {
+		return deadband;
 	}
 
 	/**
@@ -210,7 +218,6 @@ public class CustomPIDController extends MotionController {
 	}
 
 	/**
-	 * 
 	 * @param minimumNominalOutput
 	 *        Minimum Nominal Output
 	 *        result will be set to
@@ -220,7 +227,23 @@ public class CustomPIDController extends MotionController {
 	 *        the motor can only run well above a value.
 	 */
 	public void setMinimumNominalOutput(double minimumNominalOutput) {
+		if (deadband > 0) {
+			LogKitten.w("Removing deadband in favor of minimum nominal output");
+		}
+		deadband = 0;
 		this.minimumNominalOutput = minimumNominalOutput;
+	}
+
+	/**
+	 * @param deadband
+	 *        PID output will be set to 0 if it is lower than the deadband
+	 */
+	public void setDeadband(double deadband) {
+		if (minimumNominalOutput > 0) {
+			LogKitten.w("Removing minimum nominal output in favor of deadband");
+		}
+		minimumNominalOutput = 0;
+		this.deadband = deadband;
 	}
 
 	/**
@@ -329,6 +352,8 @@ public class CustomPIDController extends MotionController {
 		}
 		if (Math.abs(result) < minimumNominalOutput) {
 			result = Math.signum(result) * minimumNominalOutput;
+		} else if (Math.abs(result) < deadband) {
+			result = 0;
 		}
 		return result;
 	}
