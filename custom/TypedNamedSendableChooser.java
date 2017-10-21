@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
  *
  * @param <T>
  */
-public class TypedNamedSendableChooser<T extends Nameable> extends SendableChooser<T> {
+public class TypedNamedSendableChooser<T extends Nameable> extends SendableChooser<T> implements Supplier<T>{
 	/**
 	 * Adds an object of the type
 	 * to the smart dashboard.
@@ -28,5 +28,11 @@ public class TypedNamedSendableChooser<T extends Nameable> extends SendableChoos
 	 */
 	public void addDefault(T object) {
 		super.addDefault(object.getName() + " (default)", object);
+	}
+	/**
+	 * Wrapper for getSelected() to conform to Supplier<T>
+	 */
+	public T get(){
+		return getSelected();
 	}
 }
