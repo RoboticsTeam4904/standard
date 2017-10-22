@@ -15,27 +15,24 @@ import edu.wpi.first.wpilibj.command.Command;
 public class MotorControl extends Command {
 	protected final Motor motor;
 	protected final Supplier<Double> speedSupplier;
-	protected final double scale;
 	protected final double offset;
 
 	/**
-	 * This Command directly controls a Motor based on a double supplier;
-	 * This can allow an Operator to easily control a single Motor from an axis of the Controller.
+	 * This Command directly controls a Motor based on a double supplier; This
+	 * can allow an Operator to easily control a single Motor from an axis of
+	 * the Controller.
 	 *
 	 * @param name
 	 * @param motor
-	 * @param controller
-	 * @param axis
-	 * @param scale
+	 * @param speedSupplier
 	 * @param offset
-	 *        A constant to add to the motor's speed
-	 *        Useful for using a controller for fine-tuning a constant speed
+	 *            A constant to add to the motor's speed Useful for using a
+	 *            controller for fine-tuning a constant speed
 	 */
-	public MotorControl(String name, Motor motor, Supplier<Double> speedSupplier, double scale, double offset) {
+	public MotorControl(String name, Motor motor, Supplier<Double> speedSupplier, double offset) {
 		super(name);
 		this.motor = motor;
 		this.speedSupplier = speedSupplier;
-		this.scale = scale;
 		this.offset = offset;
 		requires(motor);
 		setInterruptible(true);
@@ -43,42 +40,28 @@ public class MotorControl extends Command {
 	}
 
 	/**
-	 * This Command directly controls a Motor based on an axis of the Controller.
-	 * This can allow an Operator to easily control a single Motor from an axis of the Controller.
+	 * This Command directly controls a Motor based on an axis of the
+	 * Controller. This can allow an Operator to easily control a single Motor
+	 * from an axis of the Controller.
 	 *
 	 * @param name
 	 * @param motor
-	 * @param controller
-	 * @param axis
+	 * @param speedSupplier
 	 */
 	public MotorControl(String name, Motor motor, Supplier<Double> speedSupplier) {
-		this(name, motor, speedSupplier, 1.0, 0.0);
+		this(name, motor, speedSupplier, 0.0);
 	}
 
 	/**
-	 * This Command directly controls a Motor based on an axis of the Controller.
-	 * This can allow an Operator to easily control a single Motor from an axis of the Controller.
+	 * This Command directly controls a Motor based on an axis of the
+	 * Controller. This can allow an Operator to easily control a single Motor
+	 * from an axis of the Controller.
 	 *
 	 * @param motor
-	 * @param controller
-	 * @param axis
-	 * @param scale
-	 */
-	public MotorControl(Motor motor, Supplier<Double> speedSupplier, double scale) {
-		this("MotorControl", motor, speedSupplier, 1.0, 0.0);
-	}
-
-	/**
-	 * This Command directly controls a Motor based on an axis of the Controller.
-	 * This can allow an Operator to easily control a single Motor from an axis of the Controller.
-	 *
-	 * @param motor
-	 * @param controller
-	 * @param axis
-	 * @param scale
+	 * @param speedSupplier
 	 */
 	public MotorControl(Motor motor, Supplier<Double> speedSupplier) {
-		this(motor, speedSupplier, 1.0);
+		this("MotorControl", motor, speedSupplier, 0.0);
 	}
 
 	@Override
