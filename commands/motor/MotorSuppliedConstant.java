@@ -65,7 +65,7 @@ public class MotorSuppliedConstant extends Command {
 
 	@Override
 	protected void initialize() {
-		speed = speedSupply.get() * scale + offset;
+		speed = speedSupply.get() + offset;
 		motor.set(speed);
 	}
 
