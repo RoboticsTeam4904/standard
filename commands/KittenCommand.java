@@ -18,7 +18,7 @@ public class KittenCommand extends Command {
 
 	@Override
 	protected void initialize() {
-		LogKitten.logMessage(message, level, false);
+		LogKitten.indirectedLogMessage(message, level, false);
 	}
 
 	@Override
