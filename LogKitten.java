@@ -146,7 +146,7 @@ public class LogKitten {
 	 * @param errorString
 	 */
 	private static void reportErrorToDriverStation(String details, String errorMessage, KittenLevel logLevel) {
-		HAL.sendError(true, logLevel.getSeverity(), false, errorMessage, details, "", false);
+		HAL.sendError(true, logLevel.ordinal(), false, errorMessage, details, "", false);
 	}
 
 	public static synchronized void logMessage(Object message, KittenLevel level, boolean override) {
@@ -370,15 +370,6 @@ public class LogKitten {
 	public static enum KittenLevel {
 		// Defined in decreasing order of severity. Enum.compareTo uses the definition order to compare enum values.
 		WTF, FATAL, ERROR, WARN, VERBOSE, DEBUG;
-		/**
-		 * Get the level severity
-		 *
-		 * @return the level severity as an int
-		 */
-		public int getSeverity() {
-			// Severity is the same as the ordinal, which increases with the order of the enum values
-			return ordinal();
-		}
 
 		/**
 		 * Get the level name
