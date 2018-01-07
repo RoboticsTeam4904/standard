@@ -139,7 +139,7 @@ public class LogKitten {
 	}
 
 	/**
-	 * Like DriverStation.reportError, but w/o stack trace nor printing to System.err
+	 * Like DriverStation.reportError, but without stack trace nor printing to System.err
 	 * (updated for 2017 WPILib release)
 	 *
 	 * @see edu.wpi.first.wpilibj.DriverStation.reportError
