@@ -59,9 +59,7 @@ public class CustomCAN {
 	 * @throws UncleanStatusException
 	 */
 	public void writeSafely(byte[] data) {
-		ByteBuffer canData = ByteBuffer.allocateDirect(8);
-		canData.put(data);
-		CANJNI.FRCNetCommCANSessionMuxSendMessage(messageID, canData, CANJNI.CAN_SEND_PERIOD_NO_REPEAT);
+		CANJNI.FRCNetCommCANSessionMuxSendMessage(messageID, data, CANJNI.CAN_SEND_PERIOD_NO_REPEAT);
 	}
 	
 	/**
@@ -73,7 +71,7 @@ public class CustomCAN {
 	 * 		CANMEssageNotFoundException
 	 *         when no new message is available
 	 */
-	protected ByteBuffer readBuffer() throws CANMessageUnavailableException {
+	protected byte[] readBuffer() throws CANMessageUnavailableException {
 		IntBuffer idBuffer = ByteBuffer.allocateDirect(4).asIntBuffer();
 		idBuffer.clear();
 		idBuffer.put(0, Integer.reverseBytes(messageID));
@@ -93,18 +91,6 @@ public class CustomCAN {
 	 * @return byte[] (8 long)
 	 */
 	public byte[] read() throws CANMessageUnavailableException {
-		ByteBuffer dataBuffer = readBuffer();
-		if (dataBuffer == null) {
-			return null;
-		}
-		if (dataBuffer.remaining() <= 0) {
-			return null;
-		}
-		dataBuffer.rewind();
-		byte[] data = new byte[dataBuffer.remaining()];
-		for (int i = 0; i < dataBuffer.remaining(); i++) {
-			data[i] = dataBuffer.get(i);
-		}
-		return data;
+		return readBuffer();
 	}
 }

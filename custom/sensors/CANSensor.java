@@ -42,9 +42,9 @@ public class CANSensor extends CustomCAN {
 	 *         to indicate that.
 	 */
 	public int[] readSensor() throws InvalidSensorException {
-		ByteBuffer rawData;
+		ByteBuffer rawData = ByteBuffer.allocateDirect(8);
 		try {
-			rawData = super.readBuffer();
+			rawData.put(super.readBuffer());
 		}
 		catch (CANMessageUnavailableException e) {
 			rawData = null; // Do not throw exception immediately, wait for timeout
