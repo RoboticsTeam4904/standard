@@ -8,11 +8,8 @@ git:
 
 install:
 - git clone https://github.com/RoboticsTeam4904/wpilib-mirror.git ~/wpilib
-- curl -o ~/wpilib/java/current/lib/navx.jar http://www.t4904.xyz/wiki/files/navx/navx.jar
-- curl -o ~/wpilib/java/current/lib/navx_frc.jar http://www.t4904.xyz/wiki/files/navx/navx_frc.jar
-- curl -o ~/wpilib/java/current/lib/CTRLib.jar http://www.t4904.xyz/wiki/files/ctrlib/CTRLib.jar
-- curl -o ~/wpilib/java/current/lib/libCTRLibDriver.so http://www.t4904.xyz/wiki/files/ctrlib/libCTRLibDriver.so
-- curl -o ~/wpilib/java/current/lib/libCTRLibDriver.so.debug http://www.t4904.xyz/wiki/files/ctrlib/libCTRLibDriver.so.debug
+- mkdir -p ~/wpilib/user/java/lib
+- git clone https://github.com/RoboticsTeam4904/4904-USERLIBS.git ~/wpilib/user/java/lib
 - curl -o ~/wpilib/java/current/ant/build.properties http://www.t4904.xyz/wiki/files/build.properties
 
 notifications:
