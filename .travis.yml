@@ -10,7 +10,6 @@ install:
 - git clone https://github.com/RoboticsTeam4904/wpilib-mirror.git ~/wpilib
 - mkdir -p ~/wpilib/user/java/lib
 - git clone https://github.com/RoboticsTeam4904/4904-USERLIBS.git ~/wpilib/user/java/lib
-- curl -o ~/wpilib/java/current/ant/build.properties http://www.t4904.xyz/wiki/files/build.properties
 
 notifications:
   email: none
