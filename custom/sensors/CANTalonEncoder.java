@@ -2,17 +2,17 @@ package org.usfirst.frc4904.standard.custom.sensors;
 
 
 import org.usfirst.frc4904.standard.Util;
+import org.usfirst.frc4904.standard.custom.motioncontrollers.CANTalonSRX;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import edu.wpi.first.wpilibj.PIDSourceType;
 
 public class CANTalonEncoder implements CustomEncoder {
-	protected final TalonSRX talon;
+	protected final CANTalonSRX talon;
 	protected PIDSourceType pidSource;
 	protected double distancePerPulse;
 	protected boolean reverseDirection;
 
-	public CANTalonEncoder(String name, TalonSRX talon, boolean reverseDirection, double distancePerPulse) {
+	public CANTalonEncoder(String name, CANTalonSRX talon, boolean reverseDirection, double distancePerPulse) {
 		this.talon = talon;
 		talon.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 0);
 		this.reverseDirection = reverseDirection;
@@ -20,27 +20,27 @@ public class CANTalonEncoder implements CustomEncoder {
 		setPIDSourceType(PIDSourceType.kDisplacement);
 	}
 
-	public CANTalonEncoder(String name, TalonSRX talon, boolean reverseDirection) {
+	public CANTalonEncoder(String name, CANTalonSRX talon, boolean reverseDirection) {
 		this(name, talon, reverseDirection, 1.0);
 	}
 
-	public CANTalonEncoder(String name, TalonSRX talon, double distancePerPulse) {
+	public CANTalonEncoder(String name, CANTalonSRX talon, double distancePerPulse) {
 		this(name, talon, false, distancePerPulse);
 	}
 
-	public CANTalonEncoder(String name, TalonSRX talon) {
+	public CANTalonEncoder(String name, CANTalonSRX talon) {
 		this(name, talon, false);
 	}
 
-	public CANTalonEncoder(TalonSRX talon, boolean reverseDirection, double distancePerPulse) {
+	public CANTalonEncoder(CANTalonSRX talon, boolean reverseDirection, double distancePerPulse) {
 		this("CANTalonEncoder", talon, reverseDirection, distancePerPulse);
 	}
 
-	public CANTalonEncoder(TalonSRX talon, double distancePerPulse) {
+	public CANTalonEncoder(CANTalonSRX talon, double distancePerPulse) {
 		this("CANTalonEncoder", talon, distancePerPulse);
 	}
 
-	public CANTalonEncoder(TalonSRX talon) {
+	public CANTalonEncoder(CANTalonSRX talon) {
 		this("CANTalonEncoder", talon);
 	}
 
