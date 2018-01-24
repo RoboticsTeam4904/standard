@@ -10,10 +10,14 @@ import java.io.StringWriter;
 import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.hal.HAL;
 
 public class LogKitten {
 	private static BufferedOutputStream fileOutput;
+	private final static String[] defaultLogCategory = {"GLOBAL"};
+	public static String[] logCategory = {"GLOBAL"};// variable category for categorizing logging. default = GLOBAL
 	public final static KittenLevel LEVEL_WTF = KittenLevel.WTF;
 	public final static KittenLevel LEVEL_FATAL = KittenLevel.FATAL;
 	public final static KittenLevel LEVEL_ERROR = KittenLevel.ERROR;
@@ -26,44 +30,61 @@ public class LogKitten {
 	private static KittenLevel logLevel = LogKitten.DEFAULT_LOG_LEVEL;
 	private static KittenLevel printLevel = LogKitten.DEFAULT_PRINT_LEVEL;
 	private static KittenLevel dsLevel = LogKitten.DEFAULT_DS_LEVEL;
-	private static String LOG_PATH = "/home/lvuser/logs/";
-	private static String LOG_ALIAS_PATH = LogKitten.LOG_PATH + "recent.log";
+	private static String GLOBAL_PATH = "/home/lvuser/logs/global/";
+	private static String GLOBAL_ALIAS_PATH = LogKitten.GLOBAL_PATH + "recent.log";
 	private static volatile boolean PRINT_MUTE = false;
 	private static final SimpleDateFormat TIMESTAMP_FORMAT = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
 	static {
-		File logPathDirectory = new File(LogKitten.LOG_PATH);
+		File globalPathDirectory = new File(LogKitten.GLOBAL_PATH);
 		try {
-			if (!logPathDirectory.isDirectory()) { // ensure that the directory /home/lvuser/logs/ exists
-				logPathDirectory.mkdirs(); // otherwise create all the directories of the path
+			if (!globalPathDirectory.isDirectory()) { // ensure that the directory /home/lvuser/logs/ exists
+				globalPathDirectory.mkdirs(); // otherwise create all the directories of the path
 			}
 		}
 		catch (SecurityException se) {
 			System.out.println("Could not create log directory");
 			se.printStackTrace();
 		}
-		String filePath = LogKitten.LOG_PATH + LogKitten.timestamp() + ".log"; // Set this sessions log to /home/lvuser/logs/[current time].log
-		File file = new File(filePath);
+		String globalPath = LogKitten.GLOBAL_PATH + LogKitten.timestamp() + ".log"; // Set this sessions log to /home/lvuser/logs/[current time].log
+		File global = new File(globalPath);
 		try {
 			// Create new file if it doesn't exist (this should happen)
 			file.createNewFile(); // creates if does not exist
 			// Create FileOutputStream to actually write to the file.
-			LogKitten.fileOutput = new BufferedOutputStream(new FileOutputStream(file));
+			LogKitten.fileOutput = new BufferedOutputStream(new FileOutputStream(global));
 		}
 		catch (IOException ioe) {
 			System.out.println("Could not open logfile");
 			ioe.printStackTrace();
 		}
-		File logAlias = new File(LogKitten.LOG_ALIAS_PATH);
+		File globalAlias = new File(LogKitten.GLOBAL_ALIAS_PATH);
 		try {
-			if (logAlias.exists()) {
-				logAlias.delete();
+			if (globalAlias.exists()) {
+				globalAlias.delete();
 			}
-			Files.createSymbolicLink(logAlias.toPath(), file.toPath());
+			Files.createSymbolicLink(globalAlias.toPath(), global.toPath());
 		}
 		catch (IOException ioe) {
 			System.out.println("Could not alias logfile");
 			ioe.printStackTrace();
 		}
+	}
+
+	/**
+	 * Gets the mode of the robot
+	 * 
+	 * @return a string with either auton or teleop
+	 */
+	private String getRobotMode(){
+		String robotMode = null;
+		if(DriverStation.getInstance().isAutonomous()) {
+			robotMode = "AUTON";
+		}else if(!DriverStation.getInstance().isAutonomous()) {
+			robotMode = "TELEOP";
+		} else {
+			robotMode = "UNKNOWN";
+		}
+		return robotMode;
 	}
 
 	/**
@@ -86,6 +107,16 @@ public class LogKitten {
 			return "";
 		}
 		return trace[trace.length - 1]; // don't include the package name
+	}
+
+	/**
+	 * Set the default category for each log to be filed into (for all LogKitten instances)
+	 * 
+	 * @param logCategory
+	 *        default category
+	 */
+	public static void setDefaultLogCategory() {
+		LogKitten.logCategory = defaultLogCategory;
 	}
 
 	/**
@@ -116,6 +147,16 @@ public class LogKitten {
 	 */
 	public static void setDefaultDSLevel(KittenLevel DEFAULT_DS_LEVEL) {
 		LogKitten.dsLevel = DEFAULT_DS_LEVEL;
+	}
+
+	/**
+	 * Set the globalfile path for all LogKitten instances
+	 *
+	 * @param GLOBAL_PATH
+	 *        globalfile path as a string
+	 */
+	public static void setGlobalPath(String GLOBAL_PATH) {
+		LogKitten.GLOBAL_PATH = GLOBAL_PATH;
 	}
 
 	/**
