@@ -42,6 +42,9 @@ public class LogKitten {
 	private static String TELEOP_ALIAS_PATH = Logkitten.TELEOP_PATH + "recent.log";
 	private static String UNKNOWN_ALIAS_PATH = Logkitten.UNKNOWN_PATH + "recent.log";
 	private static volatile boolean PRINT_MUTE = false;
+	private static volatile boolean AUTON_MUTE = false;
+	private static volatile boolean TELEOP_MUTE = false;
+	private static volatile boolean UNKNOWN_MUTE = false;
 	private static final SimpleDateFormat TIMESTAMP_FORMAT = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
 	static {
 		File globalPathDirectory = new File(LogKitten.GLOBAL_PATH);
@@ -298,6 +301,36 @@ public class LogKitten {
 	}
 
 	/**
+	 * Mutes all logging to the auton file
+	 * (useful for debugging)
+	 *
+	 * @param mute
+	 */
+	public static void setAutonMute(boolean mute) {
+		LogKitten.Auton_MUTE = mute;
+	}
+	
+	/**
+	 * Mutes all logging to the teleop file
+	 * (useful for debugging)
+	 *
+	 * @param mute
+	 */
+	public static void setTeleopMute(boolean mute) {
+		LogKitten.TELEOP_MUTE = mute;
+	}
+	
+	/**
+	 * Mutes all logging to the unknown file
+	 * (useful for debugging)
+	 *
+	 * @param mute
+	 */
+	public static void setUnknownMute(boolean mute) {
+		LogKitten.UNKNOWN_MUTE = mute;
+	}
+	
+	/**
 	 * Like DriverStation.reportError, but without stack trace nor printing to System.err
 	 * (updated for 2017 WPILib release)
 	 *
@@ -323,6 +356,39 @@ public class LogKitten {
 			catch (IOException ioe) {
 				System.out.println("Error logging " + level.getName() + " message");
 				ioe.printStackTrace();
+			}
+		}
+		if (!LogKitten.AUTON_MUTE && (LogKitten.getRobotMode() == "AUTON")) {
+			String content = LogKitten.getRobotMode() + " " + LogKitten.timestamp() + " " + level.getName() + ": " + Logkitten.getLoggerMethodName()
+				+ ": " + message + " \n";
+			try {
+				if (LogKitten.autonOutput != null) {
+					LogKitten.autonOutput.write(content.getBytes());
+				} else {
+					System.out.println("Error logging: auton logfile not open");
+				}
+			}
+		}
+		if (!LogKitten.TELEOP_MUTE && (LogKitten.getRobotMode() == "TELEOP")) {
+			String content = LogKitten.getRobotMode() + " " + LogKitten.timestamp() + " " + level.getName() + ": " + Logkitten.getLoggerMethodName()
+				+ ": " + message + " \n";
+			try {
+				if (LogKitten.teleopOutput != null) {
+					LogKitten.teleopOutput.write(content.getBytes());
+				} else {
+					System.out.println("Error logging: teleop logfile not open");
+				}
+			}
+		}
+		if (!LogKitten.UNKNOWN_MUTE && (LogKitten.getRobotMode() == "UNKNOWN")) {
+			String content = LogKitten.getRobotMode() + " " + LogKitten.timestamp() + " " + level.getName() + ": " + Logkitten.getLoggerMethodName()
+				+ ": " + message + " \n";
+			try {
+				if (LogKitten.unknownOutput != null) {
+					LogKitten.unknownOutput.write(content.getBytes());
+				} else {
+					System.out.println("Error logging: unknown logfile not open");
+				}
 			}
 		}
 		if (!LogKitten.PRINT_MUTE || override) {
