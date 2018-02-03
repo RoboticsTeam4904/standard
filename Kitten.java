@@ -19,7 +19,7 @@ public class Kitten {
 	protected Map<String, Boolean> options;
 	protected volatile boolean mute;
 	
-	public Kitten(String category, ) {
+	public Kitten(String category, Boolean[] options) {
 		this.category = category
 		this.generalPath = Kitten.LOG_PATH + this.category;
 		this.pathDirectory = new File(this.generalPath);
@@ -28,6 +28,20 @@ public class Kitten {
 		this.specificAliasPath = this.specificPath + "recent.log";
 		this.loggerAlias = new File(this.specificAliasPath);
 		this.options = new HashMap<String, Boolean>();
+		this.config(options);
+		this.mute = false;
+	}
+	
+	public Kitten(String category) {
+		this.category = category
+		this.generalPath = Kitten.LOG_PATH + this.category;
+		this.pathDirectory = new File(this.generalPath);
+		this.specificPath = this.generalPath + LogKitten.timestamp + ".log";
+		this.logger = new File(this.specificPath);
+		this.specificAliasPath = this.specificPath + "recent.log";
+		this.loggerAlias = new File(this.specificAliasPath);
+		this.options = new HashMap<String, Boolean>();
+		this.config(true);
 		this.mute = false;
 	}
 	
@@ -38,6 +52,17 @@ public class Kitten {
 	public void setMute(boolean mute) {
 		this.mute = mute;
 	}
+	
+	public void config(Boolean option) {
+		this.options.put("logErrors", option);
+		this.options.put("logRobotMode", option);
+		this.options.put("logKittenLevel", option);
+		this.options.put("logTimestamp", option);
+		this.options.put("logCallingClass", option);
+		this.options.put("logCallingMethod", option);
+		this.options.put("logMessage", option);
+	}
+	
 	public void config(Boolean[] options) {
 		if(options[0] != null) {
 			this.options.put("logErrors", options[0]);
