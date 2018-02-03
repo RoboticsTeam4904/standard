@@ -16,9 +16,6 @@ import edu.wpi.first.wpilibj.hal.HAL;
 
 public class LogKitten {
 	private static BufferedOutputStream globalOutput;
-	private static BufferedOutputStream autonOutput;
-	private static BufferedOutputStream teleopOutput;
-	private static BufferedOutputStream unknownOutput;
 	public final static KittenLevel LEVEL_WTF = KittenLevel.WTF;
 	public final static KittenLevel LEVEL_FATAL = KittenLevel.FATAL;
 	public final static KittenLevel LEVEL_ERROR = KittenLevel.ERROR;
@@ -33,24 +30,12 @@ public class LogKitten {
 	private static KittenLevel dsLevel = LogKitten.DEFAULT_DS_LEVEL;
 	private static String GLOBAL_PATH = "/home/lvuser/logs/global/";
 	private static String LOG_PATH = "/home/lvuser/logs/";
-	private static String AUTON_PATH = "/home/lvuser/logs/auton/";
-	private static String TELEOP_PATH = "/home/lvuser/logs/teleop/";
-	private static String UNKNOWN_PATH = "/home/lvuser/logs/unknown/";
 	private static String GLOBAL_ALIAS_PATH = LogKitten.GLOBAL_PATH + "recent.log";
 	private static String LOG_ALIAS_PATH = Logkitten.LOG_PATH + "recent.log";
-	private static String AUTON_ALIAS_PATH = Logkitten.AUTON_PATH + "recent.log";
-	private static String TELEOP_ALIAS_PATH = Logkitten.TELEOP_PATH + "recent.log";
-	private static String UNKNOWN_ALIAS_PATH = Logkitten.UNKNOWN_PATH + "recent.log";
 	private static volatile boolean PRINT_MUTE = false;
-	private static volatile boolean AUTON_MUTE = false;
-	private static volatile boolean TELEOP_MUTE = false;
-	private static volatile boolean UNKNOWN_MUTE = false;
 	private static final SimpleDateFormat TIMESTAMP_FORMAT = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
 	static {
 		File globalPathDirectory = new File(LogKitten.GLOBAL_PATH);
-		File autonPathDirectory = new File(LogKitten.AUTON_PATH);
-		File teleopPathDirectory = new File(LogKitten.TELEOP_PATH);
-		File unknownPathDirectory = new File(LogKitten.UNKNOWN_PATH);
 		try {
 			if (!globalPathDirectory.isDirectory()) { // ensure that the directory /home/lvuser/logs/global/ exists
 				globalPathDirectory.mkdirs(); // otherwise create all the directories of the path
@@ -60,41 +45,8 @@ public class LogKitten {
 			System.out.println("Could not create global log directory");
 			se.printStackTrace();
 		}
-		try {
-			if (!autonPathDirectory.isDirectory()) { // ensure that the directory /home/lvuser/logs/global/ exists
-				autonPathDirectory.mkdirs(); // otherwise create all the directories of the path
-			}
-		}
-		catch (SecurityException se) {
-			System.out.println("Could not create auton log directory");
-			se.printStackTrace();
-		}
-		try {
-			if (!teleopPathDirectory.isDirectory()) { // ensure that the directory /home/lvuser/logs/global/ exists
-				teleopPathDirectory.mkdirs(); // otherwise create all the directories of the path
-			}
-		}
-		catch (SecurityException se) {
-			System.out.println("Could not create teleop log directory");
-			se.printStackTrace();
-		}
-		try {
-			if (!unknownPathDirectory.isDirectory()) { // ensure that the directory /home/lvuser/logs/global/ exists
-				unknownPathDirectory.mkdirs(); // otherwise create all the directories of the path
-			}
-		}
-		catch (SecurityException se) {
-			System.out.println("Could not create unknown log directory");
-			se.printStackTrace();
-		}
 		String globalPath = LogKitten.GLOBAL_PATH + LogKitten.timestamp() + ".log"; // Set this sessions log to /home/lvuser/logs/global/[current time].log
-		String autonPath = LogKitten.AUTON_PATH + LogKitten.timestamp() + ".log"; // Set this sessions log to /home/lvuser/logs/auton/[current time].log
-		String teleopPath = LogKitten.TELEOP_PATH + LogKitten.timestamp() + ".log"; // Set this sessions log to /home/lvuser/logs/teleop/[current time].log
-		String unknownPath = LogKitten.UNKNOWN_PATH + LogKitten.timestamp() + ".log"; // Set this sessions log to /home/lvuser/logs/unknown/[current time].log
 		File global = new File(globalPath);
-		File auton = new File(autonPath);
-		File teleop = new File(teleopPath);
-		File unknown = new File(unknownPath);
 		try {
 			// Create new file if it doesn't exist (this should happen)
 			global.createNewFile(); // creates if does not exist
@@ -105,40 +57,7 @@ public class LogKitten {
 			System.out.println("Could not open global logfile");
 			ioe.printStackTrace();
 		}
-		try {
-			// Create new file if it doesn't exist (this should happen)
-			auton.createNewFile(); // creates if does not exist
-			// Create FileOutputStream to actually write to the file.
-			LogKitten.autonOutput = new BufferedOutputStream(new FileOutputStream(auton));
-		}
-		catch (IOException ioe) {
-			System.out.println("Could not open auton logfile");
-			ioe.printStackTrace();
-		}
-		try {
-			// Create new file if it doesn't exist (this should happen)
-			teleop.createNewFile(); // creates if does not exist
-			// Create FileOutputStream to actually write to the file.
-			LogKitten.teleopOutput = new BufferedOutputStream(new FileOutputStream(teleop));
-		}
-		catch (IOException ioe) {
-			System.out.println("Could not open teleop logfile");
-			ioe.printStackTrace();
-		}
-		try {
-			// Create new file if it doesn't exist (this should happen)
-			unknown.createNewFile(); // creates if does not exist
-			// Create FileOutputStream to actually write to the file.
-			LogKitten.unknownOutput = new BufferedOutputStream(new FileOutputStream(unknown));
-		}
-		catch (IOException ioe) {
-			System.out.println("Could not open unknown logfile");
-			ioe.printStackTrace();
-		}
 		File globalAlias = new File(LogKitten.GLOBAL_ALIAS_PATH);
-		File autonAlias = new File(LogKitten.AUTON_ALIAS_PATH);
-		File teleopAlias = new File(LogKitten.TELEOP_ALIAS_PATH);
-		File unknownAlias = new File(LogKitten.UNKNOWN_ALIAS_PATH);
 		try {
 			if (globalAlias.exists()) {
 				globalAlias.delete();
@@ -149,37 +68,7 @@ public class LogKitten {
 			System.out.println("Could not alias global logfile");
 			ioe.printStackTrace();
 		}
-		try {
-			if (autonAlias.exists()) {
-				autonAlias.delete();
-			}
-			Files.createSymbolicLink(autonAlias.toPath(), auton.toPath());
-		}
-		catch (IOException ioe) {
-			System.out.println("Could not alias auton logfile");
-			ioe.printStackTrace();
-		}
-		try {
-			if (teleopAlias.exists()) {
-				teleopAlias.delete();
-			}
-			Files.createSymbolicLink(teleopAlias.toPath(), teleop.toPath());
-		}
-		catch (IOException ioe) {
-			System.out.println("Could not alias teleop logfile");
-			ioe.printStackTrace();
-		}
-		try {
-			if (unknownAlias.exists()) {
-				unknownAlias.delete();
-			}
-			Files.createSymbolicLink(unknownAlias.toPath(), unknown.toPath());
-		}
-		catch (IOException ioe) {
-			System.out.println("Could not alias unknown logfile");
-			ioe.printStackTrace();
-		}
-	}
+	}//static ends
 
 	/**
 	 * Gets the mode of the robot
@@ -259,36 +148,6 @@ public class LogKitten {
 	public static void setGlobalPath(String GLOBAL_PATH) {
 		LogKitten.GLOBAL_PATH = GLOBAL_PATH;
 	}
-
-	/**
-	 * Set the autonfile path for all LogKitten instances
-	 *
-	 * @param AUTON_PATH
-	 *        globalfile path as a string
-	 */
-	public static void setAutonPath(String AUTON_PATH) {
-		LogKitten.AUTON_PATH = AUTON_PATH;
-	}
-
-	/**
-	 * Set the teleopfile path for all LogKitten instances
-	 *
-	 * @param TELEOP_PATH
-	 *        teleopfile path as a string
-	 */
-	public static void setTeleopPath(String TELEOP_PATH) {
-		LogKitten.TELEOP_PATH = TELEOP_PATH;
-	}
-	
-	/**
-	 * Set the unknownfile path for all LogKitten instances
-	 *
-	 * @param UNKNOWN_PATH
-	 *        unknownfile path as a string
-	 */
-	public static void setUnknownPath(String UNKNOWN_PATH) {
-		LogKitten.UNKNOWN_PATH = UNKNOWN_PATH;
-	}
 	
 	/**
 	 * Mutes all messages except those overriding
@@ -298,36 +157,6 @@ public class LogKitten {
 	 */
 	public static void setPrintMute(boolean mute) {
 		LogKitten.PRINT_MUTE = mute;
-	}
-
-	/**
-	 * Mutes all logging to the auton file
-	 * (useful for debugging)
-	 *
-	 * @param mute
-	 */
-	public static void setAutonMute(boolean mute) {
-		LogKitten.Auton_MUTE = mute;
-	}
-	
-	/**
-	 * Mutes all logging to the teleop file
-	 * (useful for debugging)
-	 *
-	 * @param mute
-	 */
-	public static void setTeleopMute(boolean mute) {
-		LogKitten.TELEOP_MUTE = mute;
-	}
-	
-	/**
-	 * Mutes all logging to the unknown file
-	 * (useful for debugging)
-	 *
-	 * @param mute
-	 */
-	public static void setUnknownMute(boolean mute) {
-		LogKitten.UNKNOWN_MUTE = mute;
 	}
 	
 	/**
@@ -356,39 +185,6 @@ public class LogKitten {
 			catch (IOException ioe) {
 				System.out.println("Error logging " + level.getName() + " message");
 				ioe.printStackTrace();
-			}
-		}
-		if (!LogKitten.AUTON_MUTE && (LogKitten.getRobotMode() == "AUTON")) {
-			String content = LogKitten.getRobotMode() + " " + LogKitten.timestamp() + " " + level.getName() + ": " + Logkitten.getLoggerMethodName()
-				+ ": " + message + " \n";
-			try {
-				if (LogKitten.autonOutput != null) {
-					LogKitten.autonOutput.write(content.getBytes());
-				} else {
-					System.out.println("Error logging: auton logfile not open");
-				}
-			}
-		}
-		if (!LogKitten.TELEOP_MUTE && (LogKitten.getRobotMode() == "TELEOP")) {
-			String content = LogKitten.getRobotMode() + " " + LogKitten.timestamp() + " " + level.getName() + ": " + Logkitten.getLoggerMethodName()
-				+ ": " + message + " \n";
-			try {
-				if (LogKitten.teleopOutput != null) {
-					LogKitten.teleopOutput.write(content.getBytes());
-				} else {
-					System.out.println("Error logging: teleop logfile not open");
-				}
-			}
-		}
-		if (!LogKitten.UNKNOWN_MUTE && (LogKitten.getRobotMode() == "UNKNOWN")) {
-			String content = LogKitten.getRobotMode() + " " + LogKitten.timestamp() + " " + level.getName() + ": " + Logkitten.getLoggerMethodName()
-				+ ": " + message + " \n";
-			try {
-				if (LogKitten.unknownOutput != null) {
-					LogKitten.unknownOutput.write(content.getBytes());
-				} else {
-					System.out.println("Error logging: unknown logfile not open");
-				}
 			}
 		}
 		if (!LogKitten.PRINT_MUTE || override) {
