@@ -29,9 +29,9 @@ public class LogKitten {
 	private static KittenLevel printLevel = LogKitten.DEFAULT_PRINT_LEVEL;
 	private static KittenLevel dsLevel = LogKitten.DEFAULT_DS_LEVEL;
 	private static String GLOBAL_PATH = "/home/lvuser/logs/global/";
+	@SuppressWarnings("unused")
 	private static String LOG_PATH = "/home/lvuser/logs/";
 	private static String GLOBAL_ALIAS_PATH = LogKitten.GLOBAL_PATH + "recent.log";
-	private static String LOG_ALIAS_PATH = Logkitten.LOG_PATH + "recent.log";
 	private static volatile boolean PRINT_MUTE = false;
 	private static final SimpleDateFormat TIMESTAMP_FORMAT = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
 	static {
@@ -75,7 +75,7 @@ public class LogKitten {
 	 * 
 	 * @return a string with either auton or teleop
 	 */
-	private String getRobotMode(){
+	private static String getRobotMode(){
 		String robotMode = null;
 		if(DriverStation.getInstance().isAutonomous()) {
 			robotMode = "AUTON";
@@ -85,6 +85,10 @@ public class LogKitten {
 			robotMode = "UNKNOWN";
 		}
 		return robotMode;
+	}
+
+	public static String getLogPath() {
+		return LOG_PATH;
 	}
 
 	/**
@@ -173,7 +177,7 @@ public class LogKitten {
 	public static synchronized void logMessage(Object message, KittenLevel level, boolean override) {
 		message = message.toString(); // Not strictly needed, but good practice
 		if (LogKitten.logLevel.compareTo(level) >= 0) {
-			String content = LogKitten.getRobotMode() + " " + LogKitten.timestamp() + " " + level.getName() + ": " + LogKitten.getLoggerMethodCallerMethodName()
+			String content = getRobotMode() + " " + LogKitten.timestamp() + " " + level.getName() + ": " + LogKitten.getLoggerMethodCallerMethodName()
 				+ ": " + message + " \n";
 			try {
 				if (LogKitten.globalOutput != null) {
@@ -369,8 +373,8 @@ public class LogKitten {
 	 */
 	public static synchronized void clean() {
 		try {
-			if (LogKitten.fileOutput != null) {
-				LogKitten.fileOutput.close();
+			if (LogKitten.globalOutput != null) {
+				LogKitten.globalOutput.close();
 			}
 		}
 		catch (IOException ioe) {
