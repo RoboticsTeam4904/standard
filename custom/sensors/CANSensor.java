@@ -49,7 +49,7 @@ public class CANSensor extends CustomCAN {
 		catch (CANMessageUnavailableException e) {
 			rawData = null; // Do not throw exception immediately, wait for timeout
 		}
-		if (rawData != null && rawData.remaining() >= 8) { // 8 is minimum CAN message length
+		if (rawData != null && rawData.remaining() <= 0) { // 8 is minimum CAN message length
 			rawData.rewind();
 			long data = Long.reverseBytes(rawData.getLong());
 			values[0] = (int) data & 0xFFFFFFFF;
