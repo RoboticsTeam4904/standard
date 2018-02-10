@@ -118,8 +118,6 @@ public class LogKitten {
 			robotMode = "AUTONOMOUS";
 		}else if(!DriverStation.getInstance().isAutonomous()) {
 			robotMode = "TELEOPERATED";
-		} else {
-			robotMode = "UNKNOWN";
 		}
 		return robotMode;
 	}
@@ -248,6 +246,21 @@ public class LogKitten {
 					}
 					break;
 				case "CANKitten":
+					for(int j = 0; j < Thread.currentThread().getStackTrace().length; j++) {
+						if(Thread.currentThread().getStackTrace()[j].getClassName().contains("CANKitten")) {
+							try {
+								if(i.getKey().output != null) {
+									i.getKey().output.write(content.getBytes());
+								} else {
+									System.out.println("Error logging: " + i.getKey().category + " logfile not open");
+								}
+							}
+							catch(IOException ioe) {
+								System.out.println("Error logging " + level.getName() + " message");
+								ioe.printStackTrace();
+							}
+						}
+					}
 					break;
 				case "Kitten":
 					break;
@@ -268,7 +281,7 @@ public class LogKitten {
 			}
 		}
 	}
-
+	
 	/**
 	 * What a Terrible Failure: Report a condition that should never happen, allowing override
 	 *
