@@ -13,9 +13,20 @@
 
   <target name="compile">
     <mkdir dir="build/classes"/>
-    <javac srcdir="${basedir}" destdir="build/classes" includeantruntime="false" >
-      <classpath path="${classpath}"/> <!-- classpath var is set in wpilib.properties -->
-    </javac>
+
+    <path id="classpath.path">
+      <fileset dir="${userLibs.dir}"
+               includes="*.jar"
+               excludes="*-sources.jar,*-javadoc.jar"
+               erroronmissingdir="true" />
+      <fileset file="${wpilib.jar}" />
+      <fileset file="${ntcore.jar}" />
+      <fileset file="${opencv.jar}" />
+      <fileset file="${cscore.jar}" />
+      <fileset file="${wpiutil.jar}" />
+    </path>
+
+    <javac srcdir="${basedir}" destdir="build/classes" includeantruntime="false" classpathref="classpath.path" />
   </target>
 
 </project>
