@@ -209,6 +209,20 @@ public class LogKitten {
 		HAL.sendError(true, logLevel.getSeverity(), false, errorMessage, details, "", false);
 	}
 
+	private static void logIntoFile(Map.Entry<Kitten, String> i, String content, KittenLevel level) {
+		try {
+			if(i.getKey().output != null) {
+				i.getKey().output.write(content.getBytes());
+			} else {
+				System.out.println("Error logging: " + i.getKey().category + " logfile not open");
+			}
+		}
+		catch(IOException ioe) {
+			System.out.println("Error logging " + level.getName() + " message");
+			ioe.printStackTrace();
+		}
+	}
+	
 	public static synchronized void logMessage(Object message, KittenLevel level, boolean override) {
 		message = message.toString(); // Not strictly needed, but good practice
 		if (LogKitten.logLevel.compareTo(level) >= 0) {
@@ -232,33 +246,13 @@ public class LogKitten {
 			switch(i.getValue()) {
 				case "RobotModeKitten":
 					if(getRobotMode() == ((RobotModeKitten)i.getKey()).getMode()) {
-						try {
-							if(i.getKey().output != null) {
-								i.getKey().output.write(content.getBytes());
-							} else {
-								System.out.println("Error logging: " + i.getKey().category + " logfile not open");
-							}
-						}
-						catch(IOException ioe) {
-							System.out.println("Error logging " + level.getName() + " message");
-							ioe.printStackTrace();
-						}
+						logIntoFile(i, content, level);
 					}
 					break;
 				case "CANKitten":
 					for(int j = 0; j < Thread.currentThread().getStackTrace().length; j++) {
 						if(Thread.currentThread().getStackTrace()[j].getClassName().contains("CANKitten")) {
-							try {
-								if(i.getKey().output != null) {
-									i.getKey().output.write(content.getBytes());
-								} else {
-									System.out.println("Error logging: " + i.getKey().category + " logfile not open");
-								}
-							}
-							catch(IOException ioe) {
-								System.out.println("Error logging " + level.getName() + " message");
-								ioe.printStackTrace();
-							}
+							logIntoFile(i, content, level);
 						}
 					}
 					break;
