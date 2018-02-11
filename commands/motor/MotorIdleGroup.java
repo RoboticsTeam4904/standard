@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj.command.Subsystem;
  * Used as a default command
  *
  */
-public class IdleMotors extends CommandGroup{
+public class MotorIdleGroup extends CommandGroup{
 
 	/**
 	 * Run MotorIdle (from WPILib) in parallel on every motor
@@ -19,7 +19,7 @@ public class IdleMotors extends CommandGroup{
 	 * @param subsystem
 	 * @param motors
 	 */
-	public IdleMotors(Subsystem subsystem, Motor... motors) {
+	public MotorIdleGroup(Subsystem subsystem, Motor... motors) {
 		super("IdleMotors");
 		requires(subsystem);
 		for (Motor motor : motors) {
