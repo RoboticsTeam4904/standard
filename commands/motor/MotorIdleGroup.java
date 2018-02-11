@@ -1,8 +1,7 @@
 package org.usfirst.frc4904.standard.commands.motor;
 
 
-import org.usfirst.frc4904.standard.LogKitten;
-import org.usfirst.frc4904.standard.commands.KittenCommand;
+import org.usfirst.frc4904.standard.commands.motor.MotorIdle;
 import org.usfirst.frc4904.standard.subsystems.motor.Motor;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 import edu.wpi.first.wpilibj.command.Subsystem;
@@ -13,34 +12,7 @@ import edu.wpi.first.wpilibj.command.Subsystem;
  *
  */
 public class MotorIdleGroup extends CommandGroup{
-
-	/**
-	 * Run MotorIdle (from WPILib) in parallel on every motor
-	 * from a list of motors with unrestricted size.
-	 * 
-	 * @param name
-	 * @param subsystem
-	 * @param motors
-	 */
-	public MotorIdleGroup(String name, Subsystem subsystem, boolean isDebug, Motor... motors) {
-		super(name);
-		requires(subsystem);
-		String logMessage = "";
-		for (Motor motor : motors) {
-			requires(motor);
-			addParallel(new MotorIdle(motor));
-			if (isDebug) {
-				if (motor.getName() != null) {
-					logMessage += motor.getName() + " ";
-				} else {
-					logMessage += "unnamed motor ";
-				}
-				logMessage += "idling";
-				addParallel(new KittenCommand(logMessage, LogKitten.KittenLevel.WTF));
-			}
-		}
-	}
-
+	
 	/**
 	 * Run MotorIdle (from WPILib) in parallel on every motor
 	 * from a list of motors with unrestricted size.
@@ -50,7 +22,12 @@ public class MotorIdleGroup extends CommandGroup{
 	 * @param motors
 	 */
 	public MotorIdleGroup(String name, Subsystem subsystem, Motor... motors) {
-		this(name, subsystem, false, motors);
+		super(name);
+		requires(subsystem);
+		for (Motor motor : motors) {
+			requires(motor);
+			addParallel(new MotorIdle(motor));
+		}
 	}
 
 	/**
@@ -62,7 +39,20 @@ public class MotorIdleGroup extends CommandGroup{
 	 * @param motors
 	 */
 	public MotorIdleGroup(Subsystem subsystem, Motor... motors) {
-		this("Idling Motors", subsystem, motors);
+		this(MotorIdleGroup.makeName(motors), subsystem, motors);
+	}
+
+	public static String makeName(Motor... motors) {
+		String name = "";
+		for (Motor motor : motors) {
+			if (motor.getName() != null) {
+				name += motor.getName() + " ";
+			} else {
+				name += "unnamed motor ";
+			}
+			name += "idling";
+		}
+		return name;
 	}
 }
-
+	
