@@ -12,9 +12,10 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import org.usfirst.frc4904.robot.RobotMap;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.hal.HAL;
+import org.usfirst.frc4904.standard.Kitten;
+import org.usfirst.frc4904.standard.RobotModeKitten;
 
 public class LogKitten {
 	private static BufferedOutputStream globalOutput;
@@ -38,8 +39,8 @@ public class LogKitten {
 	private static final SimpleDateFormat TIMESTAMP_FORMAT = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
 	static {
 		kittenList = new HashMap<Kitten, String>();
-		kittenList.put(RobotMap.Kittens.autonKitten, "RobotModeKitten");
-		kittenList.put(RobotMap.Kittens.teleopKitten, "RobotModeKitten");
+		kittenList.put(Kittens.autonKitten, "RobotModeKitten");
+		kittenList.put(Kittens.teleopKitten, "RobotModeKitten");
 		File globalPathDirectory = new File(LogKitten.GLOBAL_PATH);
 		try {
 			if (!globalPathDirectory.isDirectory()) { // ensure that the directory /home/lvuser/logs/global/ exists
@@ -222,6 +223,7 @@ public class LogKitten {
 			ioe.printStackTrace();
 		}
 	}
+	
 	
 	public static synchronized void logMessage(Object message, KittenLevel level, boolean override) {
 		message = message.toString(); // Not strictly needed, but good practice
@@ -485,4 +487,11 @@ public class LogKitten {
 			return name(); // Enum.name() is the Java builtin to get the name of an enum value
 		}
 	}
+	
+	public static class Kittens {
+		public static RobotModeKitten autonKitten = new RobotModeKitten("auton", "AUTONOMOUS");
+		public static RobotModeKitten teleopKitten = new RobotModeKitten("teleop", "TELEOPERATED");
+	}
 }
+
+
