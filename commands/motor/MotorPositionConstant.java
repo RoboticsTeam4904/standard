@@ -86,8 +86,12 @@ public class MotorPositionConstant extends Command {
 	}
 
 	@Override
-	protected void end() {}
+	protected void end() {
+		motor.disableMotionController();
+	}
 
 	@Override
-	protected void interrupted() {}
+	protected void interrupted() {
+		end();
+	}
 }

@@ -28,7 +28,7 @@ public class MotorIdle extends Command {
 	@Override
 	protected void initialize() {
 		motor.set(0);
-		LogKitten.d("MotorIdle initialized");
+		LogKitten.wtf("MotorIdle initialized");
 	}
 
 	@Override
