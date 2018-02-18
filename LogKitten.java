@@ -12,9 +12,10 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import org.usfirst.frc4904.robot.RobotMap;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.hal.HAL;
+import org.usfirst.frc4904.standard.Kitten;
+import org.usfirst.frc4904.standard.RobotModeKitten;
 
 public class LogKitten {
 	private static BufferedOutputStream globalOutput;
@@ -38,8 +39,8 @@ public class LogKitten {
 	private static final SimpleDateFormat TIMESTAMP_FORMAT = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
 	static {
 		kittenList = new HashMap<Kitten, String>();
-		kittenList.put(RobotMap.Kittens.autonKitten, "RobotModeKitten");
-		kittenList.put(RobotMap.Kittens.teleopKitten, "RobotModeKitten");
+		kittenList.put(Kittens.autonKitten, "RobotModeKitten");
+		kittenList.put(Kittens.teleopKitten, "RobotModeKitten");
 		File globalPathDirectory = new File(LogKitten.GLOBAL_PATH);
 		try {
 			if (!globalPathDirectory.isDirectory()) { // ensure that the directory /home/lvuser/logs/global/ exists
@@ -118,8 +119,6 @@ public class LogKitten {
 			robotMode = "AUTONOMOUS";
 		}else if(!DriverStation.getInstance().isAutonomous()) {
 			robotMode = "TELEOPERATED";
-		} else {
-			robotMode = "UNKNOWN";
 		}
 		return robotMode;
 	}
@@ -211,6 +210,21 @@ public class LogKitten {
 		HAL.sendError(true, logLevel.getSeverity(), false, errorMessage, details, "", false);
 	}
 
+	private static void logIntoFile(Map.Entry<Kitten, String> i, String content, KittenLevel level) {
+		try {
+			if(i.getKey().output != null) {
+				i.getKey().output.write(content.getBytes());
+			} else {
+				System.out.println("Error logging: " + i.getKey().category + " logfile not open");
+			}
+		}
+		catch(IOException ioe) {
+			System.out.println("Error logging " + level.getName() + " message");
+			ioe.printStackTrace();
+		}
+	}
+	
+	
 	public static synchronized void logMessage(Object message, KittenLevel level, boolean override) {
 		message = message.toString(); // Not strictly needed, but good practice
 		if (LogKitten.logLevel.compareTo(level) >= 0) {
@@ -234,20 +248,15 @@ public class LogKitten {
 			switch(i.getValue()) {
 				case "RobotModeKitten":
 					if(getRobotMode() == ((RobotModeKitten)i.getKey()).getMode()) {
-						try {
-							if(i.getKey().output != null) {
-								i.getKey().output.write(content.getBytes());
-							} else {
-								System.out.println("Error logging: " + i.getKey().category + " logfile not open");
-							}
-						}
-						catch(IOException ioe) {
-							System.out.println("Error logging " + level.getName() + " message");
-							ioe.printStackTrace();
-						}
+						logIntoFile(i, content, level);
 					}
 					break;
 				case "CANKitten":
+					for(int j = 0; j < Thread.currentThread().getStackTrace().length; j++) {
+						if(Thread.currentThread().getStackTrace()[j].getClassName().contains("CANKitten")) {
+							logIntoFile(i, content, level);
+						}
+					}
 					break;
 				case "Kitten":
 					break;
@@ -268,7 +277,7 @@ public class LogKitten {
 			}
 		}
 	}
-
+	
 	/**
 	 * What a Terrible Failure: Report a condition that should never happen, allowing override
 	 *
@@ -478,4 +487,11 @@ public class LogKitten {
 			return name(); // Enum.name() is the Java builtin to get the name of an enum value
 		}
 	}
+	
+	public static class Kittens {
+		public static RobotModeKitten autonKitten = new RobotModeKitten("auton", "AUTONOMOUS");
+		public static RobotModeKitten teleopKitten = new RobotModeKitten("teleop", "TELEOPERATED");
+	}
 }
+
+
