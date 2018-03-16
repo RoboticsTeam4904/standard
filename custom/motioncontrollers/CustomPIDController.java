@@ -336,17 +336,18 @@ public class CustomPIDController extends MotionController {
 			// Calculate the approximation of the derivative.
 			errorDerivative = (error - lastError) / timeDiff;
 		}
-		if (integralThreshold != 0 && Math.abs(error) < integralThreshold) {
+		if (integralThreshold == 0 || Math.abs(error) < integralThreshold) {
 			// Calculate the approximation of the error's integral
 			totalError += error * timeDiff;
-		} else {
+		} else {// if (error/Math.abs(error) == -totalError/Math.abs(totalError)){
 			totalError = 0.0;
 		}
 		// Calculate the result using the PIDF formula
-		double result = P * error + I * totalError + D * errorDerivative + F * setpoint;
+		double result = P * error + I * totalError + D * errorDerivative + F * setpoint * -Math.signum(error);
 		// Save the error for calculating future derivatives
 		lastError = error;
 		LogKitten.v(input + " " + setpoint + " " + result);
+		// SmartDashboard.putNumber("PID/PID_Output", result);
 		if (capOutput) {
 			// Limit the result to be within the output range [outputMin, outputMax]
 			result = Math.max(Math.min(result, outputMax), outputMin);
