@@ -20,13 +20,13 @@ public class CANEncoder extends CANSensor implements CustomEncoder {
 	 */
 	private static final byte[] RESET_ENCODER_BYTE_SEQUENCE = "resetenc".getBytes();
 	protected static final int RESET_NUMBER_TRIES = 30;
-	private double offset;
+	private int offset;
 
 	public CANEncoder(String name, int id, boolean reverseDirection, double distancePerPulse) {
 		super(name, id);
 		this.reverseDirection = reverseDirection;
 		this.distancePerPulse = distancePerPulse;
-		this.offset = 0.0;
+		this.offset = 0;
 		setPIDSourceType(PIDSourceType.kDisplacement);
 	}
 
@@ -119,9 +119,9 @@ public class CANEncoder extends CANSensor implements CustomEncoder {
 	@Override
 	public double getDistanceSafely() throws InvalidSensorException {
 		if (reverseDirection) {
-			return distancePerPulse * super.readSensor()[0] * -1.0 + offset;
+			return distancePerPulse * (super.readSensor()[0] * -1 + offset);
 		} else {
-			return distancePerPulse * super.readSensor()[0] + offset;
+			return distancePerPulse * (super.readSensor()[0] + offset);
 		}
 	}
 
@@ -165,7 +165,7 @@ public class CANEncoder extends CANSensor implements CustomEncoder {
 	}
 
 	public void resetViaOffset() {
-		this.offset -= getDistance();
+		this.offset -= get();
 	}
 
 	@Override
