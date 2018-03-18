@@ -165,7 +165,7 @@ public class CANEncoder extends CANSensor implements CustomEncoder {
 	}
 
 	public void resetViaOffset(double setpoint) {
-		this.offset -= setpoint - getDistance();
+		this.offset += setpoint - getDistance();
 	}
 
 	public void resetViaOffset() {
