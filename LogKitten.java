@@ -150,34 +150,34 @@ public class LogKitten {
 	}
 
 	public static synchronized void logMessage(Object message, KittenLevel level, boolean override) {
-		// message = message.toString(); // Not strictly needed, but good practice
-		// if (LogKitten.logLevel.compareTo(level) >= 0) {
-		// String content = LogKitten.timestamp() + " " + level.getName() + ": " + LogKitten.getLoggerMethodCallerMethodName()
-		// + ": " + message + " \n";
-		// try {
-		// if (LogKitten.fileOutput != null) {
-		// LogKitten.fileOutput.write(content.getBytes());
-		// } else {
-		// System.out.println("Error logging: logfile not open");
-		// }
-		// }
-		// catch (IOException ioe) {
-		// System.out.println("Error logging " + level.getName() + " message");
-		// ioe.printStackTrace();
-		// }
-		// }
-		// if (!LogKitten.PRINT_MUTE || override) {
-		// String printContent = level.getName() + ": " + LogKitten.getLoggerMethodCallerClassName() + "#"
-		// + LogKitten.getLoggerMethodCallerMethodName() + ": " + message + " \n";
-		// if (LogKitten.printLevel.compareTo(level) >= 0) {
-		// System.out.println(printContent);
-		// }
-		// if (LogKitten.dsLevel.compareTo(level) >= 0) {
-		// LogKitten.reportErrorToDriverStation(
-		// LogKitten.getLoggerMethodCallerClassName() + "#" + LogKitten.getLoggerMethodCallerMethodName(),
-		// level.getName() + ": " + message, level);
-		// }
-		// }
+		 message = message.toString(); // Not strictly needed, but good practice
+		 if (LogKitten.logLevel.compareTo(level) >= 0) {
+		 String content = LogKitten.timestamp() + " " + level.getName() + ": " + LogKitten.getLoggerMethodCallerMethodName()
+		 + ": " + message + " \n";
+		 try {
+		 if (LogKitten.fileOutput != null) {
+		 LogKitten.fileOutput.write(content.getBytes());
+		 } else {
+		 System.out.println("Error logging: logfile not open");
+		 }
+		 }
+		 catch (IOException ioe) {
+		 System.out.println("Error logging " + level.getName() + " message");
+		 ioe.printStackTrace();
+		 }
+		 }
+		 if (!LogKitten.PRINT_MUTE || override) {
+		 String printContent = level.getName() + ": " + LogKitten.getLoggerMethodCallerClassName() + "#"
+		 + LogKitten.getLoggerMethodCallerMethodName() + ": " + message + " \n";
+		 if (LogKitten.printLevel.compareTo(level) >= 0) {
+		 System.out.println(printContent);
+		 }
+		 if (LogKitten.dsLevel.compareTo(level) >= 0) {
+		 LogKitten.reportErrorToDriverStation(
+		 LogKitten.getLoggerMethodCallerClassName() + "#" + LogKitten.getLoggerMethodCallerMethodName(),
+		 level.getName() + ": " + message, level);
+		 }
+		 }
 	}
 
 	/**
