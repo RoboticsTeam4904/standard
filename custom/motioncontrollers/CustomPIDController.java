@@ -23,6 +23,8 @@ public class CustomPIDController extends MotionController {
 	protected double totalError;
 	protected double lastError;
 	protected long lastTime;
+	protected double lastErrorDerivative;
+	protected double derivativeTolerance;
 	protected double minimumNominalOutput = 0.0;
 
 	/**
@@ -234,6 +236,28 @@ public class CustomPIDController extends MotionController {
 	}
 
 	/**
+	 * Set the maximum derivative value at which the controller can be considered "on-target,"
+	 * given that the source suggests that the setpoint has been reached. Set this value to a
+	 * higher value if overshoot due to high velocity is a problem.
+	 *
+	 * @param derivativeTolerance
+	 *        the maximum derivative value for onTarget() to return true
+	 */
+	public void setDerivativeTolerance(double derivativeTolerance) {
+		this.derivativeTolerance = derivativeTolerance;
+	}
+
+	/**
+	 * Get the absolute derivative value stop condition.
+	 *
+	 * @see #setDerivativeTolerance(double)
+	 * @return the maximum derivative value for onTarget() to return true
+	 */
+	public double getDerivativeTolerance() {
+		return derivativeTolerance;
+	}
+
+	/**
 	 * 
 	 * @param minimumNominalOutput
 	 *        Minimum Nominal Output
@@ -327,9 +351,9 @@ public class CustomPIDController extends MotionController {
 			lastError = error;
 			return F * setpoint;
 		}
-		double errorDerivative;
 		// Check if the sensor supports native derivative calculations and that we're doing displacement PID
 		// (if we're doing rate PID, then getRate() would be the PID input rather then the input's derivative)
+		double errorDerivative;
 		if (sensor instanceof NativeDerivativeSensor && sensor.getPIDSourceType() == PIDSourceType.kDisplacement) {
 			errorDerivative = ((NativeDerivativeSensor) sensor).getRateSafely();
 		} else {
@@ -346,6 +370,7 @@ public class CustomPIDController extends MotionController {
 		double result = P * error + I * totalError + D * errorDerivative + F * Math.signum(error);
 		// Save the error for calculating future derivatives
 		lastError = error;
+		lastErrorDerivative = errorDerivative;
 		LogKitten.v(input + " " + setpoint + " " + result);
 		// SmartDashboard.putNumber("PID/PID_Output", result);
 		if (capOutput) {
@@ -374,5 +399,14 @@ public class CustomPIDController extends MotionController {
 			LogKitten.ex(e);
 			return 0;
 		}
+	}
+
+	public boolean derivativeOnTarget() {
+		return derivativeTolerance != 0 && Math.abs(lastErrorDerivative) < derivativeTolerance;
+	}
+
+	@Override
+	public boolean onTarget() {
+		return super.onTarget() && derivativeOnTarget();
 	}
 }
