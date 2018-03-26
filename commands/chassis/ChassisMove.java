@@ -78,8 +78,6 @@ public class ChassisMove extends CommandGroup {
 	@Override
 	protected void execute() {
 		chassis.moveCartesian(controller.getX(), controller.getY(), controller.getTurnSpeed());
-		// chassis.moveCartesian(controller.getX(), controller.getY(),
-		// controller.getTurnSpeed() - (1.0 / 3.0) * controller.getY()); // turns to deal with dead CIM
 		motorSpeeds = chassis.getMotorSpeeds();
 		StringBuilder motorSpeedsString = new StringBuilder();
 		motorSpeedsString.append("Motor speeds:");

@@ -7,6 +7,8 @@ import org.usfirst.frc4904.standard.subsystems.motor.Motor;
  * Tank drive chassis. Has two sets of wheels, left and right. Can only turn left or right.
  */
 public class TankDrive extends Chassis {
+	public double turn_correction = 0.0; // 0 by default but can be manually overwritten. Positive values induce a turn to the right
+
 	/**
 	 *
 	 * @param name
@@ -41,6 +43,7 @@ public class TankDrive extends Chassis {
 	 */
 	@Override
 	public void movePolar(double speed, double angle, double turnSpeed) {
+		turnSpeed += turn_correction * speed; // turns to deal with constant turning error due to unbalanced weight or dead CIM
 		double normalize = Math.max(Math.max(Math.abs(speed + turnSpeed), Math.abs(speed - turnSpeed)), 1);
 		double leftSpeed = (speed + turnSpeed) / normalize;
 		double rightSpeed = (speed - turnSpeed) / normalize;
