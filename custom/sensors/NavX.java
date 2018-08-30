@@ -4,6 +4,7 @@ package org.usfirst.frc4904.standard.custom.sensors;
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.SerialPort;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * Local NavX interface.
@@ -45,20 +46,18 @@ public class NavX extends AHRS implements IMU {
 	}
 
 	/**
-	 * Returns an always positive yaw
+	 * Returns an always positive yaw. Ignores anomalous values
 	 */
-	@Override
-	public float getYaw() {
+	public float getSafeYaw() {
 		float yaw = super.getYaw();
-		if (Math.abs(yaw - lastYaw) > NavX.MAX_DEGREES_PER_TICK) { // Smoothing
+		SmartDashboard.putNumber("navx_yaw", yaw);
+		SmartDashboard.putNumber("navx_last_yaw", lastYaw);
+		if ((Math.abs(yaw - lastYaw) > NavX.MAX_DEGREES_PER_TICK)
+			&& (Math.abs(Math.abs(yaw - lastYaw) - 360) > NavX.MAX_DEGREES_PER_TICK)) { // Smoothing
 			return lastYaw;
 		}
 		lastYaw = yaw;
 		return yaw;
-	}
-
-	public float getRawYaw() {
-		return super.getYaw();
 	}
 
 	/**
@@ -95,5 +94,11 @@ public class NavX extends AHRS implements IMU {
 			lastRoll = roll;
 			return roll;
 		}
+	}
+
+	@Override
+	public void zeroYaw() {
+		super.zeroYaw();
+		lastYaw = 0;
 	}
 }
