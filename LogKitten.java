@@ -38,7 +38,7 @@ public class LogKitten {
 	private static volatile boolean PRINT_MUTE = false;
 	private static final SimpleDateFormat TIMESTAMP_FORMAT = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
 	static {
-		kittenList = new HashMap<Kitten, String>();
+		kittenList = new HashMap<Kitten, String>(); // put all kittens in kitten list
 		kittenList.put(Kittens.autonKitten, "RobotModeKitten");
 		kittenList.put(Kittens.teleopKitten, "RobotModeKitten");
 		File globalPathDirectory = new File(LogKitten.GLOBAL_PATH);
@@ -53,8 +53,8 @@ public class LogKitten {
 		}
 		for(Map.Entry<Kitten, String> i : kittenList.entrySet()) {
 			try {
-				if (!i.getKey().pathDirectory.isDirectory()) {
-					i.getKey().pathDirectory.mkdirs();
+				if (!i.getKey().pathDirectory.isDirectory()) { // ensure that the directory /home/lvuser/kittenname/global/ exists
+					i.getKey().pathDirectory.mkdirs(); // otherwise create all the directories of the path
 				}
 			}
 			catch (SecurityException se) {
@@ -76,7 +76,9 @@ public class LogKitten {
 		}
 		for(Map.Entry<Kitten, String> i : kittenList.entrySet()) {
 			try {
-				i.getKey().logger.createNewFile();
+				// Create new file if it doesn't exist (this should happen)
+				i.getKey().logger.createNewFile(); // creates if does not exist
+				// Create FileOutputStream to actually write to the file.
 				i.getKey().output = new BufferedOutputStream(new FileOutputStream(i.getKey().logger));
 			}
 			catch (IOException ioe) {
@@ -245,7 +247,7 @@ public class LogKitten {
 		for(Map.Entry<Kitten, String> i : kittenList.entrySet()) {
 			String content = getRobotMode() + " " + LogKitten.timestamp() + " " + level.getName() + ": " + LogKitten.getLoggerMethodCallerMethodName()
 			+ ": " + message + " \n";
-			switch(i.getValue()) {
+			switch(i.getValue()) { //
 				case "RobotModeKitten":
 					if(getRobotMode() == ((RobotModeKitten)i.getKey()).getMode()) {
 						logIntoFile(i, content, level);
@@ -488,7 +490,7 @@ public class LogKitten {
 		}
 	}
 	
-	public static class Kittens {
+	public static class Kittens { // all kittens instantiated here
 		public static RobotModeKitten autonKitten = new RobotModeKitten("auton", "AUTONOMOUS");
 		public static RobotModeKitten teleopKitten = new RobotModeKitten("teleop", "TELEOPERATED");
 	}
