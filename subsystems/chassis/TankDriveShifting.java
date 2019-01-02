@@ -10,15 +10,39 @@ import org.usfirst.frc4904.standard.subsystems.motor.Motor;
  */
 public class TankDriveShifting extends TankDrive implements ShiftingChassis {
 	protected final SolenoidShifters shifter;
-
-	public TankDriveShifting(String name, Double turn_correction, Motor leftWheelA, Motor leftWheelB, Motor rightWheelA, Motor rightWheelB,
+	
+	/**
+	 * A tank drive with shifting solenoids (only two solenoids supported)
+	 *
+	 * @param name
+	 * @param turnCorrection
+	 * @param leftWheelA
+	 * @param leftWheelB
+	 * @param rightWheelA
+	 * @param rightWheelB
+	 * @param shifter
+	 */
+	
+	public TankDriveShifting(String name, Double turnCorrection, Motor leftWheelA, Motor leftWheelB, Motor rightWheelA, Motor rightWheelB,
 		SolenoidShifters shifter) {
-		super(name, turn_correction, leftWheelA, leftWheelB, rightWheelA, rightWheelB);
+		super(name, turnCorrection, leftWheelA, leftWheelB, rightWheelA, rightWheelB);
 		this.shifter = shifter;
 	}
 	
-	public TankDriveShifting(String name, Double turn_correction, Motor leftWheel, Motor rightWheel, SolenoidShifters shifter) {
-		super(name, turn_correction, leftWheel, rightWheel);
+	/**
+	 * A tank drive with shifting solenoids (only two solenoids supported)
+	 *
+	 * @param name
+	 * @param turnCorrection
+	 * @param leftWheelA
+	 * @param leftWheelB
+	 * @param rightWheelA
+	 * @param rightWheelB
+	 * @param shifter
+	 */
+	
+	public TankDriveShifting(String name, Double turnCorrection, Motor leftWheel, Motor rightWheel, SolenoidShifters shifter) {
+		super(name, turnCorrection, leftWheel, rightWheel);
 		this.shifter = shifter;
 	}
 
