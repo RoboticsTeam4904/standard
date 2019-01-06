@@ -4,9 +4,9 @@ package org.usfirst.frc4904.standard.custom;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 import org.usfirst.frc4904.standard.LogKitten;
-import edu.wpi.first.wpilibj.can.CANJNI;
-import edu.wpi.first.wpilibj.can.CANMessageNotFoundException;
-import edu.wpi.first.wpilibj.util.UncleanStatusException;
+import edu.wpi.first.hal.can.CANJNI;
+import edu.wpi.first.hal.can.CANMessageNotFoundException;
+import edu.wpi.first.hal.util.UncleanStatusException;
 
 /**
  * This class allows sending and receiving

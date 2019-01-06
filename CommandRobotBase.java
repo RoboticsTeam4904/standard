@@ -7,7 +7,7 @@ import org.usfirst.frc4904.standard.custom.CommandSendableChooser;
 import org.usfirst.frc4904.standard.custom.TypedNamedSendableChooser;
 import org.usfirst.frc4904.standard.humaninput.Driver;
 import org.usfirst.frc4904.standard.humaninput.Operator;
-import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
@@ -19,7 +19,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * so we created the CommandRobotBase class.
  * Robot should extend this instead of iterative robot.
  */
-public abstract class CommandRobotBase extends IterativeRobot {
+public abstract class CommandRobotBase extends TimedRobot {
 	private Command autonomousCommand;
 	protected CheckHealth healthcheckCommand;
 	protected Command teleopCommand;
