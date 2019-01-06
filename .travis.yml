@@ -14,4 +14,4 @@ install:
 notifications:
   email: none
 
-script: ./gradlew build
+script: ant compile
