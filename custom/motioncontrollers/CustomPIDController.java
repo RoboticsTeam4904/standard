@@ -7,7 +7,7 @@ import org.usfirst.frc4904.standard.custom.sensors.NativeDerivativeSensor;
 import org.usfirst.frc4904.standard.custom.sensors.PIDSensor;
 import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
-import edu.wpi.first.wpilibj.util.BoundaryException;
+import edu.wpi.first.hal.util.BoundaryException;
 
 /**
  * An extremely basic PID controller.

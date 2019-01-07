@@ -10,7 +10,7 @@ import java.io.StringWriter;
 import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import edu.wpi.first.wpilibj.hal.HAL;
+import edu.wpi.first.hal.HAL;
 
 public class LogKitten {
 	private static BufferedOutputStream fileOutput;
