@@ -3,23 +3,15 @@ jdk:
 - oraclejdk11
 
 # Handle git submodules yourself
-# git:
-#     submodules: false
-
-# install:
-# - git clone https://github.com/RoboticsTeam4904/wpilib-mirror.git ~/wpilib
-# - mkdir -p ~/wpilib/user/java/lib
-# - git clone https://github.com/RoboticsTeam4904/4904-USERLIBS.git ~/wpilib/user/java/lib
+git:
+    submodules: false
 
 install:
-- git clone https://github.com/RoboticsTeam4904/VS-Simple ~/VS-Simple
-- cd ~/VS-Simple/src/main/java/frc4904/standard
-- git checkout $TRAVIS_BRANCH
-- cd ~/VS-Simple
+- git clone https://github.com/RoboticsTeam4904/wpilib-mirror.git ~/wpilib
+- mkdir -p ~/wpilib/user/java/lib
+- git clone https://github.com/RoboticsTeam4904/4904-USERLIBS.git ~/wpilib/user/java/lib
 
 notifications:
   email: none
 
-script: ./gradlew build
-
-# script: ant compile
+script: ant compile
