@@ -92,7 +92,7 @@ public class LogKitten {
 	 * Set the default level for which logs will be streamed to a file (for all LogKitten instances)
 	 *
 	 * @param DEFAULT_LOG_LEVEL
-	 *        default write-to-file level
+	 *                          default write-to-file level
 	 */
 	public static void setDefaultLogLevel(KittenLevel DEFAULT_LOG_LEVEL) {
 		LogKitten.logLevel = DEFAULT_LOG_LEVEL;
@@ -102,7 +102,7 @@ public class LogKitten {
 	 * Set the default level for which logs will be printed to the console (for all LogKitten instances)
 	 *
 	 * @param DEFAULT_PRINT_LEVEL
-	 *        default console log level
+	 *                            default console log level
 	 */
 	public static void setDefaultPrintLevel(KittenLevel DEFAULT_PRINT_LEVEL) {
 		LogKitten.printLevel = DEFAULT_PRINT_LEVEL;
@@ -112,7 +112,7 @@ public class LogKitten {
 	 * Set the default level for which logs will be printed to the driver station (for all LogKitten instances)
 	 *
 	 * @param DEFAULT_DS_LEVEL
-	 *        default driver station level
+	 *                         default driver station level
 	 */
 	public static void setDefaultDSLevel(KittenLevel DEFAULT_DS_LEVEL) {
 		LogKitten.dsLevel = DEFAULT_DS_LEVEL;
@@ -122,7 +122,7 @@ public class LogKitten {
 	 * Set the logfile path for all LogKitten instances
 	 *
 	 * @param LOG_PATH
-	 *        logfile path as a string
+	 *                 logfile path as a string
 	 */
 	public static void setLogPath(String LOG_PATH) {
 		LogKitten.LOG_PATH = LOG_PATH;
@@ -194,7 +194,7 @@ public class LogKitten {
 	 * What a Terrible Failure: Report a condition that should never happen
 	 *
 	 * @param message
-	 *        the message to log
+	 *                the message to log
 	 */
 	public static void wtf(Object message) { // Log WTF message
 		LogKitten.logMessage(message, KittenLevel.WTF, false);
@@ -214,7 +214,7 @@ public class LogKitten {
 	 * Log message at level FATAL
 	 *
 	 * @param message
-	 *        the message to log
+	 *                the message to log
 	 */
 	public static void f(Object message) { // Log fatal message
 		LogKitten.logMessage(message, KittenLevel.FATAL, false);
@@ -234,7 +234,7 @@ public class LogKitten {
 	 * Log message at level ERROR
 	 *
 	 * @param message
-	 *        the message to log
+	 *                the message to log
 	 */
 	public static void e(Object message) { // Log error message
 		LogKitten.logMessage(message, KittenLevel.ERROR, false);
@@ -254,7 +254,7 @@ public class LogKitten {
 	 * Log message at level WARN
 	 *
 	 * @param message
-	 *        the message to log
+	 *                the message to log
 	 */
 	public static void w(Object message) { // Log warn message
 		LogKitten.logMessage(message, KittenLevel.WARN, false);
@@ -274,7 +274,7 @@ public class LogKitten {
 	 * Log message at level VERBOSE
 	 *
 	 * @param message
-	 *        the message to log
+	 *                the message to log
 	 */
 	public static void v(Object message) { // Log verbose message
 		LogKitten.logMessage(message, KittenLevel.VERBOSE, false);
@@ -313,7 +313,7 @@ public class LogKitten {
 	 * Log message at level DEBUG
 	 *
 	 * @param message
-	 *        the message to log
+	 *                the message to log
 	 */
 	public static void d(Object message) { // Log debug message
 		LogKitten.logMessage(message, KittenLevel.DEBUG, false);
@@ -323,9 +323,9 @@ public class LogKitten {
 	 * Log exception at level ERROR allowing override
 	 *
 	 * @param ex
-	 *        the exception to log
+	 *                 the exception to log
 	 * @param override
-	 *        whether or not to override
+	 *                 whether or not to override
 	 */
 	public static void ex(Exception ex, boolean override) {
 		StringWriter stackTraceString = new StringWriter();
@@ -337,7 +337,7 @@ public class LogKitten {
 	 * Log exception at level ERROR
 	 *
 	 * @param ex
-	 *        the exception to log
+	 *           the exception to log
 	 */
 	public static void ex(Exception ex) {
 		LogKitten.ex(ex, false);
