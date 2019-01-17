@@ -1,7 +1,6 @@
 package org.usfirst.frc4904.standard.custom.sensors;
 
 
-import org.usfirst.frc4904.standard.LogKitten;
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.PIDSourceType;

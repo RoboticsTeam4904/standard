@@ -4,7 +4,7 @@ package org.usfirst.frc4904.standard.custom.sensors;
 import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.custom.CANMessageUnavailableException;
 import org.usfirst.frc4904.standard.custom.CustomCAN;
-import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotController;
 
 /**
  * Simplified version of the PowerDistributionPanel class
@@ -135,7 +135,7 @@ public class PDP {
 		}
 		catch (InvalidSensorException e) {
 			LogKitten.ex(e);
-			return DriverStation.getInstance().getBatteryVoltage();
+			return RobotController.getBatteryVoltage();
 		}
 	}
 

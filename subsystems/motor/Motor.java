@@ -3,7 +3,6 @@ package org.usfirst.frc4904.standard.subsystems.motor;
 
 import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.commands.motor.MotorIdle;
-import org.usfirst.frc4904.standard.subsystems.motor.speedmodifiers.EnableableModifier;
 import org.usfirst.frc4904.standard.subsystems.motor.speedmodifiers.IdentityModifier;
 import org.usfirst.frc4904.standard.subsystems.motor.speedmodifiers.SpeedModifier;
 import com.ctre.phoenix.motorcontrol.IMotorController;
