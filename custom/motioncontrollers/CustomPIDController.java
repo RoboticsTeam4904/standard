@@ -2,7 +2,12 @@ package org.usfirst.frc4904.standard.custom.motioncontrollers;
 
 
 import org.usfirst.frc4904.standard.LogKitten;
+import org.usfirst.frc4904.standard.custom.sensors.InvalidSensorException;
+import org.usfirst.frc4904.standard.custom.sensors.NativeDerivativeSensor;
+import org.usfirst.frc4904.standard.custom.sensors.PIDSensor;
 import edu.wpi.first.wpilibj.PIDSource;
+import edu.wpi.first.wpilibj.PIDSourceType;
+import edu.wpi.first.hal.util.BoundaryException;
 
 /**
  * An extremely basic PID controller.
@@ -12,12 +17,18 @@ import edu.wpi.first.wpilibj.PIDSource;
 public class CustomPIDController extends MotionController {
 	protected double P;
 	protected double I;
+	protected double IPrime = 0.0;
 	protected double D;
 	protected double F;
+	protected double integralThreshold = 0.0;
 	protected double totalError;
 	protected double lastError;
-	protected boolean justReset;
-	
+	protected double accumulatedOutput;
+	protected long lastTime;
+	protected double lastErrorDerivative;
+	protected double derivativeTolerance;
+	protected double minimumNominalOutput = 0.0;
+
 	/**
 	 * An extremely basic PID controller.
 	 * It does not differentiate between rate and distance.
@@ -30,18 +41,17 @@ public class CustomPIDController extends MotionController {
 	 *        Initial D constant
 	 * @param F
 	 *        Initial F (feed forward) constant
-	 * @param source
+	 * @param sensor
 	 *        The sensor linked to the output
 	 */
-	public CustomPIDController(double P, double I, double D, double F, PIDSource source) {
-		super(source);
+	public CustomPIDController(double P, double I, double D, double F, PIDSensor sensor) {
+		super(sensor);
 		this.P = P;
 		this.I = I;
 		this.D = D;
 		this.F = F;
-		justReset = true;
 	}
-	
+
 	/**
 	 * An extremely basic PID controller.
 	 * It does not differentiate between rate and distance.
@@ -52,24 +62,99 @@ public class CustomPIDController extends MotionController {
 	 *        Initial I constant
 	 * @param D
 	 *        Initial D constant
-	 * @param source
+	 * @param F
+	 *        Initial F (feed forward) constant
+	 * @param sensor
+	 *        The sensor linked to the output
+	 */
+	public CustomPIDController(double P, double I, double D, double F, PIDSensor sensor, double integralThreshold) {
+		super(sensor);
+		this.P = P;
+		this.I = I;
+		this.D = D;
+		this.F = F;
+		this.setIThreshold(integralThreshold);
+	}
+
+	/**
+	 * An extremely basic PID controller.
+	 * It does not differentiate between rate and distance.
+	 *
+	 * @param P
+	 *        Initial P constant
+	 * @param I
+	 *        Initial I constant
+	 * @param D
+	 *        Initial D constant
+	 * @param F
+	 *        Initial F (feed forward) constant
+	 * @param sensor
+	 *        The sensor linked to the output
+	 */
+	public CustomPIDController(double P, double I, double D, double F, PIDSource source) {
+		super(source);
+		this.P = P;
+		this.I = I;
+		this.D = D;
+		this.F = F;
+	}
+
+	/**
+	 * An extremely basic PID controller.
+	 * It does not differentiate between rate and distance.
+	 *
+	 * @param P
+	 *        Initial P constant
+	 * @param I
+	 *        Initial I constant
+	 * @param D
+	 *        Initial D constant
+	 * @param sensor
+	 *        The sensor linked to the output
+	 */
+	public CustomPIDController(double P, double I, double D, PIDSensor sensor) {
+		this(P, I, D, 0.0, sensor);
+	}
+
+	/**
+	 * An extremely basic PID controller.
+	 * It does not differentiate between rate and distance.
+	 *
+	 * @param P
+	 *        Initial P constant
+	 * @param I
+	 *        Initial I constant
+	 * @param D
+	 *        Initial D constant
+	 * @param sensor
 	 *        The sensor linked to the output
 	 */
 	public CustomPIDController(double P, double I, double D, PIDSource source) {
 		this(P, I, D, 0.0, source);
 	}
-	
+
 	/**
 	 * An extremely basic PID controller.
 	 * It does not differentiate between rate and distance.
 	 *
-	 * @param source
+	 * @param sensor
+	 *        The sensor linked to the output
+	 */
+	public CustomPIDController(PIDSensor sensor) {
+		this(0, 0, 0, sensor);
+	}
+
+	/**
+	 * An extremely basic PID controller.
+	 * It does not differentiate between rate and distance.
+	 *
+	 * @param sensor
 	 *        The sensor linked to the output
 	 */
 	public CustomPIDController(PIDSource source) {
 		this(0, 0, 0, source);
 	}
-	
+
 	/**
 	 * @return
 	 * 		The current P value
@@ -77,7 +162,7 @@ public class CustomPIDController extends MotionController {
 	public double getP() {
 		return P;
 	}
-	
+
 	/**
 	 * @return
 	 * 		The current I value
@@ -85,7 +170,7 @@ public class CustomPIDController extends MotionController {
 	public double getI() {
 		return I;
 	}
-	
+
 	/**
 	 * @return
 	 * 		The current D value
@@ -93,7 +178,7 @@ public class CustomPIDController extends MotionController {
 	public double getD() {
 		return D;
 	}
-	
+
 	/**
 	 * @return
 	 * 		The current F (feed forward) value
@@ -101,7 +186,32 @@ public class CustomPIDController extends MotionController {
 	public double getF() {
 		return F;
 	}
-	
+
+	/**
+	 * @return
+	 * 		The current I' (ouput integral) value
+	 */
+	public double getIPrime() {
+		return IPrime;
+	}
+
+	/**
+	 * @param IPrime
+	 *        Integral of the PID output
+	 */
+	public void setIPrime(double IPrime) {
+		this.IPrime = IPrime;
+	}
+
+	/**
+	 *
+	 * @return
+	 * 		The current minimumNominalOutput (minimum nominal output) value
+	 */
+	public double getMinimumNominalOutput() {
+		return minimumNominalOutput;
+	}
+
 	/**
 	 * Sets the parameters of the PID loop
 	 *
@@ -120,7 +230,7 @@ public class CustomPIDController extends MotionController {
 		this.I = I;
 		this.D = D;
 	}
-	
+
 	/**
 	 * Sets the parameters of the PID loop
 	 *
@@ -132,7 +242,7 @@ public class CustomPIDController extends MotionController {
 	 *        Derivative
 	 * @param F
 	 *        Feed forward (scalar on input added to output)
-	 * 
+	 *
 	 *        If you do not know what these mean, please refer
 	 *        to this link: https://en.wikipedia.org/wiki/PID_controller
 	 */
@@ -142,39 +252,98 @@ public class CustomPIDController extends MotionController {
 		this.D = D;
 		this.F = F;
 	}
-	
+
 	/**
-	 * Resets the PID controller.
-	 * This sets total error and last error to 0,
-	 * as well as setting the setpoint to the current
-	 * sensor reading.
+	 * Set the maximum derivative value at which the controller can be considered "on-target,"
+	 * given that the source suggests that the setpoint has been reached. Set this value to a
+	 * higher value if overshoot due to high velocity is a problem.
+	 *
+	 * @param derivativeTolerance
+	 *        the maximum derivative value for onTarget() to return true
+	 */
+	public void setDerivativeTolerance(double derivativeTolerance) {
+		this.derivativeTolerance = derivativeTolerance;
+	}
+
+	/**
+	 * Get the absolute derivative value stop condition.
+	 *
+	 * @see #setDerivativeTolerance(double)
+	 * @return the maximum derivative value for onTarget() to return true
+	 */
+	public double getDerivativeTolerance() {
+		return derivativeTolerance;
+	}
+
+	/**
+	 * 
+	 * @param minimumNominalOutput
+	 *        Minimum Nominal Output
+	 *        result will be set to
+	 *        ±this value if the absolute
+	 *        value of the result is less than
+	 *        this value. This is useful if
+	 *        the motor can only run well above a value.
+	 */
+	public void setMinimumNominalOutput(double minimumNominalOutput) {
+		this.minimumNominalOutput = minimumNominalOutput;
+	}
+
+	/**
+	 * Sets the threshold below which the I term becomes active.
+	 * When the I term is active, the error sum increases. When
+	 * the I term is not active, the error sum is set to zero.
+	 * 
+	 * @param integralThreshold
+	 */
+	public void setIThreshold(double integralThreshold) {
+		if (integralThreshold < 0) {
+			throw new BoundaryException("I threshold negative");
+		}
+		this.integralThreshold = integralThreshold;
+	}
+
+	/**
+	 * Gets the threshold below which the I term becomes active.
+	 * When the I term is active, the error sum increases. When
+	 * the I term is not active, the error sum is set to zero.
+	 * 
+	 * @return
+	 */
+	public double getIThreshold() {
+		return integralThreshold;
+	}
+
+	/**
+	 * Resets the PID controller error to zero.
 	 */
 	@Override
-	public void reset() {
-		setpoint = source.pidGet();
+	protected void resetErrorToZero() {
 		totalError = 0;
 		lastError = 0;
-		justReset = true;
 	}
-	
+
 	@Override
 	public double getError() {
 		return lastError;
 	}
-	
-	@Override
+
 	/**
 	 * Get the current output of the PID loop.
 	 * This should be used to set the output (like a Motor).
 	 *
 	 * @return The current output of the PID loop.
+	 * @throws InvalidSensorException
+	 *         when a sensor fails
 	 */
-	public double get() {
+	@Override
+	public double getSafely() throws InvalidSensorException {
 		// If PID is not enabled, use feedforward only
-		if (!enable) {
+		if (!isEnabled()) {
 			return F * setpoint;
 		}
-		double input = source.pidGet();
+		double input = 0.0;
+		input = sensor.pidGet();
 		double error = setpoint - input;
 		// Account for continuous input ranges
 		if (continuous) {
@@ -188,31 +357,76 @@ public class CustomPIDController extends MotionController {
 				}
 			}
 		}
-		// Calculate the approximation of the error's derivative
-		double errorDerivative;
-		// If we've just reset the error could jump from 0 to a very high number so just return 0
-		if (justReset) {
-			errorDerivative = 0;
-		} else {
-			errorDerivative = (error - lastError);
+		long latestTime = System.currentTimeMillis();
+		long timeDiff = latestTime - lastTime;
+		lastTime = latestTime;
+		// If we just reset, then the lastTime could be way before the latestTime and so timeDiff would be huge.
+		// This would lead to a very big I (and a big D, briefly).
+		// Also, D could be unpredictable because lastError could be wildly different than error (since they're
+		// separated by more than a tick in time).
+		// Hence, if we just reset, just pretend we're still disabled and record the lastTime and lastError for next tick.
+		if (didJustReset()) {
+			lastError = error;
+			return F * Math.signum(error);
 		}
-		// Calculate the approximation of the error's integral
-		totalError += error;
+		// Check if the sensor supports native derivative calculations and that we're doing displacement PID
+		// (if we're doing rate PID, then getRate() would be the PID input rather then the input's derivative)
+		double errorDerivative;
+		if (sensor instanceof NativeDerivativeSensor && sensor.getPIDSourceType() == PIDSourceType.kDisplacement) {
+			errorDerivative = ((NativeDerivativeSensor) sensor).getRateSafely();
+		} else {
+			// Calculate the approximation of the derivative.
+			errorDerivative = (error - lastError) / timeDiff;
+		}
+		if (integralThreshold == 0 || Math.abs(error) < integralThreshold) {
+			// Calculate the approximation of the error's integral
+			totalError += error * timeDiff;
+		} else {// if (error/Math.abs(error) == -totalError/Math.abs(totalError)){
+			totalError = 0.0;
+		}
 		// Calculate the result using the PIDF formula
-		double result = P * error + I * totalError + D * errorDerivative + F * setpoint;
+		double PIDresult = P * error + I * totalError + D * errorDerivative + F * Math.signum(error);
+		double output = PIDresult + IPrime * accumulatedOutput;
+		accumulatedOutput += PIDresult * timeDiff;
 		// Save the error for calculating future derivatives
 		lastError = error;
-		justReset = false;
-		LogKitten.v(input + " " + setpoint + " " + result);
+		lastErrorDerivative = errorDerivative;
+		LogKitten.v(input + " " + setpoint + " " + output);
+		// SmartDashboard.putNumber("PID/PID_Output", output);
 		if (capOutput) {
 			// Limit the result to be within the output range [outputMin, outputMax]
-			result = Math.max(Math.min(result, outputMax), outputMin);
+			output = Math.max(Math.min(output, outputMax), outputMin);
 		}
-		return result;
+		if (Math.abs(output) < minimumNominalOutput) {
+			output = Math.signum(output) * minimumNominalOutput;
+		}
+		return output;
 	}
-	
+
+	/**
+	 * Get the current output of the PID loop.
+	 * This should be used to set the output (like a Motor).
+	 *
+	 * @return The current output of the PID loop.
+	 * @warning does not indicate sensor error
+	 */
+	@Override
+	public double get() {
+		try {
+			return getSafely();
+		}
+		catch (Exception e) {
+			LogKitten.ex(e);
+			return 0;
+		}
+	}
+
+	public boolean derivativeOnTarget() {
+		return derivativeTolerance == 0 || Math.abs(lastErrorDerivative) < derivativeTolerance;
+	}
+
 	@Override
 	public boolean onTarget() {
-		return !justReset && super.onTarget();
+		return super.onTarget() && derivativeOnTarget();
 	}
 }
