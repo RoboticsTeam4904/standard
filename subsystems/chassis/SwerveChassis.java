@@ -8,7 +8,7 @@ public class SwerveChassis extends Chassis {
 	public final Motor frontRightWheelSwerve;
 	public final Motor backLeftWheelSwerve;
 	public final Motor backRightWheelSwerve;
-	
+
 	/**
 	 * Constructs a swerve drive chassis
 	 *
@@ -22,19 +22,20 @@ public class SwerveChassis extends Chassis {
 	 * @param backLeftWheelSwerve
 	 * @param backRightWheelSwerve
 	 */
-	public SwerveChassis(String name, Motor frontLeftWheel, Motor frontRightWheel, Motor backLeftWheel, Motor backRightWheel, Motor frontLeftWheelSwerve, Motor frontRightWheelSwerve, Motor backLeftWheelSwerve, Motor backRightWheelSwerve) {
+	public SwerveChassis(String name, Motor frontLeftWheel, Motor frontRightWheel, Motor backLeftWheel, Motor backRightWheel,
+		Motor frontLeftWheelSwerve, Motor frontRightWheelSwerve, Motor backLeftWheelSwerve, Motor backRightWheelSwerve) {
 		super(name, frontLeftWheel, frontRightWheel, backLeftWheel, backRightWheel);
 		this.frontLeftWheelSwerve = frontLeftWheelSwerve;
 		this.frontRightWheelSwerve = frontRightWheelSwerve;
 		this.backLeftWheelSwerve = backLeftWheelSwerve;
 		this.backRightWheelSwerve = backRightWheelSwerve;
 	}
-	
+
 	@Override
 	public void movePolar(double xSpeed, double ySpeed, double turnSpeed) {
 		// TODO Implement
 	}
-	
+
 	@Override
 	public void moveCartesian(double speed, double angle, double turnSpeed) {
 		// TODO Implement

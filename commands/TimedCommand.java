@@ -15,7 +15,7 @@ import edu.wpi.first.wpilibj.command.Command;
 public abstract class TimedCommand extends Command {
 	protected double lastReset;
 	protected double interval;
-	
+
 	/**
 	 * Constructor.
 	 *
@@ -25,7 +25,7 @@ public abstract class TimedCommand extends Command {
 		super(name);
 		lastReset = 0.0;
 	}
-	
+
 	/**
 	 * Sets the interval between reset and getTimed
 	 *
@@ -34,7 +34,7 @@ public abstract class TimedCommand extends Command {
 	protected void setTimeInterval(double interval) {
 		this.interval = interval;
 	}
-	
+
 	/**
 	 * Returns true if there has been an
 	 * interval of time since the last reset
@@ -45,7 +45,7 @@ public abstract class TimedCommand extends Command {
 		LogKitten.d(Boolean.toString(lastReset + interval > timeSinceInitialized()));
 		return !(lastReset + interval > timeSinceInitialized());
 	}
-	
+
 	/**
 	 * Resets the timer
 	 * This is public to allow other classes to reset timers

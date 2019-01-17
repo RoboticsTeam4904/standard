@@ -5,17 +5,19 @@ import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.Util;
 import org.usfirst.frc4904.standard.custom.motioncontrollers.MotionController;
 import org.usfirst.frc4904.standard.custom.sensors.IMU;
+import org.usfirst.frc4904.standard.custom.sensors.InvalidSensorException;
 import edu.wpi.first.wpilibj.PIDSourceType;
 
-public class PIDChassisController implements ChassisController {
+public class MCChassisController implements ChassisController {
 	protected ChassisController controller;
 	protected double maxDegreesPerSecond;
 	protected double targetYaw;
 	protected double lastUpdate;
 	protected IMU imu;
 	protected MotionController motionController;
-	
-	public PIDChassisController(ChassisController controller, IMU imu, MotionController motionController, double maxDegreesPerSecond) {
+
+	public MCChassisController(ChassisController controller, IMU imu, MotionController motionController,
+		double maxDegreesPerSecond) {
 		this.controller = controller;
 		this.maxDegreesPerSecond = maxDegreesPerSecond;
 		this.imu = imu;
@@ -30,25 +32,25 @@ public class PIDChassisController implements ChassisController {
 		targetYaw = imu.getYaw();
 		lastUpdate = System.currentTimeMillis() / 1000.0;
 	}
-	
-	public void reset() {
+
+	public void reset() throws InvalidSensorException {
 		targetYaw = imu.getYaw();
 		lastUpdate = System.currentTimeMillis() / 1000.0;
 		motionController.disable();
 		motionController.reset();
 		motionController.enable();
 	}
-	
+
 	@Override
 	public double getX() {
 		return controller.getX();
 	}
-	
+
 	@Override
 	public double getY() {
 		return controller.getY();
 	}
-	
+
 	@Override
 	public double getTurnSpeed() {
 		if (Util.isZero(controller.getY()) && Util.isZero(controller.getX())) {
@@ -56,8 +58,12 @@ public class PIDChassisController implements ChassisController {
 			targetYaw = imu.getYaw();
 			return controller.getTurnSpeed();
 		}
-		LogKitten.v(motionController.getSetpoint() + " " + imu.getYaw() + " " + motionController.get());
-		targetYaw = targetYaw + ((controller.getTurnSpeed() * maxDegreesPerSecond) * ((System.currentTimeMillis() / 1000.0) - lastUpdate));
+		try {
+			LogKitten.v(motionController.getSetpoint() + " " + imu.getYaw() + " " + motionController.getSafely());
+		}
+		catch (InvalidSensorException e) {}
+		targetYaw = targetYaw
+			+ ((controller.getTurnSpeed() * maxDegreesPerSecond) * ((System.currentTimeMillis() / 1000.0) - lastUpdate));
 		lastUpdate = System.currentTimeMillis() / 1000.0;
 		if (targetYaw > 180) {
 			targetYaw = -180 + (Math.abs(targetYaw) - 180);
@@ -65,7 +71,11 @@ public class PIDChassisController implements ChassisController {
 			targetYaw = 180 - (Math.abs(targetYaw) - 180);
 		}
 		motionController.setSetpoint(targetYaw);
-		// LogKitten.d("Total error: " + pid.totalError + ", Raw Yaw: " + ahrs.getRawYaw() + ", Error: " + pid.getError(), true);
-		return motionController.get();
+		try {
+			return motionController.getSafely();
+		}
+		catch (InvalidSensorException e) {
+			return controller.getTurnSpeed();
+		}
 	}
 }

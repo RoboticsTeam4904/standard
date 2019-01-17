@@ -1,18 +1,15 @@
 language: java
 jdk:
-- oraclejdk8
-
-# Handle git submodules yourself
-git:
-    submodules: false
+- oraclejdk11
 
 install:
-- git clone https://github.com/RoboticsTeam4904/wpilib-mirror.git ~/wpilib
-- curl -o ~/wpilib/java/current/lib/navx.jar http://www.t4904.xyz/wiki/files/navx/navx.jar
-- curl -o ~/wpilib/java/current/lib/navx_frc.jar http://www.t4904.xyz/wiki/files/navx/navx_frc.jar
-- curl -o ~/wpilib/java/current/ant/build.properties http://www.t4904.xyz/wiki/files/navx/build.properties
+- git clone --recursive https://github.com/RoboticsTeam4904/VS-Simple ~/VS-Simple
+- cd ~/VS-Simple/src/main/java/frc4904/standard
+- git fetch
+- git checkout $TRAVIS_BRANCH
+- cd ~/VS-Simple
 
 notifications:
   email: none
 
-script: ant compile
+script: ./gradlew build

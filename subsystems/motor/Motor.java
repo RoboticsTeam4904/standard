@@ -3,9 +3,10 @@ package org.usfirst.frc4904.standard.subsystems.motor;
 
 import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.commands.motor.MotorIdle;
+import org.usfirst.frc4904.standard.subsystems.motor.speedmodifiers.EnableableModifier;
 import org.usfirst.frc4904.standard.subsystems.motor.speedmodifiers.IdentityModifier;
 import org.usfirst.frc4904.standard.subsystems.motor.speedmodifiers.SpeedModifier;
-import edu.wpi.first.wpilibj.CANSpeedController;
+import com.ctre.phoenix.motorcontrol.IMotorController;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
@@ -42,9 +43,7 @@ public class Motor extends Subsystem implements SpeedController {
 		this.motors = motors;
 		lastSpeed = 0;
 		for (SpeedController motor : motors) {
-			if (motor instanceof CANSpeedController && ((CANSpeedController) motor).getControlMode().getValue() != 0) { // 0 is hopefully normal motor controller mode (Like CANTalon's PercentVBus mode)
-				throw new StrangeCANSpeedControllerModeRuntimeException(this);
-			}
+			if (motor instanceof IMotorController) ((IMotorController) motor).enableVoltageCompensation(true);
 			motor.set(0); // Start all motors with 0 speed.
 		}
 		setInverted(isInverted);
@@ -229,32 +228,11 @@ public class Motor extends Subsystem implements SpeedController {
 	 */
 	@Override
 	public void set(double speed) {
-		LogKitten.v(getName() + " " + speed + " " + Thread.currentThread().getStackTrace()[2].getMethodName());
+		LogKitten.v("Motor " + getName() + " @ " + speed);
 		double newSpeed = speedModifier.modify(speed);
 		lastSpeed = newSpeed;
 		for (SpeedController motor : motors) {
 			motor.set(newSpeed);
-		}
-	}
-	
-	/**
-	 * Set the motor speed. Passes through SpeedModifier.
-	 *
-	 * @deprecated For compatibility with CANJaguar. Use set(double speed)
-	 * 
-	 * @param speed
-	 *        The speed to set. Value should be between -1.0 and 1.0.
-	 * @param syncGroup
-	 *        On CANJaguar, the update group to add this Set() to, pending UpdateSyncGroup().
-	 *        If 0, update immediately.
-	 */
-	@Deprecated
-	@Override
-	public void set(double speed, byte syncGroup) {
-		double newSpeed = speedModifier.modify(speed);
-		lastSpeed = newSpeed;
-		for (SpeedController motor : motors) {
-			motor.set(newSpeed, syncGroup);
 		}
 	}
 	
@@ -290,16 +268,17 @@ public class Motor extends Subsystem implements SpeedController {
 	protected class UnsynchronizedSpeedControllerRuntimeException extends RuntimeException {
 		private static final long serialVersionUID = 8688590919561059584L;
 		
-		public UnsynchronizedSpeedControllerRuntimeException(Motor motor) {
-			super(motor.getName() + "'s SpeedControllers report different speeds");
+		public UnsynchronizedSpeedControllerRuntimeException() {
+			super(getName() + "'s SpeedControllers report different speeds");
 		}
 	}
 	
+	@Deprecated
 	protected class StrangeCANSpeedControllerModeRuntimeException extends RuntimeException {
 		private static final long serialVersionUID = -539917227288371271L;
 		
-		public StrangeCANSpeedControllerModeRuntimeException(Motor motor) {
-			super("One of " + motor.getName() + "'s SpeedControllers is a CANSpeedController with a non-zero mode. This might mess up it's .get(), so Motor cannot verify safety.");
+		public StrangeCANSpeedControllerModeRuntimeException() {
+			super("One of " + getName() + "'s SpeedControllers is a CANSpeedController with a non-zero mode. This might mess up it's .get(), so Motor cannot verify safety.");
 		}
 	}
 }
