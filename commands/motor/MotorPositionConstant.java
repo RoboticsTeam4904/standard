@@ -86,7 +86,13 @@ public class MotorPositionConstant extends Command {
 	}
 
 	@Override
-	protected void end() {}
+	protected void end() {
+		motor.disableMotionController();
+		// Please just die in a hole and never come back
+		if (fallbackCommand != null && fallbackCommand.isRunning()) {
+			fallbackCommand.cancel();
+		}
+	}
 
 	@Override
 	protected void interrupted() {}
