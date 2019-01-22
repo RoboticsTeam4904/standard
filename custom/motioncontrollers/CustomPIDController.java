@@ -485,6 +485,7 @@ public class CustomPIDController extends MotionController {
 	@Override
 	public void updateFromSmartDashboard() {
 		updateFromSmartDashboard(CustomPIDController.DEFAULT_SMARTDASHBOARD_PREFIX);
+	}
 
 	public boolean derivativeOnTarget() {
 		return derivativeTolerance == 0 || Math.abs(lastErrorDerivative) < derivativeTolerance;
