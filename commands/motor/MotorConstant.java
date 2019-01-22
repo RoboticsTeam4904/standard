@@ -54,7 +54,9 @@ public class MotorConstant extends Command {
 	}
 
 	@Override
-	protected void end() {}
+	protected void end() {
+		motor.set(0.0);
+	}
 
 	@Override
 	protected void interrupted() {}

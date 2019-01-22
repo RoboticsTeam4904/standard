@@ -7,6 +7,7 @@ import org.usfirst.frc4904.standard.custom.sensors.NativeDerivativeSensor;
 import org.usfirst.frc4904.standard.custom.sensors.PIDSensor;
 import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
+import edu.wpi.first.hal.util.BoundaryException;
 
 /**
  * An extremely basic PID controller.
@@ -16,11 +17,16 @@ import edu.wpi.first.wpilibj.PIDSourceType;
 public class CustomPIDController extends MotionController {
 	protected double P;
 	protected double I;
+	protected double IPrime = 0.0;
 	protected double D;
 	protected double F;
+	protected double integralThreshold = 0.0;
 	protected double totalError;
 	protected double lastError;
+	protected double accumulatedOutput;
 	protected long lastTime;
+	protected double lastErrorDerivative;
+	protected double derivativeTolerance;
 	protected double minimumNominalOutput = 0.0;
 
 	/**
@@ -44,6 +50,30 @@ public class CustomPIDController extends MotionController {
 		this.I = I;
 		this.D = D;
 		this.F = F;
+	}
+
+	/**
+	 * An extremely basic PID controller.
+	 * It does not differentiate between rate and distance.
+	 *
+	 * @param P
+	 *        Initial P constant
+	 * @param I
+	 *        Initial I constant
+	 * @param D
+	 *        Initial D constant
+	 * @param F
+	 *        Initial F (feed forward) constant
+	 * @param sensor
+	 *        The sensor linked to the output
+	 */
+	public CustomPIDController(double P, double I, double D, double F, PIDSensor sensor, double integralThreshold) {
+		super(sensor);
+		this.P = P;
+		this.I = I;
+		this.D = D;
+		this.F = F;
+		this.setIThreshold(integralThreshold);
 	}
 
 	/**
@@ -158,6 +188,22 @@ public class CustomPIDController extends MotionController {
 	}
 
 	/**
+	 * @return
+	 * 		The current I' (ouput integral) value
+	 */
+	public double getIPrime() {
+		return IPrime;
+	}
+
+	/**
+	 * @param IPrime
+	 *        Integral of the PID output
+	 */
+	public void setIPrime(double IPrime) {
+		this.IPrime = IPrime;
+	}
+
+	/**
 	 *
 	 * @return
 	 * 		The current minimumNominalOutput (minimum nominal output) value
@@ -208,6 +254,28 @@ public class CustomPIDController extends MotionController {
 	}
 
 	/**
+	 * Set the maximum derivative value at which the controller can be considered "on-target,"
+	 * given that the source suggests that the setpoint has been reached. Set this value to a
+	 * higher value if overshoot due to high velocity is a problem.
+	 *
+	 * @param derivativeTolerance
+	 *        the maximum derivative value for onTarget() to return true
+	 */
+	public void setDerivativeTolerance(double derivativeTolerance) {
+		this.derivativeTolerance = derivativeTolerance;
+	}
+
+	/**
+	 * Get the absolute derivative value stop condition.
+	 *
+	 * @see #setDerivativeTolerance(double)
+	 * @return the maximum derivative value for onTarget() to return true
+	 */
+	public double getDerivativeTolerance() {
+		return derivativeTolerance;
+	}
+
+	/**
 	 * 
 	 * @param minimumNominalOutput
 	 *        Minimum Nominal Output
@@ -219,6 +287,31 @@ public class CustomPIDController extends MotionController {
 	 */
 	public void setMinimumNominalOutput(double minimumNominalOutput) {
 		this.minimumNominalOutput = minimumNominalOutput;
+	}
+
+	/**
+	 * Sets the threshold below which the I term becomes active.
+	 * When the I term is active, the error sum increases. When
+	 * the I term is not active, the error sum is set to zero.
+	 * 
+	 * @param integralThreshold
+	 */
+	public void setIThreshold(double integralThreshold) {
+		if (integralThreshold < 0) {
+			throw new BoundaryException("I threshold negative");
+		}
+		this.integralThreshold = integralThreshold;
+	}
+
+	/**
+	 * Gets the threshold below which the I term becomes active.
+	 * When the I term is active, the error sum increases. When
+	 * the I term is not active, the error sum is set to zero.
+	 * 
+	 * @return
+	 */
+	public double getIThreshold() {
+		return integralThreshold;
 	}
 
 	/**
@@ -274,32 +367,40 @@ public class CustomPIDController extends MotionController {
 		// Hence, if we just reset, just pretend we're still disabled and record the lastTime and lastError for next tick.
 		if (didJustReset()) {
 			lastError = error;
-			return F * setpoint;
+			return F * Math.signum(error);
 		}
-		double errorDerivative;
 		// Check if the sensor supports native derivative calculations and that we're doing displacement PID
 		// (if we're doing rate PID, then getRate() would be the PID input rather then the input's derivative)
+		double errorDerivative;
 		if (sensor instanceof NativeDerivativeSensor && sensor.getPIDSourceType() == PIDSourceType.kDisplacement) {
 			errorDerivative = ((NativeDerivativeSensor) sensor).getRateSafely();
 		} else {
 			// Calculate the approximation of the derivative.
 			errorDerivative = (error - lastError) / timeDiff;
 		}
-		// Calculate the approximation of the error's integral
-		totalError += error * timeDiff;
+		if (integralThreshold == 0 || Math.abs(error) < integralThreshold) {
+			// Calculate the approximation of the error's integral
+			totalError += error * timeDiff;
+		} else {// if (error/Math.abs(error) == -totalError/Math.abs(totalError)){
+			totalError = 0.0;
+		}
 		// Calculate the result using the PIDF formula
-		double result = P * error + I * totalError + D * errorDerivative + F * setpoint;
+		double PIDresult = P * error + I * totalError + D * errorDerivative + F * Math.signum(error);
+		double output = PIDresult + IPrime * accumulatedOutput;
+		accumulatedOutput += PIDresult * timeDiff;
 		// Save the error for calculating future derivatives
 		lastError = error;
-		LogKitten.v(input + " " + setpoint + " " + result);
+		lastErrorDerivative = errorDerivative;
+		LogKitten.v(input + " " + setpoint + " " + output);
+		// SmartDashboard.putNumber("PID/PID_Output", output);
 		if (capOutput) {
 			// Limit the result to be within the output range [outputMin, outputMax]
-			result = Math.max(Math.min(result, outputMax), outputMin);
+			output = Math.max(Math.min(output, outputMax), outputMin);
 		}
-		if (Math.abs(result) < minimumNominalOutput) {
-			result = Math.signum(result) * minimumNominalOutput;
+		if (Math.abs(output) < minimumNominalOutput) {
+			output = Math.signum(output) * minimumNominalOutput;
 		}
-		return result;
+		return output;
 	}
 
 	/**
@@ -318,5 +419,14 @@ public class CustomPIDController extends MotionController {
 			LogKitten.ex(e);
 			return 0;
 		}
+	}
+
+	public boolean derivativeOnTarget() {
+		return derivativeTolerance == 0 || Math.abs(lastErrorDerivative) < derivativeTolerance;
+	}
+
+	@Override
+	public boolean onTarget() {
+		return super.onTarget() && derivativeOnTarget();
 	}
 }

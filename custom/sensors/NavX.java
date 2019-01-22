@@ -1,9 +1,12 @@
 package org.usfirst.frc4904.standard.custom.sensors;
 
 
+import org.usfirst.frc4904.standard.LogKitten;
 import com.kauailabs.navx.frc.AHRS;
+import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.SerialPort;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * Local NavX interface.
@@ -14,6 +17,7 @@ public class NavX extends AHRS implements IMU {
 	protected float lastPitch;
 	protected float lastRoll;
 	protected double lastYawRate;
+	protected int getYawCalls;
 	protected static final double MAX_DEGREES_PER_TICK = 90.0;
 	protected static final double MAX_DEGREES_PER_SECOND_PER_TICK = 180;
 
@@ -23,6 +27,16 @@ public class NavX extends AHRS implements IMU {
 		lastYaw = 0.0f;
 		lastPitch = 0.0f;
 		lastRoll = 0.0f;
+		getYawCalls = 0;
+	}
+	
+	public NavX(I2C.Port port) {
+		super(port);
+		super.zeroYaw();
+		lastYaw = 0.0f;
+		lastPitch = 0.0f;
+		lastRoll = 0.0f;
+		getYawCalls = 0;
 	}
 
 	@Override
@@ -45,19 +59,24 @@ public class NavX extends AHRS implements IMU {
 	}
 
 	/**
-	 * Returns an always positive yaw
+	 * Returns an always positive yaw. Ignores anomalous values
 	 */
-	@Override
-	public float getYaw() {
+	public float getSafeYaw() {
 		float yaw = super.getYaw();
-		if (Math.abs(yaw - lastYaw) > NavX.MAX_DEGREES_PER_TICK) { // Smoothing
+		SmartDashboard.putNumber("navx_yaw", yaw);
+		SmartDashboard.putNumber("navx_last_yaw", lastYaw);
+		if ((Math.abs(yaw - lastYaw) > NavX.MAX_DEGREES_PER_TICK)
+			&& (Math.abs(Math.abs(yaw - lastYaw) - 360) > NavX.MAX_DEGREES_PER_TICK)) { // Smoothing
 			return lastYaw;
 		}
 		lastYaw = yaw;
 		return yaw;
 	}
-
-	public float getRawYaw() {
+	
+	@Override
+	public float getYaw() {
+		getYawCalls += 1;
+//		LogKitten.e(Integer.toString(getYawCalls));
 		return super.getYaw();
 	}
 
@@ -95,5 +114,11 @@ public class NavX extends AHRS implements IMU {
 			lastRoll = roll;
 			return roll;
 		}
+	}
+
+	@Override
+	public void zeroYaw() {
+		super.zeroYaw();
+		lastYaw = 0;
 	}
 }
