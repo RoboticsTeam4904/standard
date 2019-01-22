@@ -33,7 +33,4 @@ public class MotorCheck extends SubsystemCheck {
             }
         }
     }
-    public boolean isFinished(){
-        return false;
-    }
 }

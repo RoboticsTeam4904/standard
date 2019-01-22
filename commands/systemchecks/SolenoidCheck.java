@@ -25,7 +25,4 @@ public class SolenoidCheck extends SystemCheck {
             }
         }
     }
-    public boolean isFinished(){
-        return false;
-    }
 }

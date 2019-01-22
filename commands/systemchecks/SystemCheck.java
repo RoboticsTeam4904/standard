@@ -19,14 +19,21 @@ public abstract class SystemCheck extends Command {
         this("SystemCheck", systems);
     }
 
+    public boolean isFinished() {
+        return true;
+    }
     public void initStatuses() {
         for (SendableBase system : systems) {
             statuses.put(system.getName(), new StatusMessage(StatusMessage.SystemStatus.PASS, ""));
         }
     }
 
-    public void updateStatus(String key, StatusMessage.SystemStatus status, String errorMessage) {
+    public void reassignStatus(String key, StatusMessage.SystemStatus status, String errorMessage) {
         statuses.put(key, new StatusMessage(status, errorMessage));
+    }
+
+    public void updateStatus(String key, StatusMessage.SystemStatus status, String errorMessage) {
+        reassignStatus(key, status, statuses.get(key).errorMessage + errorMessage);
     }
     public StatusMessage getStatusMessage(String key) {
         return statuses.get(key);
@@ -45,6 +52,7 @@ public abstract class SystemCheck extends Command {
         for (Map.Entry<String, StatusMessage> entry : statuses.entrySet()) {
             String name = entry.getKey();
             StatusMessage message = entry.getValue();
+            // TODO: Change Logkitten level if FAIL vs PASS
             LogKitten.wtf("Subsystem: " + name + ", Status: " + (message.status == StatusMessage.SystemStatus.PASS ? "PASS" : "FAIL") + ", ERROR: " + message.errorMessage);
         }
     }
