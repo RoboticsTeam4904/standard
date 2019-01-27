@@ -2,7 +2,6 @@ package org.usfirst.frc4904.standard.commands.systemchecks;
 
 import org.usfirst.frc4904.standard.commands.systemchecks.StatusMessage.SystemStatus;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
-import edu.wpi.first.wpilibj.command.Subsystem;
 
 public class SolenoidCheck extends SystemCheck {
     protected final DoubleSolenoid[] solenoids;

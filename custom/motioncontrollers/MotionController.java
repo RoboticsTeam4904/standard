@@ -85,6 +85,10 @@ public abstract class MotionController {
 		this(new PIDSensor.PIDSourceWrapper(source));
 	}
 
+	public PIDSensor getSensor() {
+		return sensor;
+	}
+
 	/**
 	 * This should return the motion controller
 	 * to a state such that it returns 0.

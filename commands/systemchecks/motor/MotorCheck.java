@@ -1,7 +1,9 @@
-package org.usfirst.frc4904.standard.commands.systemchecks;
+package org.usfirst.frc4904.standard.commands.systemchecks.motor;
 
 import org.usfirst.frc4904.standard.Util;
+import org.usfirst.frc4904.standard.commands.systemchecks.SubsystemCheck;
 import org.usfirst.frc4904.standard.subsystems.motor.Motor;
+import org.usfirst.frc4904.standard.commands.systemchecks.StatusMessage.SystemStatus;
 
 public class MotorCheck extends SubsystemCheck {
     protected static final double DEFAULT_SPEED = 0.5; // TODO: CHECK THIS
@@ -38,7 +40,7 @@ public class MotorCheck extends SubsystemCheck {
             try {
                 motor.set(speed);
             } catch (Exception e) {
-                updateStatus(motor.getName(), StatusMessage.SystemStatus.FAIL, e.getMessage());
+                updateStatus(motor.getName(), SystemStatus.FAIL, e.getMessage());
             }
         }
     }
