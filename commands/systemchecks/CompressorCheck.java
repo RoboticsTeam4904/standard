@@ -14,18 +14,18 @@ public class CompressorCheck extends SystemCheck {
     public void execute() {
         for (Compressor compressor : compressors) {
             if (compressor.getCompressorNotConnectedFault() || compressor.getCompressorNotConnectedStickyFault() || !compressor.enabled()){
-                updateStatus(compressor.getName(), SystemStatus.FAIL, "COMPRESSOR NOT CONNECTED");
+                updateStatus(compressor.getName(), SystemStatus.FAIL, new Exception("COMPRESSOR NOT CONNECTED"));
 
             }
             else if (compressor.getCompressorShortedFault() || compressor.getCompressorShortedStickyFault()) {
-                updateStatus(compressor.getName(), SystemStatus.FAIL, "COMPRESSOR SHORTED");
+                updateStatus(compressor.getName(), SystemStatus.FAIL, new Exception("COMPRESSOR SHORTED"));
             }
 
             else if (compressor.getCompressorCurrentTooHighFault() || compressor.getCompressorCurrentTooHighStickyFault()) {
-                updateStatus(compressor.getName(), SystemStatus.FAIL, "CURRENT TOO HIGH");
+                updateStatus(compressor.getName(), SystemStatus.FAIL, new Exception("CURRENT TOO HIGH"));
             }
             else if (compressor.getPressureSwitchValue()){ //TODO: Check if this works as intended
-                updateStatus(compressor.getName(), SystemStatus.FAIL, "LOW PRESSURE");
+                updateStatus(compressor.getName(), SystemStatus.FAIL, new Exception("LOW PRESSURE"));
             }
 
 

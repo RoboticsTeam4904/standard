@@ -34,10 +34,10 @@ public class PositionMotorCheck extends SubsystemCheck {
             try {
                 motor.setPosition(setPosition);
                 if (Math.abs(motor.getMotionController().getSensor().pidGetSafely() - setPosition) > POSITION_THRESHOLD) {
-                    updateStatus(motor.getName(), SystemStatus.FAIL, "POSITION NOT WITHIN THRESHOLD");
+                    updateStatus(motor.getName(), SystemStatus.FAIL, new Exception("POSITION NOT WITHIN THRESHOLD"));
                 }
             } catch (Exception e) {
-                updateStatus(motor.getName(), SystemStatus.FAIL, e.getMessage());
+                updateStatus(motor.getName(), SystemStatus.FAIL, e);
             }
         }
     }

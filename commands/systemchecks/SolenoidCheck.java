@@ -20,7 +20,7 @@ public class SolenoidCheck extends SystemCheck {
             try {
                 solenoid.set(DoubleSolenoid.Value.kForward);   
             } catch (Exception e) {
-                updateStatus(solenoid.getName(), SystemStatus.FAIL, e.getMessage());
+                updateStatus(solenoid.getName(), SystemStatus.FAIL, e);
             }
         }
     }

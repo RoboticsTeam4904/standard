@@ -1,17 +1,12 @@
 package org.usfirst.frc4904.standard.commands.systemchecks;
 
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableInstance;
-
-
 public class StatusMessage {
     protected SystemStatus status;
-    protected String errorMessage;
-    // protected Exception e; // TODO: incorporate Exceptions
+    protected Exception[] exceptions;
 
-    public StatusMessage(SystemStatus status, String errorMessage) {
+    public StatusMessage(SystemStatus status, Exception... exceptions) {
         this.status = status;
-        this.errorMessage = errorMessage;
+        this.exceptions = exceptions;
     }
     
     public enum SystemStatus {

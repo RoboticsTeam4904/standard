@@ -11,15 +11,16 @@ public class MotorCheck extends SubsystemCheck {
     protected static final Util.Range outputCurrentRange = new Util.Range(0.1, 0.3); // TODO: Use Current to judge speedcontrollers
     protected final Motor[] motors;
 
-    public MotorCheck(String name, double speed, Motor... motors) {
-        super(name, motors);
+    public MotorCheck(String name, double timeout, double speed, Motor... motors) {
+        super(name, timeout, motors);
         this.motors = motors;
         this.speed = speed;
         
     }
-    public MotorCheck(double speed, Motor... motors) {
-        this("MotorCheck", speed, motors);
+    public MotorCheck(String name, double speed, Motor... motors) {
+        this("MotorCheck", DEFAULT_SPEED, speed, motors);
     }
+
 
     public MotorCheck(String name, Motor... motors) {
         this(name, DEFAULT_SPEED, motors);
@@ -40,7 +41,7 @@ public class MotorCheck extends SubsystemCheck {
             try {
                 motor.set(speed);
             } catch (Exception e) {
-                updateStatus(motor.getName(), SystemStatus.FAIL, e.getMessage());
+                updateStatus(motor.getName(), SystemStatus.FAIL, e);
             }
         }
     }

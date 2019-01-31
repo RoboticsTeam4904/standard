@@ -2,6 +2,8 @@ package org.usfirst.frc4904.standard.commands.systemchecks;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Stream;
+import java.util.Arrays;
 import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.commands.systemchecks.StatusMessage.SystemStatus;
 import edu.wpi.first.wpilibj.command.Command;
@@ -35,12 +37,12 @@ public abstract class BasicCheck extends Command {
         outputStatuses();
     }
 
-    public void setStatus(String name, SystemStatus status, String errorMessage) {
-        statuses.put(name, new StatusMessage(status, errorMessage));
+    public void setStatus(String name, SystemStatus status, Exception... exceptions) {
+        statuses.put(name, new StatusMessage(status, exceptions));
     }
 
     public void initStatus(String name) {
-        setStatus(name, SystemStatus.PASS, "");
+        setStatus(name, SystemStatus.PASS, new Exception("NO ERROR"));
     }
     public void initStatuses() {
         for (String name : systemNames) {
@@ -48,8 +50,8 @@ public abstract class BasicCheck extends Command {
         }
     }
     
-    public void updateStatus(String key, StatusMessage.SystemStatus status, String errorMessage) {
-        setStatus(key, status, statuses.get(key).errorMessage + errorMessage);
+    public void updateStatus(String key, StatusMessage.SystemStatus status, Exception... exceptions) {
+        setStatus(key, status, Stream.concat(Arrays.stream(getExceptions(key)), Arrays.stream(exceptions)).toArray(Exception[]::new));
     }
     public StatusMessage getStatusMessage(String key) {
         return statuses.get(key);
@@ -59,8 +61,8 @@ public abstract class BasicCheck extends Command {
         return getStatusMessage(key).status;
     }
 
-    public String getError(String key) {
-        return getStatusMessage(key).errorMessage;
+    public Exception[] getExceptions(String key) {
+        return getStatusMessage(key).exceptions;
     }
 
     public void outputStatuses() {
@@ -69,7 +71,7 @@ public abstract class BasicCheck extends Command {
             String name = entry.getKey();
             StatusMessage message = entry.getValue();
             // TODO: Change Logkitten level if FAIL vs PASS
-            LogKitten.wtf("Subsystem: " + name + ", Status: " + (message.status == StatusMessage.SystemStatus.PASS ? "PASS" : "FAIL") + ", ERROR: " + message.errorMessage);
+            LogKitten.wtf("Subsystem: " + name + ", Status: " + (message.status == StatusMessage.SystemStatus.PASS ? "PASS" : "FAIL") + ", ERROR: " + message.exceptions);
         }
     }
 }

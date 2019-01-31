@@ -40,11 +40,11 @@ public class VelocityMotorCheck extends MotorCheck {
             try {
                 motor.set(speed);
                 if (Math.abs(motor.getMotionController().getSensor().pidGetSafely() - speed) > VELOCITY_THRESHOLD) {
-                    updateStatus(motor.getName(), SystemStatus.FAIL, "SET SPEED NOT WITHIN REQUIRED THRESHOLD");
+                    updateStatus(motor.getName(), SystemStatus.FAIL, new Exception("SET SPEED NOT WITHIN REQUIRED THRESHOLD"));
                 }
             }
             catch (InvalidSensorException e) {
-                updateStatus(motor.getName(), SystemStatus.FAIL, e.getMessage());
+                updateStatus(motor.getName(), SystemStatus.FAIL, e);
             }
         }
     }
