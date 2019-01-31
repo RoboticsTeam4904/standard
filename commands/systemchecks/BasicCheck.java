@@ -8,7 +8,7 @@ import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.commands.systemchecks.StatusMessage.SystemStatus;
 import edu.wpi.first.wpilibj.command.Command;
 
-public abstract class BasicCheck extends Command {
+public abstract class BasicCheck extends Command implements Check {
     protected HashMap<String, StatusMessage> statuses;
     protected final String[] systemNames;
     protected static final double DEFAULT_TIMEOUT = 5;
@@ -72,6 +72,7 @@ public abstract class BasicCheck extends Command {
             StatusMessage message = entry.getValue();
             // TODO: Change Logkitten level if FAIL vs PASS
             LogKitten.wtf("Subsystem: " + name + ", Status: " + (message.status == StatusMessage.SystemStatus.PASS ? "PASS" : "FAIL") + ", ERROR: " + message.exceptions);
+            //TODO:check if the logging of exceptions above works
         }
     }
 }
