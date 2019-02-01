@@ -17,10 +17,18 @@ public class MotorCheck extends SubsystemCheck {
         this.speed = speed;
         
     }
+
     public MotorCheck(String name, double speed, Motor... motors) {
-        this("MotorCheck", DEFAULT_SPEED, speed, motors);
+        this(name, DEFAULT_TIMEOUT, speed, motors);
     }
 
+    public MotorCheck(double timeout, double speed, Motor... motors) {
+        this("MotorCheck", timeout, speed, motors);
+    }
+
+    public MotorCheck(double speed, Motor... motors) {
+        this(DEFAULT_TIMEOUT, speed, motors);
+    }
 
     public MotorCheck(String name, Motor... motors) {
         this(name, DEFAULT_SPEED, motors);

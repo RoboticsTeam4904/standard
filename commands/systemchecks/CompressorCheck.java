@@ -6,9 +6,21 @@ import edu.wpi.first.wpilibj.Compressor;
 public class CompressorCheck extends SystemCheck {
     protected final Compressor[] compressors;
     
-    public CompressorCheck(String name, Compressor... compressors) {
-        super("CompressorCheck", compressors);
+    public CompressorCheck(String name, double timeout, Compressor... compressors) {
+        super("CompressorCheck", timeout, compressors);
         this.compressors = compressors;
+    }
+
+    public CompressorCheck(String name, Compressor... compressors) {
+        this(name, DEFAULT_TIMEOUT, compressors);
+    }
+
+    public CompressorCheck(double timeout, Compressor... compressors) {
+        this("CompressorCheck", timeout, compressors);
+    }
+
+    public CompressorCheck(Compressor... compressors) {
+        this("CompressorCheck", compressors);
     }
 
     public void execute() {

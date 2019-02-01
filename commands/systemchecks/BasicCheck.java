@@ -51,18 +51,10 @@ public abstract class BasicCheck extends Command implements Check {
     }
     
     public void updateStatus(String key, StatusMessage.SystemStatus status, Exception... exceptions) {
-        setStatus(key, status, Stream.concat(Arrays.stream(getExceptions(key)), Arrays.stream(exceptions)).toArray(Exception[]::new));
+        setStatus(key, status, Stream.concat(Arrays.stream(getStatusMessage(key).exceptions), Arrays.stream(exceptions)).toArray(Exception[]::new));
     }
     public StatusMessage getStatusMessage(String key) {
         return statuses.get(key);
-    }
-
-    public SystemStatus getStatus(String key) {
-        return getStatusMessage(key).status;
-    }
-
-    public Exception[] getExceptions(String key) {
-        return getStatusMessage(key).exceptions;
     }
 
     public void outputStatuses() {
