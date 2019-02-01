@@ -1,5 +1,6 @@
 package org.usfirst.frc4904.standard.commands.systemchecks.motor;
 
+
 import org.usfirst.frc4904.standard.Util;
 import org.usfirst.frc4904.standard.commands.systemchecks.SubsystemCheck;
 import org.usfirst.frc4904.standard.subsystems.motor.Motor;
@@ -7,7 +8,7 @@ import org.usfirst.frc4904.standard.commands.systemchecks.StatusMessage.SystemSt
 
 public class MotorCheck extends SubsystemCheck {
     protected static final double DEFAULT_SPEED = 0.5; // TODO: CHECK THIS
-    protected final double speed; 
+    protected double speed;
     protected static final Util.Range outputCurrentRange = new Util.Range(0.1, 0.3); // TODO: Use Current to judge speedcontrollers
     protected final Motor[] motors;
 
@@ -15,7 +16,6 @@ public class MotorCheck extends SubsystemCheck {
         super(name, timeout, motors);
         this.motors = motors;
         this.speed = speed;
-        
     }
 
     public MotorCheck(String name, double speed, Motor... motors) {
@@ -39,16 +39,17 @@ public class MotorCheck extends SubsystemCheck {
     }
 
     public void initialize() {
-        for (Motor motor: motors){
+        for (Motor motor : motors) {
             motor.set(speed);
         }
     }
 
     public void execute() {
-        for (Motor motor: motors){
+        for (Motor motor : motors) {
             try {
                 motor.set(speed);
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 updateStatus(motor.getName(), SystemStatus.FAIL, e);
             }
         }
