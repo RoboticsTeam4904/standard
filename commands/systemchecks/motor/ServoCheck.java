@@ -1,5 +1,6 @@
 package org.usfirst.frc4904.standard.commands.systemchecks.motor;
 
+
 import org.usfirst.frc4904.standard.commands.systemchecks.SubsystemCheck;
 import org.usfirst.frc4904.standard.commands.systemchecks.StatusMessage.SystemStatus;
 import org.usfirst.frc4904.standard.subsystems.motor.ServoSubsystem;
@@ -15,7 +16,7 @@ public class ServoCheck extends SubsystemCheck {
         this.angle = angle;
     }
 
-    public ServoCheck(String name, ServoSubsystem...servos) {
+    public ServoCheck(String name, ServoSubsystem... servos) {
         this(name, DEFAULT_ANGLE, servos);
     }
 
@@ -30,8 +31,9 @@ public class ServoCheck extends SubsystemCheck {
     public void initialize() {
         for (ServoSubsystem servo : servos) {
             try {
-                servo.setAngle(angle);    
-            } catch (Exception e) {
+                servo.setAngle(angle);
+            }
+            catch (Exception e) {
                 updateStatus(servo.getName(), SystemStatus.FAIL, e);
             }
         }

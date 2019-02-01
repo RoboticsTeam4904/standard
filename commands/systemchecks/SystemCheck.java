@@ -1,5 +1,6 @@
 package org.usfirst.frc4904.standard.commands.systemchecks;
 
+
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.stream.Collectors;
@@ -10,7 +11,8 @@ public abstract class SystemCheck extends BasicCheck {
     protected SendableBase[] systems;
 
     public SystemCheck(String name, double timeout, SendableBase... systems) {
-        super(name, timeout, Arrays.asList(systems).stream().map(system -> system.getName()).collect(Collectors.toList()).toArray(String[]::new));
+        super(name, timeout, Arrays.asList(systems).stream().map(system -> system.getName()).collect(Collectors.toList())
+            .toArray(String[]::new));
         this.systems = systems;
     }
 
@@ -21,7 +23,7 @@ public abstract class SystemCheck extends BasicCheck {
     public SystemCheck(String name, SendableBase... systems) {
         this(name, DEFAULT_TIMEOUT, systems);
     }
-    
+
     public SystemCheck(SendableBase... systems) {
         this("SystemCheck", systems);
     }

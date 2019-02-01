@@ -1,9 +1,10 @@
 package org.usfirst.frc4904.standard.commands.systemchecks;
 
+
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 public abstract class SubsystemCheck extends SystemCheck {
-    public SubsystemCheck (String name, double timeout, Subsystem... subsystems) {
+    public SubsystemCheck(String name, double timeout, Subsystem... subsystems) {
         super(name, timeout, subsystems);
         for (Subsystem system : subsystems) {
             requires(system);

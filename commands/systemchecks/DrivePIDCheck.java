@@ -51,7 +51,8 @@ public class DrivePIDCheck extends ChassisMoveDistance implements Check {
 
     public void updateStatus(String key, SystemStatus status, Exception... exceptions) {
         setStatus(key, status,
-            Stream.concat(Arrays.stream(getStatusMessage(key).exceptions), Arrays.stream(exceptions)).toArray(Exception[]::new));
+            Stream.concat(Arrays.stream(getStatusMessage(key).exceptions), Arrays.stream(exceptions))
+                .toArray(Exception[]::new));
     }
 
     public StatusMessage getStatusMessage(String key) {

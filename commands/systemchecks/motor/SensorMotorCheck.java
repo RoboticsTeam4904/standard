@@ -1,5 +1,6 @@
 package org.usfirst.frc4904.standard.commands.systemchecks.motor;
 
+
 import org.usfirst.frc4904.standard.commands.systemchecks.StatusMessage.SystemStatus;
 import org.usfirst.frc4904.standard.custom.sensors.InvalidSensorException;
 import org.usfirst.frc4904.standard.subsystems.motor.PositionSensorMotor;
@@ -9,9 +10,8 @@ import org.usfirst.frc4904.standard.subsystems.motor.VelocitySensorMotor;
 public abstract class SensorMotorCheck extends MotorCheck {
     protected SensorMotor[] motors;
     protected static final double DEFAULT_POSITION = 50;
-    protected static final double POSITION_THRESHOLD = 2.0; //TODO: TEST THIS
-    protected static final double VELOCITY_THRESHOLD = 2.0; //TODO: TEST THIS
-
+    protected static final double POSITION_THRESHOLD = 2.0; // TODO: TEST THIS
+    protected static final double VELOCITY_THRESHOLD = 2.0; // TODO: TEST THIS
     protected double position;
 
     public SensorMotorCheck(String name, double timeout, double speed, double position, SensorMotor... motors) {
@@ -42,7 +42,7 @@ public abstract class SensorMotorCheck extends MotorCheck {
     }
 
     public SensorMotorCheck(String name, SensorMotor... motors) {
-        this(name, DEFAULT_SPEED, motors);
+        this(name, DEFAULT_POSITION, motors);
     }
 
     public SensorMotorCheck(SensorMotor... motors) {
@@ -64,7 +64,7 @@ public abstract class SensorMotorCheck extends MotorCheck {
             double input;
             try {
                 input = motor.getMotionController().getInputSafely();
-            } 
+            }
             catch (InvalidSensorException e) {
                 input = 0;
                 updateStatus(motor.getName(), SystemStatus.FAIL, e);
@@ -74,11 +74,11 @@ public abstract class SensorMotorCheck extends MotorCheck {
                 if (input - speed > VELOCITY_THRESHOLD) {
                     updateStatus(motor.getName(), SystemStatus.FAIL, new Exception("SET SPEED NOT WITHIN REQUIRED THRESHOLD"));
                 }
-            }
-            else if (motor instanceof PositionSensorMotor) {
+            } else if (motor instanceof PositionSensorMotor) {
                 ((PositionSensorMotor) motor).setPosition(position);
                 if (input - position > POSITION_THRESHOLD) {
                     updateStatus(motor.getName(), SystemStatus.FAIL, new Exception("POSITION NOT WITHIN THRESHOLD"));
+                }
             }
         }
     }

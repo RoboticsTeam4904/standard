@@ -1,9 +1,9 @@
 package org.usfirst.frc4904.standard.commands.systemchecks;
 
+
 import org.usfirst.frc4904.standard.commands.systemchecks.StatusMessage.SystemStatus;
 
 public interface Check {
-
     public void setStatus(String key, StatusMessage.SystemStatus status, Exception... exceptions);
 
     default void initStatus(String name) {

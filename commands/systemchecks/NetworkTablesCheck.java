@@ -1,5 +1,6 @@
 package org.usfirst.frc4904.standard.commands.systemchecks;
 
+
 import org.usfirst.frc4904.standard.commands.systemchecks.StatusMessage.SystemStatus;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -31,11 +32,12 @@ public class NetworkTablesCheck extends BasicCheck {
         entry.setDefaultDouble(DEFAULT_ENTRY);
         try {
             table.saveEntries(SAVE_FILE);
-			entries = table.loadEntries(SAVE_FILE);    
-        } catch (PersistentException e) {
+            entries = table.loadEntries(SAVE_FILE);
+        }
+        catch (PersistentException e) {
             updateStatus(CHECK_NAME, SystemStatus.FAIL, e);
         }
-        if (entries[0] != Double.toString(DEFAULT_ENTRY)) { //TODO: Check formatting of the entries array
+        if (entries[0] != Double.toString(DEFAULT_ENTRY)) { // TODO: Check formatting of the entries array
             updateStatus(CHECK_NAME, SystemStatus.FAIL, new Exception("LOADED ARRAY NOT EQUAL TO SAVED ARRAY"));
         }
     }
@@ -44,4 +46,4 @@ public class NetworkTablesCheck extends BasicCheck {
     public boolean isFinished() {
         return true;
     }
- }
+}

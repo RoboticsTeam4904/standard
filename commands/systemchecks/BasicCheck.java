@@ -1,5 +1,6 @@
 package org.usfirst.frc4904.standard.commands.systemchecks;
 
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Stream;
@@ -44,15 +45,18 @@ public abstract class BasicCheck extends Command implements Check {
     public void initStatus(String name) {
         setStatus(name, SystemStatus.PASS, new Exception("NO ERROR"));
     }
+
     public void initStatuses() {
         for (String name : systemNames) {
             initStatus(name);
         }
     }
-    
+
     public void updateStatus(String key, StatusMessage.SystemStatus status, Exception... exceptions) {
-        setStatus(key, status, Stream.concat(Arrays.stream(getStatusMessage(key).exceptions), Arrays.stream(exceptions)).toArray(Exception[]::new));
+        setStatus(key, status, Stream.concat(Arrays.stream(getStatusMessage(key).exceptions), Arrays.stream(exceptions))
+            .toArray(Exception[]::new));
     }
+
     public StatusMessage getStatusMessage(String key) {
         return statuses.get(key);
     }
@@ -63,8 +67,9 @@ public abstract class BasicCheck extends Command implements Check {
             String name = entry.getKey();
             StatusMessage message = entry.getValue();
             // TODO: Change Logkitten level if FAIL vs PASS
-            LogKitten.wtf("Subsystem: " + name + ", Status: " + (message.status == StatusMessage.SystemStatus.PASS ? "PASS" : "FAIL") + ", ERROR: " + message.exceptions);
-            //TODO:check if the logging of exceptions above works
+            LogKitten.wtf("Subsystem: " + name + ", Status: "
+                + (message.status == StatusMessage.SystemStatus.PASS ? "PASS" : "FAIL") + ", ERROR: " + message.exceptions);
+            // TODO:check if the logging of exceptions above works
         }
     }
 }
