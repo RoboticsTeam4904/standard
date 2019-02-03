@@ -2,7 +2,7 @@
 
 
 import org.usfirst.frc4904.standard.LogKitten;
-import org.usfirst.frc4904.standard.subsystems.solenoid.SolenoidSubsystem;
+import org.usfirst.frc4904.standard.subsystems.SolenoidSubsystem;
 
 // import Solenoid.State;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
