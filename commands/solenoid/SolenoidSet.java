@@ -1,5 +1,4 @@
-
-
+package org.usfirst.frc4904.standard.commands.solenoid;
 
 import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.subsystems.SolenoidSubsystem;
