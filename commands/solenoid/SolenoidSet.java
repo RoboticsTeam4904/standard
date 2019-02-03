@@ -23,7 +23,7 @@ public class SolenoidSet extends Command {
 
     @Override
     public void execute(){    
-        switch (solenoid.state){
+        switch (solenoid.State){
             case Forward: 
                 solenoid.extendAll();
                 solenoid.State = Forward;
@@ -50,6 +50,11 @@ public class SolenoidSet extends Command {
 	protected void end() {
 		solenoid.allOff();
 		LogKitten.d("MotorSet ended (solenoid states set to off)");
+    }
+    
+    @Override
+	protected boolean isFinished() {
+		return false;
 	}
 
 }
