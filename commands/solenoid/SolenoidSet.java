@@ -2,43 +2,42 @@ package org.usfirst.frc4904.standard.commands.solenoid;
 
 import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.subsystems.SolenoidSubsystem;
-import org.usfirst.frc4904.standard.subsystems.SolenoidSubsystem.State;
+import org.usfirst.frc4904.standard.subsystems.SolenoidSubsystem.SolenoidState;
 
 
-// import Solenoid.State;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.command.Command;
 
 public class SolenoidSet extends Command {
-    SolenoidSubsystem solenoid;
-    public SolenoidSet(SolenoidSubsystem solenoid){
-        this.solenoid = solenoid;
-        requires(solenoid);
+	protected final SolenoidSubsystem system;
+	protected final SolenoidState state;
+
+    public SolenoidSet(SolenoidSubsystem system, SolenoidState state){
+		this.system = system;
+		this.state = state;
+        requires(system);
         
         
     }
-    public void set(State state){
-        solenoid.state = state;
-        LogKitten.d("Solenoids set to "+String(solenoid.State));
+    public void set(SolenoidState state){
+        system.setState(state);
+        LogKitten.d(state); //TODO: make a better message
     }
 
     @Override
     public void execute(){    
-        switch (solenoid.state){
+        switch (system.getState()){
             case Forward: 
-                solenoid.extendAll();
-                solenoid.State = Forward;
+                system.extendAll();
                 LogKitten.d("all solenoids extended");
                 break;
             case Reverse:
-                solenoid.retractAll();
-                solenoid.State = Reverse;
+                system.retractAll();
                 LogKitten.d("all solenoids retracted");
                 break;
 
             case Off: 
-                solenoid.allOff();
-                solenoid.State = Off;
+                system.allOff();
                 LogKitten.d("all solenoids turned off");
                 break;
         }
@@ -50,7 +49,7 @@ public class SolenoidSet extends Command {
 	}
     @Override
 	protected void end() {
-		solenoid.allOff();
+		system.allOff();
 		LogKitten.d("MotorSet ended (solenoid states set to off)");
     }
     
