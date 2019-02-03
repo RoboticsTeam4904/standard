@@ -1,9 +1,9 @@
 package org.usfirst.frc4904.standard.subsystems;
 
-import standard.commands.solenoid.SolenoidSet;
+import org.usfirst.frc4904.standard.commands.solenoid.SolenoidSet;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.command.Subsystem;
-public class SolenoidSubsystem extends Subsystem{
+public class SolenoidSubsystem extends Subsystem {
     public enum State {
         Off,
         Forward,
@@ -36,6 +36,6 @@ public class SolenoidSubsystem extends Subsystem{
     }
 
     public void initDefaultCommand(){
-        new SolenoidSet(this).set(Off);
+        setDefaultCommand(new SolenoidSet(this).set(Off));
     }
 }

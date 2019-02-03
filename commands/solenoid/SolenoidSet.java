@@ -43,7 +43,8 @@ public class SolenoidSet extends Command {
     }
     @Override
 	protected void interrupted() {
-		LogKitten.d("SolenoidSet interupted (solenoid state undefined)");
+        LogKitten.d("SolenoidSet interupted (solenoid state undefined)");
+        end();
 	}
     @Override
 	protected void end() {
