@@ -2,15 +2,15 @@
 
 
 import org.usfirst.frc4904.standard.LogKitten;
-import org.usfirst.frc4904.standard.subsystems.solenoid.Solenoid;
+import org.usfirst.frc4904.standard.subsystems.solenoid.SolenoidSubsystem;
 
 // import Solenoid.State;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.command.Command;
 
 public class SolenoidSet extends Command {
-    Solenoid solenoid;
-    public SolenoidSet(Solenoid solenoid){
+    SolenoidSubsystem solenoid;
+    public SolenoidSet(SolenoidSubsystem solenoid){
         this.solenoid = solenoid;
         requires(solenoid);
         

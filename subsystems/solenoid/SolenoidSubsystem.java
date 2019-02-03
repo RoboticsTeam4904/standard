@@ -1,16 +1,16 @@
-package org.usfirst.frc4904.standard.subsystems.solenoid;
+package org.usfirst.frc4904.standard.subsystems;
 
 import standard.commands.solenoid.SolenoidSet;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.command.Subsystem;
-public class Solenoid extends Subsystem{
+public class SolenoidSubsystem extends Subsystem{
     public enum State {
         Off,
         Forward,
         Reverse
       }
     protected DoubleSolenoid[] solenoids;
-    public Solenoid(DoubleSolenoid... solenoids){
+    public SolenoidSubsystem(DoubleSolenoid... solenoids){
         this.solenoids = solenoids;
     }
 
