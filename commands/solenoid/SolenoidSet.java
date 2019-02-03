@@ -23,7 +23,7 @@ public class SolenoidSet extends Command {
 
     @Override
     public void execute(){    
-        switch(solenoid.state){
+        switch (solenoid.state){
             case Forward: 
                 solenoid.extendAll();
                 solenoid.State = Forward;
