@@ -1,3 +1,5 @@
+package org.usfirst.frc4904.standard.subsystems.solenoid;
+
 import standard.commands.solenoid.SolenoidSet;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.command.Subsystem;
@@ -20,12 +22,12 @@ public class Solenoid extends Subsystem{
     }
     public void retractAll(){
         for(DoubleSolenoid solenoid:solenoids){
-            solenoids.set(DoubleSolenoid.Value.kReverse);
+            solenoid.set(DoubleSolenoid.Value.kReverse);
         }
     }
     public void allOff(){
         for(DoubleSolenoid solenoid:solenoids){
-            solenoids.set(DoubleSolenoid.Value.kOff);
+            solenoid.set(DoubleSolenoid.Value.kOff);
         }
     }
     public DoubleSolenoid[] getSolenoids(){

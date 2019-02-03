@@ -5,9 +5,9 @@ import Solenoid.state;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.command.Command;
 
-public class SolenoidSet extends Command {
+public class SolenoidOff extends Command {
  
-    public SolenoidSet(Solenoid solenoid){
+    public SolenoidOff(Solenoid solenoid){
         this.solenoid = solenoid;
         requires(solenoid);
         solenoid.allOff();
