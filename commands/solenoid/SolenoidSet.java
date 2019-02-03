@@ -11,15 +11,14 @@ public class SolenoidSet extends Command {
 	protected final SolenoidSubsystem system;
 	protected final SolenoidState state;
 
-	public SolenoidSet(SolenoidSubsystem system, SolenoidState state) {
+	public SolenoidSet(String name, SolenoidSubsystem system, SolenoidState state) {
+		super(name, system);
 		this.system = system;
 		this.state = state;
-		requires(system);
 	}
 
-	public void set(SolenoidState state) {
-		system.setState(state);
-		LogKitten.d(state); // TODO: make a better message
+	public SolenoidSet(SolenoidSubsystem system, SolenoidState state) {
+		this("SolenoidSet", system, state);
 	}
 
 	@Override
