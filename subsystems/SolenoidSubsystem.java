@@ -12,6 +12,7 @@ public class SolenoidSubsystem extends Subsystem{
     protected DoubleSolenoid[] solenoids;
     public SolenoidSubsystem(DoubleSolenoid... solenoids){
         this.solenoids = solenoids;
+        this.state = Off;
     }
 
     public void extendAll(){

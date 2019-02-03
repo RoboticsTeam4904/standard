@@ -16,13 +16,13 @@ public class SolenoidSet extends Command {
         
     }
     public void set(State state){
-        solenoid.State = state;
+        solenoid.state = state;
         LogKitten.d("Solenoids set to "+String(solenoid.State));
     }
 
     @Override
     public void execute(){    
-        switch (solenoid.State){
+        switch (solenoid.state){
             case Forward: 
                 solenoid.extendAll();
                 solenoid.State = Forward;
