@@ -43,7 +43,7 @@ public abstract class BasicCheck extends Command implements Check {
     }
 
     public void initStatus(String name) {
-        setStatus(name, SystemStatus.PASS, new Exception("NO ERROR"));
+        setStatus(name, SystemStatus.PASS, new DefaultException());
     }
 
     public void initStatuses() {

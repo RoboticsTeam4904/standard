@@ -16,13 +16,19 @@ public class TurnPIDCheck extends ChassisTurn implements Check {
     protected HashMap<String, StatusMessage> statuses;
     protected static final String CHECK_NAME = "TurnPIDCheck";
     protected final double finalAngle;
-    protected static final double ERROR_THRESHOLD = 2.0; // TODO: CHANGE THIS
+    protected static final double DEFAULT_THRESHOLD = 2.0; // TODO: Test
+    protected final double errorThreshold;
     protected double angle;
 
-    public TurnPIDCheck(Chassis chassis, double finalAngle, IMU imu, MotionController motionController) {
+    public TurnPIDCheck(Chassis chassis, double finalAngle, IMU imu, MotionController motionController, double errorThreshold) {
         super(chassis, finalAngle, imu, motionController);
         this.finalAngle = finalAngle;
+        this.errorThreshold = errorThreshold;
         initStatuses();
+    }
+
+    public TurnPIDCheck(Chassis chassis, double finalAngle, IMU imu, MotionController motionController) {
+        this(chassis, finalAngle, imu, motionController, DEFAULT_THRESHOLD);
     }
 
     @Override
@@ -34,7 +40,7 @@ public class TurnPIDCheck extends ChassisTurn implements Check {
             angle = 0;
             updateStatus(CHECK_NAME, SystemStatus.FAIL, e);
         }
-        if (Math.abs(motionController.getSetpoint() - angle) > ERROR_THRESHOLD) {
+        if (Math.abs(motionController.getSetpoint() - angle) > errorThreshold) {
             updateStatus(CHECK_NAME, SystemStatus.FAIL, new Exception("ANGLE TURNED NOT WITHIN ERROR THRESHOLD"));
         }
         move.cancel();

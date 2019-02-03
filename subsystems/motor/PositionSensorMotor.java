@@ -63,7 +63,6 @@ public class PositionSensorMotor extends SensorMotor {
 	}
 	
 	public void setPosition(double position) {
-		double newPosition = positionRange != null ? positionRange.limitValue(position) : position;
-		motionController.setSetpoint(newPosition);
+		motionController.setSetpoint(positionRange != null ? positionRange.limitValue(position) : position);
 	}
 }
