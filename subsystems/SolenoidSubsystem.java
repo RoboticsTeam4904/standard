@@ -8,17 +8,31 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 public class SolenoidSubsystem extends Subsystem {
 	protected DoubleSolenoid[] solenoids;
 	protected SolenoidState state;
+	protected SolenoidState defaultState;
 	protected boolean isInverted;
 
-	public SolenoidSubsystem(String name, boolean isInverted, DoubleSolenoid... solenoids) {
+	public SolenoidSubsystem(String name, boolean isInverted, SolenoidState defaultState, DoubleSolenoid... solenoids) {
 		super(name);
 		this.solenoids = solenoids;
 		this.state = SolenoidState.OFF;
 		this.isInverted = isInverted;
+		this.defaultState = defaultState;
+	}
+
+	public SolenoidSubsystem(String name, boolean isInverted,  DoubleSolenoid... solenoids) {
+		this(name, isInverted, SolenoidState.EXTEND, solenoids);
+	}
+
+	public SolenoidSubsystem(String name, SolenoidState defaultState, DoubleSolenoid... solenoids) {
+		this(name, false, defaultState, solenoids);
 	}
 
 	public SolenoidSubsystem(String name, DoubleSolenoid... solenoids) {
 		this(name, false, solenoids);
+	}
+
+	public SolenoidSubsystem(SolenoidState defaultState, DoubleSolenoid... solenoids) {
+		this("SolenoidSubsystem", defaultState, solenoids);
 	}
 
 	public SolenoidSubsystem(boolean isInverted, DoubleSolenoid... solenoids) {
@@ -30,7 +44,7 @@ public class SolenoidSubsystem extends Subsystem {
 	}
 
 	public enum SolenoidState {
-		OFF(DoubleSolenoid.Value.kOff), FORWARD(DoubleSolenoid.Value.kForward), REVERSE(DoubleSolenoid.Value.kReverse);
+		OFF(DoubleSolenoid.Value.kOff), EXTEND(DoubleSolenoid.Value.kForward), RETRACT(DoubleSolenoid.Value.kReverse);
 		public final DoubleSolenoid.Value value;
 
 		private SolenoidState(DoubleSolenoid.Value value) {
@@ -48,10 +62,10 @@ public class SolenoidSubsystem extends Subsystem {
 
 	public SolenoidState invertState(SolenoidState state) {
 		switch (state) {
-			case FORWARD:
-				return SolenoidState.REVERSE;
-			case REVERSE:
-				return SolenoidState.FORWARD;
+			case EXTEND:
+				return SolenoidState.RETRACT;
+			case RETRACT:
+				return SolenoidState.EXTEND;
 		}
 		return state;
 	}

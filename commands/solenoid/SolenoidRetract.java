@@ -6,7 +6,7 @@ import org.usfirst.frc4904.standard.subsystems.SolenoidSubsystem.SolenoidState;
 
 public class SolenoidRetract extends SolenoidSet {
 	public SolenoidRetract(String name, SolenoidSubsystem system) {
-		super(name, system, SolenoidState.REVERSE);
+		super(name, system, SolenoidState.RETRACT);
 	}
 
 	public SolenoidRetract(SolenoidSubsystem system) {
