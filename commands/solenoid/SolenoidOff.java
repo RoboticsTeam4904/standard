@@ -10,6 +10,6 @@ public class SolenoidOff extends SolenoidSet {
 	}
 
 	public SolenoidOff(SolenoidSubsystem system) {
-		this("SolenoidExtend", system);
+		this("SolenoidOff", system);
 	}
 }

@@ -10,6 +10,6 @@ public class SolenoidRetract extends SolenoidSet {
 	}
 
 	public SolenoidRetract(SolenoidSubsystem system) {
-		this("SolenoidExtend", system);
+		this("SolenoidRetract", system);
 	}
 }
