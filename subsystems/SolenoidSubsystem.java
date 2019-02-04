@@ -2,6 +2,7 @@ package org.usfirst.frc4904.standard.subsystems;
 
 
 import org.usfirst.frc4904.standard.commands.solenoid.SolenoidExtend;
+import org.usfirst.frc4904.standard.commands.solenoid.SolenoidSet;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
@@ -14,13 +15,12 @@ public class SolenoidSubsystem extends Subsystem {
 	public SolenoidSubsystem(String name, boolean isInverted, SolenoidState defaultState, DoubleSolenoid... solenoids) {
 		super(name);
 		this.solenoids = solenoids;
-		this.state = SolenoidState.OFF;
 		this.isInverted = isInverted;
 		this.defaultState = defaultState;
 	}
 
 	public SolenoidSubsystem(String name, boolean isInverted,  DoubleSolenoid... solenoids) {
-		this(name, isInverted, SolenoidState.EXTEND, solenoids);
+		this(name, isInverted, SolenoidState.OFF, solenoids);
 	}
 
 	public SolenoidSubsystem(String name, SolenoidState defaultState, DoubleSolenoid... solenoids) {
@@ -84,6 +84,6 @@ public class SolenoidSubsystem extends Subsystem {
 	}
 
 	public void initDefaultCommand() {
-		setDefaultCommand(new SolenoidExtend(this));
+		setDefaultCommand(new SolenoidSet(this, defaultState));
 	}
 }
