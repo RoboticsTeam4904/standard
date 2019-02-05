@@ -16,6 +16,7 @@ public class SolenoidSubsystem extends Subsystem {
 		this.solenoids = solenoids;
 		this.isInverted = isInverted;
 		this.defaultState = defaultState;
+		this.state = defaultState;
 	}
 
 	public SolenoidSubsystem(String name, boolean isInverted, DoubleSolenoid... solenoids) {
