@@ -6,8 +6,8 @@ import org.usfirst.frc4904.standard.commands.systemchecks.StatusMessage.SystemSt
 import org.usfirst.frc4904.standard.subsystems.motor.ServoSubsystem;
 
 public class ServoCheck extends SubsystemCheck {
-    protected final double angle;
     protected static final double DEFAULT_ANGLE = 50;
+    protected final double angle;
     protected final ServoSubsystem[] servos;
 
     public ServoCheck(String name, double angle, ServoSubsystem... servos) {

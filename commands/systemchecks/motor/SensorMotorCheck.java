@@ -8,10 +8,10 @@ import org.usfirst.frc4904.standard.subsystems.motor.SensorMotor;
 import org.usfirst.frc4904.standard.subsystems.motor.VelocitySensorMotor;
 
 public abstract class SensorMotorCheck extends MotorCheck {
-    protected SensorMotor[] motors;
     protected static final double DEFAULT_POSITION = 50;
     protected static final double POSITION_THRESHOLD = 2.0; // TODO: TEST THIS
-    protected static final double VELOCITY_THRESHOLD = 2.0; // TODO: TEST THIS
+	protected static final double VELOCITY_THRESHOLD = 2.0; // TODO: TEST THIS
+    protected SensorMotor[] motors;	
     protected double position;
 
     public SensorMotorCheck(String name, double timeout, double speed, double position, SensorMotor... motors) {

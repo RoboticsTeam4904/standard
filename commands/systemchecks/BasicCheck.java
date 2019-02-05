@@ -10,9 +10,9 @@ import org.usfirst.frc4904.standard.commands.systemchecks.StatusMessage.SystemSt
 import edu.wpi.first.wpilibj.command.Command;
 
 public abstract class BasicCheck extends Command implements Check {
+    protected static final double DEFAULT_TIMEOUT = 5;
     protected HashMap<String, StatusMessage> statuses;
     protected final String[] systemNames;
-    protected static final double DEFAULT_TIMEOUT = 5;
 
     public BasicCheck(String checkName, double timeout, String... systemNames) {
         super(checkName, timeout);
