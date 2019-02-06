@@ -7,9 +7,8 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.PersistentException;
 import edu.wpi.first.networktables.NetworkTableEntry;
 
-public class NetworkTablesCheck extends BasicCheck {
-    protected static final String SAVE_PATH = "/home/lvuser/logs/networktables";
-    protected static final String SAVE_FILE = SAVE_PATH + "testTable.log";
+public class NetworkTablesCheck extends BaseCheck {
+    protected static final String SAVE_FILE = "/home/lvuser/logs/networktables/testTable.log";
     protected static final String CHECK_NAME = "NetworkTables";
     protected static final double DEFAULT_ENTRY = 4.904;
     protected static NetworkTableInstance inst;

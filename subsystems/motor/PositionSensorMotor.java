@@ -9,25 +9,29 @@ import edu.wpi.first.wpilibj.SpeedController;
 
 public class PositionSensorMotor extends SensorMotor {
 	protected Util.Range positionRange;
+
 	public PositionSensorMotor(String name, boolean isInverted, SpeedModifier speedModifier, MotionController motionController,
 		SpeedController... motors) {
 		super(name, isInverted, speedModifier, motionController, motors);
 		this.positionRange = null;
 	}
 
-	public PositionSensorMotor(String name, Util.Range positionRange, boolean isInverted, SpeedModifier speedModifier, MotionController motionController,
-	SpeedController... motors) {
+	public PositionSensorMotor(String name, Util.Range positionRange, boolean isInverted, SpeedModifier speedModifier,
+		MotionController motionController,
+		SpeedController... motors) {
 		super(name, isInverted, speedModifier, motionController, motors);
 		this.positionRange = positionRange;
 	}
-	public PositionSensorMotor(String name, Util.Range positionRange, SpeedModifier speedModifier, MotionController motionController,
-	SpeedController... motors) {
+
+	public PositionSensorMotor(String name, Util.Range positionRange, SpeedModifier speedModifier,
+		MotionController motionController,
+		SpeedController... motors) {
 		super(name, false, speedModifier, motionController, motors);
 		this.positionRange = positionRange;
 	}
 
-	public PositionSensorMotor(String name, Util.Range positionRange,  MotionController motionController,
-	SpeedController... motors) {
+	public PositionSensorMotor(String name, Util.Range positionRange, MotionController motionController,
+		SpeedController... motors) {
 		super(name, false, new IdentityModifier(), motionController, motors);
 		this.positionRange = positionRange;
 	}
@@ -61,7 +65,7 @@ public class PositionSensorMotor extends SensorMotor {
 	public PositionSensorMotor(MotionController motionController, SpeedController... motors) {
 		this("PositionSensorMotor", motionController, motors);
 	}
-	
+
 	public void setPosition(double position) {
 		motionController.setSetpoint(positionRange != null ? positionRange.limitValue(position) : position);
 	}

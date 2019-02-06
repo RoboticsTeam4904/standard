@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.stream.Collectors;
 import edu.wpi.first.wpilibj.SendableBase;
 
-public abstract class SystemCheck extends BasicCheck {
+public abstract class SystemCheck extends BaseCheck {
     protected HashMap<String, StatusMessage> statuses;
     protected SendableBase[] systems;
 
