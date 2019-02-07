@@ -4,7 +4,8 @@ jdk:
 
 install:
 - git clone --recursive https://github.com/RoboticsTeam4904/VS-Simple ~/VS-Simple
-- ls vendordeps
+- pwd
+- ls ./vendordeps
 - cd ~/VS-Simple/src/main/java/frc4904/standard
 - git fetch
 - git checkout $TRAVIS_BRANCH
