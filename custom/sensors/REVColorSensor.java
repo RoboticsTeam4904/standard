@@ -3,6 +3,10 @@ package org.usfirst.frc4904.standard.custom.sensors;
 import edu.wpi.first.wpilibj.I2C;
 import org.usfirst.frc4904.standard.custom.sensors.ColorSensor;
 
+/**
+ * An implementation of `ColorSensor` for a Rev sensor.
+ * The sensor info is found here https://www.revrobotics.com/content/docs/TMD3782_v2.pdf.
+ */
 public class REVColorSensor implements ColorSensor {
 	private static int ENABLE = 0x00;
 	private static int ENABLE_FIELDS = 0b11;
