@@ -1,13 +1,11 @@
 package org.usfirst.frc4904.standard.custom.sensors;
 
-import java.awt.Color;
 import edu.wpi.first.wpilibj.I2C;
 import org.usfirst.frc4904.standard.custom.sensors.ColorSensor;
-import org.usfirst.frc4904.standard.custom.sensors.DistanceSensor;
 
 public class REVColorSensor implements ColorSensor {
 	private static int ENABLE = 0x00;
-	private static int ENABLE_FIELDS = 3;
+	private static int ENABLE_FIELDS = 0b11;
 	private static int RDATA = 0x16;
 	private static int RDATAH = 0x17;
 	private static int GDATA = 0x18;
@@ -18,11 +16,11 @@ public class REVColorSensor implements ColorSensor {
 	private final I2C device;
 
 	public REVColorSensor(I2C.Port port, int id) {
-		device = new  I2C(port, id);
+		device = new I2C(port, id);
 		device.write(ENABLE, ENABLE_FIELDS);
 	}
 
-	private int getColorComponent(int lowAddress, int highAddress) {
+	private int getValue(int lowAddress, int highAddress) {
 		byte[] buf = new byte[1];
 		device.read(BDATA, 1, buf);
 		byte low = buf[0];
@@ -32,18 +30,14 @@ public class REVColorSensor implements ColorSensor {
 	}
 
 	public int getR() {
-		return getColorComponent(RDATA, RDATAH);
+		return getValue(RDATA, RDATAH);
 	}
 
 	public int getG() {
-		return getColorComponent(GDATA, GDATAH);
+		return getValue(GDATA, GDATAH);
 	}
 
 	public int getB() {
-		return getColorComponent(BDATA, BDATAH);
-	}
-
-	public Color getColor() {
-		return new Color(getR(), getG(), getB());
+		return getValue(BDATA, BDATAH);
 	}
 }

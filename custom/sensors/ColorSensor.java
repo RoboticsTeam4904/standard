@@ -9,5 +9,7 @@ public interface ColorSensor {
 
 	int getB();
 
-	Color getColor();
+	default Color getColor() {
+		return new Color(getR(), getG(), getB());
+	}
 }
