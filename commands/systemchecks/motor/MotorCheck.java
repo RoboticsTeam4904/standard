@@ -50,7 +50,7 @@ public class MotorCheck extends SubsystemCheck {
 				motor.set(speed);
 			}
 			catch (Exception e) {
-				updateStatus(motor.getName(), SystemStatus.FAIL, e);
+				updateStatusFail(motor.getName(), e);
 			}
 		}
 	}

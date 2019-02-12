@@ -67,17 +67,17 @@ public abstract class SensorMotorCheck extends MotorCheck {
             }
             catch (InvalidSensorException e) {
                 input = 0;
-                updateStatus(motor.getName(), SystemStatus.FAIL, e);
+                updateStatusFail(motor.getName(), e);
             }
             if (motor instanceof VelocitySensorMotor) {
                 ((VelocitySensorMotor) motor).set(speed);
                 if (input - speed > VELOCITY_THRESHOLD) {
-                    updateStatus(motor.getName(), SystemStatus.FAIL, new Exception("SET SPEED NOT WITHIN REQUIRED THRESHOLD"));
+                    updateStatusFail(motor.getName(), new Exception("SET SPEED NOT WITHIN REQUIRED THRESHOLD"));
                 }
             } else if (motor instanceof PositionSensorMotor) {
                 ((PositionSensorMotor) motor).setPosition(position);
                 if (input - position > POSITION_THRESHOLD) {
-                    updateStatus(motor.getName(), SystemStatus.FAIL, new Exception("POSITION NOT WITHIN THRESHOLD"));
+                    updateStatusFail(motor.getName(), new Exception("POSITION NOT WITHIN THRESHOLD"));
                 }
             }
         }

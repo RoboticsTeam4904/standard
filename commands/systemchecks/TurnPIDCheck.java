@@ -38,10 +38,10 @@ public class TurnPIDCheck extends ChassisTurn implements Check {
         }
         catch (InvalidSensorException e) {
             angle = 0;
-            updateStatus(CHECK_NAME, SystemStatus.FAIL, e);
+            updateStatusFail(CHECK_NAME, e);
         }
         if (Math.abs(motionController.getSetpoint() - angle) > errorThreshold) {
-            updateStatus(CHECK_NAME, SystemStatus.FAIL, new Exception("ANGLE TURNED NOT WITHIN ERROR THRESHOLD"));
+            updateStatusFail(CHECK_NAME, new Exception("ANGLE TURNED NOT WITHIN ERROR THRESHOLD"));
         }
         move.cancel();
         motionController.disable();

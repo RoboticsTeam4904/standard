@@ -34,7 +34,7 @@ public class ServoCheck extends SubsystemCheck {
                 servo.setAngle(angle);
             }
             catch (Exception e) {
-                updateStatus(servo.getName(), SystemStatus.FAIL, e);
+                updateStatusFail(servo.getName(), e);
             }
         }
     }
