@@ -1,7 +1,6 @@
 package org.usfirst.frc4904.standard.commands.systemchecks;
 
 
-import org.usfirst.frc4904.standard.commands.systemchecks.StatusMessage.SystemStatus;
 import edu.wpi.first.hal.can.CANStatus;
 import edu.wpi.first.wpilibj.RobotController;
 

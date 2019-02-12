@@ -66,7 +66,10 @@ public class DrivePIDCheck extends ChassisMoveDistance implements Check {
 		if (getStatusMessage(CHECK_NAME).status == SystemStatus.PASS) {
 			LogKitten.d(CHECK_NAME + ": PASS");
 		} else {
-			LogKitten.e(CHECK_NAME + ": " + getStatusMessage(CHECK_NAME).exceptions);
+			LogKitten.e(CHECK_NAME + ": FAIL ");
+			for (Exception e : getStatusMessage(CHECK_NAME).exceptions) {
+				LogKitten.e(e);
+			}
 		}
 	}
 }

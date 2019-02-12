@@ -4,10 +4,9 @@ package org.usfirst.frc4904.standard.commands.systemchecks.motor;
 import org.usfirst.frc4904.standard.Util;
 import org.usfirst.frc4904.standard.commands.systemchecks.SubsystemCheck;
 import org.usfirst.frc4904.standard.subsystems.motor.Motor;
-import org.usfirst.frc4904.standard.commands.systemchecks.StatusMessage.SystemStatus;
 
 public class MotorCheck extends SubsystemCheck {
-	protected static final double DEFAULT_SPEED = 0.5; // TODO: CHECK THIS
+	protected static final double DEFAULT_SPEED = 0.5;
 	protected static final Util.Range outputCurrentRange = new Util.Range(0.1, 0.3); // TODO: Use Current to judge speedcontrollers
 	protected double speed;
 	protected final Motor[] motors;

@@ -123,7 +123,7 @@ public abstract class BaseCheck extends Command implements Check {
 	}
 
 	/**
-	 * Logs the statuses of all systems with variable ordinance
+	 * Logs the statuses of all systems with variable severity
 	 * depending on the status of the system
 	 */
 	public void outputStatuses() {

@@ -1,7 +1,6 @@
 package org.usfirst.frc4904.standard.commands.systemchecks.motor;
 
 
-import org.usfirst.frc4904.standard.commands.systemchecks.StatusMessage.SystemStatus;
 import org.usfirst.frc4904.standard.custom.sensors.InvalidSensorException;
 import org.usfirst.frc4904.standard.subsystems.motor.PositionSensorMotor;
 import org.usfirst.frc4904.standard.subsystems.motor.SensorMotor;

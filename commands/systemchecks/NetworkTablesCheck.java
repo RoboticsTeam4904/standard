@@ -1,7 +1,6 @@
 package org.usfirst.frc4904.standard.commands.systemchecks;
 
 
-import org.usfirst.frc4904.standard.commands.systemchecks.StatusMessage.SystemStatus;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.PersistentException;
