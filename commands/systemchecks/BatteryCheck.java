@@ -13,6 +13,8 @@ public class BatteryCheck extends BaseCheck {
 	protected static final String systemName = "BATTERY";
 
 	/**
+	 * Systemcheck of battery status
+	 * 
 	 * @param name
 	 *                name of check
 	 * @param timeout
@@ -23,6 +25,8 @@ public class BatteryCheck extends BaseCheck {
 	}
 
 	/**
+	 * Systemcheck of battery status
+	 * 
 	 * @param name
 	 *                name of check
 	 * @param timeout
@@ -33,6 +37,8 @@ public class BatteryCheck extends BaseCheck {
 	}
 
 	/**
+	 * Systemcheck of battery status
+	 * 
 	 * @param name
 	 *                name of check
 	 * @param timeout
