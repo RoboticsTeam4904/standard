@@ -12,6 +12,9 @@ import org.usfirst.frc4904.standard.custom.sensors.IMU;
 import org.usfirst.frc4904.standard.custom.sensors.InvalidSensorException;
 import org.usfirst.frc4904.standard.subsystems.chassis.Chassis;
 
+/**
+ * Checks accuracy of TurnPID by comparing angle to setpoint
+ */
 public class TurnPIDCheck extends ChassisTurn implements Check {
 	protected HashMap<String, StatusMessage> statuses;
 	protected static final String CHECK_NAME = "TurnPIDCheck";
