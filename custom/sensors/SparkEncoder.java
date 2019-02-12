@@ -3,6 +3,7 @@ package org.usfirst.frc4904.standard.custom.sensors;
 
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
+import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.Util;
 import edu.wpi.first.wpilibj.PIDSourceType;
 
@@ -11,9 +12,10 @@ import edu.wpi.first.wpilibj.PIDSourceType;
  * Implements generic encoder interface
  */
 public class SparkEncoder implements CustomEncoder {
+    protected final double SECONDS_PER_MINUTE = 60.0;
     protected final CANEncoder encoder;
     protected PIDSourceType pidSource;
-    protected double distancePerPulse;
+    protected double distancePerRotation;
     protected boolean reverseDirection;
     protected double truePosition;
     protected double trueVelocity;
@@ -23,18 +25,19 @@ public class SparkEncoder implements CustomEncoder {
      * Implements generic encoder interface
      * 
      * @param spark
-     *                         Spark NEO motor used to construct encoder
+     *                            Spark NEO motor used to construct encoder
      * @param reverseDirection
-     *                         True to reverse direction of encoder
-     * @param distancePerPulse
-     *                         Conversion factor from encoder ticks to distance
+     *                            True to reverse direction of encoder
+     * @param distancePerRotation
+     *                            Conversion factor from encoder readings to distance/velocity readings
+     *                            Should be in units of meters per second
      * @param pidSource
-     *                         kDisplacement for position readings, kRate for velocity readings
+     *                            kDisplacement for position readings, kRate for velocity readings
      */
-    public SparkEncoder(CANSparkMax spark, boolean reverseDirection, double distancePerPulse, PIDSourceType pidSource) {
+    public SparkEncoder(CANSparkMax spark, boolean reverseDirection, double distancePerRotation, PIDSourceType pidSource) {
         encoder = new CANEncoder(spark);
         this.reverseDirection = reverseDirection;
-        this.distancePerPulse = distancePerPulse;
+        this.distancePerRotation = distancePerRotation;
         setPIDSourceType(pidSource);
     }
 
@@ -43,14 +46,15 @@ public class SparkEncoder implements CustomEncoder {
      * Implements generic encoder interface
      * 
      * @param spark
-     *                         Spark NEO motor used to construct encoder
+     *                            Spark NEO motor used to construct encoder
      * @param reverseDirection
-     *                         True to reverse direction of encoder
-     * @param distancePerPulse
-     *                         Conversion factor from encoder ticks to distance
+     *                            True to reverse direction of encoder
+     * @param distancePerRotation
+     *                            Conversion factor from encoder readings to distance/velocity readings
+     *                            Should be in units of meters per second
      */
-    public SparkEncoder(CANSparkMax spark, boolean reverseDirection, double distancePerPulse) {
-        this(spark, reverseDirection, distancePerPulse, PIDSourceType.kDisplacement);
+    public SparkEncoder(CANSparkMax spark, boolean reverseDirection, double distancePerRotation) {
+        this(spark, reverseDirection, distancePerRotation, PIDSourceType.kDisplacement);
     }
 
     /**
@@ -58,12 +62,25 @@ public class SparkEncoder implements CustomEncoder {
      * Implements generic encoder interface
      * 
      * @param spark
-     *                         Spark NEO motor used to construct encoder
-     * @param distancePerPulse
-     *                         Conversion factor from encoder ticks to distance
+     *                            Spark NEO motor used to construct encoder
+     * @param distancePerRotation
+     *                            Conversion factor from encoder readings to distance/velocity readings
+     *                            Should be in units of meters per second
      */
-    public SparkEncoder(CANSparkMax spark, double distancePerPulse) {
-        this(spark, false, distancePerPulse);
+    public SparkEncoder(CANSparkMax spark, double distancePerRotation) {
+        this(spark, false, distancePerRotation);
+    }
+
+    /**
+     * Built-in encoder on CANSpark NEO
+     * Implements generic encoder interface
+     * DistancePerRotation set to 1 to return raw encoder readings
+     * 
+     * @param spark
+     *              Spark NEO motor used to construct encoder
+     */
+    public SparkEncoder(CANSparkMax spark) {
+        this(spark, false, 1.0);
     }
 
     /**
@@ -91,13 +108,12 @@ public class SparkEncoder implements CustomEncoder {
      */
     @Override
     public double pidGet() {
-        switch (pidSource) {
-            case kDisplacement:
-                return getDistance();
-            case kRate:
-                return getRate();
-            default:
-                return getDistance();
+        try {
+            return pidGetSafely();
+        }
+        catch (InvalidSensorException e) {
+            LogKitten.e(e);
+            return 0.0;
         }
     }
 
@@ -106,21 +122,38 @@ public class SparkEncoder implements CustomEncoder {
      */
     @Override
     public int get() {
-        return (int) encoder.getPosition();
+        try {
+            return getSafely();
+        }
+        catch (InvalidSensorException e) {
+            LogKitten.e(e);
+            return 0;
+        }
     }
 
+    /**
+     * Returns rate in meters per second (given that distancePerRotation is in meters per rotation)
+     */
     @Override
     public double getDistance() {
-        if (reverseDirection) {
-            return distancePerPulse * (encoder.getPosition() - truePosition) * -1.0;
-        } else {
-            return distancePerPulse * (encoder.getPosition() - truePosition);
+        try {
+            return getDistanceSafely();
+        }
+        catch (InvalidSensorException e) {
+            LogKitten.e(e);
+            return 0.0;
         }
     }
 
     @Override
     public boolean getDirection() {
-        return !reverseDirection == (encoder.getVelocity() >= 0);
+        try {
+            return getDirectionSafely();
+        }
+        catch (InvalidSensorException e) {
+            LogKitten.e(e);
+            return false;
+        }
     }
 
     /**
@@ -128,26 +161,37 @@ public class SparkEncoder implements CustomEncoder {
      */
     @Override
     public boolean getStopped() {
-        return Util.isZero(getRate());
+        try {
+            return getStoppedSafely();
+        }
+        catch (InvalidSensorException e) {
+            LogKitten.e(e);
+            return false;
+        }
     }
 
+    /**
+     * Returns distance in meters (given that distancePerRotation is in meters per rotation)
+     */
     @Override
     public double getRate() {
-        if (reverseDirection) {
-            return (encoder.getVelocity() - trueVelocity) * distancePerPulse * -1.0;
-        } else {
-            return (encoder.getVelocity() - trueVelocity) * distancePerPulse;
+        try {
+            return getRateSafely();
+        }
+        catch (InvalidSensorException e) {
+            LogKitten.e(e);
+            return 0.0;
         }
     }
 
     @Override
     public double getDistancePerPulse() {
-        return distancePerPulse;
+        return distancePerRotation;
     }
 
     @Override
-    public void setDistancePerPulse(double distancePerPulse) {
-        this.distancePerPulse = distancePerPulse;
+    public void setDistancePerPulse(double distancePerRotation) {
+        this.distancePerRotation = distancePerRotation;
     }
 
     @Override
@@ -162,43 +206,58 @@ public class SparkEncoder implements CustomEncoder {
 
     @Override
     public void reset() {
+        truePosition = encoder.getPosition();
+        trueVelocity = encoder.getVelocity();
+    }
+
+    @Override
+    public double pidGetSafely() throws InvalidSensorException {
         switch (pidSource) {
             case kDisplacement:
-                truePosition = encoder.getPosition();
-                break;
+                return getDistance();
             case kRate:
-                trueVelocity = encoder.getVelocity();
-                break;
+                return getRate();
+            default:
+                return getDistance();
         }
     }
 
     @Override
-    public double pidGetSafely() {
-        return pidGet();
+    public int getSafely() throws InvalidSensorException {
+        return (int) encoder.getPosition();
+    }
+
+    /**
+     * Returns distance in meters (given that distancePerRotation is in meters per rotation)
+     */
+    @Override
+    public double getDistanceSafely() throws InvalidSensorException {
+        if (reverseDirection) {
+            return distancePerRotation * (encoder.getPosition() - truePosition) * -1.0;
+        } else {
+            return distancePerRotation * (encoder.getPosition() - truePosition);
+        }
     }
 
     @Override
-    public int getSafely() {
-        return get();
+    public boolean getDirectionSafely() throws InvalidSensorException {
+        return !reverseDirection == (encoder.getVelocity() >= 0);
     }
 
     @Override
-    public double getDistanceSafely() {
-        return getDistance();
+    public boolean getStoppedSafely() throws InvalidSensorException {
+        return Util.isZero(getRate());
     }
 
+    /**
+     * Returns rate in meters per second (given that distancePerRotation is in meters per rotation)
+     */
     @Override
-    public boolean getDirectionSafely() {
-        return getDirection();
-    }
-
-    @Override
-    public boolean getStoppedSafely() {
-        return getStopped();
-    }
-
-    @Override
-    public double getRateSafely() {
-        return getRate();
+    public double getRateSafely() throws InvalidSensorException {
+        if (reverseDirection) {
+            return (encoder.getVelocity() - trueVelocity) * distancePerRotation / SECONDS_PER_MINUTE * -1.0;
+        } else {
+            return (encoder.getVelocity() - trueVelocity) * distancePerRotation / SECONDS_PER_MINUTE;
+        }
     }
 }
