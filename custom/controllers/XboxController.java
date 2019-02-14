@@ -150,7 +150,7 @@ public class XboxController extends Joystick {
 		public static DPAD getEnum(int angle) {
 			angle = Math.abs(angle);
 			angle %= 360;
-			angle = Math.round(angle / 45) * 45; // May have rounding errors. Due to rounding errors.
+			angle = angle / 45 * 45; // May have rounding errors. Due to rounding errors.
 			DPAD[] all = DPAD.values();
 			for (int i = 0; i < all.length; i++) {
 				if (all[i].value == angle) {
