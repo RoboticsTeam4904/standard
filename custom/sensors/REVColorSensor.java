@@ -26,9 +26,9 @@ public class REVColorSensor implements ColorSensor {
 
 	private int getValue(int lowAddress, int highAddress) {
 		byte[] buf = new byte[1];
-		device.read(BDATA, 1, buf);
+		device.read(lowAddress, 1, buf);
 		byte low = buf[0];
-		device.read(BDATAH, 1, buf);
+		device.read(highAddress, 1, buf);
 		byte high = buf[0];
 		return (int) Math.floor((high << 8 | low) / 256);
 	}
