@@ -166,7 +166,7 @@ public abstract class SensorMotorCheck extends MotorCheck {
                 ((VelocitySensorMotor) motor).set(speed);
                 VICheck(motor);
                 if (((VelocitySensorMotor) motor).getMotionController().onTarget() && input - speed > VELOCITY_THRESHOLD) {
-                    updateStatusFail(motor.getName(), new Exception("SET SPEED NOT WITHIN REQUIRED THRESHOLD"));
+                    updateStatusFail(motor.getName(), new Exception("SPEED NOT WITHIN REQUIRED THRESHOLD"));
                 }
             } else if (motor instanceof PositionSensorMotor) {
                 if (!motor.getMotionController().onTarget()) {

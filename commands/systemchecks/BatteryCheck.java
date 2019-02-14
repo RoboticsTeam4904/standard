@@ -27,8 +27,6 @@ public class BatteryCheck extends BaseCheck {
 	/**
 	 * Systemcheck of battery status
 	 * 
-	 * @param name
-	 *                name of check
 	 * @param timeout
 	 *                duration of check
 	 */
