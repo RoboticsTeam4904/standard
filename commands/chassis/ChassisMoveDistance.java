@@ -7,12 +7,14 @@ import org.usfirst.frc4904.standard.custom.motioncontrollers.MotionController;
 import org.usfirst.frc4904.standard.custom.sensors.InvalidSensorException;
 import org.usfirst.frc4904.standard.subsystems.chassis.Chassis;
 import edu.wpi.first.wpilibj.command.Command;
+import java.util.function.DoubleSupplier;
 
 public class ChassisMoveDistance extends Command implements ChassisController {
 	protected final ChassisMove chassisMove;
 	protected final MotionController motionController;
 	protected final Command fallbackCommand;
-	protected final double distance;
+	protected double distance;
+	protected DoubleSupplier distanceSupplier;
 	protected boolean runOnce;
 
 	/**
@@ -53,8 +55,49 @@ public class ChassisMoveDistance extends Command implements ChassisController {
 		this(chassis, distance, motionController, null);
 	}
 
+		/**
+	 * Constructor.
+	 * This command moves the chassis forward a known distance via a set of encoders.
+	 * The distance is calculated as the average of the provided encoders.
+	 * The speed is decided by the provided motionController.
+	 *
+	 * @param chassis
+	 * @param distanceSupplier
+	 *        distance to move in encoder ticks
+	 * @param motionController
+	 * @param fallbackCommand
+	 *        If the sensor fails for some reason, this command will be cancelled, then the fallbackCommand will start
+	 * @param encoders
+	 */
+	public ChassisMoveDistance(Chassis chassis, DoubleSupplier distanceSupplier, MotionController motionController, Command fallbackCommand) {
+		chassisMove = new ChassisMove(chassis, this, false);
+		this.motionController = motionController;
+		this.distanceSupplier = distanceSupplier;
+		this.fallbackCommand = fallbackCommand;
+		runOnce = false;
+	}
+
+		/**
+	 * Constructor.
+	 * This command moves the chassis forward a known distance via a set of encoders.
+	 * The distance is calculated as the average of the provided encoders.
+	 * The speed is decided by the provided motionController.
+	 *
+	 * @param chassis
+	 * @param distance
+	 *        distance to move in encoder ticks
+	 * @param motionController
+	 * @param encoders
+	 */
+	public ChassisMoveDistance(Chassis chassis, DoubleSupplier distanceSupplier, MotionController motionController) {
+		this(chassis, distanceSupplier, motionController, null);
+	}
+
 	@Override
 	public void initialize() {
+		if (distanceSupplier != null) {
+			distance = distanceSupplier.getAsDouble();
+		}
 		chassisMove.start();
 		try {
 			motionController.resetSafely();
