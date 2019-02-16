@@ -52,6 +52,19 @@ public class ChassisTurn extends Command implements ChassisController {
 		this(chassis, finalAngle, imu, null, motionController);
 	}
 
+	/**
+	 * Constructor
+	 * This command rotates the chassis to a position relative to the current angle of the robot
+	 * It takes in a double supplier rather than a double for the angle
+	 * This is useful for when final angle won't be known until the command is intiliazed
+	 *
+	 * @param chassis
+	 * @param finalAngleSupplier
+	 * @param imu
+	 * @param fallbackCommand
+	 *                         If the sensor fails for some reason, this command will be cancelled, then the fallbackCommand will start
+	 * @param motionController
+	 */
 	public ChassisTurn(Chassis chassis, DoubleSupplier finalAngleSupplier, IMU imu, Command fallbackCommand, MotionController motionController) {
 		move = new ChassisMove(chassis, this);
 		this.finalAngleSupplier = finalAngleSupplier;
@@ -60,6 +73,17 @@ public class ChassisTurn extends Command implements ChassisController {
 		this.fallbackCommand = fallbackCommand;
 	}
 
+	/**
+	 * Constructor
+	 * This command rotates the chassis to a position relative to the current angle of the robot
+	 * It takes in a double supplier rather than a double for the angle
+	 * This is useful for when final angle won't be known until the command is intiliazed
+	 *
+	 * @param chassis
+	 * @param finalAngleSupplier
+	 * @param imu
+	 * @param motionController
+	 */
 	public ChassisTurn(Chassis chassis, DoubleSupplier finalAngleSupplier, IMU imu, MotionController motionController) {
 		this(chassis, finalAngleSupplier, imu, null, motionController);
 	}
