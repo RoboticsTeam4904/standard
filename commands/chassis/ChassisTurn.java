@@ -1,6 +1,7 @@
 package org.usfirst.frc4904.standard.commands.chassis;
 
 
+import java.util.function.DoubleSupplier;
 import org.usfirst.frc4904.standard.custom.ChassisController;
 import org.usfirst.frc4904.standard.custom.motioncontrollers.MotionController;
 import org.usfirst.frc4904.standard.custom.sensors.IMU;
@@ -11,7 +12,8 @@ import edu.wpi.first.wpilibj.command.Command;
 public class ChassisTurn extends Command implements ChassisController {
 	protected final ChassisMove move;
 	protected double initialAngle;
-	protected final double finalAngle;
+	protected double finalAngle;
+	protected DoubleSupplier finalAngleSupplier;
 	protected final MotionController motionController;
 	protected final Command fallbackCommand;
 	protected final IMU imu;
@@ -25,7 +27,7 @@ public class ChassisTurn extends Command implements ChassisController {
 	 * @param finalAngle
 	 * @param imu
 	 * @param fallbackCommand
-	 *        If the sensor fails for some reason, this command will be cancelled, then the fallbackCommand will start
+	 *                         If the sensor fails for some reason, this command will be cancelled, then the fallbackCommand will start
 	 * @param motionController
 	 */
 	public ChassisTurn(Chassis chassis, double finalAngle, IMU imu, Command fallbackCommand,
@@ -48,6 +50,18 @@ public class ChassisTurn extends Command implements ChassisController {
 	 */
 	public ChassisTurn(Chassis chassis, double finalAngle, IMU imu, MotionController motionController) {
 		this(chassis, finalAngle, imu, null, motionController);
+	}
+
+	public ChassisTurn(Chassis chassis, DoubleSupplier finalAngleSupplier, IMU imu, Command fallbackCommand, MotionController motionController) {
+		move = new ChassisMove(chassis, this);
+		this.finalAngleSupplier = finalAngleSupplier;
+		this.imu = imu;
+		this.motionController = motionController;
+		this.fallbackCommand = fallbackCommand;
+	}
+
+	public ChassisTurn(Chassis chassis, DoubleSupplier finalAngleSupplier, IMU imu, MotionController motionController) {
+		this(chassis, finalAngleSupplier, imu, null, motionController);
 	}
 
 	@Override
@@ -77,6 +91,9 @@ public class ChassisTurn extends Command implements ChassisController {
 
 	@Override
 	protected void initialize() {
+		if (finalAngleSupplier != null) {
+			finalAngle = finalAngleSupplier.getAsDouble();
+		}
 		move.start();
 		initialAngle = imu.getYaw();
 		try {
