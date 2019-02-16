@@ -199,6 +199,15 @@ public class SolenoidSubsystem extends Subsystem {
 	}
 
 	/**
+	 * Returns whether the solenoid is extended.
+	 * 
+	 * @return extended
+	 */
+	public boolean isExtended() {
+		return solenoids[0].get() == SolenoidState.EXTEND.value;
+	}
+
+	/**
 	 * Sets the defaultCommand to set the system to the defaultState of the system
 	 */
 	public void initDefaultCommand() {
