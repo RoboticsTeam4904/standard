@@ -23,10 +23,10 @@ public class ChassisMoveDistance extends Command implements ChassisController {
 	 *
 	 * @param chassis
 	 * @param distance
-	 *        distance to move in encoder ticks
+	 *                         distance to move in encoder ticks
 	 * @param motionController
 	 * @param fallbackCommand
-	 *        If the sensor fails for some reason, this command will be cancelled, then the fallbackCommand will start
+	 *                         If the sensor fails for some reason, this command will be cancelled, then the fallbackCommand will start
 	 * @param encoders
 	 */
 	public ChassisMoveDistance(Chassis chassis, double distance, MotionController motionController, Command fallbackCommand) {
@@ -45,7 +45,7 @@ public class ChassisMoveDistance extends Command implements ChassisController {
 	 *
 	 * @param chassis
 	 * @param distance
-	 *        distance to move in encoder ticks
+	 *                         distance to move in encoder ticks
 	 * @param motionController
 	 * @param encoders
 	 */
@@ -60,13 +60,15 @@ public class ChassisMoveDistance extends Command implements ChassisController {
 			motionController.resetSafely();
 		}
 		catch (InvalidSensorException e) {
-			LogKitten.w("Cancelling ChassisMoveDistance");
-			chassisMove.cancel();
-			cancel();
-			if (fallbackCommand != null) {
-				fallbackCommand.start();
+			if (this.getGroup() != null) {
+				LogKitten.w("Cancelling ChassisMoveDistance");
+				chassisMove.cancel();
+				cancel();
+				if (fallbackCommand != null) {
+					fallbackCommand.start();
+				}
+				return;
 			}
-			return;
 		}
 		motionController.setSetpoint(motionController.getSensorValue() + distance);
 		motionController.enable();
@@ -84,11 +86,13 @@ public class ChassisMoveDistance extends Command implements ChassisController {
 			speed = motionController.getSafely();
 		}
 		catch (InvalidSensorException e) {
-			LogKitten.w("Cancelling ChassisMoveDistance");
-			chassisMove.cancel();
-			cancel();
-			if (fallbackCommand != null) {
-				fallbackCommand.start();
+			if (getGroup() == null) {
+				LogKitten.w("Cancelling ChassisMoveDistance");
+				chassisMove.cancel();
+				cancel();
+				if (fallbackCommand != null) {
+					fallbackCommand.start();
+				}
 			}
 			speed = 0;
 		}
@@ -110,7 +114,8 @@ public class ChassisMoveDistance extends Command implements ChassisController {
 	}
 
 	@Override
-	protected void execute() {}
+	protected void execute() {
+	}
 
 	@Override
 	protected void interrupted() {

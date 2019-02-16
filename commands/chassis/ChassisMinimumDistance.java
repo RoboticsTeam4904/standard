@@ -20,11 +20,11 @@ public class ChassisMinimumDistance extends ChassisConstant {
 	 *
 	 * @param chassis
 	 * @param distance
-	 *        distance to move in encoder ticks
+	 *                        distance to move in encoder ticks
 	 * @param speed
-	 *        the speed to move at
+	 *                        the speed to move at
 	 * @param fallbackCommand
-	 *        If the sensor fails for some reason, this command will be cancelled, then the fallbackCommand will start
+	 *                        If the sensor fails for some reason, this command will be cancelled, then the fallbackCommand will start
 	 * @param encoders
 	 */
 	public ChassisMinimumDistance(Chassis chassis, double distance, double speed, ChassisConstant fallbackCommand,
@@ -44,9 +44,9 @@ public class ChassisMinimumDistance extends ChassisConstant {
 	 *
 	 * @param chassis
 	 * @param distance
-	 *        distance to move in encoder ticks
+	 *                 distance to move in encoder ticks
 	 * @param speed
-	 *        the speed to move at
+	 *                 the speed to move at
 	 * @param encoders
 	 */
 	public ChassisMinimumDistance(Chassis chassis, double distance, double speed, CustomEncoder... encoders) {
@@ -76,9 +76,11 @@ public class ChassisMinimumDistance extends ChassisConstant {
 				LogKitten.d("Encoder " + i + " reads " + encoders[i].getDistanceSafely() + " out of " + distance);
 			}
 			catch (InvalidSensorException e) {
-				cancel();
-				if (fallbackCommand != null) {
-					fallbackCommand.start();
+				if (getGroup() == null) {
+					cancel();
+					if (fallbackCommand != null) {
+						fallbackCommand.start();
+					}
 				}
 				return true;
 			}

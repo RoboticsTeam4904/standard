@@ -25,7 +25,7 @@ public class ChassisTurn extends Command implements ChassisController {
 	 * @param finalAngle
 	 * @param imu
 	 * @param fallbackCommand
-	 *        If the sensor fails for some reason, this command will be cancelled, then the fallbackCommand will start
+	 *                         If the sensor fails for some reason, this command will be cancelled, then the fallbackCommand will start
 	 * @param motionController
 	 */
 	public ChassisTurn(Chassis chassis, double finalAngle, IMU imu, Command fallbackCommand,
@@ -66,10 +66,12 @@ public class ChassisTurn extends Command implements ChassisController {
 			return motionController.getSafely();
 		}
 		catch (InvalidSensorException e) {
-			move.cancel();
-			cancel();
-			if (fallbackCommand != null) {
-				fallbackCommand.start();
+			if (getGroup() == null) {
+				move.cancel();
+				cancel();
+				if (fallbackCommand != null) {
+					fallbackCommand.start();
+				}
 			}
 			return 0;
 		}
@@ -83,10 +85,12 @@ public class ChassisTurn extends Command implements ChassisController {
 			motionController.resetSafely();
 		}
 		catch (InvalidSensorException e) {
-			move.cancel();
-			cancel();
-			if (fallbackCommand != null) {
-				fallbackCommand.start();
+			if (getGroup() == null) {
+				move.cancel();
+				cancel();
+				if (fallbackCommand != null) {
+					fallbackCommand.start();
+				}
 			}
 			return;
 		}
