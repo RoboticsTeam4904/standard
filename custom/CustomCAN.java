@@ -94,4 +94,19 @@ public class CustomCAN {
 	public byte[] read() throws CANMessageUnavailableException {
 		return readBuffer();
 	}
+
+	/**
+	 * Reads data safely, returning an empty Optional if there is no available
+	 * message.
+	 * 
+	 * @return Optional<byte[]>
+	 */
+	public Optional<byte[]> readSafely() {
+		try {
+			return Optional.of(readBuffer());
+		}
+		catch (CANMessageUnavailableException e) {
+			return Optional.empty();
+		}
+	}
 }
