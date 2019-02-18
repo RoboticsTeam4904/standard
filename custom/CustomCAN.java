@@ -91,17 +91,17 @@ public class CustomCAN {
 	 *
 	 * @return byte[] (8 long)
 	 */
-	public byte[] read() throws CANMessageUnavailableException {
+	public byte[] readSafely() throws CANMessageUnavailableException {
 		return readBuffer();
 	}
 
 	/**
-	 * Reads data safely, returning an empty Optional if there is no available
+	 * Reads data, returning an empty Optional if there is no available
 	 * message.
 	 * 
 	 * @return Optional<byte[]>
 	 */
-	public Optional<byte[]> readSafely() {
+	public Optional<byte[]> read() {
 		try {
 			return Optional.of(readBuffer());
 		}
