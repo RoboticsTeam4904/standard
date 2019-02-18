@@ -103,7 +103,7 @@ public class CustomCAN {
 	 */
 	public Optional<byte[]> read() {
 		try {
-			return Optional.of(readBuffer());
+			return Optional.of(readSafely());
 		}
 		catch (CANMessageUnavailableException e) {
 			return Optional.empty();
