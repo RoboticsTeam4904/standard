@@ -67,11 +67,11 @@ public class PDP {
 		int numberCurrents = 6;
 		try {
 			if (status == 1) {
-				rawArray = status1.read();
+				rawArray = status1.readSafely();
 			} else if (status == 2) {
-				rawArray = status2.read();
+				rawArray = status2.readSafely();
 			} else if (status == 3) {
-				rawArray = status3.read();
+				rawArray = status3.readSafely();
 				numberCurrents = 4;
 			} else {
 				LogKitten.w("Trying to read PDP status " + status + ", which does not exist!");
@@ -106,7 +106,7 @@ public class PDP {
 	private void readEnergy() throws InvalidSensorException {
 		byte[] rawArray = null;
 		try {
-			rawArray = statusEnergy.read();
+			rawArray = statusEnergy.readSafely();
 		}
 		catch (CANMessageUnavailableException e) {}
 		if (rawArray != null) {
