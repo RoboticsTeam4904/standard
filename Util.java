@@ -1,7 +1,7 @@
 package org.usfirst.frc4904.standard;
 
 
-import edu.wpi.first.wpilibj.util.BoundaryException;
+import edu.wpi.first.hal.util.BoundaryException;
 
 /**
  * Common utilities

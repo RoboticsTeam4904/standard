@@ -3,9 +3,10 @@ package org.usfirst.frc4904.standard.subsystems.motor;
 
 import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.commands.motor.MotorIdle;
+import org.usfirst.frc4904.standard.subsystems.motor.speedmodifiers.EnableableModifier;
 import org.usfirst.frc4904.standard.subsystems.motor.speedmodifiers.IdentityModifier;
 import org.usfirst.frc4904.standard.subsystems.motor.speedmodifiers.SpeedModifier;
-import edu.wpi.first.wpilibj.CANSpeedController;
+import com.ctre.phoenix.motorcontrol.IMotorController;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
@@ -42,9 +43,7 @@ public class Motor extends Subsystem implements SpeedController {
 		this.motors = motors;
 		lastSpeed = 0;
 		for (SpeedController motor : motors) {
-			if (motor instanceof CANSpeedController && ((CANSpeedController) motor).getControlMode().getValue() != 0) { // 0 is hopefully normal motor controller mode (Like CANTalon's PercentVBus mode)
-				throw new StrangeCANSpeedControllerModeRuntimeException();
-			}
+			if (motor instanceof IMotorController) ((IMotorController) motor).enableVoltageCompensation(true);
 			motor.set(0); // Start all motors with 0 speed.
 		}
 		setInverted(isInverted);
@@ -274,6 +273,7 @@ public class Motor extends Subsystem implements SpeedController {
 		}
 	}
 	
+	@Deprecated
 	protected class StrangeCANSpeedControllerModeRuntimeException extends RuntimeException {
 		private static final long serialVersionUID = -539917227288371271L;
 		

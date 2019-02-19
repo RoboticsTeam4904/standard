@@ -1,8 +1,8 @@
 package org.usfirst.frc4904.standard;
 
 
-import java.io.File;
 import java.io.BufferedOutputStream;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -10,7 +10,7 @@ import java.io.StringWriter;
 import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import edu.wpi.first.wpilibj.hal.HAL;
+import edu.wpi.first.hal.HAL;
 
 public class LogKitten {
 	private static BufferedOutputStream fileOutput;
@@ -139,7 +139,7 @@ public class LogKitten {
 	}
 
 	/**
-	 * Like DriverStation.reportError, but w/o stack trace nor printing to System.err
+	 * Like DriverStation.reportError, but without stack trace nor printing to System.err
 	 * (updated for 2017 WPILib release)
 	 *
 	 * @see edu.wpi.first.wpilibj.DriverStation.reportError
