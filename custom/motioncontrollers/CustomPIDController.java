@@ -17,11 +17,13 @@ import edu.wpi.first.hal.util.BoundaryException;
 public class CustomPIDController extends MotionController {
 	protected double P;
 	protected double I;
+	protected double IPrime = 0.0;
 	protected double D;
 	protected double F;
 	protected double integralThreshold = 0.0;
 	protected double totalError;
 	protected double lastError;
+	protected double accumulatedOutput;
 	protected long lastTime;
 	protected double lastErrorDerivative;
 	protected double derivativeTolerance;
@@ -183,6 +185,22 @@ public class CustomPIDController extends MotionController {
 	 */
 	public double getF() {
 		return F;
+	}
+
+	/**
+	 * @return
+	 * 		The current I' (ouput integral) value
+	 */
+	public double getIPrime() {
+		return IPrime;
+	}
+
+	/**
+	 * @param IPrime
+	 *        Integral of the PID output
+	 */
+	public void setIPrime(double IPrime) {
+		this.IPrime = IPrime;
 	}
 
 	/**
@@ -349,7 +367,7 @@ public class CustomPIDController extends MotionController {
 		// Hence, if we just reset, just pretend we're still disabled and record the lastTime and lastError for next tick.
 		if (didJustReset()) {
 			lastError = error;
-			return F * setpoint;
+			return F * Math.signum(error);
 		}
 		// Check if the sensor supports native derivative calculations and that we're doing displacement PID
 		// (if we're doing rate PID, then getRate() would be the PID input rather then the input's derivative)
@@ -367,20 +385,22 @@ public class CustomPIDController extends MotionController {
 			totalError = 0.0;
 		}
 		// Calculate the result using the PIDF formula
-		double result = P * error + I * totalError + D * errorDerivative + F * Math.signum(error);
+		double PIDresult = P * error + I * totalError + D * errorDerivative + F * Math.signum(error);
+		double output = PIDresult + IPrime * accumulatedOutput;
+		accumulatedOutput += PIDresult * timeDiff;
 		// Save the error for calculating future derivatives
 		lastError = error;
 		lastErrorDerivative = errorDerivative;
-		LogKitten.v(input + " " + setpoint + " " + result);
-		// SmartDashboard.putNumber("PID/PID_Output", result);
+		LogKitten.v(input + " " + setpoint + " " + output);
+		// SmartDashboard.putNumber("PID/PID_Output", output);
 		if (capOutput) {
 			// Limit the result to be within the output range [outputMin, outputMax]
-			result = Math.max(Math.min(result, outputMax), outputMin);
+			output = Math.max(Math.min(output, outputMax), outputMin);
 		}
-		if (Math.abs(result) < minimumNominalOutput) {
-			result = Math.signum(result) * minimumNominalOutput;
+		if (Math.abs(output) < minimumNominalOutput) {
+			output = Math.signum(output) * minimumNominalOutput;
 		}
-		return result;
+		return output;
 	}
 
 	/**
