@@ -1,12 +1,12 @@
 package org.usfirst.frc4904.standard.custom;
 
-
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
+import java.util.Optional;
 import org.usfirst.frc4904.standard.LogKitten;
-import edu.wpi.first.wpilibj.can.CANJNI;
-import edu.wpi.first.wpilibj.can.CANMessageNotFoundException;
-import edu.wpi.first.wpilibj.util.UncleanStatusException;
+import edu.wpi.first.hal.can.CANJNI;
+import edu.wpi.first.hal.can.CANMessageNotFoundException;
+import edu.wpi.first.hal.util.UncleanStatusException;
 
 /**
  * This class allows sending and receiving
@@ -17,7 +17,7 @@ public class CustomCAN {
 	// Because CANJNI is basically static, we do not extend it.
 	protected final int messageID;
 	protected final String name;
-	
+
 	/**
 	 * Constructor for a CustomCAN device.
 	 * The name is local and for your convenience only.
@@ -31,11 +31,11 @@ public class CustomCAN {
 		this.name = name;
 		messageID = id; // Ensure that the messageID is zeroed (32 bit int should be default, but better to be careful)
 	}
-	
+
 	public String getName() {
 		return name;
 	}
-	
+
 	/**
 	 * Used to write data to the device.
 	 *
@@ -50,7 +50,7 @@ public class CustomCAN {
 			LogKitten.ex(e);
 		}
 	}
-	
+
 	/**
 	 * Used to write data to the device.
 	 *
@@ -61,7 +61,7 @@ public class CustomCAN {
 	public void writeSafely(byte[] data) {
 		CANJNI.FRCNetCommCANSessionMuxSendMessage(messageID, data, CANJNI.CAN_SEND_PERIOD_NO_REPEAT);
 	}
-	
+
 	/**
 	 * Read data as bytebuffer
 	 *
@@ -80,17 +80,33 @@ public class CustomCAN {
 			return CANJNI.FRCNetCommCANSessionMuxReceiveMessage(idBuffer, 0x1fffffff, timestamp);
 		}
 		catch (CANMessageNotFoundException e) {
-			throw new CANMessageUnavailableException("Unable to read CAN device " + getName() + " with ID 0x" + Integer.toHexString(messageID), e);
+			throw new CANMessageUnavailableException(
+				"Unable to read CAN device " + getName() + " with ID 0x" + Integer.toHexString(messageID), e);
 		}
 	}
-	
+
 	/**
 	 * Reads data
 	 * Also stops repeating the last message.
 	 *
 	 * @return byte[] (8 long)
 	 */
-	public byte[] read() throws CANMessageUnavailableException {
+	public byte[] readSafely() throws CANMessageUnavailableException {
 		return readBuffer();
+	}
+
+	/**
+	 * Reads data, returning an empty Optional if there is no available
+	 * message.
+	 * 
+	 * @return Optional<byte[]>
+	 */
+	public Optional<byte[]> read() {
+		try {
+			return Optional.of(readSafely());
+		}
+		catch (CANMessageUnavailableException e) {
+			return Optional.empty();
+		}
 	}
 }
