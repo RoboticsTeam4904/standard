@@ -2,9 +2,9 @@ package org.usfirst.frc4904.standard.custom.sensors;
 
 
 import com.revrobotics.CANEncoder;
-import com.revrobotics.CANSparkMax;
 import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.Util;
+import org.usfirst.frc4904.standard.custom.motioncontrollers.Spark;
 import edu.wpi.first.wpilibj.PIDSourceType;
 
 /**
@@ -34,7 +34,7 @@ public class SparkEncoder implements CustomEncoder {
      * @param pidSource
      *                            kDisplacement for position readings, kRate for velocity readings
      */
-    public SparkEncoder(CANSparkMax spark, boolean reverseDirection, double distancePerRotation, PIDSourceType pidSource) {
+    public SparkEncoder(Spark spark, boolean reverseDirection, double distancePerRotation, PIDSourceType pidSource) {
         encoder = new CANEncoder(spark);
         this.reverseDirection = reverseDirection;
         this.distancePerRotation = distancePerRotation;
@@ -53,7 +53,7 @@ public class SparkEncoder implements CustomEncoder {
      *                            Conversion factor from encoder readings to distance/velocity readings
      *                            Should be in units of meters per second
      */
-    public SparkEncoder(CANSparkMax spark, boolean reverseDirection, double distancePerRotation) {
+    public SparkEncoder(Spark spark, boolean reverseDirection, double distancePerRotation) {
         this(spark, reverseDirection, distancePerRotation, PIDSourceType.kDisplacement);
     }
 
@@ -67,7 +67,7 @@ public class SparkEncoder implements CustomEncoder {
      *                            Conversion factor from encoder readings to distance/velocity readings
      *                            Should be in units of meters per second
      */
-    public SparkEncoder(CANSparkMax spark, double distancePerRotation) {
+    public SparkEncoder(Spark spark, double distancePerRotation) {
         this(spark, false, distancePerRotation);
     }
 
@@ -79,7 +79,7 @@ public class SparkEncoder implements CustomEncoder {
      * @param spark
      *              Spark NEO motor used to construct encoder
      */
-    public SparkEncoder(CANSparkMax spark) {
+    public SparkEncoder(Spark spark) {
         this(spark, false, 1.0);
     }
 
