@@ -30,4 +30,12 @@ public class Spark extends CANSparkMax implements SpeedController {
     public Spark(int deviceNumber) {
         this(deviceNumber, CANSparkMaxLowLevel.MotorType.kBrushed);
     }
+
+    public void setBrakeMode() {
+        this.setIdleMode(IdleMode.kBrake);
+    }
+
+    public void setCoastMode() {
+        this.setIdleMode(IdleMode.kCoast);
+    }
 }
