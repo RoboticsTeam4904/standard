@@ -11,13 +11,19 @@ public class CANTalonEncoder implements CustomEncoder {
 	protected PIDSourceType pidSource;
 	protected double distancePerPulse;
 	protected boolean reverseDirection;
+	protected double offset ;
 
-	public CANTalonEncoder(String name, TalonSRX talon, boolean reverseDirection, double distancePerPulse) {
+	public CANTalonEncoder(String name, TalonSRX talon, boolean reverseDirection, double distancePerPulse, double offset) {
 		this.talon = talon;
 		talon.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 0);
+		this.offset = offset;
 		this.reverseDirection = reverseDirection;
 		this.distancePerPulse = distancePerPulse;
 		setPIDSourceType(PIDSourceType.kDisplacement);
+	}
+
+	public CANTalonEncoder(String name, TalonSRX talon, boolean reverseDirection, double distancePerPulse) {
+		this(name, talon, reverseDirection, distancePerPulse, 0.0);
 	}
 
 	public CANTalonEncoder(String name, TalonSRX talon, boolean reverseDirection) {
@@ -70,9 +76,9 @@ public class CANTalonEncoder implements CustomEncoder {
 	@Override
 	public double getDistance() {
 		if (reverseDirection) {
-			return distancePerPulse * talon.getSelectedSensorPosition(0) * -1.0;
+			return distancePerPulse * talon.getSelectedSensorPosition(0) * -1.0 + offset;
 		} else {
-			return distancePerPulse * talon.getSelectedSensorPosition(0);
+			return distancePerPulse * talon.getSelectedSensorPosition(0) + offset;
 		}
 	}
 
@@ -89,10 +95,10 @@ public class CANTalonEncoder implements CustomEncoder {
 	@Override
 	public double getRate() {
 		if (reverseDirection) {
-			return talon.getSelectedSensorVelocity(0) * -10.0 * distancePerPulse;
+			return talon.getSelectedSensorVelocity(0) * -10.0 * distancePerPulse + offset;
 			// getSpeed must be converted from ticks to 100ms to ticks per second, so *10.
 		} else {
-			return talon.getSelectedSensorVelocity(0) * 10.0 * distancePerPulse;
+			return talon.getSelectedSensorVelocity(0) * 10.0 * distancePerPulse + offset;
 		}
 	}
 
@@ -119,6 +125,11 @@ public class CANTalonEncoder implements CustomEncoder {
 	@Override
 	public void reset() {
 		talon.setSelectedSensorPosition(0, 0, 0);
+	}
+
+	@Override
+	public void setSensorValue(double setpoint) {
+		this.offset += setpoint - pidGet();
 	}
 
 	@Override

@@ -4,6 +4,7 @@ package org.usfirst.frc4904.standard.custom.sensors;
 import edu.wpi.first.wpilibj.CounterBase;
 import edu.wpi.first.wpilibj.DigitalSource;
 import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.PIDSourceType;
 
 /**
  * A RoboRIO encoder that implements
@@ -13,6 +14,7 @@ import edu.wpi.first.wpilibj.Encoder;
 public class CustomDigitalEncoder extends Encoder implements CustomEncoder {
 	private double distancePerPulse;
 	private boolean reverseDirection;
+	protected double offset = 0.0;
 
 	public CustomDigitalEncoder(DigitalSource aSource, DigitalSource bSource) {
 		super(aSource, bSource);
@@ -80,17 +82,17 @@ public class CustomDigitalEncoder extends Encoder implements CustomEncoder {
 
 	@Override
 	public double pidGetSafely() {
-		return pidGet();
+		return pidGet() + offset;
 	}
 
 	@Override
 	public int getSafely() {
-		return get();
+		return get() + (int) offset;
 	}
 
 	@Override
 	public double getDistanceSafely() {
-		return getDistance();
+		return getDistance() + offset;
 	}
 
 	@Override
@@ -106,5 +108,9 @@ public class CustomDigitalEncoder extends Encoder implements CustomEncoder {
 	@Override
 	public double getRateSafely() {
 		return getRate();
+	}
+
+	public void setSensorValue(double setpoint) {
+		this.offset += setpoint - pidGetSafely();
 	}
 }
