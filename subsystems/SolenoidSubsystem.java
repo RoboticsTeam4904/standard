@@ -133,7 +133,7 @@ public class SolenoidSubsystem extends Subsystem {
 	 *              Returns the current state of the system
 	 */
 	public SolenoidState getState() {
-		return state;
+		return (solenoids[0].get() == SolenoidState.EXTEND.value) ? SolenoidState.EXTEND : SolenoidState.RETRACT;
 	}
 
 	/**
