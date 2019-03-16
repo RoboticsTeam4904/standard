@@ -29,6 +29,7 @@ public class LogKitten {
 	private static String LOG_PATH = "/home/lvuser/logs/";
 	private static String LOG_ALIAS_PATH = LogKitten.LOG_PATH + "recent.log";
 	private static volatile boolean PRINT_MUTE = false;
+	private static volatile boolean LOG_MUTE = false;
 	private static final SimpleDateFormat TIMESTAMP_FORMAT = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
 	static {
 		File logPathDirectory = new File(LogKitten.LOG_PATH);
@@ -138,6 +139,10 @@ public class LogKitten {
 		LogKitten.PRINT_MUTE = mute;
 	}
 
+	public static void setLogMute(boolean mute) {
+		LogKitten.LOG_MUTE = mute;
+	}
+
 	/**
 	 * Like DriverStation.reportError, but without stack trace nor printing to System.err
 	 * (updated for 2017 WPILib release)
@@ -151,7 +156,7 @@ public class LogKitten {
 
 	public static synchronized void logMessage(Object message, KittenLevel level, boolean override) {
 		message = message.toString(); // Not strictly needed, but good practice
-		if (LogKitten.logLevel.compareTo(level) >= 0) {
+		if (LogKitten.logLevel.compareTo(level) >= 0 && !LogKitten.LOG_MUTE) {
 			String content = LogKitten.timestamp() + " " + level.getName() + ": " + LogKitten.getLoggerMethodCallerMethodName()
 				+ ": " + message + " \n";
 			try {
