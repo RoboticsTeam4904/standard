@@ -69,6 +69,6 @@ public class SolenoidSet extends Command {
 	 */
 	@Override
 	protected boolean isFinished() {
-		return false;
+		return system.getState() == state;
 	}
 }
