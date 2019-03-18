@@ -204,7 +204,7 @@ public class SolenoidSubsystem extends Subsystem {
 	 * @return extended
 	 */
 	public boolean isExtended() {
-		return solenoids[0].get() == SolenoidState.EXTEND.value;
+		return getState() == SolenoidState.EXTEND;
 	}
 
 	/**
