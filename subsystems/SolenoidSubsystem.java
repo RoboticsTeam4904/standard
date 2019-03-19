@@ -14,6 +14,8 @@ public class SolenoidSubsystem extends Subsystem {
 	protected SolenoidState state;
 	protected SolenoidState defaultState;
 	protected boolean isInverted;
+	public static final double defaultDelay = 50;
+	public double delay;
 
 	/**
 	 * A class that wraps multiple DoubleSolenoid objects with subsystem functionality.
@@ -28,12 +30,13 @@ public class SolenoidSubsystem extends Subsystem {
 	 * @param solenoids
 	 *                     Double solenoids of the system
 	 */
-	public SolenoidSubsystem(String name, boolean isInverted, SolenoidState defaultState, DoubleSolenoid... solenoids) {
+	public SolenoidSubsystem(String name, boolean isInverted, SolenoidState defaultState, double delay, DoubleSolenoid... solenoids) {
 		super(name);
 		this.solenoids = solenoids;
 		this.isInverted = isInverted;
 		this.defaultState = defaultState;
 		this.state = defaultState;
+		this.delay = delay;
 	}
 
 	/**
@@ -47,8 +50,8 @@ public class SolenoidSubsystem extends Subsystem {
 	 * @param solenoids
 	 *                   Double solenoids of the system
 	 */
-	public SolenoidSubsystem(String name, boolean isInverted, DoubleSolenoid... solenoids) {
-		this(name, isInverted, SolenoidState.OFF, solenoids);
+	public SolenoidSubsystem(String name, boolean isInverted, double delay, DoubleSolenoid... solenoids) {
+		this(name, isInverted, SolenoidState.OFF, delay, solenoids);
 	}
 
 	/**
@@ -62,8 +65,8 @@ public class SolenoidSubsystem extends Subsystem {
 	 * @param solenoids
 	 *                     Double solenoids of the system
 	 */
-	public SolenoidSubsystem(String name, SolenoidState defaultState, DoubleSolenoid... solenoids) {
-		this(name, false, defaultState, solenoids);
+	public SolenoidSubsystem(String name, SolenoidState defaultState, double delay, DoubleSolenoid... solenoids) {
+		this(name, false, defaultState, delay,solenoids);
 	}
 
 	/**
@@ -75,8 +78,8 @@ public class SolenoidSubsystem extends Subsystem {
 	 * @param solenoids
 	 *                  Double solenoids of the system
 	 */
-	public SolenoidSubsystem(String name, DoubleSolenoid... solenoids) {
-		this(name, false, solenoids);
+	public SolenoidSubsystem(String name, double delay, DoubleSolenoid... solenoids) {
+		this(name, SolenoidState.OFF, delay, solenoids);
 	}
 
 	/**
@@ -89,7 +92,7 @@ public class SolenoidSubsystem extends Subsystem {
 	 *                     Double solenoids of the system
 	 */
 	public SolenoidSubsystem(SolenoidState defaultState, DoubleSolenoid... solenoids) {
-		this("SolenoidSubsystem", defaultState, solenoids);
+		this("SolenoidSubsystem", defaultState, SolenoidSubsystem.defaultDelay, solenoids);
 	}
 
 	/**
@@ -102,7 +105,7 @@ public class SolenoidSubsystem extends Subsystem {
 	 *                   Double solenoids of the system
 	 */
 	public SolenoidSubsystem(boolean isInverted, DoubleSolenoid... solenoids) {
-		this("SolenoidSubsystem", isInverted, solenoids);
+		this("SolenoidSubsystem", isInverted, SolenoidSubsystem.defaultDelay, solenoids);
 	}
 
 	/**
@@ -113,7 +116,18 @@ public class SolenoidSubsystem extends Subsystem {
 	 *                  Double solenoids of the system
 	 */
 	public SolenoidSubsystem(DoubleSolenoid... solenoids) {
-		this("SolenoidSubsystem", solenoids);
+		this("SolenoidSubsystem", SolenoidSubsystem.defaultDelay, solenoids);
+	}
+
+		/**
+	 * A class that wraps multiple DoubleSolenoid objects with subsystem functionality.
+	 * Allows for easy inversion and setting of default state of solenoids
+	 * 
+	 * @param solenoids
+	 *                  Double solenoids of the system
+	 */
+	public SolenoidSubsystem(String name, double timeout, double delay, DoubleSolenoid... solenoids) {
+		this("SolenoidSubsystem", delay, solenoids);
 	}
 
 	/**

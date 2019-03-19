@@ -13,6 +13,7 @@ public class SolenoidSet extends Command {
 	protected final SolenoidSubsystem system;
 	protected final SolenoidState state;
 	protected final BooleanSupplier[] booleanSuppliers;
+	double startingTime;
 
 	/**
 	 * Sets the state of a SolenoidSubsystem
@@ -41,7 +42,7 @@ public class SolenoidSet extends Command {
 		this("SolenoidSet", system, state, booleanSuppliers);
 	}
 
-	public SolenoidSet(String name, SolenoidSubsystem system, SolenoidState state) {
+	public SolenoidSet(String name, SolenoidSubsystem system, SolenoidState state, double delay) {
 		this(name, system, state, () -> {
 			return false;
 		});
@@ -62,13 +63,17 @@ public class SolenoidSet extends Command {
 			}
 		}
 		system.set(state);
+		startingTime = System.currentTimeMillis();
 	}
 
 	/**
-	 * Returns false to prevent default command from running
+	 * Returns true after a preset delay time
 	 */
 	@Override
 	protected boolean isFinished() {
+		if(System.currentTimeMillis() > this.startingTime + system.delay) {
+			return true;
+		}
 		return false;
 	}
 }
