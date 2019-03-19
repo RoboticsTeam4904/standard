@@ -14,6 +14,7 @@ public class SolenoidSet extends Command {
 	protected final SolenoidState state;
 	protected final BooleanSupplier[] booleanSuppliers;
 	double startingTime;
+	double delay;
 
 	/**
 	 * Sets the state of a SolenoidSubsystem
@@ -64,6 +65,7 @@ public class SolenoidSet extends Command {
 		}
 		system.set(state);
 		startingTime = System.currentTimeMillis();
+		delay = system.getState() == state ? 0 : system.delay;
 	}
 
 	/**
@@ -71,7 +73,7 @@ public class SolenoidSet extends Command {
 	 */
 	@Override
 	protected boolean isFinished() {
-		if(System.currentTimeMillis() > this.startingTime + system.delay && system.defaultState != SolenoidState.OFF) {
+		if(System.currentTimeMillis() > this.startingTime + delay && system.defaultState != SolenoidState.OFF) {
 			return true;
 		}
 		return false;
