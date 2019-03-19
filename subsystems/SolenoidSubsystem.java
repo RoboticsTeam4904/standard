@@ -12,9 +12,9 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 public class SolenoidSubsystem extends Subsystem {
 	protected DoubleSolenoid[] solenoids;
 	protected SolenoidState state;
-	protected SolenoidState defaultState;
+	public SolenoidState defaultState;
 	protected boolean isInverted;
-	public static final double defaultDelay = 50;
+	public static final double defaultDelay = 0;
 	public double delay;
 
 	/**
@@ -39,6 +39,15 @@ public class SolenoidSubsystem extends Subsystem {
 		this.delay = delay;
 	}
 
+	public SolenoidSubsystem(String name, boolean isInverted, SolenoidState defaultState, DoubleSolenoid... solenoids) {
+		super(name);
+		this.solenoids = solenoids;
+		this.isInverted = isInverted;
+		this.defaultState = defaultState;
+		this.state = defaultState;
+		this.delay = SolenoidSubsystem.defaultDelay;
+	}
+
 	/**
 	 * A class that wraps multiple DoubleSolenoid objects with subsystem functionality.
 	 * Allows for easy inversion and setting of default state of solenoidss
@@ -52,6 +61,10 @@ public class SolenoidSubsystem extends Subsystem {
 	 */
 	public SolenoidSubsystem(String name, boolean isInverted, double delay, DoubleSolenoid... solenoids) {
 		this(name, isInverted, SolenoidState.OFF, delay, solenoids);
+	}
+
+	public SolenoidSubsystem(String name, boolean isInverted, DoubleSolenoid... solenoids) {
+		this(name, isInverted, SolenoidState.OFF, SolenoidSubsystem.defaultDelay, solenoids);
 	}
 
 	/**
@@ -69,6 +82,10 @@ public class SolenoidSubsystem extends Subsystem {
 		this(name, false, defaultState, delay,solenoids);
 	}
 
+	public SolenoidSubsystem(String name, SolenoidState defaultState,DoubleSolenoid... solenoids) {
+		this(name, false, defaultState, SolenoidSubsystem.defaultDelay, solenoids);
+	}
+
 	/**
 	 * A class that wraps multiple DoubleSolenoid objects with subsystem functionality.
 	 * Allows for easy inversion and setting of default state of solenoids
@@ -80,6 +97,9 @@ public class SolenoidSubsystem extends Subsystem {
 	 */
 	public SolenoidSubsystem(String name, double delay, DoubleSolenoid... solenoids) {
 		this(name, SolenoidState.OFF, delay, solenoids);
+	}
+	public SolenoidSubsystem(String name, DoubleSolenoid... solenoids) {
+		this(name, SolenoidState.OFF, SolenoidSubsystem.defaultDelay, solenoids);
 	}
 
 	/**

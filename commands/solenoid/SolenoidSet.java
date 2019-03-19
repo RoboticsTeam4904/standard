@@ -71,7 +71,7 @@ public class SolenoidSet extends Command {
 	 */
 	@Override
 	protected boolean isFinished() {
-		if(System.currentTimeMillis() > this.startingTime + system.delay) {
+		if(System.currentTimeMillis() > this.startingTime + system.delay && system.defaultState != SolenoidState.OFF) {
 			return true;
 		}
 		return false;
