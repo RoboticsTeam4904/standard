@@ -26,6 +26,6 @@ public class MotorBrake extends Command {
 	}
 
 	public boolean isFinished() {
-		return false
+		return false;
 	}
 }
