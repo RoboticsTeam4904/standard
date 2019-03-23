@@ -4,40 +4,52 @@ package org.usfirst.frc4904.standard.subsystems.chassis;
 import org.usfirst.frc4904.standard.subsystems.motor.Motor;
 
 public class SwerveChassis extends Chassis {
-	public final Motor frontLeftWheelSwerve;
-	public final Motor frontRightWheelSwerve;
-	public final Motor backLeftWheelSwerve;
-	public final Motor backRightWheelSwerve;
+	protected final Motor frontLeftWheelDrive;
+	protected final Motor frontLeftWheelRotation;
+	protected final Motor frontRightWheelDrive;
+	protected final Motor frontRightWheelRotation;
+	protected final Motor backLeftWheelDrive;
+	protected final Motor backLeftWheelRotation;
+	protected final Motor backRightWheelDrive;
+	protected final Motor backRightWheelRotation;
 
 	/**
 	 * Constructs a swerve drive chassis
-	 *
 	 * @param name
-	 * @param frontLeftWheel
-	 * @param frontRightWheel
-	 * @param backLeftWheel
-	 * @param backRightWheel
-	 * @param frontLeftWheelSwerve
-	 * @param frontRightWheelSwerve
-	 * @param backLeftWheelSwerve
-	 * @param backRightWheelSwerve
+	 * @param frontLeftWheelDrive
+	 * @param frontLeftWheelRotation
+	 * @param frontRightWheelDrive
+	 * @param frontRightWheelRotation
+	 * @param backLeftWheelDrive
+	 * @param backLeftWheelRotation
+	 * @param backRightWheelDrive
+	 * @param backRightWheelRotation
 	 */
-	public SwerveChassis(String name, Motor frontLeftWheel, Motor frontRightWheel, Motor backLeftWheel, Motor backRightWheel,
-		Motor frontLeftWheelSwerve, Motor frontRightWheelSwerve, Motor backLeftWheelSwerve, Motor backRightWheelSwerve) {
-		super(name, frontLeftWheel, frontRightWheel, backLeftWheel, backRightWheel);
-		this.frontLeftWheelSwerve = frontLeftWheelSwerve;
-		this.frontRightWheelSwerve = frontRightWheelSwerve;
-		this.backLeftWheelSwerve = backLeftWheelSwerve;
-		this.backRightWheelSwerve = backRightWheelSwerve;
+
+	public SwerveChassis(String name, Motor frontLeftWheelDrive, Motor frontLeftWheelRotation, 
+						 Motor frontRightWheelDrive, Motor frontRightWheelRotation, Motor backLeftWheelDrive, 
+						 Motor backLeftWheelRotation, Motor backRightWheelDrive, Motor backRightWheelRotation) {
+		super(name, frontLeftWheelDrive, frontLeftWheelRotation, frontRightWheelDrive, frontRightWheelDrive,
+			  frontRightWheelRotation, backLeftWheelDrive, backLeftWheelRotation, backRightWheelDrive,
+			  backRightWheelRotation);
+			  this.frontLeftWheelDrive = frontLeftWheelDrive;
+			  this.frontLeftWheelRotation = frontLeftWheelRotation;
+			  this.frontRightWheelDrive = frontRightWheelDrive;
+			  this.frontRightWheelRotation = frontRightWheelRotation;
+			  this.backLeftWheelDrive = backLeftWheelDrive;
+			  this.backLeftWheelRotation = backLeftWheelRotation;
+			  this.backRightWheelDrive = backRightWheelDrive;
+			  this.backRightWheelRotation = backRightWheelRotation;
 	}
 
 	@Override
-	public void movePolar(double xSpeed, double ySpeed, double turnSpeed) {
-		// TODO Implement
+	public void moveCartesian(double xSpeed, double ySpeed, double turnSpeed) {
+		double totalSpeed = Math.sqrt(Math.pow(ySpeed,2)+Math.pow(xSpeed,2));
+		double angle = Math.PI/2 - Math.atan(ySpeed/xSpeed);
+		movePolar(totalSpeed, angle, turnSpeed);
 	}
 
 	@Override
-	public void moveCartesian(double speed, double angle, double turnSpeed) {
-		// TODO Implement
+	public void movePolar(double speed, double angle, double turnSpeed) {
 	}
 }
