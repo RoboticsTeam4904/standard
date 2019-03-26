@@ -25,8 +25,19 @@ public class SwerveChassis extends Chassis {
 
 	@Override
 	public void moveCartesian(double xSpeed, double ySpeed, double turnSpeed) {
-	
-		// TODO: Big-brain move - don't assume 4 wheels in rectangle form. Represent each wheel as an angle and distance away from the center and find generic equations that aren't wheel specific
+		double[] wheelSpeed = new double[modules.size()];
+		double[] wheelAngle = new double[modules.size()];
+
+		for(int i = 0; i<=modules.size(); i++){
+			double xVector;
+			double yVector;
+			xVector = xSpeed + modules[i].distance()*Math.cos(modules[i].angle);
+			yVector = ySpeed + modules[i].distance()*Math.sin(modules[i].angle);
+			wheelSpeed[i] = Math.sqrt(xVector * xVector + yVector * yVector);
+			wheelAngle[i] = Math.atan(xVector/yVector);
+
+		}
+		/*
 		double a = xSpeed - turnSpeed * (wheelBase / diagonal);
 		double b = (Math.pow(xSpeed + turnSpeed * (wheelBase / diagonal);
 		double c = ySpeed - turnSpeed * (trackWidth / diagonal);
@@ -41,10 +52,9 @@ public class SwerveChassis extends Chassis {
 		double frontRightWheelAngle = Math.toDegrees(Math.atan(b / d));
 		double backLeftWheelAngle = Math.toDegrees(Math.atan(a / d));
 		double backRightWheelAngle = Math.toDegrees(Math.atan(a / c)); // TODO: If not ugly, consider removing a,b,c,d since they're confusing and meaningless as is. (You could program the equation directly without the temporary helper variables) (some stuff will simplify (if not it might simplify in polar form?))
-
 		double maxSpeed = Math.max(Math.max(frontLeftWheelSpeed, frontRightWheelSpeed),
 				Math.max(backLeftWheelSpeed, backRightWheelSpeed));
-
+		*/
 		if (maxSpeed > 1) { // TODO: Shouldn't use this if statement. When maxSpeed is below 1 its magnitude isn't any more meaningful
 			frontLeftWheelSpeed /= maxSpeed;
 			frontRightWheelSpeed /= maxSpeed;
