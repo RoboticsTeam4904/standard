@@ -4,42 +4,8 @@ import org.usfirst.frc4904.standard.subsystems.motor.Motor;
 import org.usfirst.frc4904.standard.subsystems.motor.ServoSubsystem;
 
 public class SwerveChassis extends Chassis {
-	private class SwerveModule {
-		public final Motor linear;
-		public final ServoSubsystem rotation;
-		public double speed;
-		public double angle;
-
-		/**
-		 * Constructs a single swerve module
-		 * 
-		 * @param drive
-		 * @param turn
-		 */
-
-		public SwerveModule(Motor drive, ServoSubsystem turn) {
-			this.linear = drive;
-			this.rotation = turn;
-		}
-
-		public void setState(double speed, double angle) {
-			// add stuff that allows for modulating speed based on driver input
-			this.speed = speed;
-			if (angle >= 180) { // TODO: radians
-				this.speed *= -1;
-				this.angle = angle - 180;
-			} else {
-				this.angle = angle;
-			}
-			// I don't know if you'd be able to just set any angle to the servo. Maybe set it incrementally?
-			// Should end up actually calling the motors
-		}
-	}
-
-	private final SwerveModule frontLeftMod;
-	private final SwerveModule frontRightMod;
-	private final SwerveModule backLeftMod;
-	private final SwerveModule backRightMod;
+	
+	private final SwerveModule[] modules;
 
 	private final double wheelBase;
 	private final double trackWidth;
@@ -49,43 +15,25 @@ public class SwerveChassis extends Chassis {
 	 * Constructs a swerve drive chassis
 	 * 
 	 * @param name
-	 * @param frontLeftWheelDrive
-	 * @param frontLeftWheelRotation
-	 * @param frontRightWheelDrive
-	 * @param frontRightWheelRotation
-	 * @param backLeftWheelDrive
-	 * @param backLeftWheelRotation
-	 * @param backRightWheelDrive
-	 * @param backRightWheelRotation
+	 * @param Modules
 	 */
 
-	public SwerveChassis(String name, Motor frontLeftWheelDrive, ServoSubsystem frontLeftWheelRotation,
-			Motor frontRightWheelDrive, ServoSubsystem frontRightWheelRotation, Motor backLeftWheelDrive,
-			ServoSubsystem backLeftWheelRotation, Motor backRightWheelDrive, ServoSubsystem backRightWheelRotation,
-			double wheelBase, double trackWidth) {
-		super(name, frontLeftWheelDrive, frontRightWheelDrive, frontRightWheelDrive, backLeftWheelDrive,
-				backRightWheelDrive);
-
-		frontLeftMod = new SwerveModule(frontLeftWheelDrive, frontLeftWheelRotation);
-		frontRightMod = new SwerveModule(frontRightWheelDrive, frontRightWheelRotation);
-		backLeftMod = new SwerveModule(backLeftWheelDrive, backLeftWheelRotation);
-		backRightMod = new SwerveModule(backRightWheelDrive, backRightWheelRotation);
-
-		this.wheelBase = wheelBase;
-		this.trackWidth = trackWidth;
-		this.diagonal = Math.sqrt(Math.pow(wheelBase, 2) + Math.pow(trackWidth, 2));
+	public SwerveChassis(String name, SwerveModule ... modules) {
+		super(name, Modules);
+		this.modules = modules;
 	}
 
 	@Override
 	public void moveCartesian(double xSpeed, double ySpeed, double turnSpeed) {
+	
 		// TODO: Big-brain move - don't assume 4 wheels in rectangle form. Represent each wheel as an angle and distance away from the center and find generic equations that aren't wheel specific
 		double a = xSpeed - turnSpeed * (wheelBase / diagonal);
-		double b = xSpeed + turnSpeed * (wheelBase / diagonal);
+		double b = (Math.pow(xSpeed + turnSpeed * (wheelBase / diagonal);
 		double c = ySpeed - turnSpeed * (trackWidth / diagonal);
 		double d = ySpeed + turnSpeed * (trackWidth / diagonal);
 
 		double frontLeftWheelSpeed = Math.sqrt(Math.pow(b, 2) + Math.pow(c, 2)); // TODO: Add R/2
-		double frontRightWheelSpeed = Math.sqrt(Math.pow(b, 2) + Math.pow(d, 2));
+		double frontRightWheelSpeed = Math.sqrt(b), 2) + Math.pow(d, 2));
 		double backLeftWheelSpeed = Math.sqrt(Math.pow(a, 2) + Math.pow(d, 2));
 		double backRightWheelSpeed = Math.sqrt(Math.pow(a, 2) + Math.pow(c, 2)); // Math.pow is pretty inefficient, in java people often just use a*a and c*c, but it's honestly insignificant (except for how it looks)
 
