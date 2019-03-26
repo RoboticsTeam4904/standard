@@ -5,8 +5,8 @@ import org.usfirst.frc4904.standard.subsystems.motor.ServoSubsystem;
 
 public class SwerveChassis extends Chassis {
 	private class SwerveModule {
-		public final Motor drive; // TODO: better variable name
-		public final ServoSubsystem turn; // TODO: better variable name (turn implies an action or a quantity, not a motor)
+		public final Motor linear;
+		public final ServoSubsystem rotation;
 		public double speed;
 		public double angle;
 
@@ -18,8 +18,8 @@ public class SwerveChassis extends Chassis {
 		 */
 
 		public SwerveModule(Motor drive, ServoSubsystem turn) {
-			this.drive = drive;
-			this.turn = turn;
+			this.linear = drive;
+			this.rotation = turn;
 		}
 
 		public void setState(double speed, double angle) {
@@ -128,7 +128,7 @@ public class SwerveChassis extends Chassis {
 
 	@Override
 	public Motor[] getMotors() {
-		return new Motor[] {frontLeftMod.drive, frontRightMod.drive, backLeftMod.drive, backLeftMod.drive};
+		return new Motor[] {frontLeftMod.linear, frontRightMod.linear, backLeftMod.linear, backLeftMod.linear};
 	}
 
 	public double[] getServoAngles() {
@@ -136,6 +136,6 @@ public class SwerveChassis extends Chassis {
 	}
 
 	public ServoSubsystem[] getServos() {
-		return new ServoSubsystem[] {frontLeftMod.turn, frontRightMod.turn, backLeftMod.turn, backRightMod.turn};
+		return new ServoSubsystem[] {frontLeftMod.rotation, frontRightMod.rotation, backLeftMod.rotation, backRightMod.rotation};
 	}
 }
