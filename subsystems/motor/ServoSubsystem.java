@@ -76,7 +76,7 @@ public class ServoSubsystem extends Subsystem {
 	}
 
 	/**
-	 * Get the servo position.
+	 * Get the set servo position.
 	 *
 	 * <p>
 	 * Servo positions range from 0.0 to 1.0 corresponding to the range of full left to full right.
@@ -87,6 +87,21 @@ public class ServoSubsystem extends Subsystem {
 		return lastPosition;
 	}
 
+		/**
+	 * Get the position of the servo arm.
+	 *
+	 * <p>
+	 * Servo positions range from 0.0 to 1.0 corresponding to the range of full left to full right.
+	 *
+	 * @return Position from 0.0 to 1.0.
+	 */
+	public double[] getCurrentPosition() {
+		double[] positions = new double[servos.size()];
+		for(int i=0;i<servos.size();i++){
+			positions[i]=servos[i].get();
+		}
+		return positions;
+	}
 	/**
 	 * Get the servo position.
 	 *
@@ -224,6 +239,8 @@ public class ServoSubsystem extends Subsystem {
 	protected static double invertPosition(double value) {
 		return 1 - value;
 	}
+
+
 
 	/**
 	 * Invert the given degree ({@link #MIN_SERVO_ANGLE kMinServoAngle} becomes {@link #MAX_SERVO_ANGLE kMaxServoAngle}, {@link #MAX_SERVO_ANGLE kMaxServoAngle} becomes {@link #MIN_SERVO_ANGLE kMinServoAngle})
