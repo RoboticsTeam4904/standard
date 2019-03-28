@@ -16,7 +16,7 @@ public class SwerveModule {
 		/**
 		 * Constructs a single swerve module
 		 * 
-		 * @param linear
+		 * @param linear must have a range of at least 180 degrees
 		 * @param rotation
          * @param angle unit in degrees
          * @param distance
@@ -26,11 +26,10 @@ public class SwerveModule {
 			this.linear = linear;
             this.rotation = rotation;
             this.angleFromCenter = angleFromCenter;
-            this.distanceFromCenter = distanceFromCenter;
+			this.distanceFromCenter = distanceFromCenter;
 		}
 
 		public void setState(double speed, double angle) {
-			// add stuff that allows for modulating speed based on driver input
 			this.wheelSpeed = speed;
 			if (angle >= 180) { // TODO: radians
 				this.wheelSpeed *= -1;
