@@ -2,70 +2,48 @@ package org.usfirst.frc4904.standard.subsystems.chassis;
 
 import org.usfirst.frc4904.standard.subsystems.motor.Motor;
 import org.usfirst.frc4904.standard.subsystems.motor.ServoSubsystem;
+import org.usfirst.frc4904.standard.subsystems.motor.SwerveModule;
 
 public class SwerveChassis extends Chassis {
-	
 	private final SwerveModule[] modules;
-
-	private final double wheelBase;
-	private final double trackWidth;
-	private final double diagonal;
+	private double[] wheelSpeed;
+	private double[] wheelAngle;
 
 	/**
 	 * Constructs a swerve drive chassis
 	 * 
 	 * @param name
-	 * @param Modules
+	 * @param modules
 	 */
 
 	public SwerveChassis(String name, SwerveModule ... modules) {
-		super(name, Modules);
+		super(name);
 		this.modules = modules;
 	}
 
 	@Override
 	public void moveCartesian(double xSpeed, double ySpeed, double turnSpeed) {
-		double[] wheelSpeed = new double[modules.size()];
-		double[] wheelAngle = new double[modules.size()];
-
-		for(int i = 0; i<=modules.size(); i++){
+		for(int i = 0; i<modules.length; i++){
 			double xVector;
 			double yVector;
-			xVector = xSpeed + modules[i].distance()*Math.cos(modules[i].angle);
-			yVector = ySpeed + modules[i].distance()*Math.sin(modules[i].angle);
+			xVector = xSpeed + modules[i].distanceFromCenter*Math.cos(modules[i].angleFromCenter);
+			yVector = ySpeed + modules[i].distanceFromCenter*Math.sin(modules[i].angleFromCenter);
 			wheelSpeed[i] = Math.sqrt(xVector * xVector + yVector * yVector);
 			wheelAngle[i] = Math.atan(xVector/yVector);
-
 		}
+		
 		/*
-		double a = xSpeed - turnSpeed * (wheelBase / diagonal);
-		double b = (Math.pow(xSpeed + turnSpeed * (wheelBase / diagonal);
-		double c = ySpeed - turnSpeed * (trackWidth / diagonal);
-		double d = ySpeed + turnSpeed * (trackWidth / diagonal);
-
-		double frontLeftWheelSpeed = Math.sqrt(Math.pow(b, 2) + Math.pow(c, 2)); // TODO: Add R/2
-		double frontRightWheelSpeed = Math.sqrt(b), 2) + Math.pow(d, 2));
-		double backLeftWheelSpeed = Math.sqrt(Math.pow(a, 2) + Math.pow(d, 2));
-		double backRightWheelSpeed = Math.sqrt(Math.pow(a, 2) + Math.pow(c, 2)); // Math.pow is pretty inefficient, in java people often just use a*a and c*c, but it's honestly insignificant (except for how it looks)
-
-		double frontLeftWheelAngle = Math.toDegrees(Math.atan(b / c)); // TODO: Kill degrees
-		double frontRightWheelAngle = Math.toDegrees(Math.atan(b / d));
-		double backLeftWheelAngle = Math.toDegrees(Math.atan(a / d));
-		double backRightWheelAngle = Math.toDegrees(Math.atan(a / c)); // TODO: If not ugly, consider removing a,b,c,d since they're confusing and meaningless as is. (You could program the equation directly without the temporary helper variables) (some stuff will simplify (if not it might simplify in polar form?))
-		double maxSpeed = Math.max(Math.max(frontLeftWheelSpeed, frontRightWheelSpeed),
-				Math.max(backLeftWheelSpeed, backRightWheelSpeed));
+		TODO: normalize
+		code from previous version is here:
+		frontLeftWheelSpeed /= maxSpeed;
+		frontRightWheelSpeed /= maxSpeed;
+		backLeftWheelSpeed /= maxSpeed;
+		backRightWheelSpeed /= maxSpeed;
 		*/
-		if (maxSpeed > 1) { // TODO: Shouldn't use this if statement. When maxSpeed is below 1 its magnitude isn't any more meaningful
-			frontLeftWheelSpeed /= maxSpeed;
-			frontRightWheelSpeed /= maxSpeed;
-			backLeftWheelSpeed /= maxSpeed;
-			backRightWheelSpeed /= maxSpeed;
-		}
 
-		frontLeftMod.setState(frontLeftWheelSpeed, frontLeftWheelAngle);
-		frontRightMod.setState(frontRightWheelSpeed, frontRightWheelAngle);
-		backLeftMod.setState(backLeftWheelSpeed, backLeftWheelAngle);
-		backRightMod.setState(backRightWheelSpeed, backRightWheelAngle);
+		for (int i = 0; i<modules.length; i++){
+			modules[i].setState(wheelSpeed[i],wheelAngle[i]);
+		}
 
 		/*
 		 * for switching from cartesian to polar double totalSpeed =
@@ -81,19 +59,31 @@ public class SwerveChassis extends Chassis {
 
 	@Override
 	public double[] getMotorSpeeds() {
-		return new double[] {frontLeftMod.speed, frontRightMod.speed, backLeftMod.speed, backRightMod.speed};
+		return wheelSpeed;
 	}
 
-	@Override
+	@Override 
 	public Motor[] getMotors() {
-		return new Motor[] {frontLeftMod.linear, frontRightMod.linear, backLeftMod.linear, backLeftMod.linear};
+		Motor[] motors = new Motor[modules.length];
+		for (int i = 0; i<modules.length; i++){
+			motors[i] = modules[i].linear;
+		}
+		return motors;
 	}
 
 	public double[] getServoAngles() {
-		return new double[] {frontLeftMod.angle, frontRightMod.angle, backLeftMod.angle, backRightMod.angle};
+		return wheelAngle;
+	}
+	
+	public ServoSubsystem[] getServos() {
+		ServoSubsystem[] servos = new ServoSubsystem[modules.length];
+		for (int i = 0; i<modules.length; i++){
+			servos[i] = modules[i].rotation;
+		}
+		return servos;
 	}
 
-	public ServoSubsystem[] getServos() {
-		return new ServoSubsystem[] {frontLeftMod.rotation, frontRightMod.rotation, backLeftMod.rotation, backRightMod.rotation};
+	public SwerveModule[] getSwerveModule() {
+		return modules;
 	}
 }
