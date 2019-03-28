@@ -18,11 +18,12 @@ public class SwerveModule {
 		 * 
 		 * @param linear
 		 * @param rotation
-         * @param angle unit in degrees
+         * @param angle (unit in degrees)
          * @param distance
 		 */
 
-		public SwerveModule(Motor linear, ServoSubsystem rotation, Double angleFromCenter, Double distanceFromCenter) {
+		public SwerveModule(Motor linear, ServoSubsystem rotation, 
+							double angleFromCenter, double distanceFromCenter) {
 			this.linear = linear;
             this.rotation = rotation;
             this.angleFromCenter = angleFromCenter;
@@ -30,7 +31,7 @@ public class SwerveModule {
 		}
 
 		public void setState(double speed, double angle) {
-			// add stuff that allows for modulating speed based on driver input
+			// TODO: add stuff that allows for modulating speed based on driver input
 			this.wheelSpeed = speed;
 			if (angle >= 180) { // TODO: radians
 				this.wheelSpeed *= -1;
@@ -38,7 +39,8 @@ public class SwerveModule {
 			} else {
 				this.wheelAngle = angle;
 			}
-			// I don't know if you'd be able to just set any angle to the servo. Maybe set it incrementally?
+			// Osher's comment: I don't know if you'd be able to just set any angle to the servo. 
+			// Maybe set it incrementally?
 			// Should end up actually calling the motors
 		}
 	}
