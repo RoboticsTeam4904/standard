@@ -86,4 +86,27 @@ public class SwerveChassis extends Chassis {
 	public SwerveModule[] getSwerveModule() {
 		return modules;
 	}
+	
+	protected static double[][] solveSystem(double[][] augmentedSystem){
+		for(int i=0; i<augmentedSystem.length; i++){
+			for(int j=i+1;j<augmentedSystem.length;j++){
+				double firstEquationCoefficent=augmentedSystem[j][i]/augmentedSystem[i][i];
+				for(int k=i; k<=augmentedSystem[0].length-1;k++){
+					augmentedSystem[j][k]-=augmentedSystem[i][k]*firstEquationCoefficent;
+					
+				}
+			}
+		}
+		for(int i=augmentedSystem.length-1; i>=0; i--){
+			for(int j=i-1;j>=0;j--){
+				double secondEquationCoefficent=augmentedSystem[j][i]/augmentedSystem[i][i];
+				for(int k=augmentedSystem[0].length-1; k>=0;k--){
+					augmentedSystem[j][k]-=augmentedSystem[i][k]*secondEquationCoefficent;
+					
+				}
+			}
+		}
+		return augmentedSystem;
+	}
 }
+	
