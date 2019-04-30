@@ -46,6 +46,10 @@ public class SwerveModule {
 		public void setSpeed(double speed){
 			this.wheelSpeed = speed;
 		}
+		
+		public double getCurrentPosition(){
+			return rotation.getCurrentPosition();
+		}
 
 			// Osher's comment: I don't know if you'd be able to just set any angle to the servo. 
 			// Maybe set it incrementally?
