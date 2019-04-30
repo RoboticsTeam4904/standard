@@ -93,7 +93,6 @@ public class SwerveChassis extends Chassis {
 				double firstEquationCoefficent=augmentedSystem[j][i]/augmentedSystem[i][i];
 				for(int k=i; k<=augmentedSystem[0].length-1;k++){
 					augmentedSystem[j][k]-=augmentedSystem[i][k]*firstEquationCoefficent;
-					
 				}
 			}
 		}
@@ -107,6 +106,44 @@ public class SwerveChassis extends Chassis {
 			}
 		}
 		return augmentedSystem;
+	}
+	protected static double[][] minMaxUndeterminedSystem(double[][] solvedMatrix){
+		double[] intersectionX=new double[(solvedMatrix.length*(solvedMatrix.length+1))/2];
+		int k=0;
+		for(int i=0; i<solvedMatrix.length-1; i++){
+			for(int j=i+1; j<solvedMatrix.length;j++){
+				double determinent=solvedMatrix[i][i]*solvedMatrix[j][solvedMatrix[j].length-2]-
+								   solvedMatrix[j][j]*solvedMatrix[i][solvedMatrix[i].length-2];
+				if(determinent){
+					intersectionX[k]=(solvedMatrix[i][solvedMatrix[j].length-1]*solvedMatrix[j][solvedMatrix[j].length-2]-
+									  solvedMatrix[j][solvedMatrix[j].length-1]*solvedMatrix[i][solvedMatrix[i].length-2])/determinent;
+					intersectionX[k+1]=(-solvedMatrix[i][solvedMatrix[j].length-1]*solvedMatrix[j][solvedMatrix[j].length-2]-
+									  solvedMatrix[j][solvedMatrix[j].length-1]*-solvedMatrix[i][solvedMatrix[i].length-2])/determinent;
+					intersectionX[k+2]=(solvedMatrix[i][solvedMatrix[j].length-1]*solvedMatrix[j][solvedMatrix[j].length-2]+
+									  solvedMatrix[j][solvedMatrix[j].length-1]*solvedMatrix[i][solvedMatrix[i].length-2])/determinent;	
+					intersectionX[k+3]=(-solvedMatrix[i][solvedMatrix[j].length-1]*solvedMatrix[j][solvedMatrix[j].length-2]+
+									  solvedMatrix[j][solvedMatrix[j].length-1]*solvedMatrix[i][solvedMatrix[i].length-2])/determinent;					  
+				}
+				else{
+					intersectionX[k]=NaN;
+				}
+				k+=4;
+			}
+		}
+		double minMaxValue=Infinity;
+		double[] bestValues=new double[solvedMatrix.length+1];
+		double[] currentValues=new double[solvedMatrix.length+1];
+		
+		for(int i=0; i<intersectionX.length; i++){
+			for(int j=0; j<solvedMatrix.length;j++){
+				currentValues[j]=(solvedMatrix[j][solvedMatrix.length-1]-solvedMatrix[j][solvedMatrix.length-2]*intersectionX[i])/solvedMatrix[j][j];
+			}
+			
+			if(max(abs(currentValues[0]),abs(currentValues[1]),abs(currentValues[2]),abs(currentValues[3]))<minMaxValue){
+				minMaxValue=max(abs(currentValues[0]),abs(currentValues[1]),abs(currentValues[2]),abs(currentValues[3]));
+				bestValues=currentValues;
+			}
+		}
 	}
 }
 	
