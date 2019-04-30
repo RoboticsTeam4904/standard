@@ -12,8 +12,9 @@ public class SwerveChassis extends Chassis {
 	/**
 	 * Constructs a swerve drive chassis
 	 * 
-	 * @param name
 	 * @param modules
+	 * @param wheelSpeed
+	 * @param wheelAngle
 	 */
 
 	public SwerveChassis(String name, SwerveModule ... modules) {
