@@ -23,6 +23,19 @@ public class SwerveChassis extends Chassis {
 
 	@Override
 	public void moveCartesian(double xSpeed, double ySpeed, double turnSpeed) {
+		double[][] augmentedSystem = new double [3][modules.length+1]; 
+		
+		for(int j = 0;j<augmentedSystem[i].length-1;j++){
+			augmentedSystem[0][j]=Math.sin(modules[j].getCurrentPosition());
+			augmentedSystem[1][j]=Math.cos(modules[j].getCurrentPosition());
+			//TODO: implement rotation
+		}
+		augmentedSystem[0][augmentedSystem[i].length-1]=xSpeed;
+		augmentedSystem[1][augmentedSystem[i].length-1]=ySpeed;
+		augmentedSystem[2][augmentedSystem[i].length-1]=turnSpeed;
+		double[] wheelSpeeds=minMaxUndeterminedSystem(solveSystem(augmentedSystem));
+		
+	
 		for(int i = 0; i<modules.length; i++){
 			double xVector;
 			double yVector;
@@ -30,6 +43,7 @@ public class SwerveChassis extends Chassis {
 			yVector = ySpeed + modules[i].distanceFromCenter*Math.sin(modules[i].angleFromCenter);
 			wheelSpeed[i] = Math.sqrt(xVector * xVector + yVector * yVector);
 			wheelAngle[i] = Math.atan(xVector/yVector);
+		
 		}
 		
 		/*
@@ -40,11 +54,12 @@ public class SwerveChassis extends Chassis {
 		backLeftWheelSpeed /= maxSpeed;
 		backRightWheelSpeed /= maxSpeed;
 		*/
-
+		
 		for (int i = 0; i<modules.length; i++){
-			modules[i].setState(wheelSpeed[i],wheelAngle[i]);
+			modules[i].setState(wheelAngle[i], wheelSpeeds[i]);
 		}
-
+		
+		
 		/*
 		 * for switching from cartesian to polar double totalSpeed =
 		 * Math.sqrt(Math.pow(ySpeed,2)+Math.pow(xSpeed,2)); double angle = Math.PI/2 -
@@ -87,7 +102,7 @@ public class SwerveChassis extends Chassis {
 		return modules;
 	}
 	
-	protected static double[][] solveSystem(double[][] augmentedSystem){
+	protected static double[][] solveSystem(double[][] augmentedSystem){ //Works at the moment 
 		for(int i=0; i<augmentedSystem.length; i++){
 			for(int j=i+1;j<augmentedSystem.length;j++){
 				double firstEquationCoefficent=augmentedSystem[j][i]/augmentedSystem[i][i];
@@ -107,7 +122,7 @@ public class SwerveChassis extends Chassis {
 		}
 		return augmentedSystem;
 	}
-	protected static double[][] minMaxUndeterminedSystem(double[][] solvedMatrix){
+	protected static double[] minMaxUndeterminedSystem(double[][] solvedMatrix){ //Untested
 		double[] intersectionX=new double[(solvedMatrix.length*(solvedMatrix.length+1))/2];
 		int k=0;
 		for(int i=0; i<solvedMatrix.length-1; i++){
@@ -138,12 +153,13 @@ public class SwerveChassis extends Chassis {
 			for(int j=0; j<solvedMatrix.length;j++){
 				currentValues[j]=(solvedMatrix[j][solvedMatrix.length-1]-solvedMatrix[j][solvedMatrix.length-2]*intersectionX[i])/solvedMatrix[j][j];
 			}
-			
 			if(max(abs(currentValues[0]),abs(currentValues[1]),abs(currentValues[2]),abs(currentValues[3]))<minMaxValue){
 				minMaxValue=max(abs(currentValues[0]),abs(currentValues[1]),abs(currentValues[2]),abs(currentValues[3]));
 				bestValues=currentValues;
 			}
 		}
+		return bestValues;
 	}
+
 }
 	

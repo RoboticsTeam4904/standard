@@ -95,12 +95,8 @@ public class ServoSubsystem extends Subsystem {
 	 *
 	 * @return Position from 0.0 to 1.0.
 	 */
-	public double[] getCurrentPosition() {
-		double[] positions = new double[servos.length];
-		for(int i=0;i<servos.length;i++){
-			positions[i]=servos[i].get();
-		}
-		return positions;
+	public double getCurrentPosition() {
+		return servos[0].get();
 	}
 	/**
 	 * Get the servo position.

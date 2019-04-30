@@ -31,15 +31,23 @@ public class SwerveModule {
 		}
 
 		public void setState(double speed, double angle) {
-			this.wheelSpeed = speed;
+			this.setAngle(angle);
+			this.setSpeed(speed);	
+
+		}
+		public void setAngle(double angle){
 			if (angle >= 180) { // TODO: radians
 				this.wheelSpeed *= -1;
 				this.wheelAngle = angle - 180;
 			} else {
 				this.wheelAngle = angle;
 			}
+		}
+		public void setSpeed(double speed){
+			this.wheelSpeed = speed;
+		}
+
 			// Osher's comment: I don't know if you'd be able to just set any angle to the servo. 
 			// Maybe set it incrementally?
 			// Should end up actually calling the motors
-		}
 	}
