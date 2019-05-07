@@ -29,13 +29,13 @@ public class SwerveChassis extends Chassis {
 		for(int j = 0;j<augmentedSystem[0].length-1;j++){
 			augmentedSystem[0][j]=Math.sin(modules[j].getCurrentPosition());
 			augmentedSystem[1][j]=Math.cos(modules[j].getCurrentPosition());
-			//TODO: implement rotation
+			augmentedSystem[2][j]=modules[j].distanceFromCenter*(sin(modules[j].angleFromCenter-modules[j].getCurrentPosition));
 		}
 		augmentedSystem[0][augmentedSystem[0].length-1]=xSpeed;
 		augmentedSystem[1][augmentedSystem[1].length-1]=ySpeed;
 		augmentedSystem[2][augmentedSystem[2].length-1]=turnSpeed;
 		double[] wheelSpeeds=minMaxUndeterminedSystem(solveSystem(augmentedSystem));
-		
+
 		for(int i = 0; i<modules.length; i++){
 			double xVector;
 			double yVector;
