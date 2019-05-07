@@ -36,17 +36,14 @@ public class SwerveChassis extends Chassis {
 		augmentedSystem[2][augmentedSystem[2].length-1]=turnSpeed;
 		double[] wheelSpeeds=minMaxUndeterminedSystem(solveSystem(augmentedSystem));
 		
-	
 		for(int i = 0; i<modules.length; i++){
 			double xVector;
 			double yVector;
 			xVector = xSpeed + modules[i].distanceFromCenter*Math.cos(modules[i].angleFromCenter);
 			yVector = ySpeed + modules[i].distanceFromCenter*Math.sin(modules[i].angleFromCenter);
-			wheelSpeed[i] = Math.sqrt(xVector * xVector + yVector * yVector);
 			wheelAngle[i] = Math.atan(xVector/yVector);
 		
 		}
-		
 		/*
 		TODO: normalize
 		code from previous version is here:
@@ -59,8 +56,7 @@ public class SwerveChassis extends Chassis {
 		for (int i = 0; i<modules.length; i++){
 			modules[i].setState(wheelAngle[i], wheelSpeeds[i]);
 		}
-		
-		
+			
 		/*
 		 * for switching from cartesian to polar double totalSpeed =
 		 * Math.sqrt(Math.pow(ySpeed,2)+Math.pow(xSpeed,2)); double angle = Math.PI/2 -
@@ -154,7 +150,6 @@ public class SwerveChassis extends Chassis {
 			for(int j=0; j<solvedMatrix.length;j++){
 				currentValues[j]=(solvedMatrix[j][solvedMatrix.length-1]-solvedMatrix[j][solvedMatrix.length-2]*intersectionX[i])/solvedMatrix[j][j];
 			}
-			
 			if(Math.max(Math.max(Math.abs(currentValues[0]),Math.abs(currentValues[1])),Math.max(Math.abs(currentValues[2]),Math.abs(currentValues[3])))< minMaxValue){
 				minMaxValue= Math.max(Math.max(Math.abs(currentValues[0]),Math.abs(currentValues[1])), Math.max(Math.abs(currentValues[2]),Math.abs(currentValues[3])));
 				bestValues=currentValues;
