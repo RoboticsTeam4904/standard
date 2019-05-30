@@ -8,8 +8,8 @@ public class SwerveModule {
 	public final ServoSubsystem rotation;
 	public double angleFromCenter;
 	public double distanceFromCenter;
-	public double wheelSpeed;
-	public double wheelAngle;
+	private double wheelSpeed;
+	private double wheelAngle;
 
 	/**
 	 * Constructs a single swerve module
@@ -22,11 +22,14 @@ public class SwerveModule {
 	 * @param wheelAngle
 	 */
 
-	public SwerveModule(Motor linear, ServoSubsystem rotation, double angleFromCenter, double distanceFromCenter) {
+	public SwerveModule(Motor linear, ServoSubsystem rotation, double angleFromCenter, 
+						double distanceFromCenter, double wheelSpeed, double wheelAngle) {
 		this.linear = linear;
 		this.rotation = rotation;
 		this.angleFromCenter = angleFromCenter;
 		this.distanceFromCenter = distanceFromCenter;
+		this.wheelSpeed = wheelSpeed;
+		this.wheelAngle = wheelAngle;
 	}
 
 	public void setState(double speed, double angle) {
@@ -49,6 +52,6 @@ public class SwerveModule {
 	}
 
 	public double getCurrentPosition() {
-		return rotation.getCurrentPosition();
+		return this.rotation.getCurrentPosition();
 	}
 }

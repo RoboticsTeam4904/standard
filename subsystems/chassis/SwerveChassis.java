@@ -7,18 +7,21 @@ import org.usfirst.frc4904.standard.subsystems.motor.SwerveModule;
 
 public class SwerveChassis extends Chassis {
 	private final SwerveModule[] modules;
-	private double[] wheelSpeed;
-	private double[] wheelAngle;
+	private double[] wheelSpeeds;
+	private double[] wheelAngles;
 
 	/**
 	 * Constructs a swerve drive chassis
 	 * 
 	 * @param modules
-	 * @param wheelSpeed
-	 * @param wheelAngle
+	 * @param wheelSpeeds
+	 * @param wheelAngles
 	 */
-	public SwerveChassis(String name, SwerveModule... modules) {
+	public SwerveChassis(String name, double[] wheelSpeeds, double[] wheelAngle, 
+						 SwerveModule... modules) {
 		super(name);
+		this.wheelSpeeds = wheelSpeeds;
+		this.wheelAngles = wheelAngles;
 		this.modules = modules;
 	}
 
@@ -34,17 +37,17 @@ public class SwerveChassis extends Chassis {
 		augmentedSystem[0][augmentedSystem[0].length - 1] = xSpeed;
 		augmentedSystem[1][augmentedSystem[1].length - 1] = ySpeed;
 		augmentedSystem[2][augmentedSystem[2].length - 1] = turnSpeed;
-		double[] wheelSpeeds = minMaxUndeterminedSystem(solveSystem(augmentedSystem));
+		this.wheelSpeeds = minMaxUndeterminedSystem(solveSystem(augmentedSystem));
 		for (int i = 0; i < modules.length; i++) {
 			double xVector;
 			double yVector;
 			xVector = xSpeed + modules[i].distanceFromCenter * Math.cos(modules[i].angleFromCenter);
 			yVector = ySpeed + modules[i].distanceFromCenter * Math.sin(modules[i].angleFromCenter);
-			wheelAngle[i] = Math.atan(xVector / yVector);
+			this.wheelAngles[i] = Math.atan(xVector / yVector);
 		}
 		
 		 for (int i = 0; i < modules.length; i++) {
-			modules[i].setState(wheelAngle[i], wheelSpeeds[i]);
+			modules[i].setState(this.wheelAngles[i], this.wheelSpeeds[i]);
 		}
 		/*
 		 * for switching from cartesian to polar double totalSpeed =
@@ -60,7 +63,7 @@ public class SwerveChassis extends Chassis {
 
 	@Override
 	public double[] getMotorSpeeds() {
-		return wheelSpeed;
+		return this.wheelSpeeds;
 	}
 
 	@Override
@@ -73,7 +76,7 @@ public class SwerveChassis extends Chassis {
 	}
 
 	public double[] getServoAngles() {
-		return wheelAngle;
+		return this.wheelAngles;
 	}
 
 	public ServoSubsystem[] getServos() {
@@ -118,20 +121,27 @@ public class SwerveChassis extends Chassis {
 				if (determinant != 0) {
 					intersectionX[k] = (solvedMatrix[i][solvedMatrix[j].length - 1]
 						* solvedMatrix[j][solvedMatrix[j].length - 2] -
-						solvedMatrix[j][solvedMatrix[j].length - 1] * solvedMatrix[i][solvedMatrix[i].length - 2])
-						/ determinant;
+						solvedMatrix[j][solvedMatrix[j].length - 1] * 
+						solvedMatrix[i][solvedMatrix[i].length - 2]) /
+						determinant;
 					intersectionX[k
-						+ 1] = (-solvedMatrix[i][solvedMatrix[j].length - 1] * solvedMatrix[j][solvedMatrix[j].length - 2] -
-							solvedMatrix[j][solvedMatrix[j].length - 1] * -solvedMatrix[i][solvedMatrix[i].length - 2])
-							/ determinant;
+						+ 1] = (-solvedMatrix[i][solvedMatrix[j].length - 1] * 
+								solvedMatrix[j][solvedMatrix[j].length - 2] -
+								solvedMatrix[j][solvedMatrix[j].length - 1] * 
+								-solvedMatrix[i][solvedMatrix[i].length - 2]) /
+								determinant;
 					intersectionX[k
-						+ 2] = (solvedMatrix[i][solvedMatrix[j].length - 1] * solvedMatrix[j][solvedMatrix[j].length - 2] +
-							solvedMatrix[j][solvedMatrix[j].length - 1] * solvedMatrix[i][solvedMatrix[i].length - 2])
-							/ determinant;
+						+ 2] = (solvedMatrix[i][solvedMatrix[j].length - 1] * 
+							    solvedMatrix[j][solvedMatrix[j].length - 2] +
+								solvedMatrix[j][solvedMatrix[j].length - 1] * 
+								solvedMatrix[i][solvedMatrix[i].length - 2]) /
+								determinant;
 					intersectionX[k
-						+ 3] = (-solvedMatrix[i][solvedMatrix[j].length - 1] * solvedMatrix[j][solvedMatrix[j].length - 2] +
-							solvedMatrix[j][solvedMatrix[j].length - 1] * solvedMatrix[i][solvedMatrix[i].length - 2])
-							/ determinant;
+						+ 3] = (-solvedMatrix[i][solvedMatrix[j].length - 1] * 
+								solvedMatrix[j][solvedMatrix[j].length - 2] +
+								solvedMatrix[j][solvedMatrix[j].length - 1] * 
+								solvedMatrix[i][solvedMatrix[i].length - 2]) / 
+								determinant;
 				} else {
 					intersectionX[k] = Double.NaN;
 				}
@@ -144,7 +154,9 @@ public class SwerveChassis extends Chassis {
 		for (int i = 0; i < intersectionX.length; i++) {
 			for (int j = 0; j < solvedMatrix.length; j++) {
 				currentValues[j] = (solvedMatrix[j][solvedMatrix.length - 1]
-					- solvedMatrix[j][solvedMatrix.length - 2] * intersectionX[i]) / solvedMatrix[j][j];
+									- solvedMatrix[j][solvedMatrix.length - 2] * 
+									intersectionX[i]) /
+									solvedMatrix[j][j];
 			}
 			double maxValue = 0f;
 			for (double value : currentValues) {
