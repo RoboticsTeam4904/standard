@@ -1,8 +1,8 @@
 package org.usfirst.frc4904.standard.commands.motor;
 
 
+import java.util.function.Supplier;
 import org.usfirst.frc4904.standard.LogKitten;
-import org.usfirst.frc4904.standard.custom.controllers.Controller;
 import org.usfirst.frc4904.standard.subsystems.motor.Motor;
 import org.usfirst.frc4904.standard.subsystems.motor.PositionSensorMotor;
 import edu.wpi.first.wpilibj.command.Command;
@@ -14,41 +14,54 @@ import edu.wpi.first.wpilibj.command.Command;
  */
 public class MotorControl extends Command {
 	protected final Motor motor;
-	protected final Controller controller;
-	protected final int axis;
-	protected final double scale;
+	protected final Supplier<Double> speedSupplier;
+	protected final double offset;
 
 	/**
-	 * This Command directly controls a Motor based on an axis of the Controller.
-	 * This can allow an Operator to easily control a single Motor from an axis of the Controller.
+	 * This Command directly controls a Motor based on a double supplier; This
+	 * can allow an Operator to easily control a single Motor from an axis of
+	 * the Controller.
 	 *
+	 * @param name
 	 * @param motor
-	 * @param controller
-	 * @param axis
-	 * @param scale
+	 * @param speedSupplier
+	 * @param offset
+	 *            A constant to add to the motor's speed Useful for using a
+	 *            controller for fine-tuning a constant speed
 	 */
-	public MotorControl(Motor motor, Controller controller, int axis, double scale) {
-		super("MotorControl");
+	public MotorControl(String name, Motor motor, Supplier<Double> speedSupplier, double offset) {
+		super(name);
 		this.motor = motor;
-		this.controller = controller;
-		this.axis = axis;
-		this.scale = scale;
+		this.speedSupplier = speedSupplier;
+		this.offset = offset;
 		requires(motor);
 		setInterruptible(true);
 		LogKitten.d("MotorControl created for " + motor.getName());
 	}
 
 	/**
-	 * This Command directly controls a Motor based on an axis of the Controller.
-	 * This can allow an Operator to easily control a single Motor from an axis of the Controller.
+	 * This Command directly controls a Motor based on an axis of the
+	 * Controller. This can allow an Operator to easily control a single Motor
+	 * from an axis of the Controller.
+	 *
+	 * @param name
+	 * @param motor
+	 * @param speedSupplier
+	 */
+	public MotorControl(String name, Motor motor, Supplier<Double> speedSupplier) {
+		this(name, motor, speedSupplier, 0.0);
+	}
+
+	/**
+	 * This Command directly controls a Motor based on an axis of the
+	 * Controller. This can allow an Operator to easily control a single Motor
+	 * from an axis of the Controller.
 	 *
 	 * @param motor
-	 * @param controller
-	 * @param axis
-	 * @param scale
+	 * @param speedSupplier
 	 */
-	public MotorControl(Motor motor, Controller controller, int axis) {
-		this(motor, controller, axis, 1.0);
+	public MotorControl(Motor motor, Supplier<Double> speedSupplier) {
+		this("MotorControl", motor, speedSupplier, 0.0);
 	}
 
 	@Override
@@ -61,8 +74,9 @@ public class MotorControl extends Command {
 
 	@Override
 	protected void execute() {
-		LogKitten.d("MotorControl executing: " + controller.getAxis(axis));
-		motor.set(controller.getAxis(axis) * scale);
+		double speed = speedSupplier.get() + offset;
+		LogKitten.d("MotorControl executing: " + speed);
+		motor.set(speed);
 	}
 
 	@Override
