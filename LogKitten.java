@@ -13,7 +13,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.hal.HAL;
+import edu.wpi.first.hal.HAL;
 import org.usfirst.frc4904.standard.Kitten;
 import org.usfirst.frc4904.standard.RobotModeKitten;
 
