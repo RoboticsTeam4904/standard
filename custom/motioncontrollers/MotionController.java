@@ -7,7 +7,7 @@ import org.usfirst.frc4904.standard.custom.sensors.InvalidSensorException;
 import org.usfirst.frc4904.standard.custom.sensors.PIDSensor;
 import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.PIDSource;
-import edu.wpi.first.wpilibj.util.BoundaryException;
+import edu.wpi.first.hal.util.BoundaryException;
 
 /**
  * A MotionController modifies an output using a sensor

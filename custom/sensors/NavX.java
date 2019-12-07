@@ -1,7 +1,9 @@
 package org.usfirst.frc4904.standard.custom.sensors;
 
 
+import org.usfirst.frc4904.standard.LogKitten;
 import com.kauailabs.navx.frc.AHRS;
+import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -15,6 +17,7 @@ public class NavX extends AHRS implements IMU {
 	protected float lastPitch;
 	protected float lastRoll;
 	protected double lastYawRate;
+	protected int getYawCalls;
 	protected static final double MAX_DEGREES_PER_TICK = 90.0;
 	protected static final double MAX_DEGREES_PER_SECOND_PER_TICK = 180;
 
@@ -24,6 +27,16 @@ public class NavX extends AHRS implements IMU {
 		lastYaw = 0.0f;
 		lastPitch = 0.0f;
 		lastRoll = 0.0f;
+		getYawCalls = 0;
+	}
+	
+	public NavX(I2C.Port port) {
+		super(port);
+		super.zeroYaw();
+		lastYaw = 0.0f;
+		lastPitch = 0.0f;
+		lastRoll = 0.0f;
+		getYawCalls = 0;
 	}
 
 	@Override
@@ -58,6 +71,13 @@ public class NavX extends AHRS implements IMU {
 		}
 		lastYaw = yaw;
 		return yaw;
+	}
+	
+	@Override
+	public float getYaw() {
+		getYawCalls += 1;
+//		LogKitten.e(Integer.toString(getYawCalls));
+		return super.getYaw();
 	}
 
 	/**

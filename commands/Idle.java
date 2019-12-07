@@ -1,19 +1,30 @@
 package org.usfirst.frc4904.standard.commands;
 
 
+import java.util.StringJoiner;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 public class Idle extends Command {
 	public Idle() {
-		super("Idle(No Subsystem)");
+		super("Idle[No Subsystem]");
 		setInterruptible(true);
 	}
 
-	public Idle(Subsystem subsystem) {
-		super("Idle[" + subsystem.getName() + "]");
+	public Idle(Subsystem... subsystems) {
+		super("Idle[" + Idle.joinSubsystemNames(subsystems) + "]");
 		setInterruptible(true);
-		requires(subsystem);
+		for (Subsystem subsystem : subsystems) {
+			requires(subsystem);
+		}
+	}
+
+	protected static String joinSubsystemNames(Subsystem[] subsystems) {
+		StringJoiner subsystemNames = new StringJoiner("|");
+		for (Subsystem subsystem : subsystems) {
+			subsystemNames.add(subsystem.getName());
+		}
+		return subsystemNames.toString();
 	}
 
 	@Override

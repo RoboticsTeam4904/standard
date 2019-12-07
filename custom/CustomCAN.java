@@ -1,12 +1,12 @@
 package org.usfirst.frc4904.standard.custom;
 
-
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
+import java.util.Optional;
 import org.usfirst.frc4904.standard.LogKitten;
-import edu.wpi.first.wpilibj.can.CANJNI;
-import edu.wpi.first.wpilibj.can.CANMessageNotFoundException;
-import edu.wpi.first.wpilibj.util.UncleanStatusException;
+import edu.wpi.first.hal.can.CANJNI;
+import edu.wpi.first.hal.can.CANMessageNotFoundException;
+import edu.wpi.first.hal.util.UncleanStatusException;
 
 /**
  * This class allows sending and receiving
@@ -91,7 +91,22 @@ public class CustomCAN {
 	 *
 	 * @return byte[] (8 long)
 	 */
-	public byte[] read() throws CANMessageUnavailableException {
+	public byte[] readSafely() throws CANMessageUnavailableException {
 		return readBuffer();
+	}
+
+	/**
+	 * Reads data, returning an empty Optional if there is no available
+	 * message.
+	 * 
+	 * @return Optional<byte[]>
+	 */
+	public Optional<byte[]> read() {
+		try {
+			return Optional.of(readSafely());
+		}
+		catch (CANMessageUnavailableException e) {
+			return Optional.empty();
+		}
 	}
 }
