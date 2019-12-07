@@ -16,8 +16,11 @@ public class Util {
 	 * @return
 	 * 		Whether or not it is within Double.MIN_VALUE of zero
 	 */
+	public static boolean isZero(double var, double epsilon) {
+		return Math.abs(var) < epsilon;
+	}
 	public static boolean isZero(double var) {
-		return Math.abs(var) < Double.MIN_VALUE;
+		return isZero(var, Math.sqrt(Math.ulp(1.0)));
 	}
 
 	public static class Range {
