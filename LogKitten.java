@@ -10,10 +10,16 @@ import java.io.StringWriter;
 import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.hal.HAL;
+import org.usfirst.frc4904.standard.Kitten;
+import org.usfirst.frc4904.standard.RobotModeKitten;
 
 public class LogKitten {
-	private static BufferedOutputStream fileOutput;
+	private static BufferedOutputStream globalOutput;
+	private static Map<Kitten, String> kittenList; // Hashmap with <Kitten, String(what subclass the corresponding kitten is)>
 	public final static KittenLevel LEVEL_WTF = KittenLevel.WTF;
 	public final static KittenLevel LEVEL_FATAL = KittenLevel.FATAL;
 	public final static KittenLevel LEVEL_ERROR = KittenLevel.ERROR;
@@ -26,44 +32,101 @@ public class LogKitten {
 	private static KittenLevel logLevel = LogKitten.DEFAULT_LOG_LEVEL;
 	private static KittenLevel printLevel = LogKitten.DEFAULT_PRINT_LEVEL;
 	private static KittenLevel dsLevel = LogKitten.DEFAULT_DS_LEVEL;
+	private static String GLOBAL_PATH = "/home/lvuser/logs/global/";
 	private static String LOG_PATH = "/home/lvuser/logs/";
-	private static String LOG_ALIAS_PATH = LogKitten.LOG_PATH + "recent.log";
+	private static String GLOBAL_ALIAS_PATH = LogKitten.GLOBAL_PATH + "recent.log";
 	private static volatile boolean PRINT_MUTE = false;
 	private static final SimpleDateFormat TIMESTAMP_FORMAT = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
 	static {
-		File logPathDirectory = new File(LogKitten.LOG_PATH);
+		kittenList = new HashMap<Kitten, String>(); // put all kittens in kitten list
+		kittenList.put(Kittens.autonKitten, "RobotModeKitten");
+		kittenList.put(Kittens.teleopKitten, "RobotModeKitten");
+		File globalPathDirectory = new File(LogKitten.GLOBAL_PATH);
 		try {
-			if (!logPathDirectory.isDirectory()) { // ensure that the directory /home/lvuser/logs/ exists
-				logPathDirectory.mkdirs(); // otherwise create all the directories of the path
+			if (!globalPathDirectory.isDirectory()) { // ensure that the directory /home/lvuser/logs/global/ exists
+				globalPathDirectory.mkdirs(); // otherwise create all the directories of the path
 			}
 		}
 		catch (SecurityException se) {
-			System.out.println("Could not create log directory");
+			System.out.println("Could not create global log directory");
 			se.printStackTrace();
 		}
-		String filePath = LogKitten.LOG_PATH + LogKitten.timestamp() + ".log"; // Set this sessions log to /home/lvuser/logs/[current time].log
-		File file = new File(filePath);
+		for(Map.Entry<Kitten, String> i : kittenList.entrySet()) {
+			try {
+				if (!i.getKey().pathDirectory.isDirectory()) { // ensure that the directory /home/lvuser/kittenname/global/ exists
+					i.getKey().pathDirectory.mkdirs(); // otherwise create all the directories of the path
+				}
+			}
+			catch (SecurityException se) {
+				System.out.println("Could not create " + i.getKey().category + " log directory");
+				se.printStackTrace();
+			}
+		}
+		String globalPath = LogKitten.GLOBAL_PATH + LogKitten.timestamp() + ".log"; // Set this sessions log to /home/lvuser/logs/global/[current time].log
+		File global = new File(globalPath);
 		try {
 			// Create new file if it doesn't exist (this should happen)
-			file.createNewFile(); // creates if does not exist
+			global.createNewFile(); // creates if does not exist
 			// Create FileOutputStream to actually write to the file.
-			LogKitten.fileOutput = new BufferedOutputStream(new FileOutputStream(file));
+			LogKitten.globalOutput = new BufferedOutputStream(new FileOutputStream(global));
 		}
 		catch (IOException ioe) {
-			System.out.println("Could not open logfile");
+			System.out.println("Could not open global logfile");
 			ioe.printStackTrace();
 		}
-		File logAlias = new File(LogKitten.LOG_ALIAS_PATH);
-		try {
-			if (logAlias.exists()) {
-				logAlias.delete();
+		for(Map.Entry<Kitten, String> i : kittenList.entrySet()) {
+			try {
+				// Create new file if it doesn't exist (this should happen)
+				i.getKey().logger.createNewFile(); // creates if does not exist
+				// Create FileOutputStream to actually write to the file.
+				i.getKey().output = new BufferedOutputStream(new FileOutputStream(i.getKey().logger));
 			}
-			Files.createSymbolicLink(logAlias.toPath(), file.toPath());
+			catch (IOException ioe) {
+				System.out.println("Could not open " + i.getKey().category + " log directory");
+				ioe.printStackTrace();
+			}
+		}
+		File globalAlias = new File(LogKitten.GLOBAL_ALIAS_PATH);
+		try {
+			if(globalAlias.exists()) {
+				globalAlias.delete();
+			}
+			Files.createSymbolicLink(globalAlias.toPath(), global.toPath());
 		}
 		catch (IOException ioe) {
-			System.out.println("Could not alias logfile");
+			System.out.println("Could not alias global logfile");
 			ioe.printStackTrace();
 		}
+		for(Map.Entry<Kitten, String> i : kittenList.entrySet()) {
+			try {
+				if(i.getKey().loggerAlias.exists()) {
+					i.getKey().loggerAlias.delete();
+				}
+				Files.createSymbolicLink(i.getKey().loggerAlias.toPath(), i.getKey().logger.toPath());
+			}
+			catch (IOException ioe) {
+				System.out.println("Could not alias " + i.getKey().category + " logfile");
+			}
+		}
+	}//static ends
+
+	/**
+	 * Gets the mode of the robot
+	 * 
+	 * @return a string with either auton or teleop
+	 */
+	private static String getRobotMode(){
+		String robotMode = null;
+		if(DriverStation.getInstance().isAutonomous()) {
+			robotMode = "AUTONOMOUS";
+		}else if(!DriverStation.getInstance().isAutonomous()) {
+			robotMode = "TELEOPERATED";
+		}
+		return robotMode;
+	}
+
+	public static String getLogPath() {
+		return LOG_PATH;
 	}
 
 	/**
@@ -119,15 +182,15 @@ public class LogKitten {
 	}
 
 	/**
-	 * Set the logfile path for all LogKitten instances
+	 * Set the globalfile path for all LogKitten instances
 	 *
-	 * @param LOG_PATH
-	 *        logfile path as a string
+	 * @param GLOBAL_PATH
+	 *        globalfile path as a string
 	 */
-	public static void setLogPath(String LOG_PATH) {
-		LogKitten.LOG_PATH = LOG_PATH;
+	public static void setGlobalPath(String GLOBAL_PATH) {
+		LogKitten.GLOBAL_PATH = GLOBAL_PATH;
 	}
-
+	
 	/**
 	 * Mutes all messages except those overriding
 	 * (useful for debugging)
@@ -137,7 +200,7 @@ public class LogKitten {
 	public static void setPrintMute(boolean mute) {
 		LogKitten.PRINT_MUTE = mute;
 	}
-
+	
 	/**
 	 * Like DriverStation.reportError, but without stack trace nor printing to System.err
 	 * (updated for 2017 WPILib release)
@@ -149,16 +212,31 @@ public class LogKitten {
 		HAL.sendError(true, logLevel.getSeverity(), false, errorMessage, details, "", false);
 	}
 
+	private static void logIntoFile(Map.Entry<Kitten, String> i, String content, KittenLevel level) {
+		try {
+			if(i.getKey().output != null) {
+				i.getKey().output.write(content.getBytes());
+			} else {
+				System.out.println("Error logging: " + i.getKey().category + " logfile not open");
+			}
+		}
+		catch(IOException ioe) {
+			System.out.println("Error logging " + level.getName() + " message");
+			ioe.printStackTrace();
+		}
+	}
+	
+	
 	public static synchronized void logMessage(Object message, KittenLevel level, boolean override) {
 		message = message.toString(); // Not strictly needed, but good practice
 		if (LogKitten.logLevel.compareTo(level) >= 0) {
-			String content = LogKitten.timestamp() + " " + level.getName() + ": " + LogKitten.getLoggerMethodCallerMethodName()
+			String content = getRobotMode() + " " + LogKitten.timestamp() + " " + level.getName() + ": " + LogKitten.getLoggerMethodCallerMethodName()
 				+ ": " + message + " \n";
 			try {
-				if (LogKitten.fileOutput != null) {
-					LogKitten.fileOutput.write(content.getBytes());
+				if (LogKitten.globalOutput != null) {
+					LogKitten.globalOutput.write(content.getBytes());
 				} else {
-					System.out.println("Error logging: logfile not open");
+					System.out.println("Error logging: global logfile not open");
 				}
 			}
 			catch (IOException ioe) {
@@ -166,20 +244,42 @@ public class LogKitten {
 				ioe.printStackTrace();
 			}
 		}
+		for(Map.Entry<Kitten, String> i : kittenList.entrySet()) {
+			String content = getRobotMode() + " " + LogKitten.timestamp() + " " + level.getName() + ": " + LogKitten.getLoggerMethodCallerMethodName()
+			+ ": " + message + " \n";
+			switch(i.getValue()) { //
+				case "RobotModeKitten":
+					if(getRobotMode() == ((RobotModeKitten)i.getKey()).getMode()) {
+						logIntoFile(i, content, level);
+					}
+					break;
+				case "CANKitten":
+					for(int j = 0; j < Thread.currentThread().getStackTrace().length; j++) {
+						if(Thread.currentThread().getStackTrace()[j].getClassName().contains("CANKitten")) {
+							logIntoFile(i, content, level);
+						}
+					}
+					break;
+				case "Kitten":
+					break;
+				default:
+					break;
+			}
+		}
 		if (!LogKitten.PRINT_MUTE || override) {
-			String printContent = level.getName() + ": " + LogKitten.getLoggerMethodCallerClassName() + "#"
+			String printContent = level.getName() + ": " + LogKitten.getRobotMode() + " " + LogKitten.getLoggerMethodCallerClassName() + "#"
 				+ LogKitten.getLoggerMethodCallerMethodName() + ": " + message + " \n";
 			if (LogKitten.printLevel.compareTo(level) >= 0) {
 				System.out.println(printContent);
 			}
 			if (LogKitten.dsLevel.compareTo(level) >= 0) {
 				LogKitten.reportErrorToDriverStation(
-					LogKitten.getLoggerMethodCallerClassName() + "#" + LogKitten.getLoggerMethodCallerMethodName(),
+					LogKitten.getRobotMode() + " " + LogKitten.getLoggerMethodCallerClassName() + "#" + LogKitten.getLoggerMethodCallerMethodName(),
 					level.getName() + ": " + message, level);
 			}
 		}
 	}
-
+	
 	/**
 	 * What a Terrible Failure: Report a condition that should never happen, allowing override
 	 *
@@ -348,8 +448,8 @@ public class LogKitten {
 	 */
 	public static synchronized void clean() {
 		try {
-			if (LogKitten.fileOutput != null) {
-				LogKitten.fileOutput.close();
+			if (LogKitten.globalOutput != null) {
+				LogKitten.globalOutput.close();
 			}
 		}
 		catch (IOException ioe) {
@@ -389,4 +489,11 @@ public class LogKitten {
 			return name(); // Enum.name() is the Java builtin to get the name of an enum value
 		}
 	}
+	
+	public static class Kittens { // all kittens instantiated here
+		public static RobotModeKitten autonKitten = new RobotModeKitten("auton", "AUTONOMOUS");
+		public static RobotModeKitten teleopKitten = new RobotModeKitten("teleop", "TELEOPERATED");
+	}
 }
+
+
