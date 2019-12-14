@@ -1,4 +1,4 @@
-package org.usfirst.frc4904.ourWPI.devices;
+package org.usfirst.frc4904.standard.simulation.devices;
 
 /**
  * Represents a magnetic encoder.

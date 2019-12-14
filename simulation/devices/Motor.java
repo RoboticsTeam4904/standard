@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.usfirst.frc4904.ourWPI.devices;
+package org.usfirst.frc4904.standard.simulation.devices;
 
 public class Motor extends Motor /*implements com.diozero.api.OutputDeviceInterface*/ {
 	
