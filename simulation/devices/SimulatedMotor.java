@@ -2,9 +2,10 @@
  * 
  */
 package org.usfirst.frc4904.standard.simulation.devices;
+
 import org.usfirst.frc4904.standard.simulation.simulation.PhysicsSimulator;
 
-public class Motor extends org.usfirst.frc4904.standard.subsystems.motor.Motor {
+public class SimulatedMotor extends org.usfirst.frc4904.standard.subsystems.motor.Motor {
 	
 	// private GpioPinDigitalOutput forward, backward;
 	// private GpioPinPwmOutput enable;
@@ -32,7 +33,8 @@ public class Motor extends org.usfirst.frc4904.standard.subsystems.motor.Motor {
 	double CIRCLE_RADIUS;
 	
 	
-	public Motor(String name, boolean isInverted, TalonSRX speedController) {
+	public SimulatedMotor(String name, boolean isInverted, TalonSRX speedController) {
+		super(name);
 		this.voltage = 2;
 		this.torque = 2;
 		this.angle = 0;
@@ -69,4 +71,52 @@ public class Motor extends org.usfirst.frc4904.standard.subsystems.motor.Motor {
 		}
 		this.angularVelocity = this.angularVelocity + this.changeAngularVelocity * PhysicsSimulator.inst.timeStep; 
     }
+
+	@Override
+	protected void initDefaultCommand() {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void pidWrite(double speed) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void disable() {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void stopMotor() {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public double get() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void set(double speed) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public boolean getInverted() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void setInverted(boolean isInverted) {
+		// TODO Auto-generated method stub
+
+	}
 }
