@@ -4,9 +4,6 @@ import java.security.InvalidParameterException;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.usfirst.frc4904.ourWPI.util.Constants;
-
-
 /**
  * Represents a motor controller to simulate the TalonSRX.
  * @author Finn Frankis

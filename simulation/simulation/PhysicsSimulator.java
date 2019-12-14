@@ -1,18 +1,24 @@
-class PhysicsSimulator extends Thread {
+package org.usfirst.frc4904.standard.simulation.simulation;
 
-    static PhysicsSimulator inst; // = new PhysicsSimulator().start();;
+import java.util.ArrayList;
+import org.usfirst.frc4904.standard.simulation.devices.Motor;
 
+public class PhysicsSimulator extends Thread {
+
+    public static PhysicsSimulator inst; // = new PhysicsSimulator().start();;
+
+    public int timeStep;
 
     ArrayList<Motor> motors;
 
     public PhysicsSimulator(ArrayList<Motor> motors) {
-        self.motors = motors;
+        this.motors = motors;
     }
 
     @Override
     public void run() {
         while(true) {
-            for(Motor m : self.motors) {
+            for(Motor m : this.motors) {
                 System.out.println(m.angularVelocity);
             }
         }   

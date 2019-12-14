@@ -2,8 +2,9 @@
  * 
  */
 package org.usfirst.frc4904.standard.simulation.devices;
+import org.usfirst.frc4904.standard.simulation.simulation.PhysicsSimulator;
 
-public class Motor extends Motor /*implements com.diozero.api.OutputDeviceInterface*/ {
+public class Motor extends org.usfirst.frc4904.standard.subsystems.motor.Motor {
 	
 	// private GpioPinDigitalOutput forward, backward;
 	// private GpioPinPwmOutput enable;
@@ -15,20 +16,20 @@ public class Motor extends Motor /*implements com.diozero.api.OutputDeviceInterf
 	 * @param enable the enable analog pin, giving the magnitude of the speed
 	 */
 
-	float voltage;
-	float torque;
-	float angle;
-	public float angularVelocity;
-	float changeAngularVelocity;
-	float current;
+	double voltage;
+	double torque;
+	double angle;
+	public double angularVelocity;
+	double changeAngularVelocity;
+	double current;
 	
-	float TORQUE_CONSTANT;
-	float ANGULAR_VELOCITY_CONSTANT;
-	float RESISTANCE;
-	float ROTATIONAL_INERTIA;
-	float MOTOR_X;
-	float MOTOR_Y;
-	float CIRCLE_RADIUS;
+	double TORQUE_CONSTANT;
+	double ANGULAR_VELOCITY_CONSTANT;
+	double RESISTANCE;
+	double ROTATIONAL_INERTIA;
+	double MOTOR_X;
+	double MOTOR_Y;
+	double CIRCLE_RADIUS;
 	
 	
 	public Motor(String name, boolean isInverted, TalonSRX speedController) {
@@ -62,10 +63,10 @@ public class Motor extends Motor /*implements com.diozero.api.OutputDeviceInterf
 		this.changeAngularVelocity = (this.TORQUE_CONSTANT*(
 		  this.voltage-(this.angularVelocity/this.ANGULAR_VELOCITY_CONSTANT))) / 
 		  (this.RESISTANCE * this.current);
-		this.angle = this.angle + this.angularVelocity * timeStep;
+		this.angle = this.angle + this.angularVelocity * PhysicsSimulator.inst.timeStep;
 		if (this.angle >= 360) {
 		  this.angle -= 360;
 		}
-		this.angularVelocity = this.angularVelocity + this.changeAngularVelocity * timeStep; 
+		this.angularVelocity = this.angularVelocity + this.changeAngularVelocity * PhysicsSimulator.inst.timeStep; 
     }
 }
