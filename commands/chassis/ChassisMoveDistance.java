@@ -1,7 +1,7 @@
 package org.usfirst.frc4904.standard.commands.chassis;
 
-import java.util.*;
-
+import java.util.Set;
+import java.util.HashSet;
 import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.custom.ChassisController;
 import org.usfirst.frc4904.standard.custom.motioncontrollers.MotionController;
@@ -120,9 +120,6 @@ public class ChassisMoveDistance implements Command, ChassisController {
 	public void execute() {
 	}
 
-	/*
-	 * @Override protected void interrupted() { end(); }
-	 */
 	@Override
 	public boolean isFinished() {
 		if (chassisMove.isScheduled() && !runOnce) {

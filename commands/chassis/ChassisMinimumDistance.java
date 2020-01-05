@@ -4,9 +4,8 @@ import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.custom.sensors.CustomEncoder;
 import org.usfirst.frc4904.standard.custom.sensors.InvalidSensorException;
 import org.usfirst.frc4904.standard.subsystems.chassis.Chassis;
-import edu.wpi.first.wpilibj2.command.Command;
 
-public class ChassisMinimumDistance extends ChassisConstant implements Command {
+public class ChassisMinimumDistance extends ChassisConstant {
 	protected CustomEncoder[] encoders;
 	protected final ChassisConstant fallbackCommand;
 	protected double distance;

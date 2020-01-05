@@ -8,7 +8,8 @@ import org.usfirst.frc4904.standard.subsystems.motor.Motor;
 import org.usfirst.frc4904.standard.subsystems.motor.VelocitySensorMotor;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.Subsystem;
-import java.util.*;
+import java.util.Set;
+import java.util.HashSet;
 
 /*
  * This command moves the chassis.
@@ -26,7 +27,7 @@ public class ChassisMove extends ParallelCommandGroup {
 	protected final Chassis chassis;
 	protected final ChassisController controller;
 
-	/**
+	/*
 	 * @param chassis    The robot's Chassis.
 	 * @param controller A ChassisController to control the Chassis, such as a
 	 *                   Driver or autonomous routine.

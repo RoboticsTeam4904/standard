@@ -1,8 +1,8 @@
 package org.usfirst.frc4904.standard.commands.chassis;
 
-
 import org.usfirst.frc4904.standard.subsystems.chassis.SolenoidShifters;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+
 
 /**
  * This command shifts a set of solenoids.
@@ -39,15 +39,15 @@ public class ChassisShift extends CommandBase {
 		if (state == null) {
 			// null state means toggle
 			solenoids.shift();
-		} 
-		else {
+		} else {
 			// not null state means shift to it directly
 			solenoids.shift(state);
 		}
 	}
 
 	@Override
-	public void execute() {}
+	public void execute() {
+	}
 
 	@Override
 	public boolean isFinished() {

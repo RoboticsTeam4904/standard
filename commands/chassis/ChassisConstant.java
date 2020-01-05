@@ -1,6 +1,6 @@
 package org.usfirst.frc4904.standard.commands.chassis;
 
-import java.util.*;
+import java.util.Set;
 
 import org.usfirst.frc4904.standard.custom.ChassisController;
 import org.usfirst.frc4904.standard.subsystems.chassis.Chassis;
@@ -13,8 +13,8 @@ public class ChassisConstant implements Command, ChassisController {
 	protected final CommandGroupBase move;
 	protected final double x;
 	protected final double y;
-	protected final double turn;
-	protected final double timeout;
+	protected double turn;
+	protected double timeout;
 	private Chassis chassis;
 
 	public ChassisConstant(Chassis chassis, double x, double y, double turn, double timeout) {
@@ -61,7 +61,7 @@ public class ChassisConstant implements Command, ChassisController {
 	public boolean isFinished() {
 		// the command has timed out if the time since scheduled is greater than the
 		// timeout
-		return move.isFinished() || CommandScheduler.getInstance().timeSinceScheduled(this) > this.timeout;
+		return move.isFinished() || CommandScheduler.getInstance().timeSinceScheduled(this) >= this.timeout;
 	}
 
 	@Override

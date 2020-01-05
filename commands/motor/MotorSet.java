@@ -1,37 +1,41 @@
 package org.usfirst.frc4904.standard.commands.motor;
 
+import java.util.Set;
 
 import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.subsystems.motor.Motor;
 import edu.wpi.first.wpilibj.SpeedController;
-import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Subsystem;
+import java.util.Set;
+import java.util.HashSet;
 
 /**
- * Sets a motor to a speed.
- * The speed can change through
- * use of the set command.
- * This is better than setting
- * the motor because it uses
- * requires to avoid having
- * multiple attempts to set a
- * motor simultaneously.
+ * Sets a motor to a speed. The speed can change through use of the set command.
+ * This is better than setting the motor because it uses requires to avoid
+ * having multiple attempts to set a motor simultaneously.
  *
  */
-public class MotorSet extends Command {
+public class MotorSet implements Command {
 	protected final SpeedController motor;
 	protected double speed;
 
 	public MotorSet(Motor motor) {
-		super("MotorSet");
 		this.motor = motor;
 		speed = 0;
 		LogKitten.d("MotorSet created for " + motor.getName());
-		requires(motor);
-		setInterruptible(true);
+		//requires(motor);
 	}
 
 	@Override
-	protected void initialize() {
+	public Set<SpeedController> getRequirements() {
+		HashSet<SpeedController> set = new HashSet<SpeedController>();
+		set.add(this.motor);
+		return set;
+	}
+	
+	@Override
+	public void initialize() {
 		LogKitten.d("MotorSet initialized");
 	}
 
@@ -50,18 +54,22 @@ public class MotorSet extends Command {
 	}
 
 	@Override
-	protected void end() {
+	public void end(boolean interrupted) {
 		motor.set(0);
-		LogKitten.d("MotorSet ended (motor speed set to 0)");
+		if (interrupted) {
+			LogKitten.d("MotorSet interrupted?!");
+		} else {
+			LogKitten.d("MotorSet ended (motor speed set to 0)");
+		}
 	}
 
 	@Override
-	protected void interrupted() {
-		LogKitten.d("MotorSet interupted (motor speed undefined)");
-	}
-
-	@Override
-	protected boolean isFinished() {
+	public boolean isFinished() {
 		return false;
+	}
+
+	@Override
+	public Set<Subsystem> getRequirements() {
+		return null;
 	}
 }

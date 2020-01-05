@@ -17,10 +17,10 @@ public class ChassisIdle extends ParallelCommandGroup {
 	 *
 	 * @param chassis The robot Chassis to idle.
 	 */
-	Chassis selfChassis;
+	private Chassis chassis;
 
 	public ChassisIdle(Chassis chassis) {
-		this.selfChassis = chassis;
+		this.chassis = chassis;
 		Motor[] motors = chassis.getMotors();
 		for (Motor motor : motors) {
 			addCommands(new MotorIdle(motor));
@@ -30,16 +30,24 @@ public class ChassisIdle extends ParallelCommandGroup {
 	@Override
 	public Set<Subsystem> getRequirements() {
 		HashSet<Subsystem> set = new HashSet<Subsystem>();
-		set.add(this.selfChassis);
+		set.add(this.chassis);
 		return set;
 	}
 
 	@Override
-	public void initialize() {}
-	@Override
-	public void execute() {}
-	@Override
-	public void end(boolean interrupt) {}
+	public void initialize() {
+	}
 
-	//public void 
+	@Override
+	public void execute() {
+	}
+
+	@Override
+	public void end(boolean interrupt) {
+	}
+
+	@Override
+	public boolean isFinished() {
+		return false;
+	}
 }

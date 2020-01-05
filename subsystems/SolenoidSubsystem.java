@@ -3,7 +3,7 @@ package org.usfirst.frc4904.standard.subsystems;
 
 import org.usfirst.frc4904.standard.commands.solenoid.SolenoidSet;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
-import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj2.command.Subsystem;
 
 /**
  * A class that wraps multiple DoubleSolenoid objects with subsystem functionality.
