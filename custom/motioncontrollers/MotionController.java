@@ -391,7 +391,7 @@ public abstract class MotionController {
 					}
 				}
 				if (output != null && isEnabled()) {
-					output.pidWrite(value);
+					output.Set(Calculate(value));
 				}
 			}
 			catch (Exception e) {

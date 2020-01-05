@@ -110,7 +110,9 @@ public class ChassisMoveDistance extends Command implements ChassisController {
 	}
 
 	@Override
-	protected void execute() {}
+	protected void execute() {
+
+	}
 
 	@Override
 	protected void interrupted() {

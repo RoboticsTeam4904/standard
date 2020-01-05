@@ -1,7 +1,7 @@
 package org.usfirst.frc4904.standard.commands;
 
 
-import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj2.command.Command;;
 
 public class Noop extends Command {
 	public Noop() {
@@ -9,19 +9,19 @@ public class Noop extends Command {
 	}
 
 	@Override
-	protected void initialize() {}
+	public void initialize() {}
 
 	@Override
-	protected void execute() {}
+	public void execute() {}
 
 	@Override
-	protected boolean isFinished() {
+	public boolean isFinished() {
 		return true;
 	}
 
 	@Override
-	protected void end() {}
+	public void end(boolean interrupted) {}
 
-	@Override
-	protected void interrupted() {}
+	// @Override
+	// protected void interrupted() {}
 }

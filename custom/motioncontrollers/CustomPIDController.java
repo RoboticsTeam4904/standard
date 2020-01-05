@@ -1,12 +1,10 @@
 package org.usfirst.frc4904.standard.custom.motioncontrollers;
 
-
 import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.custom.sensors.InvalidSensorException;
 import org.usfirst.frc4904.standard.custom.sensors.NativeDerivativeSensor;
 import org.usfirst.frc4904.standard.custom.sensors.PIDSensor;
-import edu.wpi.first.wpilibj.PIDSource;
-import edu.wpi.first.wpilibj.PIDSourceType;
+import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.hal.util.BoundaryException;
 
 /**
@@ -91,7 +89,7 @@ public class CustomPIDController extends MotionController {
 	 * @param sensor
 	 *        The sensor linked to the output
 	 */
-	public CustomPIDController(double P, double I, double D, double F, PIDSource source) {
+	public CustomPIDController(double P, double I, double D, double F, PIDController source) {
 		super(source);
 		this.P = P;
 		this.I = I;
@@ -129,7 +127,7 @@ public class CustomPIDController extends MotionController {
 	 * @param sensor
 	 *        The sensor linked to the output
 	 */
-	public CustomPIDController(double P, double I, double D, PIDSource source) {
+	public CustomPIDController(double P, double I, double D, PIDController source) {
 		this(P, I, D, 0.0, source);
 	}
 
@@ -151,7 +149,7 @@ public class CustomPIDController extends MotionController {
 	 * @param sensor
 	 *        The sensor linked to the output
 	 */
-	public CustomPIDController(PIDSource source) {
+	public CustomPIDController(PIDController source) {
 		this(0, 0, 0, source);
 	}
 

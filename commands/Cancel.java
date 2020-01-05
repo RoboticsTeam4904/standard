@@ -17,7 +17,8 @@ public class Cancel implements Command {
 	}
 
 	@Override
-	public void initialize() {
+	public void initialize() 
+	{
 		LogKitten.v("Initializing " + getName());
 		command.cancel();
 	}

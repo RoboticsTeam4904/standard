@@ -1,9 +1,10 @@
 package org.usfirst.frc4904.standard.custom.sensors;
 
-
 import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.Util;
-import edu.wpi.first.wpilibj.PIDSourceType;
+// import 
+
+// import edu.wpi.first.wpilibj.PIDSourceType;
 
 /**
  * Encoder over CAN
@@ -27,7 +28,6 @@ public class CANEncoder extends CANSensor implements CustomEncoder {
 		this.reverseDirection = reverseDirection;
 		this.distancePerPulse = distancePerPulse;
 		this.offset = 0.0;
-		setPIDSourceType(PIDSourceType.kDisplacement);
 	}
 
 	public CANEncoder(String name, int id, boolean reverseDirection) {
@@ -63,15 +63,8 @@ public class CANEncoder extends CANSensor implements CustomEncoder {
 	 * PIDSourceType is either PIDSourceType.kDisplacement
 	 * or PIDSourceType.kRate.
 	 */
-	@Override
-	public void setPIDSourceType(PIDSourceType pidSource) {
-		this.pidSource = pidSource;
-	}
 
-	@Override
-	public PIDSourceType getPIDSourceType() {
-		return pidSource;
-	}
+
 
 	@Override
 	public double getDistancePerPulse() {
