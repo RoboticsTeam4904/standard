@@ -2,10 +2,14 @@ package org.usfirst.frc4904.standard.commands;
 
 
 import java.util.StringJoiner;
-import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Subsystem;
+import edu.wpi.first.wpilibj2.command.Subsystem;
+import java.util.HashSet;
+import java.util.Set;
 
-public class Idle extends Command {
+
+public class Idle implements Command {
 	public Idle() {
 		super("Idle[No Subsystem]");
 		setInterruptible(true);
@@ -28,19 +32,27 @@ public class Idle extends Command {
 	}
 
 	@Override
-	protected void initialize() {}
+	public void initialize() {}
 
 	@Override
-	protected void execute() {}
+	public void execute() {}
 
 	@Override
-	protected boolean isFinished() {
+	public boolean isFinished() {
 		return false;
 	}
 
 	@Override
-	protected void end() {}
+	public void end(boolean interrupted) {}
 
-	@Override
-	protected void interrupted() {}
+	/*
+	* Fixes the error at the top of the file, but needs a Motor object. 
+	*/
+	// @Override
+	// public Set<Subsystem> getRequirements() {
+	// 	Set<Subsystem> motors = new HashSet<Subsystem>();
+	// 	motors.add(motor);
+	// 	// TODO Auto-generated method stub
+	// 	return motors;
+	// }
 }

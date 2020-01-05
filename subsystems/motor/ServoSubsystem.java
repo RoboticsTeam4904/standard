@@ -3,9 +3,10 @@ package org.usfirst.frc4904.standard.subsystems.motor;
 
 import org.usfirst.frc4904.standard.commands.Idle;
 import edu.wpi.first.wpilibj.Servo;
-import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj2.command.Subsystem;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
-public class ServoSubsystem extends Subsystem {
+public class ServoSubsystem implements Subsystem {
 	protected final Servo[] servos;
 	protected boolean isInverted;
 	protected double lastPosition;
@@ -26,7 +27,6 @@ public class ServoSubsystem extends Subsystem {
 	 *        Can be a single Servo or multiple Servos.
 	 */
 	public ServoSubsystem(String name, boolean isInverted, Servo... servos) {
-		super(name);
 		this.servos = servos;
 		this.isInverted = isInverted;
 		set(0);
@@ -70,7 +70,7 @@ public class ServoSubsystem extends Subsystem {
 		this("ServoSubsystem", servos);
 	}
 
-	@Override
+
 	protected void initDefaultCommand() {
 		setDefaultCommand(new Idle(this));
 	}

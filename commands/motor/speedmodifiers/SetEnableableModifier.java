@@ -3,6 +3,7 @@ package org.usfirst.frc4904.standard.commands.motor.speedmodifiers;
 
 import org.usfirst.frc4904.standard.subsystems.motor.speedmodifiers.EnableableModifier;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
 public class SetEnableableModifier extends CommandBase {
 	protected final EnableableModifier[] modifiers;
