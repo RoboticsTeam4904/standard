@@ -65,7 +65,6 @@ public abstract class CommandRobotBase extends TimedRobot {
 
 	/**
 	 * Function for year-specific code to be run on robot code launch.
-	 * setHealthChecks should be called here if needed.
 	 */
 	public abstract void initialize();
 
@@ -201,10 +200,6 @@ public abstract class CommandRobotBase extends TimedRobot {
 	 */
 	@Override
 	public void testPeriodic() {
-<<<<<<< HEAD
-		// LiveWindow.run(); deprecated 2019 "no longer requried", removed 2020
-=======
->>>>>>> origin/CommandRobotBase
 		testExecute();
 		alwaysExecute();
 		
