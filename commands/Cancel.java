@@ -1,35 +1,42 @@
 package org.usfirst.frc4904.standard.commands;
 
 
-import org.usfirst.frc4904.standard.LogKitten;
-import edu.wpi.first.wpilibj.command.Command;
+import java.util.HashSet;
+import java.util.Set;
 
-public class Cancel extends Command {
+import org.usfirst.frc4904.standard.LogKitten;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Subsystem;
+
+public class Cancel implements Command {
 	protected final Command command;
 
 	public Cancel(Command command) {
-		super("Cancel[" + command + "]");
-		setInterruptible(false);
+		//setInterruptible(false);
 		this.command = command;
 	}
 
 	@Override
-	protected void initialize() {
+	public void initialize() {
 		LogKitten.v("Initializing " + getName());
 		command.cancel();
 	}
 
 	@Override
-	protected void execute() {}
+	public void execute() {
+	}
 
 	@Override
-	protected boolean isFinished() {
+	public boolean isFinished() {
 		return true;
 	}
 
 	@Override
-	protected void end() {}
+	public void end(boolean interrupted) {
+	}
 
 	@Override
-	protected void interrupted() {}
+	public Set<Subsystem> getRequirements() {
+		return new HashSet<Subsystem>();
+	}
 }

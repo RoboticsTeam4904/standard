@@ -2,7 +2,7 @@ package org.usfirst.frc4904.standard.custom.sensors;
 
 
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.buttons.Button;
+import edu.wpi.first.wpilibj2.command.button.Button;
 
 /**
  * A limit switch that extends the generic

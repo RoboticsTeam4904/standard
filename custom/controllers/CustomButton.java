@@ -3,8 +3,8 @@ package org.usfirst.frc4904.standard.custom.controllers;
 
 import org.usfirst.frc4904.standard.commands.Cancel;
 import edu.wpi.first.wpilibj.GenericHID;
-import edu.wpi.first.wpilibj.buttons.JoystickButton;
-import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.Command;
 
 /**
  * A button with better toggle detection
@@ -60,7 +60,7 @@ public class CustomButton extends JoystickButton {
 	 *        The command to be run.
 	 */
 	public void onlyWhileReleased(Command command) {
-		command.start();
+		command.schedule();
 		whenReleased(command);
 		cancelWhenPressed(command);
 	}
