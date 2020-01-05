@@ -10,12 +10,14 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
  * A subsystem for managing a solenoid for a shifting drivetrain.
  *
  */
-public class SolenoidShifters extends SubsystemBase {
+public class SolenoidShifters extends SubsystemBase 
+{
 	protected final DoubleSolenoid solenoid;
 	protected final boolean isInverted;
 	protected ShiftState state;
 
-	public enum ShiftState {
+	public enum ShiftState 
+	{
 		UP, DOWN;
 	}
 
@@ -27,13 +29,17 @@ public class SolenoidShifters extends SubsystemBase {
 	 * @param isInverted
 	 *        To invert or not
 	 */
-	public SolenoidShifters(DoubleSolenoid solenoid, boolean isInverted) {
+	public SolenoidShifters(DoubleSolenoid solenoid, boolean isInverted) 
+	{
 		super();
 		this.solenoid = solenoid;
 		this.isInverted = isInverted;
-		if (!isInverted && solenoid.get() == DoubleSolenoid.Value.kForward) {
+		if (!isInverted && solenoid.get() == DoubleSolenoid.Value.kForward) 
+		{
 			state = ShiftState.UP;
-		} else {
+		} 
+		else 
+		{
 			state = ShiftState.DOWN;
 		}
 	}
@@ -44,7 +50,8 @@ public class SolenoidShifters extends SubsystemBase {
 	 * @param solenoid
 	 *        The DoubleSolenoid used to shift
 	 */
-	public SolenoidShifters(DoubleSolenoid solenoid) {
+	public SolenoidShifters(DoubleSolenoid solenoid) 
+	{
 		this(solenoid, false);
 	}
 
@@ -56,7 +63,8 @@ public class SolenoidShifters extends SubsystemBase {
 	 * @param portDown
 	 *        The second port of the double solenoid
 	 */
-	public SolenoidShifters(int portUp, int portDown) {
+	public SolenoidShifters(int portUp, int portDown) 
+	{
 		this(new DoubleSolenoid(portUp, portDown), false);
 	}
 
@@ -70,12 +78,14 @@ public class SolenoidShifters extends SubsystemBase {
 	 * @param portDown
 	 *        The second port of the double solenoid
 	 */
-	public SolenoidShifters(int module, int portUp, int portDown) {
+	public SolenoidShifters(int module, int portUp, int portDown) 
+	{
 		this(new DoubleSolenoid(module, portUp, portDown), false);
 	}
 
 	@Override
-	public Command getDefaultCommand() {
+	public Command getDefaultCommand() 
+	{
 		return new ChassisShift(this, SolenoidShifters.ShiftState.DOWN);
 	}
 
@@ -83,7 +93,8 @@ public class SolenoidShifters extends SubsystemBase {
 	 * Returns the current state of the solenoid shifters.
 	 * This is based on the set state, not a measured state.
 	 */
-	public ShiftState getShiftState() {
+	public ShiftState getShiftState() 
+	{
 		return state;
 	}
 
@@ -92,21 +103,29 @@ public class SolenoidShifters extends SubsystemBase {
 	 *
 	 * @param state
 	 */
-	public void shift(ShiftState state) {
+	public void shift(ShiftState state) 
+	{
 		this.state = state;
-		switch (state) {
+		switch (state) 
+		{
 			case UP:
-				if (!isInverted) {
+				if (!isInverted) 
+				{
 					solenoid.set(DoubleSolenoid.Value.kForward);
-				} else {
+				} 
+				else 
+				{
 					solenoid.set(DoubleSolenoid.Value.kReverse);
 				}
 				return;
 			case DOWN:
 			default:
-				if (!isInverted) {
+				if (!isInverted) 
+				{
 					solenoid.set(DoubleSolenoid.Value.kReverse);
-				} else {
+				} 
+				else 
+				{
 					solenoid.set(DoubleSolenoid.Value.kForward);
 				}
 				return;
@@ -116,8 +135,10 @@ public class SolenoidShifters extends SubsystemBase {
 	/**
 	 * Toggles current shift state for both gearboxes
 	 */
-	public void shift() {
-		switch (state) {
+	public void shift() 
+	{
+		switch (state) 
+		{
 			case UP:
 				shift(ShiftState.DOWN);
 				return;

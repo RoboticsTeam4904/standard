@@ -1,34 +1,30 @@
 package org.usfirst.frc4904.standard.subsystems.chassis;
 
 
-import org.usfirst.frc4904.standard.commands.chassis.ChassisIdle;
 import org.usfirst.frc4904.standard.subsystems.motor.Motor;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 
 /**
  * Generic Chassis class.
  * In the 4904 standard, the Chassis is treated as a container for motors and as a calculator for motor speeds.
- *
+ * setDefaultCommand should be called from RobotMap
  */
-public abstract class Chassis implements Subsystem {
+
+public abstract class Chassis implements Subsystem 
+{
 	protected double[] motorSpeeds;
 	protected Motor[] motors;
 
 	/**
 	 *
-	 * @param name
-	 * @param motors
+]	 * @param motors
 	 *        all the motors that are part of this Chassis. Pass from front to back, left to right
 	 */
-	public Chassis(String name, Motor... motors) {
-		super(name);
+	public Chassis(Motor... motors)
+	{
+		// super(name);
 		this.motors = motors;
 		motorSpeeds = new double[motors.length];
-	}
-
-	@Override
-	protected void initDefaultCommand() {
-		setDefaultCommand(new ChassisIdle(this));
 	}
 
 	/**
@@ -37,7 +33,8 @@ public abstract class Chassis implements Subsystem {
 	 * @return
 	 * 		all motors in the order passed to the constructor
 	 */
-	public Motor[] getMotors() {
+	public Motor[] getMotors() 
+	{
 		return motors;
 	}
 
@@ -47,7 +44,8 @@ public abstract class Chassis implements Subsystem {
 	 * @return
 	 * 		current motor speeds
 	 */
-	public double[] getMotorSpeeds() {
+	public double[] getMotorSpeeds()
+	{
 		return motorSpeeds;
 	}
 

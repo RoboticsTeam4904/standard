@@ -8,13 +8,13 @@ import org.usfirst.frc4904.standard.subsystems.motor.Motor;
  * This effectively adds a solenoid shifter to the chassis as a contained object.
  *
  */
-public class TankDriveShifting extends TankDrive implements ShiftingChassis {
+public class TankDriveShifting extends TankDrive implements ShiftingChassis 
+{
 	protected final SolenoidShifters shifter;
 	
 	/**
 	 * A tank drive with shifting solenoids (only two solenoids supported)
 	 *
-	 * @param name
 	 * @param turnCorrection
 	 * @param leftWheelA
 	 * @param leftWheelB
@@ -24,15 +24,15 @@ public class TankDriveShifting extends TankDrive implements ShiftingChassis {
 	 */
 	
 	public TankDriveShifting(String name, Double turnCorrection, Motor leftWheelA, Motor leftWheelB, Motor rightWheelA, Motor rightWheelB,
-		SolenoidShifters shifter) {
-		super(name, turnCorrection, leftWheelA, leftWheelB, rightWheelA, rightWheelB);
+		SolenoidShifters shifter) 
+	{
+		super(turnCorrection, leftWheelA, leftWheelB, rightWheelA, rightWheelB);
 		this.shifter = shifter;
 	}
 	
 	/**
 	 * A tank drive with shifting solenoids (only two solenoids supported)
 	 *
-	 * @param name
 	 * @param turnCorrection
 	 * @param leftWheelA
 	 * @param leftWheelB
@@ -41,37 +41,38 @@ public class TankDriveShifting extends TankDrive implements ShiftingChassis {
 	 * @param shifter
 	 */
 	
-	public TankDriveShifting(String name, Double turnCorrection, Motor leftWheel, Motor rightWheel, SolenoidShifters shifter) {
-		super(name, turnCorrection, leftWheel, rightWheel);
+	public TankDriveShifting(Double turnCorrection, Motor leftWheel, Motor rightWheel, SolenoidShifters shifter) 
+	{
+		super(turnCorrection, leftWheel, rightWheel);
 		this.shifter = shifter;
 	}
 
 	/**
 	 * A tank drive with shifting solenoids (only two solenoids supported)
 	 *
-	 * @param name
 	 * @param leftWheelA
 	 * @param leftWheelB
 	 * @param rightWheelA
 	 * @param rightWheelB
 	 * @param shifter
 	 */
-	public TankDriveShifting(String name, Motor leftWheelA, Motor leftWheelB, Motor rightWheelA, Motor rightWheelB,
-		SolenoidShifters shifter) {
-		super(name, leftWheelA, leftWheelB, rightWheelA, rightWheelB);
+	public TankDriveShifting(Motor leftWheelA, Motor leftWheelB, Motor rightWheelA, Motor rightWheelB,
+		SolenoidShifters shifter) 
+	{
+		super(leftWheelA, leftWheelB, rightWheelA, rightWheelB);
 		this.shifter = shifter;
 	}
 
 	/**
 	 * A tank drive with shifting solenoids (only two solenoids supported)
 	 *
-	 * @param name
 	 * @param leftWheel
 	 * @param rightWheel
 	 * @param shifter
 	 */
-	public TankDriveShifting(String name, Motor leftWheel, Motor rightWheel, SolenoidShifters shifter) {
-		super(name, leftWheel, rightWheel);
+	public TankDriveShifting(Motor leftWheel, Motor rightWheel, SolenoidShifters shifter) 
+	{
+		super(leftWheel, rightWheel);
 		this.shifter = shifter;
 	}
 
@@ -79,7 +80,8 @@ public class TankDriveShifting extends TankDrive implements ShiftingChassis {
 	 * Returns an array of solenoids in the order left, right
 	 */
 	@Override
-	public SolenoidShifters getShifter() {
+	public SolenoidShifters getShifter() 
+	{
 		return shifter;
 	}
 }

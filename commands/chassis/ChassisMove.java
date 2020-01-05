@@ -7,9 +7,11 @@ import org.usfirst.frc4904.standard.custom.ChassisController;
 import org.usfirst.frc4904.standard.subsystems.chassis.Chassis;
 import org.usfirst.frc4904.standard.subsystems.motor.Motor;
 import org.usfirst.frc4904.standard.subsystems.motor.VelocitySensorMotor;
-import edu.wpi.first.wpilibj.command.CommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.Subsystem;
+import java.util.*;
 
-/**
+/*
  * This command moves the chassis.
  * It move based on the driver class.
  * Note that it supports all types of chassis.
@@ -17,7 +19,7 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
  * The command works by creating a movement command for each motor.
  * This is the best way to handle this because it allows each motor to be a full subsystem.
  */
-public class ChassisMove extends CommandGroup {
+public class ChassisMove extends ParallelCommandGroup {
 	protected final MotorSet[] motorSpins;
 	protected double[] motorSpeeds;
 	protected final Motor[] motors;
@@ -34,8 +36,6 @@ public class ChassisMove extends CommandGroup {
 	 *        Whether to enable PID using any SensorMotors that Chassis has.
 	 */
 	public ChassisMove(Chassis chassis, ChassisController controller, boolean usePID) {
-		super("ChassisMove");
-		requires(chassis);
 		this.chassis = chassis;
 		this.controller = controller;
 		this.usePID = usePID;
@@ -43,9 +43,17 @@ public class ChassisMove extends CommandGroup {
 		motorSpins = new MotorSet[motors.length];
 		for (int i = 0; i < motors.length; i++) {
 			motorSpins[i] = new MotorSet(motors[i]);
-			addParallel(motorSpins[i]);
+			addCommands(motorSpins[i]);
 		}
-		LogKitten.v("ChassisMove created for " + chassis.getName());
+		// LogKitten.v("ChassisMove created for " + chassis.getName());
+	}
+	
+	@Override
+	public Set<Subsystem> getRequirements() 
+	{
+		HashSet<Subsystem> set = new HashSet<Subsystem>();
+		set.add(this.chassis);
+		return set;
 	}
 
 	/**
@@ -59,7 +67,7 @@ public class ChassisMove extends CommandGroup {
 	}
 
 	@Override
-	protected void initialize() {
+	public void initialize() {
 		for (Motor motor : motors) {
 			if (motor instanceof VelocitySensorMotor) {
 				// VelocitySensorMotors will attempt to very precisely achieve the speed set by this command when PID is enabled
@@ -76,7 +84,7 @@ public class ChassisMove extends CommandGroup {
 	}
 
 	@Override
-	protected void execute() {
+	public void execute() {
 		chassis.moveCartesian(controller.getX(), controller.getY(), controller.getTurnSpeed());
 		motorSpeeds = chassis.getMotorSpeeds();
 		StringBuilder motorSpeedsString = new StringBuilder();
@@ -92,7 +100,7 @@ public class ChassisMove extends CommandGroup {
 	}
 
 	@Override
-	protected boolean isFinished() {
+	public boolean isFinished() {
 		return false;
 	}
 
@@ -110,14 +118,14 @@ public class ChassisMove extends CommandGroup {
 	}
 
 	@Override
-	protected void end() {
+	public void end(boolean interrupted) {
 		stopMotorSpins();
-		LogKitten.v("ChassisMove ended");
-	}
+		
+		if(interrupted){
+			LogKitten.w("ChassisMove interrupted");
+		}else{
+			LogKitten.v("ChassisMove ended");
+		}
 
-	@Override
-	protected void interrupted() {
-		stopMotorSpins();
-		LogKitten.w("ChassisMove interrupted");
 	}
 }

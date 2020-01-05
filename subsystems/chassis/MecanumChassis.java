@@ -9,7 +9,8 @@ import org.usfirst.frc4904.standard.subsystems.motor.Motor;
  * Can move in all directions.
  *
  */
-public class MecanumChassis extends Chassis {
+public class MecanumChassis extends Chassis 
+{
 	/**
 	 * Constructs a mecanum chassis
 	 *
@@ -19,8 +20,9 @@ public class MecanumChassis extends Chassis {
 	 * @param backLeftWheel
 	 * @param backRightWheel
 	 */
-	public MecanumChassis(String name, Motor frontLeftWheel, Motor frontRightWheel, Motor backLeftWheel, Motor backRightWheel) {
-		super(name, frontLeftWheel, frontRightWheel, backLeftWheel, backRightWheel);
+	public MecanumChassis(String name, Motor frontLeftWheel, Motor frontRightWheel, Motor backLeftWheel, Motor backRightWheel) 
+	{
+		super(frontLeftWheel, frontRightWheel, backLeftWheel, backRightWheel);
 	}
 
 	/**
@@ -34,7 +36,8 @@ public class MecanumChassis extends Chassis {
 	 *        The speed at which the robot will revolve around itself during the maneuver. In the range -1 to 1.
 	 */
 	@Override
-	public void movePolar(double speed, double angle, double turnSpeed) {
+	public void movePolar(double speed, double angle, double turnSpeed) 
+	{
 		motorSpeeds = MecanumChassis.calculateWheels(speed, angle, turnSpeed);
 	}
 
@@ -49,7 +52,8 @@ public class MecanumChassis extends Chassis {
 	 *        The speed at which the robot will revolve around itself during the maneuver. In the range -1 to 1.
 	 */
 	@Override
-	public void moveCartesian(double xSpeed, double ySpeed, double turnSpeed) {
+	public void moveCartesian(double xSpeed, double ySpeed, double turnSpeed) 
+	{
 		double[] polar = MecanumChassis.cartesianToPolar(xSpeed, ySpeed);
 		movePolar(polar[0], polar[1], turnSpeed);
 	}

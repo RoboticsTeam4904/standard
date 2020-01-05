@@ -1,59 +1,77 @@
 package org.usfirst.frc4904.standard.commands.chassis;
 
+import java.util.*;
 
 import org.usfirst.frc4904.standard.custom.ChassisController;
 import org.usfirst.frc4904.standard.subsystems.chassis.Chassis;
-import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Subsystem;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.CommandGroupBase; 
 
-public class ChassisConstant extends Command implements ChassisController {
-	protected final ChassisMove move;
+public class ChassisConstant extends CommandBase implements Command, ChassisController {
+	protected final CommandGroupBase move;
 	protected final double x;
 	protected final double y;
 	protected final double turn;
+	protected final double timeout;
+	protected final Chassis chassis;
 
 	public ChassisConstant(Chassis chassis, double x, double y, double turn, double timeout) {
-		move = new ChassisMove(chassis, this);
+		move = new ChassisMove(chassis, this).withTimeout(timeout);
+		this.timeout = timeout;
 		this.x = x;
 		this.y = y;
 		this.turn = turn;
-		setTimeout(timeout);
+		this.chassis = chassis;
+	}
+	
+	@Override
+	public Set<Subsystem> getRequirements() 
+	{
+		HashSet<Subsystem> set = new HashSet<Subsystem>();
+		set.add(this.chassis);
+		return set;
 	}
 
 	@Override
-	public double getX() {
+	public double getX() 
+	{
 		return x;
 	}
 
 	@Override
-	public double getY() {
+	public double getY() 
+	{
 		return y;
 	}
 
 	@Override
-	public double getTurnSpeed() {
+	public double getTurnSpeed()
+	{
 		return turn;
 	}
 
 	@Override
-	protected void initialize() {
-		move.start();
+	public void initialize() 
+	{
+		move.initialize();
 	}
 
 	@Override
-	protected void execute() {}
+	public void execute() {}
 
 	@Override
-	protected boolean isFinished() {
-		return move.isFinished() || isTimedOut();
+	public boolean isFinished() 
+	{
+		// the command has timed out if the time since scheduled is greater than the timeout
+		return move.isFinished() || CommandScheduler.getInstance().timeSinceScheduled(this) > this.timeout;
 	}
 
 	@Override
-	protected void end() {
-		move.cancel();
-	}
-
-	@Override
-	protected void interrupted() {
+	public void end(boolean interrupted) 
+	{
 		move.cancel();
 	}
 }

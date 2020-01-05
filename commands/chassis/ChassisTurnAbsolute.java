@@ -4,7 +4,7 @@ package org.usfirst.frc4904.standard.commands.chassis;
 import org.usfirst.frc4904.standard.custom.motioncontrollers.MotionController;
 import org.usfirst.frc4904.standard.custom.sensors.IMU;
 import org.usfirst.frc4904.standard.subsystems.chassis.Chassis;
-import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class ChassisTurnAbsolute extends ChassisTurn {
 	/**
@@ -33,13 +33,14 @@ public class ChassisTurnAbsolute extends ChassisTurn {
 	 *        If the sensor fails for some reason, this command will be cancelled, then the fallbackCommand will start
 	 * @param motionController
 	 */
-	public ChassisTurnAbsolute(Chassis chassis, double finalAngle, IMU imu, Command fallbackCommand,
+	public ChassisTurnAbsolute(Chassis chassis, double finalAngle, IMU imu, CommandBase fallbackCommand,
 		MotionController motionController) {
 		super(chassis, finalAngle, imu, fallbackCommand, motionController);
 	}
 
 	@Override
-	protected void initialize() {
+	public void initialize() 
+	{
 		// ChassisTurnDegrees measures an initial angle and compensates for it
 		// to make its turns relative;
 		super.initialize();

@@ -6,14 +6,16 @@ import org.usfirst.frc4904.standard.custom.motioncontrollers.MotionController;
 import org.usfirst.frc4904.standard.custom.sensors.IMU;
 import org.usfirst.frc4904.standard.custom.sensors.InvalidSensorException;
 import org.usfirst.frc4904.standard.subsystems.chassis.Chassis;
-import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 
-public class ChassisTurn extends Command implements ChassisController {
+public class ChassisTurn extends CommandBase implements ChassisController, Command 
+{
 	protected final ChassisMove move;
 	protected double initialAngle;
 	protected final double finalAngle;
 	protected final MotionController motionController;
-	protected final Command fallbackCommand;
+	protected final CommandBase fallbackCommand;
 	protected final IMU imu;
 	protected boolean runOnce;
 
@@ -28,8 +30,9 @@ public class ChassisTurn extends Command implements ChassisController {
 	 *        If the sensor fails for some reason, this command will be cancelled, then the fallbackCommand will start
 	 * @param motionController
 	 */
-	public ChassisTurn(Chassis chassis, double finalAngle, IMU imu, Command fallbackCommand,
-		MotionController motionController) {
+	public ChassisTurn(final Chassis chassis, final double finalAngle, final IMU imu, final CommandBase fallbackCommand,
+		final MotionController motionController) 
+	{
 		move = new ChassisMove(chassis, this);
 		this.finalAngle = -((finalAngle + 360) % 360 - 180);
 		this.imu = imu;
@@ -46,81 +49,91 @@ public class ChassisTurn extends Command implements ChassisController {
 	 * @param imu
 	 * @param motionController
 	 */
-	public ChassisTurn(Chassis chassis, double finalAngle, IMU imu, MotionController motionController) {
+	public ChassisTurn(final Chassis chassis, final double finalAngle, final IMU imu, final MotionController motionController) 
+	{
 		this(chassis, finalAngle, imu, null, motionController);
 	}
 
 	@Override
-	public double getX() {
+	public double getX() 
+	{
 		return 0.0;
 	}
 
 	@Override
-	public double getY() {
+	public double getY() 
+	{
 		return 0.0;
 	}
 
 	@Override
-	public double getTurnSpeed() {
-		try {
+	public double getTurnSpeed() 
+	{
+		try 
+		{
 			return motionController.getSafely();
 		}
-		catch (InvalidSensorException e) {
+		catch (final InvalidSensorException e) 
+		{
 			move.cancel();
 			cancel();
-			if (fallbackCommand != null) {
-				fallbackCommand.start();
+			if (fallbackCommand != null) 
+			{
+				fallbackCommand.initialize();
 			}
 			return 0;
 		}
 	}
 
 	@Override
-	protected void initialize() {
-		move.start();
+	public void initialize() 
+	{
+		move.initialize();
 		initialAngle = imu.getYaw();
-		try {
+		try 
+		{
 			motionController.resetSafely();
 		}
-		catch (InvalidSensorException e) {
+		catch (final InvalidSensorException e) 
+		{
 			move.cancel();
 			cancel();
-			if (fallbackCommand != null) {
-				fallbackCommand.start();
+			if (fallbackCommand != null) 
+			{
+				fallbackCommand.initialize();
 			}
 			return;
 		}
 	}
 
 	@Override
-	protected void execute() {
+	public void execute() 
+	{
 		motionController.setSetpoint(((finalAngle + initialAngle) + 360) % 360 - 180);
-		if (!motionController.isEnabled()) {
+		if (!motionController.isEnabled()) 
+		{
 			motionController.enable();
 		}
 	}
 
 	@Override
-	protected boolean isFinished() {
-		if (move.isRunning() && !runOnce) {
+	public boolean isFinished() 
+	{
+		if (move.isScheduled() && !runOnce) 
+		{
 			runOnce = true;
 		}
-		return (motionController.onTarget() || !move.isRunning()) && runOnce;
+		return (motionController.onTarget() || !move.isScheduled()) && runOnce;
 	}
 
 	@Override
-	protected void end() {
+	public void end(final boolean interrupted) 
+	{
 		motionController.disable();
 		move.cancel();
-		// Please just die in a hole and never come back
-		if (fallbackCommand != null && fallbackCommand.isRunning()) {
+		if (fallbackCommand != null && fallbackCommand.isScheduled()) {
 			fallbackCommand.cancel();
 		}
 		runOnce = false;
-	}
-
-	@Override
-	protected void interrupted() {
-		end();
 	}
 }

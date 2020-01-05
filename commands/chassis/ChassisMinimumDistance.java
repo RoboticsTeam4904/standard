@@ -5,8 +5,10 @@ import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.custom.sensors.CustomEncoder;
 import org.usfirst.frc4904.standard.custom.sensors.InvalidSensorException;
 import org.usfirst.frc4904.standard.subsystems.chassis.Chassis;
+import edu.wpi.first.wpilibj2.command.Command;
 
-public class ChassisMinimumDistance extends ChassisConstant {
+public class ChassisMinimumDistance extends ChassisConstant implements Command
+{
 	protected CustomEncoder[] encoders;
 	protected final ChassisConstant fallbackCommand;
 	protected double distance;
@@ -28,7 +30,8 @@ public class ChassisMinimumDistance extends ChassisConstant {
 	 * @param encoders
 	 */
 	public ChassisMinimumDistance(Chassis chassis, double distance, double speed, ChassisConstant fallbackCommand,
-		CustomEncoder... encoders) {
+		CustomEncoder... encoders) 
+	{
 		super(chassis, 0.0, speed, 0.0, Double.MAX_VALUE);
 		this.encoders = encoders;
 		this.distance = distance;
@@ -54,13 +57,16 @@ public class ChassisMinimumDistance extends ChassisConstant {
 	}
 
 	@Override
-	protected void initialize() {
+	public void initialize() {
 		super.initialize();
-		for (int i = 0; i < encoders.length; i++) {
-			try {
+		for (int i = 0; i < encoders.length; i++) 
+		{
+			try 
+			{
 				initialDistances[i] = encoders[i].getDistanceSafely();
 			}
-			catch (InvalidSensorException e) {
+			catch (InvalidSensorException e) 
+			{
 				cancel();
 				return;
 			}
@@ -68,17 +74,22 @@ public class ChassisMinimumDistance extends ChassisConstant {
 	}
 
 	@Override
-	protected boolean isFinished() {
+	public boolean isFinished() 
+	{
 		double distanceSum = 0;
-		for (int i = 0; i < encoders.length; i++) {
-			try {
+		for (int i = 0; i < encoders.length; i++) 
+		{
+			try 
+			{
 				distanceSum += encoders[i].getDistanceSafely() - initialDistances[i];
 				LogKitten.d("Encoder " + i + " reads " + encoders[i].getDistanceSafely() + " out of " + distance);
 			}
-			catch (InvalidSensorException e) {
+			catch (InvalidSensorException e) 
+			{
 				cancel();
-				if (fallbackCommand != null) {
-					fallbackCommand.start();
+				if (fallbackCommand != null) 
+				{
+					fallbackCommand.initialize();
 				}
 				return true;
 			}
@@ -88,14 +99,16 @@ public class ChassisMinimumDistance extends ChassisConstant {
 	}
 
 	@Override
-	protected void end() {
-		super.end();
-		LogKitten.v("Finished traveling " + distance + " units (as set by setDistancePerPulse)");
-	}
-
-	@Override
-	protected void interrupted() {
-		super.interrupted();
-		LogKitten.w("Interrupted! " + getName() + " is in undefined location.");
+	public void end(boolean interrupted) 
+	{
+		super.end(interrupted);
+		if(interrupted)
+		{
+				LogKitten.w("Interrupted! " + getName() + " is in undefined location.");
+		}
+		else
+		{
+			LogKitten.v("Finished traveling " + distance + " units (as set by setDistancePerPulse)");
+		}
 	}
 }

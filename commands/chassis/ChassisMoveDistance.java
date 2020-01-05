@@ -1,18 +1,21 @@
 package org.usfirst.frc4904.standard.commands.chassis;
 
+import java.util.*;
 
 import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.custom.ChassisController;
 import org.usfirst.frc4904.standard.custom.motioncontrollers.MotionController;
 import org.usfirst.frc4904.standard.custom.sensors.InvalidSensorException;
 import org.usfirst.frc4904.standard.subsystems.chassis.Chassis;
-import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj2.command.Subsystem;
+import edu.wpi.first.wpilibj2.command.Command;
 
-public class ChassisMoveDistance extends Command implements ChassisController {
+public class ChassisMoveDistance implements Command, ChassisController {
 	protected final ChassisMove chassisMove;
 	protected final MotionController motionController;
 	protected final Command fallbackCommand;
 	protected final double distance;
+	protected final Chassis chassis;
 	protected boolean runOnce;
 
 	/**
@@ -34,6 +37,7 @@ public class ChassisMoveDistance extends Command implements ChassisController {
 		this.motionController = motionController;
 		this.distance = distance;
 		this.fallbackCommand = fallbackCommand;
+		this.chassis = chassis;
 		runOnce = false;
 	}
 
@@ -54,8 +58,16 @@ public class ChassisMoveDistance extends Command implements ChassisController {
 	}
 
 	@Override
+	public Set<Subsystem> getRequirements() 
+	{
+		HashSet<Subsystem> set = new HashSet<Subsystem>();
+		set.add(this.chassis);
+		return set;
+	}
+
+	@Override
 	public void initialize() {
-		chassisMove.start();
+		chassisMove.initialize();
 		try {
 			motionController.resetSafely();
 		}
@@ -64,7 +76,7 @@ public class ChassisMoveDistance extends Command implements ChassisController {
 			chassisMove.cancel();
 			cancel();
 			if (fallbackCommand != null) {
-				fallbackCommand.start();
+				fallbackCommand.initialize();
 			}
 			return;
 		}
@@ -88,7 +100,7 @@ public class ChassisMoveDistance extends Command implements ChassisController {
 			chassisMove.cancel();
 			cancel();
 			if (fallbackCommand != null) {
-				fallbackCommand.start();
+				fallbackCommand.initialize();
 			}
 			speed = 0;
 		}
@@ -102,7 +114,7 @@ public class ChassisMoveDistance extends Command implements ChassisController {
 	}
 
 	@Override
-	protected void end() {
+	public void end(boolean interrupted) {
 		chassisMove.cancel();
 		motionController.disable();
 		motionController.reset();
@@ -110,18 +122,18 @@ public class ChassisMoveDistance extends Command implements ChassisController {
 	}
 
 	@Override
-	protected void execute() {}
-
+	public void execute() {}
+/*
 	@Override
 	protected void interrupted() {
 		end();
 	}
-
+*/
 	@Override
-	protected boolean isFinished() {
-		if (chassisMove.isRunning() && !runOnce) {
+	public boolean isFinished() {
+		if (chassisMove.isScheduled() && !runOnce) {
 			runOnce = true;
 		}
-		return (motionController.onTarget() || !chassisMove.isRunning()) && runOnce;
+		return (motionController.onTarget() || !chassisMove.isScheduled()) && runOnce;
 	}
 }
