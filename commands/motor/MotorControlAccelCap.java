@@ -5,14 +5,17 @@ import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.custom.controllers.Controller;
 import org.usfirst.frc4904.standard.subsystems.motor.Motor;
 import org.usfirst.frc4904.standard.subsystems.motor.PositionSensorMotor;
-import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Subsystem;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Controls a Motor directly from a Controller (e.g. Joystick or Xbox)
  * Has an acceleration cap (but not deceleration cap)
  *
  */
-public class MotorControlAccelCap extends Command {
+public class MotorControlAccelCap implements Command {
 	protected final Motor motor;
 	protected final Controller controller;
 	protected final int axis;
@@ -34,7 +37,6 @@ public class MotorControlAccelCap extends Command {
 	 *        This is the maximum change in motor speed per second
 	 */
 	public MotorControlAccelCap(Motor motor, Controller controller, int axis, double scale, double accel_cap) {
-		super("MotorControl");
 		this.motor = motor;
 		this.controller = controller;
 		this.axis = axis;
@@ -42,8 +44,6 @@ public class MotorControlAccelCap extends Command {
 		this.accel_cap = accel_cap;
 		this.last_speed = 0.0;
 		last_t = System.currentTimeMillis();
-		requires(motor);
-		setInterruptible(true);
 		LogKitten.d("MotorControl created for " + motor.getName());
 	}
 
@@ -63,7 +63,7 @@ public class MotorControlAccelCap extends Command {
 	}
 
 	@Override
-	protected void initialize() {
+	public void initialize() {
 		LogKitten.d("MotorControl initialized");
 		if (motor instanceof PositionSensorMotor) {
 			((PositionSensorMotor) motor).disableMotionController();
@@ -71,7 +71,7 @@ public class MotorControlAccelCap extends Command {
 	}
 
 	@Override
-	protected void execute() {
+	public void execute() {
 		LogKitten.d("MotorControl executing: " + controller.getAxis(axis));
 		double human_input = controller.getAxis(axis) * scale;
 		double new_speed;
@@ -83,15 +83,19 @@ public class MotorControlAccelCap extends Command {
 	}
 
 	@Override
-	protected boolean isFinished() {
+	public boolean isFinished() {
 		return false;
 	}
 
 	@Override
-	protected void end() {}
-
-	@Override
-	protected void interrupted() {
+	public void end(boolean interrupted) {
 		LogKitten.d("MotorControl interrupted");
+	}
+	@Override
+	public Set<Subsystem> getRequirements() {
+		Set<Subsystem> motors = new HashSet<Subsystem>();
+		motors.add(motor);
+		// TODO Auto-generated method stub
+		return motors;
 	}
 }

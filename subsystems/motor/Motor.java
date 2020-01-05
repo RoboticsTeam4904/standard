@@ -8,13 +8,13 @@ import org.usfirst.frc4904.standard.subsystems.motor.speedmodifiers.IdentityModi
 import org.usfirst.frc4904.standard.subsystems.motor.speedmodifiers.SpeedModifier;
 import com.ctre.phoenix.motorcontrol.IMotorController;
 import edu.wpi.first.wpilibj.SpeedController;
-import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj2.command.Subsystem;
 
 /**
  * A class that wraps around a variable number of SpeedController objects to give them Subsystem functionality.
  * Can also modify their speed with a SpeedModifier for things like scaling or brownout protection.
  */
-public class Motor extends Subsystem implements SpeedController {
+public class Motor implements Subsystem, SpeedController {
 	protected final SpeedController[] motors;
 	protected final SpeedModifier speedModifier;
 	protected boolean isInverted;
@@ -228,6 +228,7 @@ public class Motor extends Subsystem implements SpeedController {
 	 */
 	@Override
 	public void set(double speed) {
+	
 		LogKitten.v("Motor " + getName() + " @ " + speed);
 		double newSpeed = speedModifier.modify(speed);
 		lastSpeed = newSpeed;
@@ -280,5 +281,9 @@ public class Motor extends Subsystem implements SpeedController {
 		public StrangeCANSpeedControllerModeRuntimeException() {
 			super("One of " + getName() + "'s SpeedControllers is a CANSpeedController with a non-zero mode. This might mess up it's .get(), so Motor cannot verify safety.");
 		}
+	}
+
+	public String getName() {
+		return null;
 	}
 }

@@ -3,7 +3,10 @@ package org.usfirst.frc4904.standard.commands.motor;
 
 import org.usfirst.frc4904.standard.custom.sensors.InvalidSensorException;
 import org.usfirst.frc4904.standard.subsystems.motor.PositionSensorMotor;
-import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Subsystem;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * MotorPositionConstant is a Command that runs while setting a SensorMotor's position
@@ -12,7 +15,7 @@ import edu.wpi.first.wpilibj.command.Command;
  * returns true (as set by internal PID).
  *
  */
-public class MotorPositionConstant extends Command {
+public class MotorPositionConstant implements Command {
 	protected PositionSensorMotor motor;
 	protected double position;
 	protected boolean endOnArrival;
@@ -34,13 +37,10 @@ public class MotorPositionConstant extends Command {
 	 *        If the sensor fails for some reason, this command will be cancelled, then the fallbackCommand will start
 	 */
 	public MotorPositionConstant(PositionSensorMotor motor, double position, boolean endOnArrival, Command fallbackCommand) {
-		super("MotorPositionConstant");
 		this.motor = motor;
 		this.position = position;
 		this.endOnArrival = endOnArrival;
 		this.fallbackCommand = fallbackCommand;
-		requires(motor);
-		setInterruptible(true);
 	}
 
 	public MotorPositionConstant(PositionSensorMotor motor, double position, boolean endOnArrival) {
@@ -52,7 +52,7 @@ public class MotorPositionConstant extends Command {
 	}
 
 	@Override
-	protected void initialize() {
+	public void initialize() {
 		try {
 			motor.reset();
 			motor.enableMotionController();
@@ -61,24 +61,24 @@ public class MotorPositionConstant extends Command {
 		catch (InvalidSensorException e) {
 			cancel();
 			if (fallbackCommand != null) {
-				fallbackCommand.start();
+				fallbackCommand.schedule();
 			}
 			return;
 		}
 	}
 
 	@Override
-	protected void execute() {
+	public void execute() {
 		if (motor.checkSensorException() != null) {
 			cancel();
 			if (fallbackCommand != null) {
-				fallbackCommand.start();
+				fallbackCommand.schedule();
 			}
 		}
 	}
 
 	@Override
-	protected boolean isFinished() {
+	public boolean isFinished() {
 		if (endOnArrival) {
 			return motor.onTarget();
 		}
@@ -86,14 +86,19 @@ public class MotorPositionConstant extends Command {
 	}
 
 	@Override
-	protected void end() {
+	public void end(boolean interrupted) {
 		motor.disableMotionController();
 		// Please just die in a hole and never come back
-		if (fallbackCommand != null && fallbackCommand.isRunning()) {
+		if (fallbackCommand != null && fallbackCommand.isScheduled()) {
 			fallbackCommand.cancel();
 		}
 	}
-
+	
 	@Override
-	protected void interrupted() {}
+	public Set<Subsystem> getRequirements() {
+		Set<Subsystem> motors = new HashSet<Subsystem>();
+		motors.add(motor);
+		// TODO Auto-generated method stub
+		return motors;
+	}
 }

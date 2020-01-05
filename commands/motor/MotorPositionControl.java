@@ -6,13 +6,16 @@ import org.usfirst.frc4904.standard.Util;
 import org.usfirst.frc4904.standard.custom.controllers.Controller;
 import org.usfirst.frc4904.standard.custom.sensors.InvalidSensorException;
 import org.usfirst.frc4904.standard.subsystems.motor.PositionSensorMotor;
-import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Subsystem;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Controls a SensorMotor's position directly from a Controller (e.g. Joystick or Xbox)
  *
  */
-public class MotorPositionControl extends Command {
+public class MotorPositionControl implements Command {
 	protected final PositionSensorMotor motor;
 	protected final Controller controller;
 	protected final int axis;
@@ -32,15 +35,12 @@ public class MotorPositionControl extends Command {
 	 *        If the sensor fails for some reason, this command will be cancelled, then the fallbackCommand will start
 	 */
 	public MotorPositionControl(PositionSensorMotor motor, Util.Range motorPositionRange, Controller controller, int axis, boolean invert, Command fallbackCommand) {
-		super("MotorPositionControl");
 		this.motor = motor;
 		this.motorPositionRange = motorPositionRange;
 		this.controller = controller;
 		this.axis = axis;
 		this.invert = invert;
 		this.fallbackCommand = fallbackCommand;
-		requires(motor);
-		setInterruptible(true);
 		LogKitten.d("MotorControl created for " + motor.getName());
 	}
 
@@ -59,12 +59,12 @@ public class MotorPositionControl extends Command {
 	}
 
 	@Override
-	protected void initialize() {
+	public void initialize() {
 		LogKitten.d("MotorPositionControl initialized");
 	}
 
 	@Override
-	protected void execute() {
+	public void execute() {
 		double axisValue = invert ? -1.0 * controller.getAxis(axis) : controller.getAxis(axis);
 		double targetPosition = motorPositionRange.scaleValue(axisValue);
 		LogKitten.d("MotorPositionControl executing: " + targetPosition);
@@ -74,21 +74,25 @@ public class MotorPositionControl extends Command {
 		catch (InvalidSensorException e) {
 			cancel();
 			if (fallbackCommand != null) {
-				fallbackCommand.start();
+				fallbackCommand.schedule();
 			}
 		}
 	}
 
 	@Override
-	protected boolean isFinished() {
+	public boolean isFinished() {
 		return false;
 	}
 
 	@Override
-	protected void end() {}
-
-	@Override
-	protected void interrupted() {
+	public void end(boolean interrupted) {
 		LogKitten.d("MotorPositionControl interrupted");
+	}
+	@Override
+	public Set<Subsystem> getRequirements() {
+		Set<Subsystem> motors = new HashSet<Subsystem>();
+		motors.add(motor);
+		// TODO Auto-generated method stub
+		return motors;
 	}
 }

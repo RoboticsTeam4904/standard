@@ -3,8 +3,11 @@ package org.usfirst.frc4904.standard.commands.motor;
 
 import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.subsystems.motor.Motor;
-import edu.wpi.first.wpilibj.SpeedController;
-import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Subsystem;
+import java.util.HashSet;
+import java.util.Set;
+
 
 /**
  * Sets a motor to a speed.
@@ -17,21 +20,18 @@ import edu.wpi.first.wpilibj.command.Command;
  * motor simultaneously.
  *
  */
-public class MotorSet extends Command {
-	protected final SpeedController motor;
+public class MotorSet implements Command {
+	protected final Motor motor;
 	protected double speed;
 
 	public MotorSet(Motor motor) {
-		super("MotorSet");
 		this.motor = motor;
 		speed = 0;
 		LogKitten.d("MotorSet created for " + motor.getName());
-		requires(motor);
-		setInterruptible(true);
 	}
 
 	@Override
-	protected void initialize() {
+	public void initialize() {
 		LogKitten.d("MotorSet initialized");
 	}
 
@@ -44,24 +44,26 @@ public class MotorSet extends Command {
 	}
 
 	@Override
-	protected void execute() {
+	public void execute() {
 		motor.set(speed);
 		LogKitten.d("MotorSet executing with speed " + speed);
 	}
 
 	@Override
-	protected void end() {
+	public void end(boolean interrupted) {
 		motor.set(0);
 		LogKitten.d("MotorSet ended (motor speed set to 0)");
 	}
 
 	@Override
-	protected void interrupted() {
-		LogKitten.d("MotorSet interupted (motor speed undefined)");
-	}
-
-	@Override
-	protected boolean isFinished() {
+	public boolean isFinished() {
 		return false;
+	}
+	@Override
+	public Set<Subsystem> getRequirements() {
+		Set<Subsystem> motors = new HashSet<Subsystem>();
+		motors.add(motor);
+		// TODO Auto-generated method stub
+		return motors;
 	}
 }

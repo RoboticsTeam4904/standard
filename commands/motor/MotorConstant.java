@@ -1,63 +1,61 @@
 package org.usfirst.frc4904.standard.commands.motor;
 
-
+import java.util.HashSet;
+import java.util.Set;
 import org.usfirst.frc4904.standard.subsystems.motor.Motor;
-import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Subsystem;
 
 /**
  * Runs a motor at a constant speed until interrupted.
  */
-public class MotorConstant extends Command {
+public class MotorConstant implements Command {
 	protected final double motorSpeed;
 	protected final Motor motor;
 
 	/**
-	 * @param name
-	 *        The name of this command.
-	 * @param motor
-	 *        The motor to set the speed of.
-	 * @param motorSpeed
-	 *        The speed to set the motor to.
+	 * @param name       The name of this command.
+	 * @param motor      The motor to set the speed of.
+	 * @param motorSpeed The speed to set the motor to.
 	 */
 	public MotorConstant(String name, Motor motor, double motorSpeed) {
-		super(name);
 		this.motor = motor;
 		this.motorSpeed = motorSpeed;
-		requires(motor);
-		setInterruptible(true);
 	}
 
 	/**
 	 *
-	 * @param motor
-	 *        The motor to set the speed of.
-	 * @param motorSpeed
-	 *        The speed to set the motor to.
+	 * @param motor      The motor to set the speed of.
+	 * @param motorSpeed The speed to set the motor to.
 	 */
 	public MotorConstant(Motor motor, double motorSpeed) {
 		this("MotorConstant", motor, motorSpeed);
 	}
 
 	@Override
-	protected void initialize() {
+	public void initialize() {
 		motor.set(motorSpeed);
 	}
 
 	@Override
-	protected void execute() {
+	public void execute() {
 		motor.set(motorSpeed);
 	}
 
 	@Override
-	protected boolean isFinished() {
+	public boolean isFinished() {
 		return false;
 	}
-
 	@Override
-	protected void end() {
+	public void end(boolean interrupted) {
 		motor.set(0.0);
 	}
 
 	@Override
-	protected void interrupted() {}
+	public Set<Subsystem> getRequirements() {
+		Set<Subsystem> motors = new HashSet<Subsystem>();
+		motors.add(motor);
+		// TODO Auto-generated method stub
+		return motors;
+	}
 }

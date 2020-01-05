@@ -5,14 +5,17 @@ import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.custom.controllers.Controller;
 import org.usfirst.frc4904.standard.subsystems.motor.Motor;
 import org.usfirst.frc4904.standard.subsystems.motor.PositionSensorMotor;
-import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Subsystem;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Controls a Motor directly from a Controller (e.g. Joystick or Xbox)
  *
  *
  */
-public class MotorControl extends Command {
+public class MotorControl implements Command {
 	protected final Motor motor;
 	protected final Controller controller;
 	protected final int axis;
@@ -28,14 +31,11 @@ public class MotorControl extends Command {
 	 * @param scale
 	 */
 	public MotorControl(Motor motor, Controller controller, int axis, double scale) {
-		super("MotorControl");
 		this.motor = motor;
 		this.controller = controller;
 		this.axis = axis;
 		this.scale = scale;
-		requires(motor);
-		setInterruptible(true);
-		LogKitten.d("MotorControl created for " + motor.getName());
+		LogKitten.d("MotorControl created.");
 	}
 
 	/**
@@ -52,7 +52,7 @@ public class MotorControl extends Command {
 	}
 
 	@Override
-	protected void initialize() {
+	public void initialize() {
 		LogKitten.d("MotorControl initialized");
 		if (motor instanceof PositionSensorMotor) {
 			((PositionSensorMotor) motor).disableMotionController();
@@ -60,21 +60,25 @@ public class MotorControl extends Command {
 	}
 
 	@Override
-	protected void execute() {
+	public void execute() {
 		LogKitten.d("MotorControl executing: " + controller.getAxis(axis));
 		motor.set(controller.getAxis(axis) * scale);
 	}
 
 	@Override
-	protected boolean isFinished() {
+	public boolean isFinished() {
 		return false;
 	}
 
 	@Override
-	protected void end() {}
-
-	@Override
-	protected void interrupted() {
+	public void end(boolean interrupted) {
 		LogKitten.d("MotorControl interrupted");
+	}
+	@Override
+	public Set<Subsystem> getRequirements() {
+		Set<Subsystem> motors = new HashSet<Subsystem>();
+		motors.add(motor);
+		// TODO Auto-generated method stub
+		return motors;
 	}
 }
