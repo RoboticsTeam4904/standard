@@ -3,14 +3,14 @@ package org.usfirst.frc4904.standard.subsystems.chassis;
 
 import org.usfirst.frc4904.standard.commands.chassis.ChassisIdle;
 import org.usfirst.frc4904.standard.subsystems.motor.Motor;
-import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj2.command.Subsystem;
 
 /**
  * Generic Chassis class.
  * In the 4904 standard, the Chassis is treated as a container for motors and as a calculator for motor speeds.
  *
  */
-public abstract class Chassis extends Subsystem {
+public abstract class Chassis implements Subsystem {
 	protected double[] motorSpeeds;
 	protected Motor[] motors;
 
