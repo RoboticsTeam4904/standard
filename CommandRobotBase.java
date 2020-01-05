@@ -10,7 +10,7 @@ import org.usfirst.frc4904.standard.humaninput.Operator;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
-import edu.wpi.first.wpilibj.livewindow.LiveWindow;
+//import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
@@ -216,9 +216,10 @@ public abstract class CommandRobotBase extends TimedRobot {
 	 */
 	@Override
 	public void testPeriodic() {
-		LiveWindow.run();
+	//	LiveWindow.run();
 		testExecute();
 		alwaysExecute();
+		
 	}
 
 	/**
