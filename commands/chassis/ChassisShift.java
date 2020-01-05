@@ -2,15 +2,13 @@ package org.usfirst.frc4904.standard.commands.chassis;
 
 
 import org.usfirst.frc4904.standard.subsystems.chassis.SolenoidShifters;
-//import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /**
  * This command shifts a set of solenoids.
  *
  */
-public class ChassisShift extends CommandBase
-{
+public class ChassisShift extends CommandBase {
 	protected final SolenoidShifters solenoids;
 	protected final SolenoidShifters.ShiftState state;
 
