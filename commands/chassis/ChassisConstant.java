@@ -7,7 +7,6 @@ import org.usfirst.frc4904.standard.subsystems.chassis.Chassis;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.CommandGroupBase;
 
 public class ChassisConstant implements Command, ChassisController {
@@ -16,7 +15,7 @@ public class ChassisConstant implements Command, ChassisController {
 	protected final double y;
 	protected final double turn;
 	protected final double timeout;
-	protected final Chassis chassis;
+	private Chassis chassis;
 
 	public ChassisConstant(Chassis chassis, double x, double y, double turn, double timeout) {
 		move = new ChassisMove(chassis, this).withTimeout(timeout);
