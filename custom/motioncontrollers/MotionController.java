@@ -1,12 +1,14 @@
 package org.usfirst.frc4904.standard.custom.motioncontrollers;
 
-
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.function.DoubleSupplier;
+import java.util.function.DoubleConsumer;
+
 import org.usfirst.frc4904.standard.custom.sensors.InvalidSensorException;
 import org.usfirst.frc4904.standard.custom.sensors.PIDSensor;
-import edu.wpi.first.wpilibj.PIDOutput;
-import edu.wpi.first.wpilibj.PIDSource;
+import edu.wpi.first.wpilibj.controller.PIDController;
+import edu.wpi.first.wpilibj2.command.PIDCommand;
 import edu.wpi.first.hal.util.BoundaryException;
 
 /**
@@ -15,7 +17,7 @@ import edu.wpi.first.hal.util.BoundaryException;
  *
  */
 public abstract class MotionController {
-	protected PIDOutput output;
+	protected DoubleConsumer output;
 	protected Timer timer;
 	protected MotionControllerTask task;
 	protected final PIDSensor sensor;
@@ -69,7 +71,7 @@ public abstract class MotionController {
 	 * @param output
 	 *        The output to control
 	 */
-	public void setOutput(PIDOutput output) {
+	public void setOutput(DoubleConsumer output) {
 		this.output = output;
 	}
 
@@ -81,7 +83,7 @@ public abstract class MotionController {
 	 *        The sensor associated with the output you are
 	 *        trying to control
 	 */
-	public MotionController(PIDSource source) {
+	public MotionController(PIDController source) {
 		this(new PIDSensor.PIDSourceWrapper(source));
 	}
 
