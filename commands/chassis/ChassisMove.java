@@ -1,6 +1,5 @@
 package org.usfirst.frc4904.standard.commands.chassis;
 
-
 import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.commands.motor.MotorSet;
 import org.usfirst.frc4904.standard.custom.ChassisController;
@@ -28,12 +27,11 @@ public class ChassisMove extends ParallelCommandGroup {
 	protected final ChassisController controller;
 
 	/**
-	 * @param chassis
-	 *        The robot's Chassis.
-	 * @param controller
-	 *        A ChassisController to control the Chassis, such as a Driver or autonomous routine.
-	 * @param usePID
-	 *        Whether to enable PID using any SensorMotors that Chassis has.
+	 * @param chassis    The robot's Chassis.
+	 * @param controller A ChassisController to control the Chassis, such as a
+	 *                   Driver or autonomous routine.
+	 * @param usePID     Whether to enable PID using any SensorMotors that Chassis
+	 *                   has.
 	 */
 	public ChassisMove(Chassis chassis, ChassisController controller, boolean usePID) {
 		this.chassis = chassis;
@@ -47,20 +45,18 @@ public class ChassisMove extends ParallelCommandGroup {
 		}
 		// LogKitten.v("ChassisMove created for " + chassis.getName());
 	}
-	
+
 	@Override
-	public Set<Subsystem> getRequirements() 
-	{
+	public Set<Subsystem> getRequirements() {
 		HashSet<Subsystem> set = new HashSet<Subsystem>();
 		set.add(this.chassis);
 		return set;
 	}
 
 	/**
-	 * @param chassis
-	 *        The robot's chassis.
-	 * @param controller
-	 *        A ChassisController to control the Chassis, such as a Driver or autonomous routine.
+	 * @param chassis    The robot's chassis.
+	 * @param controller A ChassisController to control the Chassis, such as a
+	 *                   Driver or autonomous routine.
 	 */
 	public ChassisMove(Chassis chassis, ChassisController controller) {
 		this(chassis, controller, false);
@@ -70,9 +66,12 @@ public class ChassisMove extends ParallelCommandGroup {
 	public void initialize() {
 		for (Motor motor : motors) {
 			if (motor instanceof VelocitySensorMotor) {
-				// VelocitySensorMotors will attempt to very precisely achieve the speed set by this command when PID is enabled
-				// PositionSensorMotors will either attempt to maintain their previous position, or worse, will try to move to somewhere
-				// between -1.0 and 1.0, which is probably not the correct position regardless of the scaling.
+				// VelocitySensorMotors will attempt to very precisely achieve the speed set by
+				// this command when PID is enabled
+				// PositionSensorMotors will either attempt to maintain their previous position,
+				// or worse, will try to move to somewhere
+				// between -1.0 and 1.0, which is probably not the correct position regardless
+				// of the scaling.
 				if (usePID) {
 					((VelocitySensorMotor) motor).enableMotionController();
 				} else {
@@ -105,11 +104,9 @@ public class ChassisMove extends ParallelCommandGroup {
 	}
 
 	/**
-	 * It's important to stop motor spins before
-	 * the ChassisMove command stops. Otherwise,
-	 * the spins might briefly (for one tick) use the
-	 * previously set values if the ChassisMove command
-	 * is reused.
+	 * It's important to stop motor spins before the ChassisMove command stops.
+	 * Otherwise, the spins might briefly (for one tick) use the previously set
+	 * values if the ChassisMove command is reused.
 	 */
 	protected void stopMotorSpins() {
 		for (int i = 0; i < motors.length; i++) {
@@ -120,10 +117,10 @@ public class ChassisMove extends ParallelCommandGroup {
 	@Override
 	public void end(boolean interrupted) {
 		stopMotorSpins();
-		
-		if(interrupted){
+
+		if (interrupted) {
 			LogKitten.w("ChassisMove interrupted");
-		}else{
+		} else {
 			LogKitten.v("ChassisMove ended");
 		}
 

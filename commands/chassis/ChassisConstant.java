@@ -8,9 +8,9 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.CommandGroupBase; 
+import edu.wpi.first.wpilibj2.command.CommandGroupBase;
 
-public class ChassisConstant extends CommandBase implements Command, ChassisController {
+public class ChassisConstant implements Command, ChassisController {
 	protected final CommandGroupBase move;
 	protected final double x;
 	protected final double y;
@@ -26,52 +26,47 @@ public class ChassisConstant extends CommandBase implements Command, ChassisCont
 		this.turn = turn;
 		this.chassis = chassis;
 	}
-	
+
 	@Override
-	public Set<Subsystem> getRequirements() 
-	{
+	public Set<Subsystem> getRequirements() {
 		HashSet<Subsystem> set = new HashSet<Subsystem>();
 		set.add(this.chassis);
 		return set;
 	}
 
 	@Override
-	public double getX() 
-	{
+	public double getX() {
 		return x;
 	}
 
 	@Override
-	public double getY() 
-	{
+	public double getY() {
 		return y;
 	}
 
 	@Override
-	public double getTurnSpeed()
-	{
+	public double getTurnSpeed() {
 		return turn;
 	}
 
 	@Override
-	public void initialize() 
-	{
+	public void initialize() {
 		move.initialize();
 	}
 
 	@Override
-	public void execute() {}
+	public void execute() {
+	}
 
 	@Override
-	public boolean isFinished() 
-	{
-		// the command has timed out if the time since scheduled is greater than the timeout
+	public boolean isFinished() {
+		// the command has timed out if the time since scheduled is greater than the
+		// timeout
 		return move.isFinished() || CommandScheduler.getInstance().timeSinceScheduled(this) > this.timeout;
 	}
 
 	@Override
-	public void end(boolean interrupted) 
-	{
+	public void end(boolean interrupted) {
 		move.cancel();
 	}
 }

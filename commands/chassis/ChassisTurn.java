@@ -1,6 +1,5 @@
 package org.usfirst.frc4904.standard.commands.chassis;
 
-
 import org.usfirst.frc4904.standard.custom.ChassisController;
 import org.usfirst.frc4904.standard.custom.motioncontrollers.MotionController;
 import org.usfirst.frc4904.standard.custom.sensors.IMU;
@@ -9,8 +8,7 @@ import org.usfirst.frc4904.standard.subsystems.chassis.Chassis;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-public class ChassisTurn extends CommandBase implements ChassisController, Command 
-{
+public class ChassisTurn extends CommandBase implements ChassisController, Command {
 	protected final ChassisMove move;
 	protected double initialAngle;
 	protected final double finalAngle;
@@ -20,19 +18,19 @@ public class ChassisTurn extends CommandBase implements ChassisController, Comma
 	protected boolean runOnce;
 
 	/**
-	 * Constructor
-	 * This command rotates the chassis to a position relative to the current angle of the robot
+	 * Constructor This command rotates the chassis to a position relative to the
+	 * current angle of the robot
 	 *
 	 * @param chassis
 	 * @param finalAngle
 	 * @param imu
-	 * @param fallbackCommand
-	 *        If the sensor fails for some reason, this command will be cancelled, then the fallbackCommand will start
+	 * @param fallbackCommand  If the sensor fails for some reason, this command
+	 *                         will be cancelled, then the fallbackCommand will
+	 *                         start
 	 * @param motionController
 	 */
 	public ChassisTurn(final Chassis chassis, final double finalAngle, final IMU imu, final CommandBase fallbackCommand,
-		final MotionController motionController) 
-	{
+			final MotionController motionController) {
 		move = new ChassisMove(chassis, this);
 		this.finalAngle = -((finalAngle + 360) % 360 - 180);
 		this.imu = imu;
@@ -41,44 +39,37 @@ public class ChassisTurn extends CommandBase implements ChassisController, Comma
 	}
 
 	/**
-	 * Constructor
-	 * This command rotates the chassis to a position relative to the current angle of the robot
+	 * Constructor This command rotates the chassis to a position relative to the
+	 * current angle of the robot
 	 *
 	 * @param chassis
 	 * @param finalAngle
 	 * @param imu
 	 * @param motionController
 	 */
-	public ChassisTurn(final Chassis chassis, final double finalAngle, final IMU imu, final MotionController motionController) 
-	{
+	public ChassisTurn(final Chassis chassis, final double finalAngle, final IMU imu,
+			final MotionController motionController) {
 		this(chassis, finalAngle, imu, null, motionController);
 	}
 
 	@Override
-	public double getX() 
-	{
+	public double getX() {
 		return 0.0;
 	}
 
 	@Override
-	public double getY() 
-	{
+	public double getY() {
 		return 0.0;
 	}
 
 	@Override
-	public double getTurnSpeed() 
-	{
-		try 
-		{
+	public double getTurnSpeed() {
+		try {
 			return motionController.getSafely();
-		}
-		catch (final InvalidSensorException e) 
-		{
+		} catch (final InvalidSensorException e) {
 			move.cancel();
 			cancel();
-			if (fallbackCommand != null) 
-			{
+			if (fallbackCommand != null) {
 				fallbackCommand.initialize();
 			}
 			return 0;
@@ -86,20 +77,15 @@ public class ChassisTurn extends CommandBase implements ChassisController, Comma
 	}
 
 	@Override
-	public void initialize() 
-	{
+	public void initialize() {
 		move.initialize();
 		initialAngle = imu.getYaw();
-		try 
-		{
+		try {
 			motionController.resetSafely();
-		}
-		catch (final InvalidSensorException e) 
-		{
+		} catch (final InvalidSensorException e) {
 			move.cancel();
 			cancel();
-			if (fallbackCommand != null) 
-			{
+			if (fallbackCommand != null) {
 				fallbackCommand.initialize();
 			}
 			return;
@@ -107,28 +93,23 @@ public class ChassisTurn extends CommandBase implements ChassisController, Comma
 	}
 
 	@Override
-	public void execute() 
-	{
+	public void execute() {
 		motionController.setSetpoint(((finalAngle + initialAngle) + 360) % 360 - 180);
-		if (!motionController.isEnabled()) 
-		{
+		if (!motionController.isEnabled()) {
 			motionController.enable();
 		}
 	}
 
 	@Override
-	public boolean isFinished() 
-	{
-		if (move.isScheduled() && !runOnce) 
-		{
+	public boolean isFinished() {
+		if (move.isScheduled() && !runOnce) {
 			runOnce = true;
 		}
 		return (motionController.onTarget() || !move.isScheduled()) && runOnce;
 	}
 
 	@Override
-	public void end(final boolean interrupted) 
-	{
+	public void end(final boolean interrupted) {
 		motionController.disable();
 		move.cancel();
 		if (fallbackCommand != null && fallbackCommand.isScheduled()) {

@@ -19,20 +19,20 @@ public class ChassisMoveDistance implements Command, ChassisController {
 	protected boolean runOnce;
 
 	/**
-	 * Constructor.
-	 * This command moves the chassis forward a known distance via a set of encoders.
-	 * The distance is calculated as the average of the provided encoders.
-	 * The speed is decided by the provided motionController.
+	 * Constructor. This command moves the chassis forward a known distance via a
+	 * set of encoders. The distance is calculated as the average of the provided
+	 * encoders. The speed is decided by the provided motionController.
 	 *
 	 * @param chassis
-	 * @param distance
-	 *        distance to move in encoder ticks
+	 * @param distance         distance to move in encoder ticks
 	 * @param motionController
-	 * @param fallbackCommand
-	 *        If the sensor fails for some reason, this command will be cancelled, then the fallbackCommand will start
+	 * @param fallbackCommand  If the sensor fails for some reason, this command
+	 *                         will be cancelled, then the fallbackCommand will
+	 *                         start
 	 * @param encoders
 	 */
-	public ChassisMoveDistance(Chassis chassis, double distance, MotionController motionController, Command fallbackCommand) {
+	public ChassisMoveDistance(Chassis chassis, double distance, MotionController motionController,
+			Command fallbackCommand) {
 		chassisMove = new ChassisMove(chassis, this, false);
 		this.motionController = motionController;
 		this.distance = distance;
@@ -42,14 +42,12 @@ public class ChassisMoveDistance implements Command, ChassisController {
 	}
 
 	/**
-	 * Constructor.
-	 * This command moves the chassis forward a known distance via a set of encoders.
-	 * The distance is calculated as the average of the provided encoders.
-	 * The speed is decided by the provided motionController.
+	 * Constructor. This command moves the chassis forward a known distance via a
+	 * set of encoders. The distance is calculated as the average of the provided
+	 * encoders. The speed is decided by the provided motionController.
 	 *
 	 * @param chassis
-	 * @param distance
-	 *        distance to move in encoder ticks
+	 * @param distance         distance to move in encoder ticks
 	 * @param motionController
 	 * @param encoders
 	 */
@@ -58,8 +56,7 @@ public class ChassisMoveDistance implements Command, ChassisController {
 	}
 
 	@Override
-	public Set<Subsystem> getRequirements() 
-	{
+	public Set<Subsystem> getRequirements() {
 		HashSet<Subsystem> set = new HashSet<Subsystem>();
 		set.add(this.chassis);
 		return set;
@@ -70,8 +67,7 @@ public class ChassisMoveDistance implements Command, ChassisController {
 		chassisMove.initialize();
 		try {
 			motionController.resetSafely();
-		}
-		catch (InvalidSensorException e) {
+		} catch (InvalidSensorException e) {
 			LogKitten.w("Cancelling ChassisMoveDistance");
 			chassisMove.cancel();
 			cancel();
@@ -94,8 +90,7 @@ public class ChassisMoveDistance implements Command, ChassisController {
 		double speed;
 		try {
 			speed = motionController.getSafely();
-		}
-		catch (InvalidSensorException e) {
+		} catch (InvalidSensorException e) {
 			LogKitten.w("Cancelling ChassisMoveDistance");
 			chassisMove.cancel();
 			cancel();
@@ -122,13 +117,12 @@ public class ChassisMoveDistance implements Command, ChassisController {
 	}
 
 	@Override
-	public void execute() {}
-/*
-	@Override
-	protected void interrupted() {
-		end();
+	public void execute() {
 	}
-*/
+
+	/*
+	 * @Override protected void interrupted() { end(); }
+	 */
 	@Override
 	public boolean isFinished() {
 		if (chassisMove.isScheduled() && !runOnce) {
