@@ -35,12 +35,11 @@ public class ChassisIdle extends ParallelCommandGroup {
 	}
 
 	@Override
-	public void initialize() {
+	public void initialize() {}
 	@Override
 	public void execute() {}
 	@Override
-	public void end(boolean interrupt) {
-	}
-	//@Override
+	public void end(boolean interrupt) {}
+
 	//public void 
 }
