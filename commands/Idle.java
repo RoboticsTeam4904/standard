@@ -45,14 +45,10 @@ public class Idle implements Command {
 	@Override
 	public void end(boolean interrupted) {}
 
-	/*
-	* Fixes the error at the top of the file, but needs a Motor object. 
-	*/
-	// @Override
-	// public Set<Subsystem> getRequirements() {
-	// 	Set<Subsystem> motors = new HashSet<Subsystem>();
-	// 	motors.add(motor);
-	// 	// TODO Auto-generated method stub
-	// 	return motors;
-	// }
+	@Override
+	public Set<Subsystem> getRequirements() {
+		Set<Subsystem> motors = new HashSet<Subsystem>();
+		// TODO Auto-generated method stub
+		return motors;
+	}
 }
