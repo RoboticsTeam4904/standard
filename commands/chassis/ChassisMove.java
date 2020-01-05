@@ -7,7 +7,7 @@ import org.usfirst.frc4904.standard.custom.ChassisController;
 import org.usfirst.frc4904.standard.subsystems.chassis.Chassis;
 import org.usfirst.frc4904.standard.subsystems.motor.Motor;
 import org.usfirst.frc4904.standard.subsystems.motor.VelocitySensorMotor;
-import edu.wpi.first.wpilibj.command.CommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 
 /**
  * This command moves the chassis.
@@ -17,7 +17,7 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
  * The command works by creating a movement command for each motor.
  * This is the best way to handle this because it allows each motor to be a full subsystem.
  */
-public class ChassisMove extends CommandGroup {
+public class ChassisMove extends ParallelCommandGroup {
 	protected final MotorSet[] motorSpins;
 	protected double[] motorSpeeds;
 	protected final Motor[] motors;
@@ -76,7 +76,7 @@ public class ChassisMove extends CommandGroup {
 	}
 
 	@Override
-	protected void execute() {
+	public void execute() {
 		chassis.moveCartesian(controller.getX(), controller.getY(), controller.getTurnSpeed());
 		motorSpeeds = chassis.getMotorSpeeds();
 		StringBuilder motorSpeedsString = new StringBuilder();

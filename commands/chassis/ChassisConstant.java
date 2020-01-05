@@ -1,16 +1,26 @@
 package org.usfirst.frc4904.standard.commands.chassis;
 
 
+import java.util.Set;
+
 import org.usfirst.frc4904.standard.custom.ChassisController;
 import org.usfirst.frc4904.standard.subsystems.chassis.Chassis;
-import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Subsystem;
 
-public class ChassisConstant extends Command implements ChassisController {
+public class ChassisConstant implements ChassisController, Command {
 	protected final ChassisMove move;
 	protected final double x;
 	protected final double y;
 	protected final double turn;
 
+	@Override
+	public Set<Subsystem> getRequirements() {
+		// TODO Auto-generated method stub
+		// we need nothing
+
+		return null;
+	}
 	public ChassisConstant(Chassis chassis, double x, double y, double turn, double timeout) {
 		move = new ChassisMove(chassis, this);
 		this.x = x;
@@ -35,25 +45,25 @@ public class ChassisConstant extends Command implements ChassisController {
 	}
 
 	@Override
-	protected void initialize() {
+	public void initialize() {
 		move.start();
 	}
 
 	@Override
-	protected void execute() {}
+	public void execute() {}
 
 	@Override
-	protected boolean isFinished() {
+	public boolean isFinished() {
 		return move.isFinished() || isTimedOut();
 	}
 
 	@Override
-	protected void end() {
+	public void end(boolean interrupted) {
 		move.cancel();
 	}
 
 	@Override
-	protected void interrupted() {
+	public void interrupted() {
 		move.cancel();
 	}
 }
