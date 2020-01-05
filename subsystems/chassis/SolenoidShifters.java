@@ -3,13 +3,14 @@ package org.usfirst.frc4904.standard.subsystems.chassis;
 
 import org.usfirst.frc4904.standard.commands.chassis.ChassisShift;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
-import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 /**
  * A subsystem for managing a solenoid for a shifting drivetrain.
  *
  */
-public class SolenoidShifters extends Subsystem {
+public class SolenoidShifters extends SubsystemBase {
 	protected final DoubleSolenoid solenoid;
 	protected final boolean isInverted;
 	protected ShiftState state;
@@ -27,7 +28,7 @@ public class SolenoidShifters extends Subsystem {
 	 *        To invert or not
 	 */
 	public SolenoidShifters(DoubleSolenoid solenoid, boolean isInverted) {
-		super("SolenoidShifters");
+		super();
 		this.solenoid = solenoid;
 		this.isInverted = isInverted;
 		if (!isInverted && solenoid.get() == DoubleSolenoid.Value.kForward) {
@@ -74,8 +75,8 @@ public class SolenoidShifters extends Subsystem {
 	}
 
 	@Override
-	protected void initDefaultCommand() {
-		setDefaultCommand(new ChassisShift(this, SolenoidShifters.ShiftState.DOWN));
+	public Command getDefaultCommand() {
+		return new ChassisShift(this, SolenoidShifters.ShiftState.DOWN);
 	}
 
 	/**
