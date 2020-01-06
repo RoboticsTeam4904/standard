@@ -51,8 +51,13 @@ public class MotorSet implements Command {
 
 	@Override
 	public void end(boolean interrupted) {
-		motor.set(0);
-		LogKitten.d("MotorSet ended (motor speed set to 0)");
+		if(interrupted) {
+			motor.set(0);
+			LogKitten.d("MotorSet ended (motor speed set to 0)");
+		}
+		else {
+			LogKitten.d("MotorSet interrupted (motor speed undefined)");
+		}
 	}
 
 	@Override

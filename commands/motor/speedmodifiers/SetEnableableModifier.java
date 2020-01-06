@@ -2,10 +2,13 @@ package org.usfirst.frc4904.standard.commands.motor.speedmodifiers;
 
 
 import org.usfirst.frc4904.standard.subsystems.motor.speedmodifiers.EnableableModifier;
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.Subsystem;
+import java.util.HashSet;
+import java.util.Set;
 
-public class SetEnableableModifier extends CommandBase {
+public class SetEnableableModifier implements Command {
 	protected final EnableableModifier[] modifiers;
 	protected final boolean enable;
 
@@ -13,12 +16,6 @@ public class SetEnableableModifier extends CommandBase {
 	public SetEnableableModifier(boolean enable, EnableableModifier... modifiers) {
 		this.modifiers = modifiers;
 		this.enable = enable;
-		for (EnableableModifier modifier : modifiers) {
-			requires(modifier);
-		}
-	}
-	protected void requires(EnableableModifier modifier){
-
 	}
 
 	@Override
@@ -31,5 +28,15 @@ public class SetEnableableModifier extends CommandBase {
 	@Override
 	public boolean isFinished() {
 		return true;
+	}
+
+	@Override
+	public Set<Subsystem> getRequirements() {
+		Set<Subsystem> requirements = new HashSet<Subsystem>();
+		for (EnableableModifier modifier : modifiers) {
+			requirements.add(modifier);
+		}
+		// TODO Auto-generated method stub
+		return requirements;
 	}
 }

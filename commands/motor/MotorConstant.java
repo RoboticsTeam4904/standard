@@ -5,6 +5,8 @@ import java.util.Set;
 import org.usfirst.frc4904.standard.subsystems.motor.Motor;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
+import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
+
 
 /**
  * Runs a motor at a constant speed until interrupted.
@@ -46,9 +48,12 @@ public class MotorConstant implements Command {
 	public boolean isFinished() {
 		return false;
 	}
+
 	@Override
 	public void end(boolean interrupted) {
-		motor.set(0.0);
+		if(!interrupted) {
+			motor.set(0.0);
+		}
 	}
 
 	@Override

@@ -44,7 +44,9 @@ public class MotorIdle implements Command {
 
 	@Override
 	public void end(boolean interrupted) {
-		LogKitten.d("MotorIdle interrupted");
+		if(interrupted) {
+			LogKitten.d("MotorIdle interrupted");
+		}
 	}
 	@Override
 	public Set<Subsystem> getRequirements() {

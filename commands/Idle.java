@@ -47,8 +47,6 @@ public class Idle implements Command {
 
 	@Override
 	public Set<Subsystem> getRequirements() {
-		Set<Subsystem> motors = new HashSet<Subsystem>();
-		// TODO Auto-generated method stub
-		return motors;
+		return new HashSet<Subsystem>();
 	}
 }

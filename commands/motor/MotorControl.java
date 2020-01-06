@@ -72,8 +72,11 @@ public class MotorControl implements Command {
 
 	@Override
 	public void end(boolean interrupted) {
-		LogKitten.d("MotorControl interrupted");
+		if(interrupted) {
+			LogKitten.d("MotorControl interrupted");
+		}
 	}
+
 	@Override
 	public Set<Subsystem> getRequirements() {
 		Set<Subsystem> motors = new HashSet<Subsystem>();

@@ -87,10 +87,12 @@ public class MotorPositionConstant implements Command {
 
 	@Override
 	public void end(boolean interrupted) {
-		motor.disableMotionController();
-		// Please just die in a hole and never come back
-		if (fallbackCommand != null && fallbackCommand.isScheduled()) {
-			fallbackCommand.cancel();
+		if(!interrupted) {
+			motor.disableMotionController();
+			// Please just die in a hole and never come back
+			if (fallbackCommand != null && fallbackCommand.isScheduled()) {
+				fallbackCommand.cancel();
+			}
 		}
 	}
 	

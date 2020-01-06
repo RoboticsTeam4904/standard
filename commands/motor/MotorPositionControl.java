@@ -86,7 +86,9 @@ public class MotorPositionControl implements Command {
 
 	@Override
 	public void end(boolean interrupted) {
-		LogKitten.d("MotorPositionControl interrupted");
+		if(interrupted) {
+			LogKitten.d("MotorPositionControl interrupted");
+		}
 	}
 	@Override
 	public Set<Subsystem> getRequirements() {

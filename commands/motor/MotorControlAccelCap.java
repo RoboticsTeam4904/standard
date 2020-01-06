@@ -89,7 +89,9 @@ public class MotorControlAccelCap implements Command {
 
 	@Override
 	public void end(boolean interrupted) {
-		LogKitten.d("MotorControl interrupted");
+		if(interrupted) {
+			LogKitten.d("MotorControl interrupted");
+		}
 	}
 	@Override
 	public Set<Subsystem> getRequirements() {
