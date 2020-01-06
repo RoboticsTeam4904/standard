@@ -216,7 +216,6 @@ public abstract class CommandRobotBase extends TimedRobot {
 	 */
 	@Override
 	public void testPeriodic() {
-		// LiveWindow.run(); deprecated 2019 "no longer requried", removed 2020
 		testExecute();
 		alwaysExecute();
 	}
