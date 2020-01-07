@@ -22,4 +22,5 @@ public class CANMessageUnavailableException extends Exception {
 	public CANMessageUnavailableException(String msg) {
 		super(msg);
 	}
+	
 }
