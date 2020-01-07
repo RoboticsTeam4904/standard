@@ -24,7 +24,7 @@ public class ChassisMinimumDistance extends ChassisConstant {
 	 *                        be cancelled, then the fallbackCommand will start
 	 * @param encoders
 	 */
-	public ChassisMinimumDistance(Chassis chassis, double distance, double speed, ChassisConstant fallbackCommand,
+public class ChassisMinimumDistance extends ChassisConstant implements Command
 			CustomEncoder... encoders) {
 		super(chassis, 0.0, speed, 0.0, Double.MAX_VALUE);
 		this.encoders = encoders;

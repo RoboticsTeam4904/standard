@@ -1,5 +1,6 @@
 package org.usfirst.frc4904.standard.commands.chassis;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import org.usfirst.frc4904.standard.custom.ChassisController;
@@ -50,17 +51,21 @@ public class ChassisConstant implements Command, ChassisController {
 
 	@Override
 	public void initialize() {
-		move.initialize();
+		move.schedule();
 	}
 
 	@Override
 	public void execute() {
 	}
 
+	/**
+	 * The command has timed out if the time since scheduled is greater than the
+	 * timeout
+	 * 
+	 * @return finished
+	 */
 	@Override
 	public boolean isFinished() {
-		// the command has timed out if the time since scheduled is greater than the
-		// timeout
 		return move.isFinished() || CommandScheduler.getInstance().timeSinceScheduled(this) >= this.timeout;
 	}
 

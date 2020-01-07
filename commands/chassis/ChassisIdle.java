@@ -46,8 +46,5 @@ public class ChassisIdle extends ParallelCommandGroup {
 	public void end(boolean interrupt) {
 	}
 
-	@Override
-	public boolean isFinished() {
-		return false;
-	}
+
 }
