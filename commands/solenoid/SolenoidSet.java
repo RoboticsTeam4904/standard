@@ -1,18 +1,21 @@
 package org.usfirst.frc4904.standard.commands.solenoid;
 
 import java.util.function.BooleanSupplier;
+import java.util.Set;
 
 import org.usfirst.frc4904.standard.subsystems.SolenoidSubsystem;
 import org.usfirst.frc4904.standard.subsystems.SolenoidSubsystem.SolenoidState;
-import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Subsystem;
 
 /**
  * Command to set the state of a SolenoidSubsystem
  */
-public class SolenoidSet extends Command {
+public class SolenoidSet implements Command {
 	protected final SolenoidSubsystem system;
 	protected final SolenoidState state;
 	protected final BooleanSupplier[] booleanSuppliers;
+	protected final Set<Subsystem> requirements;
 
 	/**
 	 * Sets the state of a SolenoidSubsystem
@@ -23,32 +26,19 @@ public class SolenoidSet extends Command {
 	 * @param booleanSuppliers conditions that if true, prevents solenoidSubsystem
 	 *                         from setting
 	 */
-	public SolenoidSet(String name, SolenoidSubsystem system, SolenoidState state,
+	public SolenoidSet(SolenoidSubsystem system, SolenoidState state,
 			BooleanSupplier... booleanSuppliers) {
-		super(name, system);
 		this.system = system;
 		this.state = state;
 		this.booleanSuppliers = booleanSuppliers;
-	}
 
-	/**
-	 * Sets the state of a SolenoidSubsystem
-	 * 
-	 * @param system SolenoidSubsystem to set
-	 * @param state  state to set system
-	 */
-	public SolenoidSet(SolenoidSubsystem system, SolenoidState state, BooleanSupplier... booleanSuppliers) {
-		this("SolenoidSet", system, state, booleanSuppliers);
-	}
-
-	public SolenoidSet(String name, SolenoidSubsystem system, SolenoidState state) {
-		this(name, system, state, () -> {
-			return false;
-		});
+		requirements = Set.of((Subsystem) system);
 	}
 
 	public SolenoidSet(SolenoidSubsystem system, SolenoidState state) {
-		this("SolenoidSet", system, state);
+		this(system, state, () -> {
+			return false;
+		});
 	}
 
 	/**
@@ -65,10 +55,18 @@ public class SolenoidSet extends Command {
 	}
 
 	/**
+	 * Gets requirements
+	 */
+	public Set<Subsystem> getRequirements() {
+		return requirements;
+	}
+
+	/**
 	 * Returns false to prevent default command from running
 	 */
 	@Override
-	protected boolean isFinished() {
+	public boolean isFinished() {
 		return false;
 	}
 }
+
