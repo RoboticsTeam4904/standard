@@ -1,10 +1,11 @@
 package org.usfirst.frc4904.standard.commands;
 
-
+import java.util.Set;
 import java.util.function.Supplier;
-import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Subsystem;
 
-public class RunWhile extends Command {
+public class RunWhile implements Command {
 	protected final Command command;
 	protected final Supplier<Boolean> stopCondition;
 
@@ -13,23 +14,23 @@ public class RunWhile extends Command {
 		this.stopCondition = stopCondition;
 	}
 
-	@Override
-	protected void initialize() {
-		command.start();
+	public void initialize() {
+		command.schedule();
 	}
 
-	@Override
-	protected boolean isFinished() {
+	public boolean isFinished() {
 		return !stopCondition.get();
 	}
 
-	@Override
-	protected void end() {
+	public void end() {
 		command.cancel();
 	}
 
-	@Override
-	protected void interrupted() {
+	public void interrupted() {
 		end();
+	}
+
+	public Set<Subsystem> getRequirements() {
+		return this.command.getRequirements();
 	}
 }

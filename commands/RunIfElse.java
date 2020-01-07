@@ -1,66 +1,61 @@
 package org.usfirst.frc4904.standard.commands;
 
-
+import java.util.HashSet;
+import java.util.Set;
 import java.util.function.BooleanSupplier;
-import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Subsystem;
 
-public class RunIfElse extends Command {
+public class RunIfElse implements Command {
 	protected final Command ifCommand;
 	protected final Command elseCommand;
 	protected Command runningCommand;
 	protected final BooleanSupplier[] booleanSuppliers;
 	protected boolean hasRunOnce;
 
-	public RunIfElse(Command ifCommand, Command elseCommand, BooleanSupplier... booleanSuppliers) {
-		this("RunIf[" + ifCommand.getName() + "]Else[" + elseCommand.getName() + "]", ifCommand, elseCommand, booleanSuppliers);
-	}
+	protected final Set<Subsystem> unionRequirements;
 
-	protected RunIfElse(String name, Command ifCommand, Command elseCommand, BooleanSupplier... booleanSuppliers) {
-		super(name);
+	protected RunIfElse(Command ifCommand, Command elseCommand, BooleanSupplier... booleanSuppliers) {
 		this.ifCommand = ifCommand;
 		this.elseCommand = elseCommand;
 		this.booleanSuppliers = booleanSuppliers;
+
+		unionRequirements = new HashSet<Subsystem>(ifCommand.getRequirements());
+		unionRequirements.addAll(elseCommand.getRequirements());
 	}
 
-	@Override
-	public boolean doesRequire(Subsystem subsystem) {
-		return ifCommand.doesRequire(subsystem) || elseCommand.doesRequire(subsystem);
-	}
-
-	@Override
-	protected void initialize() {
+	public void initialize() {
 		for (BooleanSupplier booleanSupplier : booleanSuppliers) {
 			if (!booleanSupplier.getAsBoolean()) {
-				elseCommand.start();
+				elseCommand.schedule();
 				runningCommand = elseCommand;
 				return;
 			}
 		}
-		ifCommand.start();
+		ifCommand.schedule();
 		runningCommand = ifCommand;
 	}
 
-	@Override
-	protected void execute() {}
+	public void execute() {}
 
-	@Override
-	protected boolean isFinished() {
-		if (runningCommand.isRunning() && !hasRunOnce) {
+	public boolean isFinished() {
+		if (runningCommand.isScheduled() && !hasRunOnce) {
 			hasRunOnce = true;
 		}
-		return !runningCommand.isRunning() && hasRunOnce;
+		return !runningCommand.isScheduled() && hasRunOnce;
 	}
 
-	@Override
-	protected void end() {
+	public void end() {
 		ifCommand.cancel();
 		elseCommand.cancel();
 		hasRunOnce = false;
 	}
 
-	@Override
-	protected void interrupted() {
+	public void interrupted() {
 		end();
+	}
+
+	public Set<Subsystem> getRequirements() {
+		return unionRequirements;
 	}
 }

@@ -1,9 +1,10 @@
 package org.usfirst.frc4904.standard.commands;
 
+import java.util.Set;
+import edu.wpi.first.wpilibj2.command.Subsystem;
+import edu.wpi.first.wpilibj2.command.Command;
 
-import edu.wpi.first.wpilibj.command.Command;
-
-public class RunFor extends Command {
+public class RunFor implements Command {
 	protected final double duration;
 	protected final Command command;
 	protected boolean firstTick;
@@ -21,38 +22,35 @@ public class RunFor extends Command {
 	 *        Whether this command should be interruptible
 	 */
 	public RunFor(Command command, double duration) {
-		super("RunFor[" + command.getName() + "]");
 		this.duration = duration;
 		this.command = command;
 		firstTick = true;
-		setTimeout(duration);
 	}
 
-	@Override
-	protected void initialize() {
-		command.start();
+	public void initialize() {
+		command.withTimeout(duration);
 	}
 
-	@Override
-	protected void execute() {}
+	public void execute() {}
 
-	@Override
-	protected boolean isFinished() {
+	public boolean isFinished() {
 		if (firstTick) {
 			firstTick = false;
 			return isTimedOut();
 		}
-		return isTimedOut() || !command.isRunning();
+		return isTimedOut() || !command.isScheduled();
 	}
 
-	@Override
-	protected void end() {
+	public void end() {
 		command.cancel();
 		firstTick = true;
 	}
 
-	@Override
-	protected void interrupted() {
+	public void interrupted() {
 		end();
+	}
+
+	public Set<Subsystem> getRequirements() {
+		return this.command.getRequirements();
 	}
 }

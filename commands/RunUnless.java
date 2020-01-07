@@ -2,7 +2,7 @@ package org.usfirst.frc4904.standard.commands;
 
 
 import java.util.function.BooleanSupplier;
-import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj2.command.Command;
 
 public class RunUnless extends RunIfElse {
 	/**
@@ -18,6 +18,6 @@ public class RunUnless extends RunIfElse {
 	 *        A condition function using Java 8's colon syntax (will run unless the condition is true)
 	 */
 	public RunUnless(Command command, BooleanSupplier... booleanSuppliers) {
-		super("RunUnless[" + command.getName() + "]", new Noop(), command, booleanSuppliers);
+		super(new Noop(), command, booleanSuppliers);
 	}
 }

@@ -1,27 +1,23 @@
 package org.usfirst.frc4904.standard.commands;
 
+import java.util.Set;
+import edu.wpi.first.wpilibj2.command.Subsystem;
+import edu.wpi.first.wpilibj2.command.Command;
 
-import edu.wpi.first.wpilibj.command.Command;
+public class Noop implements Command {
+	public void initialize() {}
 
-public class Noop extends Command {
-	public Noop() {
-		super("Noop");
-	}
+	public void execute() {}
 
-	@Override
-	protected void initialize() {}
-
-	@Override
-	protected void execute() {}
-
-	@Override
-	protected boolean isFinished() {
+	public boolean isFinished() {
 		return true;
 	}
 
-	@Override
-	protected void end() {}
+	public void end() {}
 
-	@Override
-	protected void interrupted() {}
+	public void interrupted() {}
+
+	public Set<Subsystem> getRequirements() {
+		return Set.of();
+	}
 }
