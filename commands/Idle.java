@@ -2,45 +2,56 @@ package org.usfirst.frc4904.standard.commands;
 
 
 import java.util.StringJoiner;
-import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.command.Subsystem;
+import java.util.Set;
+import java.util.Collections;
 
-public class Idle extends Command {
-	public Idle() {
-		super("Idle[No Subsystem]");
-		setInterruptible(true);
+import org.usfirst.frc4904.standard.LogKitten;
+
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Subsystem;
+
+public class Idle implements Command {
+	boolean verbose;
+	public Idle(boolean verbose, Subsystem... subsystems) {
+		this.verbose = verbose;
+		Set<Subsystem> requirements = Collections.emptySet(); // as per https://stackoverflow.com/a/285184
+		for (Subsystem subsystem : subsystems) {
+			requirements.add(subsystem);
+		}
 	}
 
 	public Idle(Subsystem... subsystems) {
-		super("Idle[" + Idle.joinSubsystemNames(subsystems) + "]");
-		setInterruptible(true);
-		for (Subsystem subsystem : subsystems) {
-			requires(subsystem);
+		this(false, subsystems);
+	}
+
+	public void initialize() {
+		if (verbose) {
+			LogKitten.v("Idle(verbose) initialized.");
 		}
 	}
 
-	protected static String joinSubsystemNames(Subsystem[] subsystems) {
-		StringJoiner subsystemNames = new StringJoiner("|");
-		for (Subsystem subsystem : subsystems) {
-			subsystemNames.add(subsystem.getName());
+	public void execute() {
+		if (verbose) {
+			LogKitten.v("Idle(verbose) executed.");
 		}
-		return subsystemNames.toString();
 	}
 
-	@Override
-	protected void initialize() {}
-
-	@Override
-	protected void execute() {}
-
-	@Override
-	protected boolean isFinished() {
+	public boolean isFinished() {
+		if (verbose) {
+			LogKitten.v("Idle(verbose) isFinished?");
+		}
 		return false;
 	}
 
-	@Override
-	protected void end() {}
+	protected void end() {
+		if (verbose) {
+			LogKitten.v("Idle(verbose) end.");
+		}
+	}
 
-	@Override
-	protected void interrupted() {}
+	protected void interrupted() {
+		if (verbose) {
+			LogKitten.v("Idle(verbose) interrupted.");
+		}
+	}
 }
