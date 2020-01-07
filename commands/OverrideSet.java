@@ -14,7 +14,7 @@ public class OverrideSet extends InstantCommand {
 	}
 
 	@Override
-	protected void initialize() {
+	public void initialize() {
 		for (Overridable overridable : overridables) {
 			overridable.setOverridden(isOverridden);
 		}
