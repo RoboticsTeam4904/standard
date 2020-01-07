@@ -26,7 +26,6 @@ public class SolenoidOff extends SolenoidSet {
 	 * Command to set the state of a SolenoidSubsystem to
 	 * OFF(DoubleSolenoid.Value.kOff)
 	 * 
-	 * @param name   Name of Command
 	 * @param system SolenoidSubsystem to set
 	 */
 	public SolenoidOff(SolenoidSubsystem system) {
