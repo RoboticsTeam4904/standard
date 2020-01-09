@@ -7,12 +7,10 @@ import edu.wpi.first.wpilibj2.command.Subsystem;
 
 
 public abstract class CustomCommand extends CommandBase {
-    protected double timeout = 0.0;
-
-    
     public CustomCommand(String name, double timeout, Subsystem... requirements) {
         this(name, requirements);
         this.withTimeout(timeout);
+        
     }
 
     public CustomCommand(String name, Subsystem... requirements) {
@@ -20,12 +18,6 @@ public abstract class CustomCommand extends CommandBase {
         setName(name);
         addRequirements(requirements);
     }
-
-    //TODO: write this
-    public boolean isRunning() {
-        return true;
-    }
-
 
 
 }
