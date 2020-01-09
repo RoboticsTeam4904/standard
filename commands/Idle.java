@@ -10,17 +10,17 @@ import edu.wpi.first.wpilibj2.command.Subsystem;
 /**
  * Requires subsystems so no other code can interact with them.
  */
-public class Idle extends CommandBase { 
+public class Idle extends CommandBase {
 	boolean verbose;
 	Set<Subsystem> requirements;
 
-	public Idle(String name, boolean verbose, Subsystem... subsystems)
-	{
+	public Idle(String name, boolean verbose, Subsystem... subsystems) {
 		super();
 		setName(name);
 		this.verbose = verbose;
 		requirements = Set.of(subsystems);
 	}
+
 	public Idle(boolean verbose, Subsystem... subsystems) {
 		this("Idle", verbose, subsystems);
 	}
