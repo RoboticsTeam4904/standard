@@ -14,10 +14,13 @@ public abstract class CustomCommand extends CommandBase {
     }
 
     public CustomCommand(String name, Subsystem... requirements) {
-        super();
-        setName(name);
+        this(name);
         addRequirements(requirements);
     }
 
+    public CustomCommand(String name) {
+        super();
+        setName(name);
+    }
 
 }
