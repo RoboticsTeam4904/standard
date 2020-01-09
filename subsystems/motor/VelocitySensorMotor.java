@@ -1,6 +1,5 @@
 package org.usfirst.frc4904.standard.subsystems.motor;
 
-
 import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.custom.motioncontrollers.MotionController;
 import org.usfirst.frc4904.standard.subsystems.motor.speedmodifiers.IdentityModifier;
@@ -9,16 +8,17 @@ import org.usfirst.frc4904.standard.custom.motioncontrollers.CustomSpeedControll
 
 public class VelocitySensorMotor extends SensorMotor {
 	public VelocitySensorMotor(String name, boolean isInverted, SpeedModifier slopeController,
-		MotionController motionController, CustomSpeedController... motors) {
+			MotionController motionController, CustomSpeedController... motors) {
 		super(name, isInverted, slopeController, motionController, motors);
 	}
 
-	public VelocitySensorMotor(String name, boolean isInverted, MotionController motionController, CustomSpeedController... motors) {
+	public VelocitySensorMotor(String name, boolean isInverted, MotionController motionController,
+			CustomSpeedController... motors) {
 		this(name, isInverted, new IdentityModifier(), motionController, motors);
 	}
 
 	public VelocitySensorMotor(String name, SpeedModifier speedModifier, MotionController motionController,
-		CustomSpeedController... motors) {
+			CustomSpeedController... motors) {
 		this(name, false, speedModifier, motionController, motors);
 	}
 
@@ -27,7 +27,7 @@ public class VelocitySensorMotor extends SensorMotor {
 	}
 
 	public VelocitySensorMotor(boolean isInverted, SpeedModifier speedModifier, MotionController motionController,
-		CustomSpeedController... motors) {
+			CustomSpeedController... motors) {
 		this("VelocitySensorMotor", isInverted, speedModifier, motionController, motors);
 	}
 
@@ -35,14 +35,15 @@ public class VelocitySensorMotor extends SensorMotor {
 		this("VelocitySensorMotor", isInverted, motionController, motors);
 	}
 
-	public VelocitySensorMotor(SpeedModifier speedModifier, MotionController motionController, CustomSpeedController... motors) {
+	public VelocitySensorMotor(SpeedModifier speedModifier, MotionController motionController,
+			CustomSpeedController... motors) {
 		this("VelocitySensorMotor", speedModifier, motionController, motors);
 	}
 
 	public VelocitySensorMotor(MotionController motionController, CustomSpeedController... motors) {
 		this("VelocitySensorMotor", motionController, motors);
 	}
-	
+
 	@Override
 	public void set(double speed) {
 		LogKitten.v(speed + "");

@@ -1,30 +1,21 @@
 package org.usfirst.frc4904.standard.commands.motor;
 
-
 import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.subsystems.motor.Motor;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Subsystem;
-import java.util.HashSet;
-import java.util.Set;
-
+import org.usfirst.frc4904.standard.commands.CustomCommand;
 
 /**
- * Sets a motor to a speed.
- * The speed can change through
- * use of the set command.
- * This is better than setting
- * the motor because it uses
- * requires to avoid having
- * multiple attempts to set a
- * motor simultaneously.
+ * Sets a motor to a speed. The speed can change through use of the set command.
+ * This is better than setting the motor because it uses requires to avoid
+ * having multiple attempts to set a motor simultaneously.
  *
  */
-public class MotorSet implements Command {
+public class MotorSet extends CustomCommand {
 	protected final Motor motor;
 	protected double speed;
 
 	public MotorSet(Motor motor) {
+		super("motorSet", motor);
 		this.motor = motor;
 		speed = 0;
 		LogKitten.d("MotorSet created for " + motor.getName());
@@ -51,11 +42,10 @@ public class MotorSet implements Command {
 
 	@Override
 	public void end(boolean interrupted) {
-		if(interrupted) {
+		if (interrupted) {
 			motor.set(0);
 			LogKitten.d("MotorSet ended (motor speed set to 0)");
-		}
-		else {
+		} else {
 			LogKitten.d("MotorSet interrupted (motor speed undefined)");
 		}
 	}
@@ -63,12 +53,5 @@ public class MotorSet implements Command {
 	@Override
 	public boolean isFinished() {
 		return false;
-	}
-	@Override
-	public Set<Subsystem> getRequirements() {
-		Set<Subsystem> motors = new HashSet<Subsystem>();
-		motors.add(motor);
-		// TODO Auto-generated method stub
-		return motors;
 	}
 }

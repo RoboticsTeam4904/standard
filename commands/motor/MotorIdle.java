@@ -1,18 +1,14 @@
 package org.usfirst.frc4904.standard.commands.motor;
 
-
 import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.subsystems.motor.Motor;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Subsystem;
-import java.util.HashSet;
-import java.util.Set;
+import org.usfirst.frc4904.standard.commands.CustomCommand;
 
 /**
  * Idles the motor (sets speed to 0).
  *
  */
-public class MotorIdle implements Command {
+public class MotorIdle extends CustomCommand {
 	protected final Motor motor;
 
 	/**
@@ -21,6 +17,7 @@ public class MotorIdle implements Command {
 	 * @param motor
 	 */
 	public MotorIdle(Motor motor) {
+		super("motorIdle", motor);
 		this.motor = motor;
 		LogKitten.d("MotorIdle created");
 	}
@@ -44,15 +41,8 @@ public class MotorIdle implements Command {
 
 	@Override
 	public void end(boolean interrupted) {
-		if(interrupted) {
+		if (interrupted) {
 			LogKitten.d("MotorIdle interrupted");
 		}
-	}
-	@Override
-	public Set<Subsystem> getRequirements() {
-		Set<Subsystem> motors = new HashSet<Subsystem>();
-		motors.add(motor);
-		// TODO Auto-generated method stub
-		return motors;
 	}
 }

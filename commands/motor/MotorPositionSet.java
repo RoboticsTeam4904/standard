@@ -1,41 +1,35 @@
 package org.usfirst.frc4904.standard.commands.motor;
 
-
 import org.usfirst.frc4904.standard.custom.sensors.InvalidSensorException;
 import org.usfirst.frc4904.standard.subsystems.motor.PositionSensorMotor;
+import org.usfirst.frc4904.standard.commands.CustomCommand;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Subsystem;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * Sets a motor to a position and keeps it there using an encoder.
  */
-public class MotorPositionSet implements Command {
+public class MotorPositionSet extends CustomCommand {
 	protected PositionSensorMotor motor;
 	protected double position;
 	protected final Command fallbackCommand;
 
 	/**
-	 * Constructor.
-	 * The MotorSensorHold command holds a motor to a position.
+	 * Constructor. The MotorSensorHold command holds a motor to a position.
 	 *
-	 * @param motor
-	 *        A Motor that also implements PositionSensorMotor.
-	 * @param fallbackCommand
-	 *        If the sensor fails for some reason, this command will be cancelled, then the fallbackCommand will start
+	 * @param motor           A Motor that also implements PositionSensorMotor.
+	 * @param fallbackCommand If the sensor fails for some reason, this command will
+	 *                        be cancelled, then the fallbackCommand will start
 	 */
 	public MotorPositionSet(PositionSensorMotor motor, Command fallbackCommand) {
+		super("motorPositionSet", motor);
 		this.motor = motor;
 		this.fallbackCommand = fallbackCommand;
 	}
 
 	/**
-	 * Constructor.
-	 * The MotorSensorHold command holds a motor to a position.
+	 * Constructor. The MotorSensorHold command holds a motor to a position.
 	 *
-	 * @param motor
-	 *        A Motor that also implements PositionSensorMotor.
+	 * @param motor A Motor that also implements PositionSensorMotor.
 	 */
 	public MotorPositionSet(PositionSensorMotor motor) {
 		this(motor, null);
@@ -44,8 +38,7 @@ public class MotorPositionSet implements Command {
 	/**
 	 * Sets the motor to this position.
 	 *
-	 * @param position
-	 *        The position to set the motor to.
+	 * @param position The position to set the motor to.
 	 */
 	public void setPosition(double position) {
 		this.position = position;
@@ -57,8 +50,7 @@ public class MotorPositionSet implements Command {
 			motor.reset();
 			motor.enableMotionController();
 			motor.setPositionSafely(position);
-		}
-		catch (InvalidSensorException e) {
+		} catch (InvalidSensorException e) {
 			cancel();
 			if (fallbackCommand != null) {
 				fallbackCommand.schedule();
@@ -83,13 +75,6 @@ public class MotorPositionSet implements Command {
 	}
 
 	@Override
-	public void end(boolean interrupted) {}
-
-	@Override
-	public Set<Subsystem> getRequirements() {
-		Set<Subsystem> motors = new HashSet<Subsystem>();
-		motors.add(motor);
-		// TODO Auto-generated method stub
-		return motors;
+	public void end(boolean interrupted) {
 	}
 }

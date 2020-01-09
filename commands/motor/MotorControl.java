@@ -1,21 +1,17 @@
 package org.usfirst.frc4904.standard.commands.motor;
 
-
 import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.custom.controllers.Controller;
 import org.usfirst.frc4904.standard.subsystems.motor.Motor;
 import org.usfirst.frc4904.standard.subsystems.motor.PositionSensorMotor;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Subsystem;
-import java.util.HashSet;
-import java.util.Set;
+import org.usfirst.frc4904.standard.commands.CustomCommand;
 
 /**
  * Controls a Motor directly from a Controller (e.g. Joystick or Xbox)
  *
  *
  */
-public class MotorControl implements Command {
+public class MotorControl extends CustomCommand {
 	protected final Motor motor;
 	protected final Controller controller;
 	protected final int axis;
@@ -23,7 +19,8 @@ public class MotorControl implements Command {
 
 	/**
 	 * This Command directly controls a Motor based on an axis of the Controller.
-	 * This can allow an Operator to easily control a single Motor from an axis of the Controller.
+	 * This can allow an Operator to easily control a single Motor from an axis of
+	 * the Controller.
 	 *
 	 * @param motor
 	 * @param controller
@@ -31,6 +28,7 @@ public class MotorControl implements Command {
 	 * @param scale
 	 */
 	public MotorControl(Motor motor, Controller controller, int axis, double scale) {
+		super("motorControl", motor);
 		this.motor = motor;
 		this.controller = controller;
 		this.axis = axis;
@@ -40,7 +38,8 @@ public class MotorControl implements Command {
 
 	/**
 	 * This Command directly controls a Motor based on an axis of the Controller.
-	 * This can allow an Operator to easily control a single Motor from an axis of the Controller.
+	 * This can allow an Operator to easily control a single Motor from an axis of
+	 * the Controller.
 	 *
 	 * @param motor
 	 * @param controller
@@ -72,15 +71,8 @@ public class MotorControl implements Command {
 
 	@Override
 	public void end(boolean interrupted) {
-		if(interrupted) {
+		if (interrupted) {
 			LogKitten.d("MotorControl interrupted");
 		}
-	}
-
-	@Override
-	public Set<Subsystem> getRequirements() {
-		Set<Subsystem> motors = new HashSet<Subsystem>();
-		motors.add(motor);
-		return motors;
 	}
 }

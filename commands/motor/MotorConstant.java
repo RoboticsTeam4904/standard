@@ -1,15 +1,12 @@
 package org.usfirst.frc4904.standard.commands.motor;
 
-import java.util.HashSet;
-import java.util.Set;
 import org.usfirst.frc4904.standard.subsystems.motor.Motor;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Subsystem;
+import org.usfirst.frc4904.standard.commands.CustomCommand;
 
 /**
  * Runs a motor at a constant speed until interrupted.
  */
-public class MotorConstant implements Command {
+public class MotorConstant extends CustomCommand {
 	protected final double motorSpeed;
 	protected final Motor motor;
 
@@ -19,6 +16,7 @@ public class MotorConstant implements Command {
 	 * @param motorSpeed The speed to set the motor to.
 	 */
 	public MotorConstant(String name, Motor motor, double motorSpeed) {
+		super("motorConstant", motor);
 		this.motor = motor;
 		this.motorSpeed = motorSpeed;
 	}
@@ -52,12 +50,5 @@ public class MotorConstant implements Command {
 		if (!interrupted) {
 			motor.set(0.0);
 		}
-	}
-
-	@Override
-	public Set<Subsystem> getRequirements() {
-		Set<Subsystem> motors = new HashSet<Subsystem>();
-		motors.add(motor);
-		return motors;
 	}
 }

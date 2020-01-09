@@ -4,17 +4,14 @@ import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.custom.controllers.Controller;
 import org.usfirst.frc4904.standard.subsystems.motor.Motor;
 import org.usfirst.frc4904.standard.subsystems.motor.PositionSensorMotor;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Subsystem;
-import java.util.HashSet;
-import java.util.Set;
+import org.usfirst.frc4904.standard.commands.CustomCommand;
 
 /**
  * Controls a Motor directly from a Controller (e.g. Joystick or Xbox) Has an
  * acceleration cap (but not deceleration cap)
  *
  */
-public class MotorControlAccelCap implements Command {
+public class MotorControlAccelCap extends CustomCommand {
 	protected final Motor motor;
 	protected final Controller controller;
 	protected final int axis;
@@ -35,6 +32,7 @@ public class MotorControlAccelCap implements Command {
 	 * @param accel_cap  This is the maximum change in motor speed per second
 	 */
 	public MotorControlAccelCap(Motor motor, Controller controller, int axis, double scale, double accel_cap) {
+		super("motorControlAccelCap", motor);
 		this.motor = motor;
 		this.controller = controller;
 		this.axis = axis;
@@ -90,13 +88,5 @@ public class MotorControlAccelCap implements Command {
 		if (interrupted) {
 			LogKitten.d("MotorControl interrupted");
 		}
-	}
-
-	@Override
-	public Set<Subsystem> getRequirements() {
-		Set<Subsystem> motors = new HashSet<Subsystem>();
-		motors.add(motor);
-		// TODO Auto-generated method stub
-		return motors;
 	}
 }
