@@ -6,7 +6,8 @@ import edu.wpi.first.wpilibj2.command.Subsystem;
 /**
  * Generic Chassis class. In the 4904 standard, the Chassis is treated as a
  * container for motors and as a calculator for motor speeds. setDefaultCommand
- * should be called from RobotMap
+ * should be called from RobotMap.
+ * The default command is a ChassisIdle.
  */
 
 public abstract class Chassis implements Subsystem {
