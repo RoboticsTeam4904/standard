@@ -3,18 +3,19 @@ package org.usfirst.frc4904.standard.commands;
 import java.util.Set;
 
 import org.usfirst.frc4904.standard.LogKitten;
-import org.usfirst.frc4904.standard.commands.CustomCommand;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 
 /**
  * This class cancels a command
  */
-public class Cancel extends CustomCommand {
+public class Cancel extends CommandBase {
 	protected final Command command;
 
 	public Cancel(Command command) {
-		super("Cancel " + command);
+		super();
+		setName("Cancel " + command.getName());
 		this.command = command;
 	}
 
@@ -27,8 +28,7 @@ public class Cancel extends CustomCommand {
 		return true;
 	}
 
-	public Set<Subsystem> getRequirements()
-	{
+	public Set<Subsystem> getRequirements() {
 		return Set.of();
 	}
 }
