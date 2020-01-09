@@ -4,19 +4,20 @@ import java.util.Set;
 
 import org.usfirst.frc4904.standard.LogKitten;
 
-import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 
 /**
  * Requires subsystems so no other code can interact with them.
  */
-public class Idle extends CustomCommand { 
+public class Idle extends CommandBase { 
 	boolean verbose;
 	Set<Subsystem> requirements;
 
 	public Idle(String name, boolean verbose, Subsystem... subsystems)
 	{
-		super(name);
+		super();
+		setName(name);
 		this.verbose = verbose;
 		requirements = Set.of(subsystems);
 	}
