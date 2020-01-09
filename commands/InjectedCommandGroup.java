@@ -1,8 +1,7 @@
 package org.usfirst.frc4904.standard.commands;
 
 
-import org.usfirst.frc4904.standard.commands.CustomCommand;
-import edu.wpi.first.wpilibj2.command.CommandGroupBase; // TODO: Nikhil's intuition might change
+import edu.wpi.first.wpilibj2.command.CommandGroupBase;
 
 public abstract class InjectedCommandGroup extends CommandGroupBase {
 	private final CustomCommand previous;
@@ -18,8 +17,8 @@ public abstract class InjectedCommandGroup extends CommandGroupBase {
 		this.previous = previous;
 	}
 	
-	final protected void initialize() {
-		if (previous != null && (previous.isRunning())) {
+	final public void initialize() {
+		if (previous != null && (previous.isScheduled())) {
 			previous.cancel();
 		}
 		onInitialize();
@@ -27,14 +26,14 @@ public abstract class InjectedCommandGroup extends CommandGroupBase {
 	
 	final protected void interrupted() {
 		onInterrupted();
-		if (previous != null && (!previous.isRunning())) {
+		if (previous != null && (!previous.isScheduled())) {
 			previous.schedule();
 		}
 	}
 	
 	final protected void end() {
 		onEnd();
-		if (previous != null && (!previous.isRunning())) {
+		if (previous != null && (!previous.isScheduled())) {
 			previous.schedule();
 		}
 	}
