@@ -10,46 +10,52 @@ import edu.wpi.first.wpilibj2.command.Subsystem;
 /**
  * Requires subsystems so no other code can interact with them.
  */
-public class Idle implements Command {
+public class Idle extends CustomCommand { 
 	boolean verbose;
 	Set<Subsystem> requirements;
-	public Idle(boolean verbose, Subsystem... subsystems) {
+
+	public Idle(String name, boolean verbose, Subsystem... subsystems)
+	{
+		super(name);
 		this.verbose = verbose;
-		requirements = Subsystem.of(subsystems);
+		requirements = Set.of(subsystems);
+	}
+	public Idle(boolean verbose, Subsystem... subsystems) {
+		this("Idle", verbose, subsystems);
 	}
 
 	public Idle(Subsystem... subsystems) {
-		this(false, subsystems);
+		this("Idle", false, subsystems);
 	}
 
 	public void initialize() {
 		if (verbose) {
-			LogKitten.v("Idle(verbose) initialized.");
+			LogKitten.v("Idle " + getName() + " initialized.");
 		}
 	}
 
 	public void execute() {
 		if (verbose) {
-			LogKitten.v("Idle(verbose) executed.");
+			LogKitten.v("Idle " + getName() + " executed.");
 		}
 	}
 
 	public boolean isFinished() {
 		if (verbose) {
-			LogKitten.v("Idle(verbose) isFinished?");
+			LogKitten.v("Idle " + getName() + " isFinished?");
 		}
 		return false;
 	}
 
 	protected void end() {
 		if (verbose) {
-			LogKitten.v("Idle(verbose) end.");
+			LogKitten.v("Idle " + getName() + " end.");
 		}
 	}
 
 	protected void interrupted() {
 		if (verbose) {
-			LogKitten.v("Idle(verbose) interrupted.");
+			LogKitten.v("Idle " + getName() + " interrupted.");
 		}
 	}
 }
