@@ -2,6 +2,7 @@ package org.usfirst.frc4904.standard.custom.sensors;
 
 
 import edu.wpi.first.wpilibj.controller.PIDController;
+import org.usfirst.frc4904.standard.custom.CustomPIDSourceType;
 
 public interface IMU extends PIDController {
 	/**

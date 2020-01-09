@@ -3,6 +3,7 @@ package org.usfirst.frc4904.standard.custom.sensors;
 
 import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.Util;
+import org.usfirst.frc4904.standard.custom.CustomPIDSourceType;
 import edu.wpi.first.wpilibj.PIDSourceType;
 
 /**
@@ -16,7 +17,7 @@ import edu.wpi.first.wpilibj.PIDSourceType;
 public class EncoderPair implements CustomEncoder {
 	private final CustomEncoder[] encoders;
 	private final int[] offset; // Do not reset encoders, just store an offset value
-	private PIDSourceType pidSource;
+	private CustomPIDSourceType pidSource;
 	private boolean reverseDirection;
 	private double distancePerPulse;
 	private final double distanceTolerance;
@@ -44,7 +45,7 @@ public class EncoderPair implements CustomEncoder {
 		offset = new int[] {0, 0};
 		this.distanceTolerance = distanceTolerance;
 		this.rateTolerance = rateTolerance;
-		pidSource = PIDSourceType.kDisplacement;
+		pidSource = CustomPIDSourceType.kDisplacement;
 		reverseDirection = false;
 	}
 	
@@ -64,13 +65,13 @@ public class EncoderPair implements CustomEncoder {
 	}
 	
 	@Override
-	public PIDSourceType getPIDSourceType() {
+	public CustomPIDSourceType getCustomPIDSourceType() {
 		return pidSource;
 	}
 	
 	@Override
 	public double pidGet() {
-		if (pidSource == PIDSourceType.kDisplacement) {
+		if (pidSource == CustomPIDSourceType.kDisplacement) {
 			return getDistance();
 		}
 		return getRate();
@@ -78,14 +79,14 @@ public class EncoderPair implements CustomEncoder {
 	
 	@Override
 	public double pidGetSafely() throws InvalidSensorException {
-		if (pidSource == PIDSourceType.kDisplacement) {
+		if (pidSource == CustomPIDSourceType.kDisplacement) {
 			return getDistanceSafely();
 		}
 		return getRateSafely();
 	}
 	
 	@Override
-	public void setPIDSourceType(PIDSourceType pidSource) {
+	public void setCustomPIDSourceType(CustomPIDSourceType pidSource) {
 		if (pidSource != null) {
 			this.pidSource = pidSource;
 		}
@@ -248,19 +249,19 @@ public class EncoderPair implements CustomEncoder {
 	}
 	
 	public class EncoderDifference implements PIDSensor {
-		private PIDSourceType pidSource; // Needs to be seperate in case of multiple threads changing source type
+		private CustomPIDSourceType pidSource; // Needs to be seperate in case of multiple threads changing source type
 		
 		public EncoderDifference() {
-			pidSource = PIDSourceType.kDisplacement;
+			pidSource = CustomPIDSourceType.kDisplacement;
 		}
 		
 		@Override
-		public void setPIDSourceType(PIDSourceType pidSource) {
+		public void setCustomPIDSourceType(CustomPIDSourceType pidSource) {
 			this.pidSource = pidSource;
 		}
 		
 		@Override
-		public PIDSourceType getPIDSourceType() {
+		public CustomPIDSourceType getCustomPIDSourceType() {
 			return pidSource;
 		}
 		
@@ -277,7 +278,7 @@ public class EncoderPair implements CustomEncoder {
 		
 		@Override
 		public double pidGetSafely() throws InvalidSensorException {
-			if (pidSource == PIDSourceType.kDisplacement) {
+			if (pidSource == CustomPIDSourceType.kDisplacement) {
 				return getDifferenceSafely();
 			}
 			return getRateDifferenceSafely();

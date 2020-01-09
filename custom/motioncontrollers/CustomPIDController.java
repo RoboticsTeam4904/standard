@@ -4,6 +4,9 @@ import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.custom.sensors.InvalidSensorException;
 import org.usfirst.frc4904.standard.custom.sensors.NativeDerivativeSensor;
 import org.usfirst.frc4904.standard.custom.sensors.PIDSensor;
+
+import edu.wpi.first.wpilibj.PIDSourceType;
+import org.usfirst.frc4904.standard.custom.CustomPIDSourceType;
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.hal.util.BoundaryException;
 
@@ -370,7 +373,7 @@ public class CustomPIDController extends MotionController {
 		// Check if the sensor supports native derivative calculations and that we're doing displacement PID
 		// (if we're doing rate PID, then getRate() would be the PID input rather then the input's derivative)
 		double errorDerivative;
-		if (sensor instanceof NativeDerivativeSensor && sensor.getPIDSourceType() == PIDSourceType.kDisplacement) {
+		if (sensor instanceof NativeDerivativeSensor && sensor.getCustomPIDSourceType() == CustomPIDSourceType.kDisplacement) {
 			errorDerivative = ((NativeDerivativeSensor) sensor).getRateSafely();
 		} else {
 			// Calculate the approximation of the derivative.

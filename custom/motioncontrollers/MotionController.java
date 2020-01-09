@@ -85,9 +85,9 @@ public abstract class MotionController {
 	 *        The sensor associated with the output you are
 	 *        trying to control
 	 */
-	public MotionController(PIDController source) {
-		this(new PIDSensor.PIDSourceWrapper(source));
-	}
+	//public MotionController(PIDController source) {
+		//this(new PIDSensor.PIDSourceWrapper(source));
+	//}
 
 	/**
 	 * This should return the motion controller
@@ -393,7 +393,7 @@ public abstract class MotionController {
 					}
 				}
 				if (output != null && isEnabled()) {
-					output.Set(Calculate(value));
+					output.accept(value);
 				}
 			}
 			catch (Exception e) {

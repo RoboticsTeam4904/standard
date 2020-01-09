@@ -3,6 +3,7 @@ package org.usfirst.frc4904.standard.custom.sensors;
 
 import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
+import org.usfirst.frc4904.standard.custom.CustomPIDSourceType;
 // import edu.wpi.first.wpilibj2.PIDController
 
 import edu.wpi.first.wpilibj.controller.PIDController;
@@ -64,7 +65,7 @@ public interface PIDSensor {
 	 * @param pidSource
 	 *        An enum to select the parameter.
 	 */
-	public void setPIDSourceType(PIDSourceType pidSource);
+	public void setCustomPIDSourceType(CustomPIDSourceType pidSource);
 
 	/**
 	 * Get which parameter of the device you are using as a process control
@@ -72,7 +73,7 @@ public interface PIDSensor {
 	 *
 	 * @return the currently selected PID source parameter
 	 */
-	public PIDSourceType getPIDSourceType();
+	public CustomPIDSourceType getCustomPIDSourceType();
 
 	/**
 	 * Get the result to use in PIDController
@@ -92,35 +93,4 @@ public interface PIDSensor {
 	 *         when sensor data should not be used for PID due to potential inaccuracy
 	 */
 	public double pidGetSafely() throws InvalidSensorException;
-
-	/**
-	 * Class to wrap a PIDSource to a PIDSensor
-	 *
-	 */
-	public static class PIDSourceWrapper implements PIDSensor {
-		PIDSource source;
-
-		public PIDSourceWrapper(PIDSource source) {
-			this.source = source;
-		}
-		@Override
-		public void setPIDSourceType(PIDSourceType pidSource) {
-			source.setPIDSourceType(pidSource);
-		}
-		
-		@Override
-		public PIDSourceType getPIDSourceType() {
-			return source.getPIDSourceType();
-		}
-		
-		@Override
-		public double pidGetSafely() throws InvalidSensorException { // No exception possible anyway
-			return source.pidGet();
-		}
-		
-		@Override
-		public double pidGet() {
-			return source.pidGet();
-		}
-	}
 }

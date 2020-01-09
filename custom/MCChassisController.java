@@ -6,6 +6,7 @@ import org.usfirst.frc4904.standard.Util;
 import org.usfirst.frc4904.standard.custom.motioncontrollers.MotionController;
 import org.usfirst.frc4904.standard.custom.sensors.IMU;
 import org.usfirst.frc4904.standard.custom.sensors.InvalidSensorException;
+import org.usfirst.frc4904.standard.custom.CustomPIDSourceType;
 import edu.wpi.first.wpilibj.PIDSourceType;
 
 public class MCChassisController implements ChassisController {
@@ -22,7 +23,7 @@ public class MCChassisController implements ChassisController {
 		this.maxDegreesPerSecond = maxDegreesPerSecond;
 		this.imu = imu;
 		this.imu.reset();
-		this.imu.setPIDSourceType(PIDSourceType.kDisplacement);
+		this.imu.setCustomPIDSourceType(CustomPIDSourceType.kDisplacement);
 		this.motionController = motionController;
 		motionController.setInputRange(-180.0f, 180.0f);
 		motionController.setOutputRange(-1.0f, 1.0f);

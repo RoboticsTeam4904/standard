@@ -2,6 +2,7 @@ package org.usfirst.frc4904.standard.custom.sensors;
 
 import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.Util;
+import org.usfirst.frc4904.standard.custom.CustomPIDSourceType;
 // import 
 
 // import edu.wpi.first.wpilibj.PIDSourceType;
@@ -12,7 +13,7 @@ import org.usfirst.frc4904.standard.Util;
  *
  */
 public class CANEncoder extends CANSensor implements CustomEncoder {
-	private PIDSourceType pidSource;
+	private CustomPIDSourceType pidSource;
 	private double distancePerPulse;
 	private boolean reverseDirection;
 	/**
@@ -88,7 +89,7 @@ public class CANEncoder extends CANSensor implements CustomEncoder {
 
 	@Override
 	public double pidGetSafely() throws InvalidSensorException {
-		if (pidSource == PIDSourceType.kDisplacement) {
+		if (pidSource == CustomPIDSourceType.kDisplacement) {
 			return getDistance();
 		}
 		return getRate();
