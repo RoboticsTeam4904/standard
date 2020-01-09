@@ -81,7 +81,6 @@ public class MotorControl implements Command {
 	public Set<Subsystem> getRequirements() {
 		Set<Subsystem> motors = new HashSet<Subsystem>();
 		motors.add(motor);
-		// TODO Auto-generated method stub
 		return motors;
 	}
 }

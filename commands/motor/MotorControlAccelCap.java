@@ -1,6 +1,5 @@
 package org.usfirst.frc4904.standard.commands.motor;
 
-
 import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.custom.controllers.Controller;
 import org.usfirst.frc4904.standard.subsystems.motor.Motor;
@@ -11,8 +10,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Controls a Motor directly from a Controller (e.g. Joystick or Xbox)
- * Has an acceleration cap (but not deceleration cap)
+ * Controls a Motor directly from a Controller (e.g. Joystick or Xbox) Has an
+ * acceleration cap (but not deceleration cap)
  *
  */
 public class MotorControlAccelCap implements Command {
@@ -26,15 +25,14 @@ public class MotorControlAccelCap implements Command {
 
 	/**
 	 * This Command directly controls a Motor based on an axis of the Controller.
-	 * This can allow an Operator to easily control a single Motor from an axis of the Controller.
-	 * Has an acceleration cap (but not deceleration cap)
+	 * This can allow an Operator to easily control a single Motor from an axis of
+	 * the Controller. Has an acceleration cap (but not deceleration cap)
 	 *
 	 * @param motor
 	 * @param controller
 	 * @param axis
 	 * @param scale
-	 * @param accel_cap
-	 *        This is the maximum change in motor speed per second
+	 * @param accel_cap  This is the maximum change in motor speed per second
 	 */
 	public MotorControlAccelCap(Motor motor, Controller controller, int axis, double scale, double accel_cap) {
 		this.motor = motor;
@@ -49,14 +47,14 @@ public class MotorControlAccelCap implements Command {
 
 	/**
 	 * This Command directly controls a Motor based on an axis of the Controller.
-	 * This can allow an Operator to easily control a single Motor from an axis of the Controller.
+	 * This can allow an Operator to easily control a single Motor from an axis of
+	 * the Controller.
 	 *
 	 * @param motor
 	 * @param controller
 	 * @param axis
 	 * @param scale
-	 * @param accel_cap
-	 *        This is the maximum change in motor speed per second
+	 * @param accel_cap  This is the maximum change in motor speed per second
 	 */
 	public MotorControlAccelCap(Motor motor, Controller controller, int axis, double accel_cap) {
 		this(motor, controller, axis, 1.0, accel_cap);
@@ -89,10 +87,11 @@ public class MotorControlAccelCap implements Command {
 
 	@Override
 	public void end(boolean interrupted) {
-		if(interrupted) {
+		if (interrupted) {
 			LogKitten.d("MotorControl interrupted");
 		}
 	}
+
 	@Override
 	public Set<Subsystem> getRequirements() {
 		Set<Subsystem> motors = new HashSet<Subsystem>();
