@@ -1,52 +1,47 @@
 package org.usfirst.frc4904.standard.commands;
 
+import org.usfirst.frc4904.standard.commands.CustomCommand;
 
-import edu.wpi.first.wpilibj.command.Command;
-
-public abstract class InjectedCommand extends Command {
-	private final Command previous;
+public abstract class InjectedCommand extends CustomCommand {
+	private final CustomCommand previous;
 	
-	public InjectedCommand(Command previous) {
-		super();
-		this.previous = previous;
-	}
-	
-	public InjectedCommand(String name, Command previous) {
-		super(name);
-		this.previous = previous;
-	}
-	
-	public InjectedCommand(double timeout, Command previous) {
-		super(timeout);
-		this.previous = previous;
-	}
-	
-	public InjectedCommand(String name, double timeout, Command previous) {
+	public InjectedCommand(String name, double timeout, CustomCommand previous) {
 		super(name, timeout);
 		this.previous = previous;
 	}
+
+	public InjectedCommand(double timeout, CustomCommand previous) {
+		this("Injected(" + previous.getName() + ")", timeout, previous);
+	}
+
+	public InjectedCommand(String name, CustomCommand previous) {
+		super(name);
+		this.previous = previous;
+	}
+
+	public InjectedCommand(CustomCommand previous) {
+		this("Injected(" + previous.getName() + ")", previous);
+	}
 	
 	@Override
-	final protected void initialize() {
-		if (previous != null && (previous.isRunning() || !previous.isCanceled())) {
+	final public void initialize() {
+		if (previous != null && (previous.isRunning())) {
 			previous.cancel();
 		}
 		onInitialize();
 	}
 	
-	@Override
-	final protected void interrupted() {
+	final public void interrupted() {
 		onInterrupted();
-		if (previous != null && (!previous.isRunning() || previous.isCanceled())) {
-			previous.start();
+		if (previous != null && (!previous.isRunning())) {
+			previous.schedule();
 		}
 	}
 	
-	@Override
-	final protected void end() {
+	final public void end() {
 		onEnd();
-		if (previous != null && (!previous.isRunning() || previous.isCanceled())) {
-			previous.start();
+		if (previous != null && (!previous.isRunning())) {
+			previous.schedule();
 		}
 	}
 	
