@@ -1,10 +1,8 @@
 package org.usfirst.frc4904.standard.subsystems.chassis;
 
-
 import org.usfirst.frc4904.standard.subsystems.motor.Motor;
 
-public class SwerveChassis extends Chassis 
-{
+public class SwerveChassis extends Chassis {
 	public final Motor frontLeftWheelSwerve;
 	public final Motor frontRightWheelSwerve;
 	public final Motor backLeftWheelSwerve;
@@ -24,7 +22,8 @@ public class SwerveChassis extends Chassis
 	 * @param backRightWheelSwerve
 	 */
 	public SwerveChassis(Motor frontLeftWheel, Motor frontRightWheel, Motor backLeftWheel, Motor backRightWheel,
-		Motor frontLeftWheelSwerve, Motor frontRightWheelSwerve, Motor backLeftWheelSwerve, Motor backRightWheelSwerve) {
+			Motor frontLeftWheelSwerve, Motor frontRightWheelSwerve, Motor backLeftWheelSwerve,
+			Motor backRightWheelSwerve) {
 		super(frontLeftWheel, frontRightWheel, backLeftWheel, backRightWheel);
 		this.frontLeftWheelSwerve = frontLeftWheelSwerve;
 		this.frontRightWheelSwerve = frontRightWheelSwerve;
@@ -33,8 +32,7 @@ public class SwerveChassis extends Chassis
 	}
 
 	@Override
-	public void movePolar(double xSpeed, double ySpeed, double turnSpeed) 
-	{
+	public void movePolar(double xSpeed, double ySpeed, double turnSpeed) {
 		// TODO Implement
 	}
 

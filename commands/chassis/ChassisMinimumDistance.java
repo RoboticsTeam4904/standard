@@ -1,5 +1,7 @@
 package org.usfirst.frc4904.standard.commands.chassis;
 
+import javax.lang.model.util.ElementScanner6;
+
 import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.custom.sensors.CustomEncoder;
 import org.usfirst.frc4904.standard.custom.sensors.InvalidSensorException;
@@ -24,7 +26,7 @@ public class ChassisMinimumDistance extends ChassisConstant {
 	 *                        be cancelled, then the fallbackCommand will start
 	 * @param encoders
 	 */
-public class ChassisMinimumDistance extends ChassisConstant implements Command
+	public ChassisMinimumDistance(Chassis chassis, double distance, double speed, ChassisConstant fallbackCommand,
 			CustomEncoder... encoders) {
 		super(chassis, 0.0, speed, 0.0, Double.MAX_VALUE);
 		this.encoders = encoders;
@@ -71,7 +73,7 @@ public class ChassisMinimumDistance extends ChassisConstant implements Command
 			} catch (InvalidSensorException e) {
 				cancel();
 				if (fallbackCommand != null) {
-					fallbackCommand.initialize();
+					fallbackCommand.schedule();
 				}
 				return true;
 			}

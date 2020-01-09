@@ -5,17 +5,20 @@ import org.usfirst.frc4904.standard.subsystems.chassis.Chassis;
 import org.usfirst.frc4904.standard.subsystems.motor.Motor;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.Subsystem;
-import java.util.*;
+import java.util.Set;
+import java.util.HashSet;
 
 /**
+ * <p>
  * This command causes the Chassis to idle by spawning a MotorIdle for every
  * Motor in the Chassis.
- *
+ * </p>
  */
 public class ChassisIdle extends ParallelCommandGroup {
 	/**
-	 *
+	 * <p>
 	 * @param chassis The robot Chassis to idle.
+	 * </p>
 	 */
 	private Chassis chassis;
 
@@ -28,23 +31,14 @@ public class ChassisIdle extends ParallelCommandGroup {
 	}
 
 	@Override
-	public Set<Subsystem> getRequirements() {
-		HashSet<Subsystem> set = new HashSet<Subsystem>();
-		set.add(this.chassis);
-		return set;
-	}
+	public Set<Subsystem> getRequirements() { return Set.of(chassis); }
 
 	@Override
-	public void initialize() {
-	}
+	public void initialize() {}
 
 	@Override
-	public void execute() {
-	}
+	public void execute() {}
 
 	@Override
-	public void end(boolean interrupt) {
-	}
-
-
+	public void end(boolean interrupt) {}
 }

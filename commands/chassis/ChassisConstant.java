@@ -29,9 +29,7 @@ public class ChassisConstant implements Command, ChassisController {
 
 	@Override
 	public Set<Subsystem> getRequirements() {
-		HashSet<Subsystem> set = new HashSet<Subsystem>();
-		set.add(this.chassis);
-		return set;
+		return Set.of(chassis);
 	}
 
 	@Override
@@ -59,10 +57,11 @@ public class ChassisConstant implements Command, ChassisController {
 	}
 
 	/**
-	 * The command has timed out if the time since scheduled is greater than the
-	 * timeout
+	 * <p>
+	 * The command has timed out if the time since scheduled is greater than the timeout
 	 * 
 	 * @return finished
+	 * </p>
 	 */
 	@Override
 	public boolean isFinished() {

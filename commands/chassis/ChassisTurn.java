@@ -18,6 +18,7 @@ public class ChassisTurn extends CommandBase implements ChassisController, Comma
 	protected boolean runOnce;
 
 	/**
+	 * <p>
 	 * Constructor This command rotates the chassis to a position relative to the
 	 * current angle of the robot
 	 *
@@ -28,6 +29,7 @@ public class ChassisTurn extends CommandBase implements ChassisController, Comma
 	 *                         will be cancelled, then the fallbackCommand will
 	 *                         start
 	 * @param motionController
+	 * </p>
 	 */
 	public ChassisTurn(final Chassis chassis, final double finalAngle, final IMU imu, final CommandBase fallbackCommand,
 			final MotionController motionController) {
@@ -39,6 +41,7 @@ public class ChassisTurn extends CommandBase implements ChassisController, Comma
 	}
 
 	/**
+	 * <p>
 	 * Constructor This command rotates the chassis to a position relative to the
 	 * current angle of the robot
 	 *
@@ -46,6 +49,7 @@ public class ChassisTurn extends CommandBase implements ChassisController, Comma
 	 * @param finalAngle
 	 * @param imu
 	 * @param motionController
+	 * </p>
 	 */
 	public ChassisTurn(final Chassis chassis, final double finalAngle, final IMU imu,
 			final MotionController motionController) {
@@ -109,9 +113,10 @@ public class ChassisTurn extends CommandBase implements ChassisController, Comma
 	}
 
 	@Override
-	public void end(final boolean interrupted) {
+	public void end(boolean interrupted) {
 		motionController.disable();
 		move.cancel();
+		
 		if (fallbackCommand != null && fallbackCommand.isScheduled()) {
 			fallbackCommand.cancel();
 		}

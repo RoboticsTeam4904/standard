@@ -11,13 +11,14 @@ import edu.wpi.first.wpilibj2.command.Subsystem;
 import java.util.Set;
 import java.util.HashSet;
 
-/*
- * This command moves the chassis.
- * It move based on the driver class.
- * Note that it supports all types of chassis.
- * The chassis is used to calculate the motor movement.
- * The command works by creating a movement command for each motor.
- * This is the best way to handle this because it allows each motor to be a full subsystem.
+/**
+ * <p>
+ * This command moves the chassis. It move based on the driver class. Note that
+ * it supports all types of chassis. The chassis is used to calculate the motor
+ * movement. The command works by creating a movement command for each motor.
+ * This is the best way to handle this because it allows each motor to be a full
+ * subsystem.
+ * </p>
  */
 public class ChassisMove extends ParallelCommandGroup {
 	protected final MotorSet[] motorSpins;
@@ -27,12 +28,15 @@ public class ChassisMove extends ParallelCommandGroup {
 	protected final Chassis chassis;
 	protected final ChassisController controller;
 
-	/*
+	/**
+	 * <p>
+	 * 
 	 * @param chassis    The robot's Chassis.
 	 * @param controller A ChassisController to control the Chassis, such as a
 	 *                   Driver or autonomous routine.
 	 * @param usePID     Whether to enable PID using any SensorMotors that Chassis
 	 *                   has.
+	 *                   </p>
 	 */
 	public ChassisMove(Chassis chassis, ChassisController controller, boolean usePID) {
 		this.chassis = chassis;
@@ -44,35 +48,39 @@ public class ChassisMove extends ParallelCommandGroup {
 			motorSpins[i] = new MotorSet(motors[i]);
 			addCommands(motorSpins[i]);
 		}
-		// LogKitten.v("ChassisMove created for " + chassis.getName());
 	}
 
 	@Override
 	public Set<Subsystem> getRequirements() {
-		HashSet<Subsystem> set = new HashSet<Subsystem>();
-		set.add(this.chassis);
-		return set;
+		return Set.of(this.chassis);
 	}
 
 	/**
+	 * <p>
+	 * 
 	 * @param chassis    The robot's chassis.
 	 * @param controller A ChassisController to control the Chassis, such as a
 	 *                   Driver or autonomous routine.
+	 * </p>
 	 */
 	public ChassisMove(Chassis chassis, ChassisController controller) {
 		this(chassis, controller, false);
 	}
 
+	/**
+	 * <p>
+	 * VelocitySensorMotors will attempt to very precisely achieve the speed set by
+	 * this command when PID is enabled PositionSensorMotors will either attempt to
+	 * maintain their previous position, or worse, will try to move to somewhere
+	 * between -1.0 and 1.0, which is probably not the correct position regardless
+	 * of the scaling.
+	 * </p>
+	 */
 	@Override
 	public void initialize() {
 		for (Motor motor : motors) {
 			if (motor instanceof VelocitySensorMotor) {
-				// VelocitySensorMotors will attempt to very precisely achieve the speed set by
-				// this command when PID is enabled
-				// PositionSensorMotors will either attempt to maintain their previous position,
-				// or worse, will try to move to somewhere
-				// between -1.0 and 1.0, which is probably not the correct position regardless
-				// of the scaling.
+
 				if (usePID) {
 					((VelocitySensorMotor) motor).enableMotionController();
 				} else {
@@ -105,9 +113,11 @@ public class ChassisMove extends ParallelCommandGroup {
 	}
 
 	/**
+	 * <p>
 	 * It's important to stop motor spins before the ChassisMove command stops.
 	 * Otherwise, the spins might briefly (for one tick) use the previously set
 	 * values if the ChassisMove command is reused.
+	 * </p>
 	 */
 	protected void stopMotorSpins() {
 		for (int i = 0; i < motors.length; i++) {

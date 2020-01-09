@@ -1,15 +1,16 @@
 package org.usfirst.frc4904.standard.subsystems.chassis;
 
-import org.usfirst.frc4904.standard.commands.chassis.ChassisShift;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.Subsystem;
 
 /**
- * A subsystem for managing a solenoid for a shifting drivetrain.
- *
+ * <h2>A subsystem for managing a solenoid for a shifting drivetrain.</h2> The
+ * normal default command is <em><strong>ChassisShift</strong></em>(this,
+ * SolenoidShifters.ShiftState.DOWN). It is set with
+ * subsystemname..setDefaultCommand(...)
  */
-public class SolenoidShifters extends SubsystemBase {
+public class SolenoidShifters extends SubsystemBase implements Subsystem {
 	protected final DoubleSolenoid solenoid;
 	protected final boolean isInverted;
 	protected ShiftState state;
@@ -65,14 +66,11 @@ public class SolenoidShifters extends SubsystemBase {
 		this(new DoubleSolenoid(module, portUp, portDown), false);
 	}
 
-	@Override
-	public Command getDefaultCommand() {
-		return new ChassisShift(this, SolenoidShifters.ShiftState.DOWN);
-	}
-
 	/**
+	 * 
 	 * Returns the current state of the solenoid shifters. This is based on the set
 	 * state, not a measured state.
+	 * 
 	 */
 	public ShiftState getShiftState() {
 		return state;

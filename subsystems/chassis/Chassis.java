@@ -15,11 +15,10 @@ public abstract class Chassis implements Subsystem {
 
 	/**
 	 *
-	 * ] * @param motors all the motors that are part of this Chassis. Pass from
+	 * @param motors all the motors that are part of this Chassis. Pass from
 	 * front to back, left to right
 	 */
 	public Chassis(Motor... motors) {
-		// super(name);
 		this.motors = motors;
 		motorSpeeds = new double[motors.length];
 	}

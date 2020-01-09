@@ -10,7 +10,7 @@ import org.usfirst.frc4904.standard.subsystems.chassis.Chassis;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 
-public class ChassisMoveDistance implements Command, ChassisController {
+public class ChassisMoveDistance implements Command, ChassisController { 
 	protected final ChassisMove chassisMove;
 	protected final MotionController motionController;
 	protected final Command fallbackCommand;
@@ -42,6 +42,7 @@ public class ChassisMoveDistance implements Command, ChassisController {
 	}
 
 	/**
+	 * <p>
 	 * Constructor. This command moves the chassis forward a known distance via a
 	 * set of encoders. The distance is calculated as the average of the provided
 	 * encoders. The speed is decided by the provided motionController.
@@ -49,7 +50,8 @@ public class ChassisMoveDistance implements Command, ChassisController {
 	 * @param chassis
 	 * @param distance         distance to move in encoder ticks
 	 * @param motionController
-	 * @param encoders
+	 * @param encoders 
+	 * </p>
 	 */
 	public ChassisMoveDistance(Chassis chassis, double distance, MotionController motionController) {
 		this(chassis, distance, motionController, null);
@@ -57,14 +59,12 @@ public class ChassisMoveDistance implements Command, ChassisController {
 
 	@Override
 	public Set<Subsystem> getRequirements() {
-		HashSet<Subsystem> set = new HashSet<Subsystem>();
-		set.add(this.chassis);
-		return set;
+		return Set.of(chassis);
 	}
 
 	@Override
 	public void initialize() {
-		chassisMove.initialize();
+		chassisMove.schedule();
 		try {
 			motionController.resetSafely();
 		} catch (InvalidSensorException e) {
@@ -72,7 +72,7 @@ public class ChassisMoveDistance implements Command, ChassisController {
 			chassisMove.cancel();
 			cancel();
 			if (fallbackCommand != null) {
-				fallbackCommand.initialize();
+				fallbackCommand.schedule();
 			}
 			return;
 		}
@@ -95,7 +95,7 @@ public class ChassisMoveDistance implements Command, ChassisController {
 			chassisMove.cancel();
 			cancel();
 			if (fallbackCommand != null) {
-				fallbackCommand.initialize();
+				fallbackCommand.schedule();
 			}
 			speed = 0;
 		}
@@ -117,8 +117,7 @@ public class ChassisMoveDistance implements Command, ChassisController {
 	}
 
 	@Override
-	public void execute() {
-	}
+	public void execute() {}
 
 	@Override
 	public boolean isFinished() {

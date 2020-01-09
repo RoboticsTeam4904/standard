@@ -1,6 +1,7 @@
 package org.usfirst.frc4904.standard.commands;
 
 import java.util.Set;
+import java.util.Collections;
 
 import org.usfirst.frc4904.standard.LogKitten;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -37,6 +38,7 @@ public class Cancel implements Command {
 
 	@Override
 	public Set<Subsystem> getRequirements() {
-		return null;
+		Set<Subsystem> emptySet = Collections.<Subsystem>emptySet();
+		return emptySet;
 	}
 }
