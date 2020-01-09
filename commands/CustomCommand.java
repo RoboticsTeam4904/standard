@@ -23,4 +23,13 @@ public abstract class CustomCommand extends CommandBase {
         setName(name);
     }
 
+    // TODO: write this well (so that it actually returns if something is running)
+    /**
+     * Check if a command is scheduled to run.
+     * 
+     * @return Whether the command is scheduled to run
+     */
+    public boolean isRunning() {
+        return isScheduled();
+    }
 }
