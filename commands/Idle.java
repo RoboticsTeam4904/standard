@@ -1,23 +1,21 @@
 package org.usfirst.frc4904.standard.commands;
 
-
-import java.util.StringJoiner;
 import java.util.Set;
-import java.util.Collections;
 
 import org.usfirst.frc4904.standard.LogKitten;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 
+/**
+ * Requires subsystems so no other code can interact with them.
+ */
 public class Idle implements Command {
 	boolean verbose;
+	Set<Subsystem> requirements;
 	public Idle(boolean verbose, Subsystem... subsystems) {
 		this.verbose = verbose;
-		Set<Subsystem> requirements = Collections.emptySet(); // as per https://stackoverflow.com/a/285184
-		for (Subsystem subsystem : subsystems) {
-			requirements.add(subsystem);
-		}
+		requirements = Subsystem.of(subsystems);
 	}
 
 	public Idle(Subsystem... subsystems) {
