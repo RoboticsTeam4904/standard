@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj.command.Subsystem;
  * but one of them (the background command) runs indefinitely. Using GuardCommand, that
  * background command will be run for the duration of the primary command, or for less time
  * if it ends by itself. Note that in the latter case, the primary command will finish independently.
- *
+ * @deprecated
  */
 public class GuardCommand extends Command {
 	protected final Command backgroundCommand;
