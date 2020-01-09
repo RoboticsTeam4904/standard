@@ -6,6 +6,9 @@ import org.usfirst.frc4904.standard.LogKitten;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 
+/**
+ * This class cancels a command
+ */
 public class Cancel implements Command {
 	protected final Command command;
 
@@ -18,18 +21,12 @@ public class Cancel implements Command {
 		command.cancel();
 	}
 
-	public void execute() {}
-
 	public boolean isFinished() {
 		return true;
 	}
-
-	public void end() {}
 
 	public Set<Subsystem> getRequirements()
 	{
 		return Set.of();
 	}
-
-	public void interrupted() {}
 }
