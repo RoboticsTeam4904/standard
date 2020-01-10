@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj.PIDSourceType;
 
 public class CANTalonEncoder implements CustomEncoder {
 	protected final TalonSRX talon;
-	protected PIDSourceType pidSource;
+	protected CustomPIDSourceType pidSource;
 	protected double distancePerPulse;
 	protected boolean reverseDirection;
 
@@ -57,7 +57,7 @@ public class CANTalonEncoder implements CustomEncoder {
 
 	@Override
 	public double pidGet() {
-		if (pidSource == PIDSourceType.kDisplacement) {
+		if (pidSource == CustomPIDSourceType.kDisplacement) {
 			return getDistance();
 		}
 		return getRate();

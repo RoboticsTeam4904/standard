@@ -64,6 +64,7 @@ public abstract class MotionController {
 		sensorException = null;
 	}
 
+
 	/**
 	 * Sets the output for this MotionController.
 	 * Once every MotionController tick, the output will

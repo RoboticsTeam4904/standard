@@ -2,6 +2,8 @@ package org.usfirst.frc4904.standard.custom.sensors;
 
 
 import org.usfirst.frc4904.standard.LogKitten;
+import org.usfirst.frc4904.standard.custom.CustomPIDSourceType;
+
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.PIDSourceType;
@@ -29,7 +31,7 @@ public class NavX extends AHRS implements IMU {
 		lastRoll = 0.0f;
 		getYawCalls = 0;
 	}
-	
+
 	public NavX(I2C.Port port) {
 		super(port);
 		super.zeroYaw();
@@ -66,17 +68,17 @@ public class NavX extends AHRS implements IMU {
 		SmartDashboard.putNumber("navx_yaw", yaw);
 		SmartDashboard.putNumber("navx_last_yaw", lastYaw);
 		if ((Math.abs(yaw - lastYaw) > NavX.MAX_DEGREES_PER_TICK)
-			&& (Math.abs(Math.abs(yaw - lastYaw) - 360) > NavX.MAX_DEGREES_PER_TICK)) { // Smoothing
+				&& (Math.abs(Math.abs(yaw - lastYaw) - 360) > NavX.MAX_DEGREES_PER_TICK)) { // Smoothing
 			return lastYaw;
 		}
 		lastYaw = yaw;
 		return yaw;
 	}
-	
+
 	@Override
 	public float getYaw() {
 		getYawCalls += 1;
-//		LogKitten.e(Integer.toString(getYawCalls));
+		// LogKitten.e(Integer.toString(getYawCalls));
 		return super.getYaw();
 	}
 
@@ -121,4 +123,23 @@ public class NavX extends AHRS implements IMU {
 		super.zeroYaw();
 		lastYaw = 0;
 	}
+
+	@Override
+	public void setPIDSourceType(CustomPIDSourceType pidSource) {
+		// TODO Auto-generated method stub
+
+	}
+
+	
+	public CustomPIDSourceType getCustomPIDSourceType() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setCustomPIDSourceType(CustomPIDSourceType kdisplacement) {
+		// TODO Auto-generated method stub
+
+	}
 }
+

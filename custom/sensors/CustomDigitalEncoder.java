@@ -4,6 +4,7 @@ package org.usfirst.frc4904.standard.custom.sensors;
 import edu.wpi.first.wpilibj.CounterBase;
 import edu.wpi.first.wpilibj.DigitalSource;
 import edu.wpi.first.wpilibj.Encoder;
+import org.usfirst.frc4904.standard.custom.CustomPIDSourceType;
 
 /**
  * A RoboRIO encoder that implements
@@ -106,5 +107,17 @@ public class CustomDigitalEncoder extends Encoder implements CustomEncoder {
 	@Override
 	public double getRateSafely() {
 		return getRate();
+	}
+
+	@Override
+	public void setCustomPIDSourceType(CustomPIDSourceType pidSource) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public CustomPIDSourceType getCustomPIDSourceType() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
