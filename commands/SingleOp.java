@@ -11,7 +11,7 @@ public class SingleOp extends CommandBase {
 	}
 
 	public SingleOp(Runnable op) {
-		this.op = op;
+		this("SingleOp", op);
 	}
 
 	@Override
