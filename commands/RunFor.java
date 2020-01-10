@@ -2,11 +2,11 @@ package org.usfirst.frc4904.standard.commands;
 
 import java.util.Set;
 import edu.wpi.first.wpilibj2.command.Subsystem;
-import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 
-public class RunFor implements Command {
+public class RunFor implements CommandBase {
 	protected final double duration;
-	protected final Command command;
+	protected final CommandBase command;
 	protected boolean firstTick;
 
 	/**
@@ -18,7 +18,7 @@ public class RunFor implements Command {
 	 * @param duration      A duration in seconds
 	 * @param interruptible Whether this command should be interruptible
 	 */
-	public RunFor(Command command, double duration) {
+	public RunFor(CommandBase command, double duration) {
 		this.duration = duration;
 		this.command = command;
 		firstTick = true;
