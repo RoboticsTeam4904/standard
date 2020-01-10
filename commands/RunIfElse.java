@@ -36,7 +36,8 @@ public class RunIfElse implements Command {
 		runningCommand = ifCommand;
 	}
 
-	public void execute() {}
+	public void execute() {
+	}
 
 	public boolean isFinished() {
 		if (runningCommand.isScheduled() && !hasRunOnce) {

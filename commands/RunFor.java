@@ -10,16 +10,13 @@ public class RunFor implements Command {
 	protected boolean firstTick;
 
 	/**
-	 * Run a command for a given amount of time, in seconds. The command will be cancelled at the end.
-	 * For example, if you want to go forward for 3 seconds, use:
-	 * new RunFor(new GoForward(), 3)
+	 * Run a command for a given amount of time, in seconds. The command will be
+	 * cancelled at the end. For example, if you want to go forward for 3 seconds,
+	 * use: new RunFor(new GoForward(), 3)
 	 *
-	 * @param command
-	 *        The command to be run for the duration
-	 * @param duration
-	 *        A duration in seconds
-	 * @param interruptible
-	 *        Whether this command should be interruptible
+	 * @param command       The command to be run for the duration
+	 * @param duration      A duration in seconds
+	 * @param interruptible Whether this command should be interruptible
 	 */
 	public RunFor(Command command, double duration) {
 		this.duration = duration;
@@ -31,12 +28,13 @@ public class RunFor implements Command {
 		command.withTimeout(duration);
 	}
 
-	public void execute() {}
+	public void execute() {
+	}
 
 	public boolean isFinished() {
 		if (firstTick) {
 			firstTick = false;
-			return isTimedOut();
+			return isTimedOut(); // TODO: needs to be changed
 		}
 		return isTimedOut() || !command.isScheduled();
 	}
@@ -51,6 +49,6 @@ public class RunFor implements Command {
 	}
 
 	public Set<Subsystem> getRequirements() {
-		return this.command.getRequirements();
+		return command.getRequirements();
 	}
 }

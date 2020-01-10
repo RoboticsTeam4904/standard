@@ -31,6 +31,6 @@ public class RunWhile implements Command {
 	}
 
 	public Set<Subsystem> getRequirements() {
-		return this.command.getRequirements();
+		return command.getRequirements();
 	}
 }
