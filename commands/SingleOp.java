@@ -5,6 +5,11 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 public class SingleOp extends CommandBase {
 	protected Runnable op;
 
+	public SingleOp(String name, Runnable op) {
+		setName(name);
+		this.op = op;
+	}
+
 	public SingleOp(Runnable op) {
 		this.op = op;
 	}
