@@ -4,14 +4,14 @@ package org.usfirst.frc4904.standard.commands;
 import edu.wpi.first.wpilibj2.command.CommandGroupBase;
 
 public abstract class InjectedCommandGroup extends CommandGroupBase {
-	private final CustomCommand previous;
+	private final CommandGroupBase previous;
 	
-	public InjectedCommandGroup(CustomCommand previous) {
+	public InjectedCommandGroup(CommandGroupBase previous) {
 		super();
 		this.previous = previous;
 	}
 	
-	public InjectedCommandGroup(String name, CustomCommand previous) {
+	public InjectedCommandGroup(String name, CommandGroupBase previous) {
 		super();
 		setName(name);
 		this.previous = previous;
