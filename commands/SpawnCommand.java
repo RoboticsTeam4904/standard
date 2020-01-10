@@ -18,17 +18,7 @@ public class SpawnCommand extends CommandBase {
 	}
 
 	@Override
-	public void execute() {
-	}
-
-	@Override
 	public boolean isFinished() {
 		return true;
-	}
-
-	protected void end() {
-	}
-
-	protected void interrupted() {
 	}
 }
