@@ -20,17 +20,6 @@ public abstract class SafetyCommand extends CommandBase {
 		setName(name);
 	}
 
-	public SafetyCommand(double timeout) {
-		super();
-		withTimeout(timeout);
-	}
-
-	public SafetyCommand(String name, double timeout) {
-		super();
-		setName(name);
-		withTimeout(timeout);
-	}
-
 	@Override
 	final public void execute() {
 		if (isSafe()) {
