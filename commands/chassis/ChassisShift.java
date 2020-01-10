@@ -1,17 +1,13 @@
 package org.usfirst.frc4904.standard.commands.chassis;
 
-import java.util.Set;
-import java.util.HashSet;
-
 import org.usfirst.frc4904.standard.subsystems.chassis.SolenoidShifters;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Subsystem;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /**
  * This command shifts a set of solenoids.
  *
  */
-public class ChassisShift implements Command {
+public class ChassisShift extends CommandBase {
 	protected final SolenoidShifters solenoids;
 	protected final SolenoidShifters.ShiftState state;
 
@@ -31,10 +27,23 @@ public class ChassisShift implements Command {
 	 * @param state
 	 */
 	public ChassisShift(SolenoidShifters solenoids, SolenoidShifters.ShiftState state) {
+		this(solenoids, state, "Chassis Shift");
+	}
+
+	/**
+	 * Shifts the solenoids to the provided state
+	 *
+	 * @param solenoids
+	 * @param state
+	 * @param name
+	 */
+	public ChassisShift(SolenoidShifters solenoids, SolenoidShifters.ShiftState state, String name) {
 		super();
-		this.solenoids = solenoids;
-		//addRequirements(solenoids);
+		// addRequirements(solenoids);
 		this.state = state;
+		this.solenoids = solenoids;
+		setName(name);
+		addRequirements(solenoids);
 	}
 
 	@Override
@@ -55,12 +64,5 @@ public class ChassisShift implements Command {
 	@Override
 	public boolean isFinished() {
 		return false; // Encoders stay in whatever state until shifted elsewhere.
-	}
-
-	@Override
-	public Set<Subsystem> getRequirements() {
-		HashSet<Subsystem> set = new HashSet<Subsystem>();
-		set.add(this.solenoids);
-		return set;
 	}
 }

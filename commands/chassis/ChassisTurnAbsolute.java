@@ -16,7 +16,7 @@ public class ChassisTurnAbsolute extends ChassisTurn {
 	 * @param motionController
 	 */
 	public ChassisTurnAbsolute(Chassis chassis, double finalAngle, IMU imu, MotionController motionController) {
-		super(chassis, finalAngle, imu, motionController);
+		super(chassis, finalAngle, imu, motionController, "Chassis Turn Absolute");
 	}
 
 	/**
@@ -33,7 +33,40 @@ public class ChassisTurnAbsolute extends ChassisTurn {
 	 */
 	public ChassisTurnAbsolute(Chassis chassis, double finalAngle, IMU imu, CommandBase fallbackCommand,
 			MotionController motionController) {
-		super(chassis, finalAngle, imu, fallbackCommand, motionController);
+		super(chassis, finalAngle, imu, fallbackCommand, motionController, "Chassis Turn Absolute");
+	}
+
+	/**
+	 * Constructor This command rotates the chassis to a position relative to the
+	 * starting point of the robot (e.g. the position where the imu was last reset).
+	 *
+	 * @param chassis
+	 * @param finalAngle
+	 * @param imu
+	 * @param motionController
+	 * @param name
+	 */
+	public ChassisTurnAbsolute(Chassis chassis, double finalAngle, IMU imu, MotionController motionController,
+			String name) {
+		super(chassis, finalAngle, imu, motionController, name);
+	}
+
+	/**
+	 * Constructor This command rotates the chassis to a position relative to the
+	 * starting point of the robot (e.g. the position where the imu was last reset).
+	 *
+	 * @param chassis
+	 * @param finalAngle
+	 * @param imu
+	 * @param fallbackCommand  If the sensor fails for some reason, this command
+	 *                         will be cancelled, then the fallbackCommand will
+	 *                         start
+	 * @param motionController
+	 * @param name
+	 */
+	public ChassisTurnAbsolute(Chassis chassis, double finalAngle, IMU imu, CommandBase fallbackCommand,
+			MotionController motionController, String name) {
+		super(chassis, finalAngle, imu, fallbackCommand, motionController, name);
 	}
 
 	@Override

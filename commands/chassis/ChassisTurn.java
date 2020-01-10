@@ -5,10 +5,9 @@ import org.usfirst.frc4904.standard.custom.motioncontrollers.MotionController;
 import org.usfirst.frc4904.standard.custom.sensors.IMU;
 import org.usfirst.frc4904.standard.custom.sensors.InvalidSensorException;
 import org.usfirst.frc4904.standard.subsystems.chassis.Chassis;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-public class ChassisTurn extends CommandBase implements ChassisController, Command {
+public class ChassisTurn extends CommandBase implements ChassisController {
 	protected final ChassisMove move;
 	protected double initialAngle;
 	protected final double finalAngle;
@@ -18,7 +17,7 @@ public class ChassisTurn extends CommandBase implements ChassisController, Comma
 	protected boolean runOnce;
 
 	/**
-	 * <p>
+	 * 
 	 * Constructor This command rotates the chassis to a position relative to the
 	 * current angle of the robot
 	 *
@@ -29,19 +28,20 @@ public class ChassisTurn extends CommandBase implements ChassisController, Comma
 	 *                         will be cancelled, then the fallbackCommand will
 	 *                         start
 	 * @param motionController
-	 * </p>
+	 * @param name
 	 */
 	public ChassisTurn(final Chassis chassis, final double finalAngle, final IMU imu, final CommandBase fallbackCommand,
-			final MotionController motionController) {
+			final MotionController motionController, String name) {
 		move = new ChassisMove(chassis, this);
 		this.finalAngle = -((finalAngle + 360) % 360 - 180);
 		this.imu = imu;
 		this.motionController = motionController;
 		this.fallbackCommand = fallbackCommand;
+		setName(name);
 	}
 
 	/**
-	 * <p>
+	 * 
 	 * Constructor This command rotates the chassis to a position relative to the
 	 * current angle of the robot
 	 *
@@ -49,11 +49,44 @@ public class ChassisTurn extends CommandBase implements ChassisController, Comma
 	 * @param finalAngle
 	 * @param imu
 	 * @param motionController
-	 * </p>
+	 * @param name
+	 */
+	public ChassisTurn(final Chassis chassis, final double finalAngle, final IMU imu,
+			final MotionController motionController, String name) {
+		this(chassis, finalAngle, imu, null, motionController, name);
+	}
+
+	/**
+	 * 
+	 * Constructor This command rotates the chassis to a position relative to the
+	 * current angle of the robot
+	 *
+	 * @param chassis
+	 * @param finalAngle
+	 * @param imu
+	 * @param motionController
 	 */
 	public ChassisTurn(final Chassis chassis, final double finalAngle, final IMU imu,
 			final MotionController motionController) {
-		this(chassis, finalAngle, imu, null, motionController);
+		this(chassis, finalAngle, imu, null, motionController, "Chassis Turn");
+	}
+
+	/**
+	 * 
+	 * Constructor This command rotates the chassis to a position relative to the
+	 * current angle of the robot
+	 *
+	 * @param chassis
+	 * @param finalAngle
+	 * @param imu
+	 * @param fallbackCommand  If the sensor fails for some reason, this command
+	 *                         will be cancelled, then the fallbackCommand will
+	 *                         start
+	 * @param motionController
+	 */
+	public ChassisTurn(final Chassis chassis, final double finalAngle, final IMU imu, final CommandBase fallbackCommand,
+			final MotionController motionController) {
+		this(chassis, finalAngle, imu, fallbackCommand, motionController, "Chassis Turn");
 	}
 
 	@Override
@@ -116,7 +149,7 @@ public class ChassisTurn extends CommandBase implements ChassisController, Comma
 	public void end(boolean interrupted) {
 		motionController.disable();
 		move.cancel();
-		
+
 		if (fallbackCommand != null && fallbackCommand.isScheduled()) {
 			fallbackCommand.cancel();
 		}

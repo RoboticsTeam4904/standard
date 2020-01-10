@@ -1,35 +1,30 @@
 package org.usfirst.frc4904.standard.commands.chassis;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import org.usfirst.frc4904.standard.custom.ChassisController;
 import org.usfirst.frc4904.standard.subsystems.chassis.Chassis;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.CommandGroupBase;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 
-public class ChassisConstant implements Command, ChassisController {
+public class ChassisConstant extends CommandBase implements ChassisController {
 	protected final CommandGroupBase move;
 	protected final double x;
 	protected final double y;
 	protected double turn;
 	protected double timeout;
-	private Chassis chassis;
 
-	public ChassisConstant(Chassis chassis, double x, double y, double turn, double timeout) {
+	public ChassisConstant(Chassis chassis, double x, double y, double turn, double timeout, String name) {
 		move = new ChassisMove(chassis, this).withTimeout(timeout);
 		this.timeout = timeout;
 		this.x = x;
 		this.y = y;
 		this.turn = turn;
-		this.chassis = chassis;
+		setName(name);
+		addRequirements(chassis);
 	}
 
-	@Override
-	public Set<Subsystem> getRequirements() {
-		return Set.of(chassis);
+	public ChassisConstant(Chassis chassis, double x, double y, double turn, double timeout) {
+		this(chassis, x, y, turn, timeout, "Chassis Constant");
 	}
 
 	@Override
@@ -57,11 +52,12 @@ public class ChassisConstant implements Command, ChassisController {
 	}
 
 	/**
-	 * <p>
-	 * The command has timed out if the time since scheduled is greater than the timeout
+	 *
+	 * The command has timed out if the time since scheduled is greater than the
+	 * timeout
 	 * 
 	 * @return finished
-	 * </p>
+	 * 
 	 */
 	@Override
 	public boolean isFinished() {
