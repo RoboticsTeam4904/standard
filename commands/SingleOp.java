@@ -1,9 +1,8 @@
 package org.usfirst.frc4904.standard.commands;
 
+import edu.wpi.first.wpilibj2.command.CommandBase;
 
-import edu.wpi.first.wpilibj.command.Command;
-
-public class SingleOp extends Command {
+public class SingleOp extends CommandBase {
 	protected Runnable op;
 
 	public SingleOp(Runnable op) {
@@ -11,12 +10,12 @@ public class SingleOp extends Command {
 	}
 
 	@Override
-	protected void initialize() {
+	public void initialize() {
 		op.run();
 	}
 
 	@Override
-	protected boolean isFinished() {
+	public boolean isFinished() {
 		return true;
 	}
 }
