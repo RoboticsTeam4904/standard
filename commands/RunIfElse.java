@@ -55,8 +55,4 @@ public class RunIfElse extends CommandBase {
 	public void interrupted() {
 		end();
 	}
-
-	public Set<Subsystem> getRequirements() {
-		return unionRequirements;
-	}
 }
