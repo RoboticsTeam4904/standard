@@ -11,13 +11,13 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 public abstract class SafetyCommand extends CommandBase {
 	protected String reasonUnsafe;
 
-	public SafetyCommand() {
-		super();
-	}
-
 	public SafetyCommand(String name) {
 		super();
 		setName(name);
+	}
+
+	public SafetyCommand() {
+		this("SafteyCommand");
 	}
 
 	@Override
