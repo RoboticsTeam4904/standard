@@ -1,12 +1,16 @@
 package org.usfirst.frc4904.standard;
 
+
+import org.usfirst.frc4904.standard.commands.healthchecks.AbstractHealthCheck;
+import org.usfirst.frc4904.standard.commands.healthchecks.CheckHealth;
 import org.usfirst.frc4904.standard.custom.CommandSendableChooser;
 import org.usfirst.frc4904.standard.custom.TypedNamedSendableChooser;
 import org.usfirst.frc4904.standard.humaninput.Driver;
 import org.usfirst.frc4904.standard.humaninput.Operator;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.command.Scheduler;
+import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
@@ -16,8 +20,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * Robot should extend this instead of iterative robot.
  */
 public abstract class CommandRobotBase extends TimedRobot {
-	private CommandBase autonomousCommand;
-	protected CommandBase teleopCommand;
+	private Command autonomousCommand;
+	protected CheckHealth healthcheckCommand;
+	protected Command teleopCommand;
 	protected CommandSendableChooser autoChooser;
 	protected TypedNamedSendableChooser<Driver> driverChooser;
 	protected TypedNamedSendableChooser<Operator> operatorChooser;
@@ -44,6 +49,12 @@ public abstract class CommandRobotBase extends TimedRobot {
 		if (teleopCommand != null) {
 			teleopCommand.cancel();
 		}
+		if (healthcheckCommand != null) {
+			healthcheckCommand.cancel();
+		}
+		if (healthcheckCommand != null) {
+			healthcheckCommand.start();
+		}
 	}
 
 	/**
@@ -59,12 +70,17 @@ public abstract class CommandRobotBase extends TimedRobot {
 		operatorChooser = new TypedNamedSendableChooser<Operator>();
 		// Run user-provided initialize function
 		initialize();
+		// Start health checks
+		if (healthcheckCommand != null) {
+			healthcheckCommand.start();
+		}
 		// Display choosers on SmartDashboard
 		displayChoosers();
 	}
 
 	/**
 	 * Function for year-specific code to be run on robot code launch.
+	 * setHealthChecks should be called here if needed.
 	 */
 	public abstract void initialize();
 
@@ -86,7 +102,7 @@ public abstract class CommandRobotBase extends TimedRobot {
 		}
 		teleopInitialize();
 		if (teleopCommand != null) {
-			teleopCommand.schedule();
+			teleopCommand.start();
 		}
 	}
 
@@ -102,7 +118,7 @@ public abstract class CommandRobotBase extends TimedRobot {
 	 */
 	@Override
 	public final void teleopPeriodic() {
-		CommandScheduler.getInstance().run();
+		Scheduler.getInstance().run();
 		teleopExecute();
 		alwaysExecute();
 	}
@@ -122,7 +138,7 @@ public abstract class CommandRobotBase extends TimedRobot {
 		cleanup();
 		autonomousCommand = autoChooser.getSelected();
 		if (autonomousCommand != null) {
-			autonomousCommand.schedule();
+			autonomousCommand.start();
 		}
 		autonomousInitialize();
 	}
@@ -138,7 +154,7 @@ public abstract class CommandRobotBase extends TimedRobot {
 	 */
 	@Override
 	public final void autonomousPeriodic() {
-		CommandScheduler.getInstance().run();
+		Scheduler.getInstance().run();
 		autonomousExecute();
 		alwaysExecute();
 	}
@@ -169,7 +185,7 @@ public abstract class CommandRobotBase extends TimedRobot {
 	 */
 	@Override
 	public final void disabledPeriodic() {
-		CommandScheduler.getInstance().run();
+		Scheduler.getInstance().run();
 		disabledExecute();
 		alwaysExecute();
 	}
@@ -200,9 +216,9 @@ public abstract class CommandRobotBase extends TimedRobot {
 	 */
 	@Override
 	public void testPeriodic() {
+		// LiveWindow.run(); deprecated 2019 "no longer requried", removed 2020
 		testExecute();
 		alwaysExecute();
-		
 	}
 
 	/**
@@ -214,6 +230,16 @@ public abstract class CommandRobotBase extends TimedRobot {
 	 * Function for year-specific code to be run in every robot mode.
 	 */
 	public abstract void alwaysExecute();
+
+	/**
+	 * Sets the health checks for the robot.
+	 * This should be called in initialize.
+	 *
+	 * @param healthChecks
+	 */
+	public final void setHealthChecks(AbstractHealthCheck... healthChecks) {
+		healthcheckCommand = new CheckHealth(healthChecks);
+	}
 
 	/**
 	 * @return True if the robot is enabled and is in operator control.
