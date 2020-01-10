@@ -14,12 +14,25 @@ public class SolenoidExtend extends SolenoidSet {
 	 * Command to set the state of a SolenoidSubsystem to
 	 * EXTEND(DoubleSolenoid.Value.kForward)
 	 * 
+	 * @param name             Name of the extension
+	 * @param system           SolenoidSubsystem to set
+	 * @param booleanSuppliers conditions that if true, prevent the setting of the
+	 *                         system
+	 */
+	public SolenoidExtend(String name, SolenoidSubsystem system, BooleanSupplier... booleanSuppliers) {
+		super(name, system, SolenoidState.EXTEND, booleanSuppliers);
+	}
+
+	/**
+	 * Command to set the state of a SolenoidSubsystem to
+	 * EXTEND(DoubleSolenoid.Value.kForward)
+	 * 
 	 * @param system SolenoidSubsystem to set 
 	 * @param booleanSuppliers conditions that if true, prevent the setting of the 
 	 * 						   system
 	 */
 	public SolenoidExtend(SolenoidSubsystem system, BooleanSupplier... booleanSuppliers) {
-		super(system, SolenoidState.EXTEND, booleanSuppliers);
+		super("Extending " + system.getName(), system, SolenoidState.EXTEND, booleanSuppliers);
 	}
 
 	/**
@@ -29,6 +42,6 @@ public class SolenoidExtend extends SolenoidSet {
 	 * @param system SolenoidSubsystem to set
 	 */
 	public SolenoidExtend(SolenoidSubsystem system) {
-		super(system, SolenoidState.EXTEND);
+		super("Extending " + system.getName(), system, SolenoidState.EXTEND);
 	}
 }
