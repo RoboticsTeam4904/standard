@@ -24,6 +24,7 @@ public class RunFor extends CommandBase {
 		this.duration = duration;
 		this.command = command;
 		firstTick = true;
+		addRequirements(this.command.getRequirements()); // TODO: how do we pass a set if it expects an arglist?
 	}
 
 	/**
@@ -43,9 +44,6 @@ public class RunFor extends CommandBase {
 		command.withTimeout(duration);
 	}
 
-	public void execute() {
-	}
-
 	public boolean isFinished() {
 		if (firstTick) {
 			firstTick = false;
@@ -54,16 +52,9 @@ public class RunFor extends CommandBase {
 		return isTimedOut() || !command.isScheduled();
 	}
 
-	public void end() {
+	@Override
+	public void end(boolean inturrupted) {
 		command.cancel();
 		firstTick = true;
-	}
-
-	public void interrupted() {
-		end();
-	}
-
-	public Set<Subsystem> getRequirements() {
-		return command.getRequirements();
 	}
 }
