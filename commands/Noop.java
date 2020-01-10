@@ -5,18 +5,24 @@ import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 
 public class Noop implements Command {
-	public void initialize() {}
+	@Override
+	public void initialize() {
+	}
 
-	public void execute() {}
+	@Override
+	public void execute() {
+	}
 
+	@Override
 	public boolean isFinished() {
 		return true;
 	}
 
-	public void end() {}
+	@Override
+	public void end(boolean wasInterrupted) {
+	}
 
-	public void interrupted() {}
-
+	@Override
 	public Set<Subsystem> getRequirements() {
 		return Set.of();
 	}
