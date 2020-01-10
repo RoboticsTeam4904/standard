@@ -5,17 +5,6 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 public abstract class InjectedCommand extends CommandBase {
 	private final CommandBase previous;
 
-	public InjectedCommand(String name, double timeout, CommandBase previous) {
-		super();
-		this.withTimeout(timeout);
-		setName(name);
-		this.previous = previous;
-	}
-
-	public InjectedCommand(double timeout, CommandBase previous) {
-		this("Injected(" + previous.getName() + ")", timeout, previous);
-	}
-
 	public InjectedCommand(String name, CommandBase previous) {
 		super();
 		setName(name);
