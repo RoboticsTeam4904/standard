@@ -2,13 +2,11 @@ package org.usfirst.frc4904.standard.commands;
 
 
 import java.util.StringJoiner;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Subsystem;
-import java.util.HashSet;
-import java.util.Set;
+import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.command.Subsystem;
 
 
-public class Idle implements Command {
+public class Idle extends Command {
 	public Idle() {
 		super("Idle[No Subsystem]");
 		setInterruptible(true);
@@ -31,21 +29,19 @@ public class Idle implements Command {
 	}
 
 	@Override
-	public void initialize() {}
+	protected void initialize() {}
 
 	@Override
-	public void execute() {}
+	protected void execute() {}
 
 	@Override
-	public boolean isFinished() {
+	protected boolean isFinished() {
 		return false;
 	}
 
 	@Override
-	public void end(boolean interrupted) {}
+	protected void end() {}
 
 	@Override
-	public Set<Subsystem> getRequirements() {
-		return new HashSet<Subsystem>();
-	}
+	protected void interrupted() {}
 }
