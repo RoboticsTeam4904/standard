@@ -2,16 +2,15 @@ package org.usfirst.frc4904.standard.commands.motor;
 
 import org.usfirst.frc4904.standard.custom.sensors.InvalidSensorException;
 import org.usfirst.frc4904.standard.subsystems.motor.PositionSensorMotor;
-import org.usfirst.frc4904.standard.commands.CustomCommand;
-import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /**
  * Sets a motor to a position and keeps it there using an encoder.
  */
-public class MotorPositionSet extends CustomCommand {
+public class MotorPositionSet extends CommandBase {
 	protected PositionSensorMotor motor;
 	protected double position;
-	protected final Command fallbackCommand;
+	protected final CommandBase fallbackCommand;
 
 	/**
 	 * Constructor. The MotorSensorHold command holds a motor to a position.
@@ -20,8 +19,8 @@ public class MotorPositionSet extends CustomCommand {
 	 * @param fallbackCommand If the sensor fails for some reason, this command will
 	 *                        be cancelled, then the fallbackCommand will start
 	 */
-	public MotorPositionSet(PositionSensorMotor motor, Command fallbackCommand) {
-		super("motorPositionSet", motor);
+	public MotorPositionSet(PositionSensorMotor motor, CommandBase fallbackCommand) {
+		super();
 		this.motor = motor;
 		this.fallbackCommand = fallbackCommand;
 	}
@@ -72,9 +71,5 @@ public class MotorPositionSet extends CustomCommand {
 	@Override
 	public boolean isFinished() {
 		return false;
-	}
-
-	@Override
-	public void end(boolean interrupted) {
 	}
 }

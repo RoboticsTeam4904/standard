@@ -4,45 +4,45 @@ import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.commands.motor.MotorIdle;
 import org.usfirst.frc4904.standard.subsystems.motor.speedmodifiers.IdentityModifier;
 import org.usfirst.frc4904.standard.subsystems.motor.speedmodifiers.SpeedModifier;
-import org.usfirst.frc4904.standard.custom.motioncontrollers.CustomSpeedController;
+import edu.wpi.first.wpilibj.SpeedController;
 import com.ctre.phoenix.motorcontrol.IMotorController;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 
 /**
- * A class that wraps around a variable number of CustomSpeedController objects
+ * A class that wraps around a variable number of SpeedController objects
  * to give them Subsystem functionality. Can also modify their speed with a
  * SpeedModifier for things like scaling or brownout protection.
  */
-public class Motor implements Subsystem, CustomSpeedController {
-	protected final CustomSpeedController[] motors;
+public class Motor implements Subsystem, SpeedController {
+	protected final SpeedController[] motors;
 	protected final SpeedModifier speedModifier;
 	protected final String name;
 	protected boolean isInverted;
 	protected double lastSpeed;
 
 	/**
-	 * A class that wraps around a variable number of CustomSpeedController objects
+	 * A class that wraps around a variable number of SpeedController objects
 	 * to give them Subsystem functionality. Can also modify their speed with a
 	 * SpeedModifier for things like scaling or brownout protection.
 	 *
 	 * @param name          The name for the motor
 	 * @param isInverted    Inverts the direction of all of the
-	 *                      CustomSpeedControllers. This does not override the
+	 *                      SpeedControllers. This does not override the
 	 *                      individual inversions of the motors.
 	 * @param speedModifier A SpeedModifier changes the input to every motor based
 	 *                      on some factor. The default is an IdentityModifier,
 	 *                      which does not affect anything.
-	 * @param motors        The CustomSpeedControllers in this subsystem. Can be a
-	 *                      single CustomSpeedController or multiple
-	 *                      CustomSpeedControllers.
+	 * @param motors        The SpeedControllers in this subsystem. Can be a
+	 *                      single SpeedController or multiple
+	 *                      SpeedControllers.
 	 */
-	public Motor(String name, boolean isInverted, SpeedModifier speedModifier, CustomSpeedController... motors) {
+	public Motor(String name, boolean isInverted, SpeedModifier speedModifier, SpeedController... motors) {
 		this.name = name;
 		this.isInverted = false;
 		this.speedModifier = speedModifier;
 		this.motors = motors;
 		lastSpeed = 0;
-		for (CustomSpeedController motor : motors) {
+		for (SpeedController motor : motors) {
 			if (motor instanceof IMotorController)
 				((IMotorController) motor).enableVoltageCompensation(true);
 			motor.set(0); // Start all motors with 0 speed.
@@ -51,24 +51,24 @@ public class Motor implements Subsystem, CustomSpeedController {
 	}
 
 	/**
-	 * A class that wraps around a variable number of CustomSpeedController objects
+	 * A class that wraps around a variable number of SpeedController objects
 	 * to give them Subsystem functionality. Can also modify their speed with a
 	 * SpeedModifier for things like scaling or brownout protection.
 	 *
 	 * @param name       The name for the motor
-	 * @param isInverted Inverts the direction of all of the CustomSpeedControllers.
+	 * @param isInverted Inverts the direction of all of the SpeedControllers.
 	 *                   This does not override the individual inversions of the
 	 *                   motors.
-	 * @param motors     The CustomSpeedControllers in this subsystem. Can be a
-	 *                   single CustomSpeedController or multiple
-	 *                   CustomSpeedControllers.
+	 * @param motors     The SpeedControllers in this subsystem. Can be a
+	 *                   single SpeedController or multiple
+	 *                   SpeedControllers.
 	 */
-	public Motor(String name, boolean isInverted, CustomSpeedController... motors) {
+	public Motor(String name, boolean isInverted, SpeedController... motors) {
 		this(name, isInverted, new IdentityModifier(), motors);
 	}
 
 	/**
-	 * A class that wraps around a variable number of CustomSpeedController objects
+	 * A class that wraps around a variable number of SpeedController objects
 	 * to give them Subsystem functionality. Can also modify their speed with a
 	 * SpeedModifier for things like scaling or brownout protection.
 	 *
@@ -77,70 +77,70 @@ public class Motor implements Subsystem, CustomSpeedController {
 	 *                      on some factor. The default is an IdentityModifier,
 	 *                      which does not affect anything. Can also regulate set
 	 *                      speed to prevent brownouts (if you use AccelerationCap).
-	 * @param motors        The CustomSpeedControllers in this subsystem. Can be a
-	 *                      single CustomSpeedController or multiple
-	 *                      CustomSpeedControllers.
+	 * @param motors        The SpeedControllers in this subsystem. Can be a
+	 *                      single SpeedController or multiple
+	 *                      SpeedControllers.
 	 */
-	public Motor(String name, SpeedModifier speedModifier, CustomSpeedController... motors) {
+	public Motor(String name, SpeedModifier speedModifier, SpeedController... motors) {
 		this(name, false, speedModifier, motors);
 	}
 
 	/**
-	 * A class that wraps around a variable number of CustomSpeedController objects
+	 * A class that wraps around a variable number of SpeedController objects
 	 * to give them Subsystem functionality. Can also modify their speed with a
 	 * SpeedModifier for things like scaling or brownout protection.
 	 *
 	 * @param name   The name for the motor.
-	 * @param motors The CustomSpeedControllers in this subsystem. Can be a single
-	 *               CustomSpeedController or multiple CustomSpeedControllers.
+	 * @param motors The SpeedControllers in this subsystem. Can be a single
+	 *               SpeedController or multiple SpeedControllers.
 	 */
-	public Motor(String name, CustomSpeedController... motors) {
+	public Motor(String name, SpeedController... motors) {
 		this(name, false, new IdentityModifier(), motors);
 	}
 
 	/**
-	 * A class that wraps around a variable number of CustomSpeedController objects
+	 * A class that wraps around a variable number of SpeedController objects
 	 * to give them Subsystem functionality. Can also modify their speed with a
 	 * SpeedModifier for things like scaling or brownout protection.
 	 *
 	 * @param isInverted    Inverts the direction of all of the
-	 *                      CustomSpeedControllers. This does not override the
+	 *                      SpeedControllers. This does not override the
 	 *                      individual inversions of the motors.
 	 * @param speedModifier A SpeedModifier changes the input to every motor based
 	 *                      on some factor. The default is an IdentityModifier,
 	 *                      which does not affect anything. Can also regulate set
 	 *                      speed to prevent brownouts (if you use AccelerationCap).
-	 * @param motors        The CustomSpeedControllers in this subsystem. Can be a
-	 *                      single CustomSpeedController or multiple
-	 *                      CustomSpeedControllers.
+	 * @param motors        The SpeedControllers in this subsystem. Can be a
+	 *                      single SpeedController or multiple
+	 *                      SpeedControllers.
 	 */
-	public Motor(boolean isInverted, SpeedModifier speedModifier, CustomSpeedController... motors) {
+	public Motor(boolean isInverted, SpeedModifier speedModifier, SpeedController... motors) {
 		this("Motor", isInverted, speedModifier, motors);
 	}
 
 	/**
-	 * A class that wraps around a variable number of CustomSpeedController objects
+	 * A class that wraps around a variable number of SpeedController objects
 	 * to give them Subsystem functionality. Can also modify their speed with a
 	 * SpeedModifier for things like scaling or brownout protection.
 	 *
 	 * @param name          The name for the motor.
 	 * @param isInverted    Inverts the direction of all of the
-	 *                      CustomSpeedControllers. This does not override the
+	 *                      SpeedControllers. This does not override the
 	 *                      individual inversions of the motors.
 	 * @param speedModifier A SpeedModifier changes the input to every motor based
 	 *                      on some factor. The default is an IdentityModifier,
 	 *                      which does not affect anything. Can also regulate set
 	 *                      speed to prevent brownouts (if you use AccelerationCap).
-	 * @param motors        The CustomSpeedControllers in this subsystem. Can be a
-	 *                      single CustomSpeedController or multiple
-	 *                      CustomSpeedControllers.
+	 * @param motors        The SpeedControllers in this subsystem. Can be a
+	 *                      single SpeedController or multiple
+	 *                      SpeedControllers.
 	 */
-	public Motor(boolean isInverted, CustomSpeedController... motors) {
+	public Motor(boolean isInverted, SpeedController... motors) {
 		this("Motor", isInverted, motors);
 	}
 
 	/**
-	 * A class that wraps around a variable number of CustomSpeedController objects
+	 * A class that wraps around a variable number of SpeedController objects
 	 * to give them Subsystem functionality. Can also modify their speed with a
 	 * SpeedModifier for things like scaling or brownout protection.
 	 *
@@ -148,23 +148,23 @@ public class Motor implements Subsystem, CustomSpeedController {
 	 *                      on some factor. The default is an IdentityModifier,
 	 *                      which does not affect anything. Can also regulate set
 	 *                      speed to prevent brownouts (if you use AccelerationCap).
-	 * @param motors        The CustomSpeedControllers in this subsystem. Can be a
-	 *                      single CustomSpeedController or multiple
-	 *                      CustomSpeedControllers.
+	 * @param motors        The SpeedControllers in this subsystem. Can be a
+	 *                      single SpeedController or multiple
+	 *                      SpeedControllers.
 	 */
-	public Motor(SpeedModifier speedModifier, CustomSpeedController... motors) {
+	public Motor(SpeedModifier speedModifier, SpeedController... motors) {
 		this("Motor", speedModifier, motors);
 	}
 
 	/**
-	 * A class that wraps around a variable number of CustomSpeedController objects
+	 * A class that wraps around a variable number of SpeedController objects
 	 * to give them Subsystem functionality. Can also modify their speed with a
 	 * SpeedModifier for things like scaling or brownout protection.
 	 *
-	 * @param motors The CustomSpeedControllers in this subsystem. Can be a single
-	 *               CustomSpeedController or multiple CustomSpeedControllers.
+	 * @param motors The SpeedControllers in this subsystem. Can be a single
+	 *               SpeedController or multiple SpeedControllers.
 	 */
-	public Motor(CustomSpeedController... motors) {
+	public Motor(SpeedController... motors) {
 		this("Motor", motors);
 	}
 
@@ -181,30 +181,30 @@ public class Motor implements Subsystem, CustomSpeedController {
 	public void pidWrite(double speed) {
 		double newSpeed = speedModifier.modify(speed);
 		lastSpeed = newSpeed;
-		for (CustomSpeedController motor : motors) {
+		for (SpeedController motor : motors) {
 			motor.pidWrite(newSpeed);
 		}
 	}
 
 	/**
-	 * Disables the motor. This function uses the underlying CustomSpeedController's
+	 * Disables the motor. This function uses the underlying SpeedController's
 	 * disable implementation.
 	 */
 	@Override
 	public void disable() {
-		for (CustomSpeedController motor : motors) {
+		for (SpeedController motor : motors) {
 			motor.disable();
 		}
 	}
 
 	/**
-	 * Stops the motor. This function uses the underlying CustomSpeedController's
+	 * Stops the motor. This function uses the underlying SpeedController's
 	 * stopMotor implementation. In theory this should stop the motor without
 	 * disabling, but wpilib seems to just call disable under the hood.
 	 */
 	@Override
 	public void stopMotor() {
-		for (CustomSpeedController motor : motors) {
+		for (SpeedController motor : motors) {
 			motor.stopMotor();
 		}
 	}
@@ -230,7 +230,7 @@ public class Motor implements Subsystem, CustomSpeedController {
 		LogKitten.v("Motor " + getName() + " @ " + speed);
 		double newSpeed = speedModifier.modify(speed);
 		lastSpeed = newSpeed;
-		for (CustomSpeedController motor : motors) {
+		for (SpeedController motor : motors) {
 			motor.set(newSpeed);
 		}
 	}
@@ -247,15 +247,15 @@ public class Motor implements Subsystem, CustomSpeedController {
 
 	/**
 	 * Sets the direction inversion of all motor substituents. This respects the
-	 * original inversion state of each CustomSpeedController when constructed, and
-	 * will only invert CustomSpeedControllers if this.getInverted() != the input.
+	 * original inversion state of each SpeedController when constructed, and
+	 * will only invert SpeedControllers if this.getInverted() != the input.
 	 *
 	 * @param isInverted The state of inversion, true is inverted.
 	 */
 	@Override
 	public void setInverted(boolean isInverted) {
 		if (getInverted() != isInverted) {
-			for (CustomSpeedController motor : motors) {
+			for (SpeedController motor : motors) {
 				motor.setInverted(!motor.getInverted());
 			}
 		}
@@ -266,7 +266,7 @@ public class Motor implements Subsystem, CustomSpeedController {
 		private static final long serialVersionUID = 8688590919561059584L;
 
 		public UnsynchronizedSpeedControllerRuntimeException() {
-			super(getName() + "'s CustomSpeedControllers report different speeds");
+			super(getName() + "'s SpeedControllers report different speeds");
 		}
 	}
 
@@ -276,7 +276,7 @@ public class Motor implements Subsystem, CustomSpeedController {
 
 		public StrangeCANSpeedControllerModeRuntimeException() {
 			super("One of " + getName()
-					+ "'s CustomSpeedControllers is a CANSpeedController with a non-zero mode. This might mess up it's .get(), so Motor cannot verify safety.");
+					+ "'s SpeedControllers is a CANSpeedController with a non-zero mode. This might mess up it's .get(), so Motor cannot verify safety.");
 		}
 	}
 

@@ -4,14 +4,14 @@ import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.custom.controllers.Controller;
 import org.usfirst.frc4904.standard.subsystems.motor.Motor;
 import org.usfirst.frc4904.standard.subsystems.motor.PositionSensorMotor;
-import org.usfirst.frc4904.standard.commands.CustomCommand;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /**
  * Controls a Motor directly from a Controller (e.g. Joystick or Xbox)
  *
  *
  */
-public class MotorControl extends CustomCommand {
+public class MotorControl extends CommandBase {
 	protected final Motor motor;
 	protected final Controller controller;
 	protected final int axis;
@@ -28,7 +28,7 @@ public class MotorControl extends CustomCommand {
 	 * @param scale
 	 */
 	public MotorControl(Motor motor, Controller controller, int axis, double scale) {
-		super("motorControl", motor);
+		super();
 		this.motor = motor;
 		this.controller = controller;
 		this.axis = axis;

@@ -5,21 +5,20 @@ import org.usfirst.frc4904.standard.Util;
 import org.usfirst.frc4904.standard.custom.controllers.Controller;
 import org.usfirst.frc4904.standard.custom.sensors.InvalidSensorException;
 import org.usfirst.frc4904.standard.subsystems.motor.PositionSensorMotor;
-import org.usfirst.frc4904.standard.commands.CustomCommand;
-import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /**
  * Controls a SensorMotor's position directly from a Controller (e.g. Joystick
  * or Xbox)
  *
  */
-public class MotorPositionControl extends CustomCommand {
+public class MotorPositionControl extends CommandBase {
 	protected final PositionSensorMotor motor;
 	protected final Controller controller;
 	protected final int axis;
 	protected final boolean invert;
 	protected final Util.Range motorPositionRange;
-	protected final Command fallbackCommand;
+	protected final CommandBase fallbackCommand;
 
 	/**
 	 * This Command directly controls a SensorMotor's position based on an axis of
@@ -34,8 +33,8 @@ public class MotorPositionControl extends CustomCommand {
 	 *                        be cancelled, then the fallbackCommand will start
 	 */
 	public MotorPositionControl(PositionSensorMotor motor, Util.Range motorPositionRange, Controller controller,
-			int axis, boolean invert, Command fallbackCommand) {
-		super("motorPositionControl", motor);
+			int axis, boolean invert, CommandBase fallbackCommand) {
+		super();
 		this.motor = motor;
 		this.motorPositionRange = motorPositionRange;
 		this.controller = controller;

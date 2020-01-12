@@ -4,14 +4,14 @@ import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.custom.controllers.Controller;
 import org.usfirst.frc4904.standard.subsystems.motor.Motor;
 import org.usfirst.frc4904.standard.subsystems.motor.PositionSensorMotor;
-import org.usfirst.frc4904.standard.commands.CustomCommand;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /**
  * Controls a Motor directly from a Controller (e.g. Joystick or Xbox) Has an
  * acceleration cap (but not deceleration cap)
  *
  */
-public class MotorControlAccelCap extends CustomCommand {
+public class MotorControlAccelCap extends CommandBase {
 	protected final Motor motor;
 	protected final Controller controller;
 	protected final int axis;
@@ -32,7 +32,7 @@ public class MotorControlAccelCap extends CustomCommand {
 	 * @param accel_cap  This is the maximum change in motor speed per second
 	 */
 	public MotorControlAccelCap(Motor motor, Controller controller, int axis, double scale, double accel_cap) {
-		super("motorControlAccelCap", motor);
+		super();
 		this.motor = motor;
 		this.controller = controller;
 		this.axis = axis;

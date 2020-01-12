@@ -2,9 +2,9 @@ package org.usfirst.frc4904.standard.subsystems.motor;
 
 import org.usfirst.frc4904.standard.commands.Idle;
 import edu.wpi.first.wpilibj.Servo;
-import edu.wpi.first.wpilibj2.command.Subsystem;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class ServoSubsystem implements Subsystem {
+public class ServoSubsystem extends SubsystemBase {
 	protected final Servo[] servos;
 	protected boolean isInverted;
 	protected double lastPosition;

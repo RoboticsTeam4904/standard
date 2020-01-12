@@ -1,9 +1,9 @@
 package org.usfirst.frc4904.standard.subsystems.motor.speedmodifiers;
 
 
-import edu.wpi.first.wpilibj2.command.Subsystem;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class EnableableModifier implements Subsystem, SpeedModifier{
+public class EnableableModifier extends SubsystemBase implements SpeedModifier{
 	protected boolean enabled;
 	protected final SpeedModifier modifier;
 

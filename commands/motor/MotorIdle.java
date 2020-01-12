@@ -2,13 +2,13 @@ package org.usfirst.frc4904.standard.commands.motor;
 
 import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.subsystems.motor.Motor;
-import org.usfirst.frc4904.standard.commands.CustomCommand;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /**
  * Idles the motor (sets speed to 0).
  *
  */
-public class MotorIdle extends CustomCommand {
+public class MotorIdle extends CommandBase {
 	protected final Motor motor;
 
 	/**
@@ -17,7 +17,7 @@ public class MotorIdle extends CustomCommand {
 	 * @param motor
 	 */
 	public MotorIdle(Motor motor) {
-		super("motorIdle", motor);
+		super();
 		this.motor = motor;
 		LogKitten.d("MotorIdle created");
 	}

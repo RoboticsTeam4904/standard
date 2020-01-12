@@ -2,7 +2,7 @@ package org.usfirst.frc4904.standard.commands.motor;
 
 import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.subsystems.motor.Motor;
-import org.usfirst.frc4904.standard.commands.CustomCommand;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /**
  * Sets a motor to a speed. The speed can change through use of the set command.
@@ -10,12 +10,12 @@ import org.usfirst.frc4904.standard.commands.CustomCommand;
  * having multiple attempts to set a motor simultaneously.
  *
  */
-public class MotorSet extends CustomCommand {
+public class MotorSet extends CommandBase {
 	protected final Motor motor;
 	protected double speed;
 
 	public MotorSet(Motor motor) {
-		super("motorSet", motor);
+		super();
 		this.motor = motor;
 		speed = 0;
 		LogKitten.d("MotorSet created for " + motor.getName());

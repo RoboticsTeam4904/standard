@@ -2,8 +2,7 @@ package org.usfirst.frc4904.standard.commands.motor;
 
 import org.usfirst.frc4904.standard.custom.sensors.InvalidSensorException;
 import org.usfirst.frc4904.standard.subsystems.motor.PositionSensorMotor;
-import org.usfirst.frc4904.standard.commands.CustomCommand;
-import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /**
  * MotorPositionConstant is a Command that runs while setting a SensorMotor's
@@ -13,11 +12,11 @@ import edu.wpi.first.wpilibj2.command.Command;
  * PID).
  *
  */
-public class MotorPositionConstant extends CustomCommand {
+public class MotorPositionConstant extends CommandBase {
 	protected PositionSensorMotor motor;
 	protected double position;
 	protected boolean endOnArrival;
-	protected final Command fallbackCommand;
+	protected final CommandBase fallbackCommand;
 
 	/**
 	 * Constructor MotorPositionConstant is a Command that runs while setting a
@@ -33,8 +32,8 @@ public class MotorPositionConstant extends CustomCommand {
 	 *                        be cancelled, then the fallbackCommand will start
 	 */
 	public MotorPositionConstant(PositionSensorMotor motor, double position, boolean endOnArrival,
-			Command fallbackCommand) {
-		super("motorPositionConstant", motor);
+			CommandBase fallbackCommand) {
+		super();
 		this.motor = motor;
 		this.position = position;
 		this.endOnArrival = endOnArrival;
