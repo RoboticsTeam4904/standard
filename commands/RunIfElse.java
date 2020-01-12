@@ -13,15 +13,13 @@ public class RunIfElse extends CommandBase {
 	protected final BooleanSupplier[] booleanSuppliers;
 	protected boolean hasRunOnce;
 
-	protected final Set<Subsystem> unionRequirements;
-
 	protected RunIfElse(CommandBase ifCommand, CommandBase elseCommand, BooleanSupplier... booleanSuppliers) {
 		this.ifCommand = ifCommand;
 		this.elseCommand = elseCommand;
 		this.booleanSuppliers = booleanSuppliers;
 
-		unionRequirements = new HashSet<Subsystem>(ifCommand.getRequirements());
-		unionRequirements.addAll(elseCommand.getRequirements());
+		addRequirements((Subsystem[]) ifCommand.getRequirements().toArray());
+		addRequirements((Subsystem[]) elseCommand.getRequirements().toArray());
 	}
 
 	public void initialize() {
