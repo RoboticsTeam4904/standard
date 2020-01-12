@@ -6,7 +6,6 @@ import java.util.Set;
 import org.usfirst.frc4904.standard.subsystems.SolenoidSubsystem;
 import org.usfirst.frc4904.standard.subsystems.SolenoidSubsystem.SolenoidState;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.Subsystem;
 
 /**
  * Command to set the state of a SolenoidSubsystem
