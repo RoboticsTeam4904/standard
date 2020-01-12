@@ -4,7 +4,10 @@ package org.usfirst.frc4904.standard.custom.motioncontrollers;
 import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.custom.sensors.InvalidSensorException;
 import org.usfirst.frc4904.standard.custom.sensors.PIDSensor;
+<<<<<<< Updated upstream
 import edu.wpi.first.wpilibj.controller.PIDController;
+=======
+>>>>>>> Stashed changes
 
 /**
  * A bang bang controller.
@@ -65,6 +68,7 @@ public class BangBangController extends MotionController {
 	 * @param threshold
 	 *        The threshold for the bangbang to start doing something.
 	 */
+<<<<<<< Updated upstream
 	public BangBangController(PIDController source, double A, double F, double threshold) {
 		super(source);
 		this.A = A;
@@ -72,6 +76,8 @@ public class BangBangController extends MotionController {
 		this.threshold = threshold;
 		reset();
 	}
+=======
+>>>>>>> Stashed changes
 
 	/**
 	 * BangBang controller
@@ -91,7 +97,11 @@ public class BangBangController extends MotionController {
 	 *        The scalar on the input.
 	 */
 	public BangBangController(PIDSensor sensor, double A, double F) {
-		this(sensor, A, F, Double.MIN_VALUE);
+		//this(sensor, A, F, Double.MIN_VALUE);
+		super(sensor);
+		this.A = A;
+		this.F = F;
+		this.threshold = threshold;
 	}
 
 	/**
@@ -111,9 +121,12 @@ public class BangBangController extends MotionController {
 	 *        Feedforward term
 	 *        The scalar on the input.
 	 */
+<<<<<<< Updated upstream
 	public BangBangController(PIDController source, double A, double F) {
 		this(source, A, F, Double.MIN_VALUE);
 	}
+=======
+>>>>>>> Stashed changes
 
 	/**
 	 * Sets the stored error value to zero (0)

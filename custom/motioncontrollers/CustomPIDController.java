@@ -4,11 +4,14 @@ import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.custom.sensors.InvalidSensorException;
 import org.usfirst.frc4904.standard.custom.sensors.NativeDerivativeSensor;
 import org.usfirst.frc4904.standard.custom.sensors.PIDSensor;
+<<<<<<< Updated upstream
 
 import edu.wpi.first.wpilibj.PIDSourceType;
 import org.usfirst.frc4904.standard.custom.CustomPIDSourceType;
 import edu.wpi.first.wpilibj.controller.PIDController;
 import org.usfirst.frc4904.standard.custom.motioncontrollers.CustomPIDController;
+=======
+>>>>>>> Stashed changes
 import edu.wpi.first.hal.util.BoundaryException;
 
 /**
@@ -88,13 +91,16 @@ public class CustomPIDController extends MotionController {
 	 *        Initial I constant
 	 * @param D
 	 *        Initial D constant
-	 * @param F
-	 *        Initial F (feed forward) constant
 	 * @param sensor
 	 *        The sensor linked to the output
 	 */
+<<<<<<< Updated upstream
 	public CustomPIDController(double P, double I, double D, double F, CustomPIDController source) {
 		super(source);
+=======
+	public CustomPIDController(double P, double I, double D, PIDSensor sensor) {
+		super(sensor);
+>>>>>>> Stashed changes
 		this.P = P;
 		this.I = I;
 		this.D = D;
@@ -105,6 +111,7 @@ public class CustomPIDController extends MotionController {
 	 * An extremely basic PID controller.
 	 * It does not differentiate between rate and distance.
 	 *
+<<<<<<< Updated upstream
 	 * @param P
 	 *        Initial P constant
 	 * @param I
@@ -139,6 +146,8 @@ public class CustomPIDController extends MotionController {
 	 * An extremely basic PID controller.
 	 * It does not differentiate between rate and distance.
 	 *
+=======
+>>>>>>> Stashed changes
 	 * @param sensor
 	 *        The sensor linked to the output
 	 */
@@ -153,9 +162,12 @@ public class CustomPIDController extends MotionController {
 	 * @param sensor
 	 *        The sensor linked to the output
 	 */
+<<<<<<< Updated upstream
 	public CustomPIDController(PIDController source) {
 		this(0, 0, 0, source);
 	}
+=======
+>>>>>>> Stashed changes
 
 	/**
 	 * @return
