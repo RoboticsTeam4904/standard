@@ -35,7 +35,7 @@ public class RunFor extends CommandBase {
 	 * use: new RunFor(new GoForward(), 3)
 	 *
 	 * @param command       The command to be run for the duration
-	 * @param duration      A duration in seclonds
+	 * @param duration      A duration in seconds
 	 * @param interruptible Whether this command should be interruptible
 	 */
 	public RunFor(CommandBase command, double duration) {
