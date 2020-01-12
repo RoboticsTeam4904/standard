@@ -32,7 +32,7 @@ public class SolenoidOff extends SolenoidSet {
 	 *                         system
 	 */
 	public SolenoidOff(SolenoidSubsystem system, BooleanSupplier... booleanSuppliers) {
-		super("Turning off " + system.getName(), system, SolenoidState.OFF, booleanSuppliers);
+		this("Turning off " + system.getName(), system, booleanSuppliers);
 	}
 
 	/**
@@ -42,6 +42,6 @@ public class SolenoidOff extends SolenoidSet {
 	 * @param system SolenoidSubsystem to set
 	 */
 	public SolenoidOff(SolenoidSubsystem system) {
-		super("Turning off " + system.getName(), system, SolenoidState.OFF);
+		this("Turning off " + system.getName(), system);
 	}
 }

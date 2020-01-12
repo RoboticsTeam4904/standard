@@ -32,7 +32,7 @@ public class SolenoidExtend extends SolenoidSet {
 	 * 						   system
 	 */
 	public SolenoidExtend(SolenoidSubsystem system, BooleanSupplier... booleanSuppliers) {
-		super("Extending " + system.getName(), system, SolenoidState.EXTEND, booleanSuppliers);
+		this("Extending " + system.getName(), system, booleanSuppliers);
 	}
 
 	/**
@@ -42,6 +42,6 @@ public class SolenoidExtend extends SolenoidSet {
 	 * @param system SolenoidSubsystem to set
 	 */
 	public SolenoidExtend(SolenoidSubsystem system) {
-		super("Extending " + system.getName(), system, SolenoidState.EXTEND);
+		this("Extending " + system.getName(), system);
 	}
 }
