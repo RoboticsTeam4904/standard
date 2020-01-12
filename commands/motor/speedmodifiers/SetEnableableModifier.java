@@ -1,6 +1,5 @@
 package org.usfirst.frc4904.standard.commands.motor.speedmodifiers;
 
-
 import org.usfirst.frc4904.standard.subsystems.motor.speedmodifiers.EnableableModifier;
 import edu.wpi.first.wpilibj.command.Command;
 

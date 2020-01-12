@@ -1,6 +1,5 @@
 package org.usfirst.frc4904.standard.commands.motor;
 
-
 import org.usfirst.frc4904.standard.subsystems.motor.Motor;
 import edu.wpi.first.wpilibj.command.Command;
 
@@ -12,12 +11,9 @@ public class MotorConstant extends Command {
 	protected final Motor motor;
 
 	/**
-	 * @param name
-	 *        The name of this command.
-	 * @param motor
-	 *        The motor to set the speed of.
-	 * @param motorSpeed
-	 *        The speed to set the motor to.
+	 * @param name       The name of this command.
+	 * @param motor      The motor to set the speed of.
+	 * @param motorSpeed The speed to set the motor to.
 	 */
 	public MotorConstant(String name, Motor motor, double motorSpeed) {
 		super(name);
@@ -29,10 +25,8 @@ public class MotorConstant extends Command {
 
 	/**
 	 *
-	 * @param motor
-	 *        The motor to set the speed of.
-	 * @param motorSpeed
-	 *        The speed to set the motor to.
+	 * @param motor      The motor to set the speed of.
+	 * @param motorSpeed The speed to set the motor to.
 	 */
 	public MotorConstant(Motor motor, double motorSpeed) {
 		this("MotorConstant", motor, motorSpeed);
@@ -59,5 +53,6 @@ public class MotorConstant extends Command {
 	}
 
 	@Override
-	protected void interrupted() {}
+	protected void interrupted() {
+	}
 }

@@ -1,6 +1,5 @@
 package org.usfirst.frc4904.standard.subsystems.motor.speedmodifiers;
 
-
 import org.usfirst.frc4904.standard.commands.Idle;
 import edu.wpi.first.wpilibj.command.Subsystem;
 

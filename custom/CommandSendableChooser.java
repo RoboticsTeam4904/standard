@@ -1,13 +1,11 @@
 package org.usfirst.frc4904.standard.custom;
 
-
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 
 /**
- * A SendableChooser for commands.
- * This allows us to put a command
- * choice on the smart dashboard.
+ * A SendableChooser for commands. This allows us to put a command choice on the
+ * smart dashboard.
  *
  */
 public class CommandSendableChooser extends SendableChooser<Command> {
@@ -21,8 +19,7 @@ public class CommandSendableChooser extends SendableChooser<Command> {
 	}
 
 	/**
-	 * Adds the command object to the smart dashboard
-	 * as the default command.
+	 * Adds the command object to the smart dashboard as the default command.
 	 *
 	 * @param object
 	 */

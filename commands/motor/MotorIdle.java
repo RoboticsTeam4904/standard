@@ -1,13 +1,11 @@
 package org.usfirst.frc4904.standard.commands.motor;
 
-
 import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.subsystems.motor.Motor;
 import edu.wpi.first.wpilibj.command.Command;
 
 /**
  * Idles the motor (sets speed to 0).
- *
  */
 public class MotorIdle extends Command {
 	protected final Motor motor;

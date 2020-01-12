@@ -1,16 +1,15 @@
 package org.usfirst.frc4904.standard.subsystems.chassis;
 
-
 import org.usfirst.frc4904.standard.subsystems.motor.Motor;
 
 /**
- * A tank drive chassis with the shifting system.
- * This effectively adds a solenoid shifter to the chassis as a contained object.
+ * A tank drive chassis with the shifting system. This effectively adds a
+ * solenoid shifter to the chassis as a contained object.
  *
  */
 public class TankDriveShifting extends TankDrive implements ShiftingChassis {
 	protected final SolenoidShifters shifter;
-	
+
 	/**
 	 * A tank drive with shifting solenoids (only two solenoids supported)
 	 *
@@ -22,13 +21,13 @@ public class TankDriveShifting extends TankDrive implements ShiftingChassis {
 	 * @param rightWheelB
 	 * @param shifter
 	 */
-	
-	public TankDriveShifting(String name, Double turnCorrection, Motor leftWheelA, Motor leftWheelB, Motor rightWheelA, Motor rightWheelB,
-		SolenoidShifters shifter) {
+
+	public TankDriveShifting(String name, Double turnCorrection, Motor leftWheelA, Motor leftWheelB, Motor rightWheelA,
+			Motor rightWheelB, SolenoidShifters shifter) {
 		super(name, turnCorrection, leftWheelA, leftWheelB, rightWheelA, rightWheelB);
 		this.shifter = shifter;
 	}
-	
+
 	/**
 	 * A tank drive with shifting solenoids (only two solenoids supported)
 	 *
@@ -40,8 +39,9 @@ public class TankDriveShifting extends TankDrive implements ShiftingChassis {
 	 * @param rightWheelB
 	 * @param shifter
 	 */
-	
-	public TankDriveShifting(String name, Double turnCorrection, Motor leftWheel, Motor rightWheel, SolenoidShifters shifter) {
+
+	public TankDriveShifting(String name, Double turnCorrection, Motor leftWheel, Motor rightWheel,
+			SolenoidShifters shifter) {
 		super(name, turnCorrection, leftWheel, rightWheel);
 		this.shifter = shifter;
 	}
@@ -57,7 +57,7 @@ public class TankDriveShifting extends TankDrive implements ShiftingChassis {
 	 * @param shifter
 	 */
 	public TankDriveShifting(String name, Motor leftWheelA, Motor leftWheelB, Motor rightWheelA, Motor rightWheelB,
-		SolenoidShifters shifter) {
+			SolenoidShifters shifter) {
 		super(name, leftWheelA, leftWheelB, rightWheelA, rightWheelB);
 		this.shifter = shifter;
 	}

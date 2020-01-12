@@ -1,6 +1,5 @@
 package org.usfirst.frc4904.standard.commands.chassis;
 
-
 import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.commands.motor.MotorSet;
 import org.usfirst.frc4904.standard.custom.ChassisController;
@@ -10,12 +9,11 @@ import org.usfirst.frc4904.standard.subsystems.motor.VelocitySensorMotor;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
 /**
- * This command moves the chassis.
- * It move based on the driver class.
- * Note that it supports all types of chassis.
- * The chassis is used to calculate the motor movement.
- * The command works by creating a movement command for each motor.
- * This is the best way to handle this because it allows each motor to be a full subsystem.
+ * This command moves the chassis. It move based on the driver class. Note that
+ * it supports all types of chassis. The chassis is used to calculate the motor
+ * movement. The command works by creating a movement command for each motor.
+ * This is the best way to handle this because it allows each motor to be a full
+ * subsystem.
  */
 public class ChassisMove extends CommandGroup {
 	protected final MotorSet[] motorSpins;
@@ -26,12 +24,11 @@ public class ChassisMove extends CommandGroup {
 	protected final ChassisController controller;
 
 	/**
-	 * @param chassis
-	 *        The robot's Chassis.
-	 * @param controller
-	 *        A ChassisController to control the Chassis, such as a Driver or autonomous routine.
-	 * @param usePID
-	 *        Whether to enable PID using any SensorMotors that Chassis has.
+	 * @param chassis    The robot's Chassis.
+	 * @param controller A ChassisController to control the Chassis, such as a
+	 *                   Driver or autonomous routine.
+	 * @param usePID     Whether to enable PID using any SensorMotors that Chassis
+	 *                   has.
 	 */
 	public ChassisMove(Chassis chassis, ChassisController controller, boolean usePID) {
 		super("ChassisMove");
@@ -49,10 +46,9 @@ public class ChassisMove extends CommandGroup {
 	}
 
 	/**
-	 * @param chassis
-	 *        The robot's chassis.
-	 * @param controller
-	 *        A ChassisController to control the Chassis, such as a Driver or autonomous routine.
+	 * @param chassis    The robot's chassis.
+	 * @param controller A ChassisController to control the Chassis, such as a
+	 *                   Driver or autonomous routine.
 	 */
 	public ChassisMove(Chassis chassis, ChassisController controller) {
 		this(chassis, controller, false);
@@ -62,9 +58,12 @@ public class ChassisMove extends CommandGroup {
 	protected void initialize() {
 		for (Motor motor : motors) {
 			if (motor instanceof VelocitySensorMotor) {
-				// VelocitySensorMotors will attempt to very precisely achieve the speed set by this command when PID is enabled
-				// PositionSensorMotors will either attempt to maintain their previous position, or worse, will try to move to somewhere
-				// between -1.0 and 1.0, which is probably not the correct position regardless of the scaling.
+				// VelocitySensorMotors will attempt to very precisely achieve the speed set by
+				// this command when PID is enabled
+				// PositionSensorMotors will either attempt to maintain their previous position,
+				// or worse, will try to move to somewhere
+				// between -1.0 and 1.0, which is probably not the correct position regardless
+				// of the scaling.
 				if (usePID) {
 					((VelocitySensorMotor) motor).enableMotionController();
 				} else {
@@ -97,11 +96,9 @@ public class ChassisMove extends CommandGroup {
 	}
 
 	/**
-	 * It's important to stop motor spins before
-	 * the ChassisMove command stops. Otherwise,
-	 * the spins might briefly (for one tick) use the
-	 * previously set values if the ChassisMove command
-	 * is reused.
+	 * It's important to stop motor spins before the ChassisMove command stops.
+	 * Otherwise, the spins might briefly (for one tick) use the previously set
+	 * values if the ChassisMove command is reused.
 	 */
 	protected void stopMotorSpins() {
 		for (int i = 0; i < motors.length; i++) {

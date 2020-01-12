@@ -1,22 +1,18 @@
 package org.usfirst.frc4904.standard.custom.sensors;
 
-
 import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.Util;
 import edu.wpi.first.wpilibj.PIDSourceType;
 
 /**
- * Encoder over CAN
- * Implements CustomEncoder generic encoder class
- *
+ * Encoder over CAN Implements CustomEncoder generic encoder class
  */
 public class CANEncoder extends CANSensor implements CustomEncoder {
 	private PIDSourceType pidSource;
 	private double distancePerPulse;
 	private boolean reverseDirection;
 	/**
-	 * Sequence of bytes used to reset an encoder
-	 * Spells out "resetenc" in ASCII
+	 * Sequence of bytes used to reset an encoder Spells out "resetenc" in ASCII
 	 */
 	private static final byte[] RESET_ENCODER_BYTE_SEQUENCE = "resetenc".getBytes();
 	protected static final int RESET_NUMBER_TRIES = 30;
@@ -59,9 +55,8 @@ public class CANEncoder extends CANSensor implements CustomEncoder {
 	}
 
 	/**
-	 * Sets PID mode
-	 * PIDSourceType is either PIDSourceType.kDisplacement
-	 * or PIDSourceType.kRate.
+	 * Sets PID mode PIDSourceType is either PIDSourceType.kDisplacement or
+	 * PIDSourceType.kRate.
 	 */
 	@Override
 	public void setPIDSourceType(PIDSourceType pidSource) {
@@ -126,8 +121,7 @@ public class CANEncoder extends CANSensor implements CustomEncoder {
 	}
 
 	/**
-	 * Returns the most recent direction of movement
-	 * (based on the speed)
+	 * Returns the most recent direction of movement (based on the speed)
 	 */
 	@Override
 	public boolean getDirectionSafely() throws InvalidSensorException {
@@ -176,8 +170,7 @@ public class CANEncoder extends CANSensor implements CustomEncoder {
 	public double pidGet() {
 		try {
 			return pidGetSafely();
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			LogKitten.ex(e);
 			return 0;
 		}
@@ -187,8 +180,7 @@ public class CANEncoder extends CANSensor implements CustomEncoder {
 	public int get() {
 		try {
 			return getSafely();
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			LogKitten.ex(e);
 			return 0;
 		}
@@ -198,8 +190,7 @@ public class CANEncoder extends CANSensor implements CustomEncoder {
 	public double getDistance() {
 		try {
 			return getDistanceSafely();
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			LogKitten.ex(e);
 			return 0;
 		}
@@ -209,8 +200,7 @@ public class CANEncoder extends CANSensor implements CustomEncoder {
 	public boolean getDirection() {
 		try {
 			return getDirectionSafely();
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			LogKitten.ex(e);
 			return false;
 		}
@@ -220,8 +210,7 @@ public class CANEncoder extends CANSensor implements CustomEncoder {
 	public boolean getStopped() {
 		try {
 			return getStoppedSafely();
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			LogKitten.ex(e);
 			return false;
 		}
@@ -231,8 +220,7 @@ public class CANEncoder extends CANSensor implements CustomEncoder {
 	public double getRate() {
 		try {
 			return getRateSafely();
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			LogKitten.ex(e);
 			return 0;
 		}

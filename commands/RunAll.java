@@ -1,6 +1,5 @@
 package org.usfirst.frc4904.standard.commands;
 
-
 import java.util.StringJoiner;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.CommandGroup;

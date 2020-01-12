@@ -1,6 +1,5 @@
 package org.usfirst.frc4904.standard.commands.motor;
 
-
 import org.usfirst.frc4904.standard.custom.sensors.InvalidSensorException;
 import org.usfirst.frc4904.standard.subsystems.motor.PositionSensorMotor;
 import edu.wpi.first.wpilibj.command.Command;
@@ -14,13 +13,11 @@ public class MotorPositionSet extends Command {
 	protected final Command fallbackCommand;
 
 	/**
-	 * Constructor.
-	 * The MotorSensorHold command holds a motor to a position.
+	 * Constructor. The MotorSensorHold command holds a motor to a position.
 	 *
-	 * @param motor
-	 *        A Motor that also implements PositionSensorMotor.
-	 * @param fallbackCommand
-	 *        If the sensor fails for some reason, this command will be cancelled, then the fallbackCommand will start
+	 * @param motor           A Motor that also implements PositionSensorMotor.
+	 * @param fallbackCommand If the sensor fails for some reason, this command will
+	 *                        be cancelled, then the fallbackCommand will start
 	 */
 	public MotorPositionSet(PositionSensorMotor motor, Command fallbackCommand) {
 		super("MotorPositionSet");
@@ -31,11 +28,9 @@ public class MotorPositionSet extends Command {
 	}
 
 	/**
-	 * Constructor.
-	 * The MotorSensorHold command holds a motor to a position.
+	 * Constructor. The MotorSensorHold command holds a motor to a position.
 	 *
-	 * @param motor
-	 *        A Motor that also implements PositionSensorMotor.
+	 * @param motor A Motor that also implements PositionSensorMotor.
 	 */
 	public MotorPositionSet(PositionSensorMotor motor) {
 		this(motor, null);
@@ -44,8 +39,7 @@ public class MotorPositionSet extends Command {
 	/**
 	 * Sets the motor to this position.
 	 *
-	 * @param position
-	 *        The position to set the motor to.
+	 * @param position The position to set the motor to.
 	 */
 	public void setPosition(double position) {
 		this.position = position;
@@ -57,8 +51,7 @@ public class MotorPositionSet extends Command {
 			motor.reset();
 			motor.enableMotionController();
 			motor.setPositionSafely(position);
-		}
-		catch (InvalidSensorException e) {
+		} catch (InvalidSensorException e) {
 			cancel();
 			if (fallbackCommand != null) {
 				fallbackCommand.start();
@@ -83,8 +76,10 @@ public class MotorPositionSet extends Command {
 	}
 
 	@Override
-	protected void end() {}
+	protected void end() {
+	}
 
 	@Override
-	protected void interrupted() {}
+	protected void interrupted() {
+	}
 }

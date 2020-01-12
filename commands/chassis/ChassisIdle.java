@@ -1,20 +1,19 @@
 package org.usfirst.frc4904.standard.commands.chassis;
 
-
 import org.usfirst.frc4904.standard.commands.motor.MotorIdle;
 import org.usfirst.frc4904.standard.subsystems.chassis.Chassis;
 import org.usfirst.frc4904.standard.subsystems.motor.Motor;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
 /**
- * This command causes the Chassis to idle by spawning a MotorIdle for every Motor in the Chassis.
+ * This command causes the Chassis to idle by spawning a MotorIdle for every
+ * Motor in the Chassis.
  *
  */
 public class ChassisIdle extends CommandGroup {
 	/**
 	 *
-	 * @param chassis
-	 *        The robot Chassis to idle.
+	 * @param chassis The robot Chassis to idle.
 	 */
 	public ChassisIdle(Chassis chassis) {
 		super("ChassisIdle");
@@ -27,16 +26,20 @@ public class ChassisIdle extends CommandGroup {
 	}
 
 	@Override
-	protected void initialize() {}
+	protected void initialize() {
+	}
 
 	@Override
-	protected void execute() {}
+	protected void execute() {
+	}
 
 	@Override
-	protected void end() {}
+	protected void end() {
+	}
 
 	@Override
-	protected void interrupted() {}
+	protected void interrupted() {
+	}
 
 	@Override
 	protected boolean isFinished() {

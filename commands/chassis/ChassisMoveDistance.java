@@ -1,6 +1,5 @@
 package org.usfirst.frc4904.standard.commands.chassis;
 
-
 import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.custom.ChassisController;
 import org.usfirst.frc4904.standard.custom.motioncontrollers.MotionController;
@@ -16,20 +15,20 @@ public class ChassisMoveDistance extends Command implements ChassisController {
 	protected boolean runOnce;
 
 	/**
-	 * Constructor.
-	 * This command moves the chassis forward a known distance via a set of encoders.
-	 * The distance is calculated as the average of the provided encoders.
-	 * The speed is decided by the provided motionController.
+	 * Constructor. This command moves the chassis forward a known distance via a
+	 * set of encoders. The distance is calculated as the average of the provided
+	 * encoders. The speed is decided by the provided motionController.
 	 *
 	 * @param chassis
-	 * @param distance
-	 *        distance to move in encoder ticks
+	 * @param distance         distance to move in encoder ticks
 	 * @param motionController
-	 * @param fallbackCommand
-	 *        If the sensor fails for some reason, this command will be cancelled, then the fallbackCommand will start
+	 * @param fallbackCommand  If the sensor fails for some reason, this command
+	 *                         will be cancelled, then the fallbackCommand will
+	 *                         start
 	 * @param encoders
 	 */
-	public ChassisMoveDistance(Chassis chassis, double distance, MotionController motionController, Command fallbackCommand) {
+	public ChassisMoveDistance(Chassis chassis, double distance, MotionController motionController,
+			Command fallbackCommand) {
 		chassisMove = new ChassisMove(chassis, this, false);
 		this.motionController = motionController;
 		this.distance = distance;
@@ -38,14 +37,12 @@ public class ChassisMoveDistance extends Command implements ChassisController {
 	}
 
 	/**
-	 * Constructor.
-	 * This command moves the chassis forward a known distance via a set of encoders.
-	 * The distance is calculated as the average of the provided encoders.
-	 * The speed is decided by the provided motionController.
+	 * Constructor. This command moves the chassis forward a known distance via a
+	 * set of encoders. The distance is calculated as the average of the provided
+	 * encoders. The speed is decided by the provided motionController.
 	 *
 	 * @param chassis
-	 * @param distance
-	 *        distance to move in encoder ticks
+	 * @param distance         distance to move in encoder ticks
 	 * @param motionController
 	 * @param encoders
 	 */
@@ -58,8 +55,7 @@ public class ChassisMoveDistance extends Command implements ChassisController {
 		chassisMove.start();
 		try {
 			motionController.resetSafely();
-		}
-		catch (InvalidSensorException e) {
+		} catch (InvalidSensorException e) {
 			LogKitten.w("Cancelling ChassisMoveDistance");
 			chassisMove.cancel();
 			cancel();
@@ -82,8 +78,7 @@ public class ChassisMoveDistance extends Command implements ChassisController {
 		double speed;
 		try {
 			speed = motionController.getSafely();
-		}
-		catch (InvalidSensorException e) {
+		} catch (InvalidSensorException e) {
 			LogKitten.w("Cancelling ChassisMoveDistance");
 			chassisMove.cancel();
 			cancel();
@@ -110,7 +105,8 @@ public class ChassisMoveDistance extends Command implements ChassisController {
 	}
 
 	@Override
-	protected void execute() {}
+	protected void execute() {
+	}
 
 	@Override
 	protected void interrupted() {

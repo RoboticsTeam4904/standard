@@ -1,6 +1,5 @@
 package org.usfirst.frc4904.standard.commands.chassis;
 
-
 import org.usfirst.frc4904.standard.subsystems.chassis.SolenoidShifters;
 import edu.wpi.first.wpilibj.command.Command;
 
@@ -47,13 +46,16 @@ public class ChassisShift extends Command {
 	}
 
 	@Override
-	protected void execute() {}
+	protected void execute() {
+	}
 
 	@Override
-	protected void interrupted() {}
+	protected void interrupted() {
+	}
 
 	@Override
-	protected void end() {}
+	protected void end() {
+	}
 
 	@Override
 	protected boolean isFinished() {

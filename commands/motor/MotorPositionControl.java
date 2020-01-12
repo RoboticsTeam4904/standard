@@ -1,6 +1,5 @@
 package org.usfirst.frc4904.standard.commands.motor;
 
-
 import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.Util;
 import org.usfirst.frc4904.standard.custom.controllers.Controller;
@@ -9,8 +8,8 @@ import org.usfirst.frc4904.standard.subsystems.motor.PositionSensorMotor;
 import edu.wpi.first.wpilibj.command.Command;
 
 /**
- * Controls a SensorMotor's position directly from a Controller (e.g. Joystick or Xbox)
- *
+ * Controls a SensorMotor's position directly from a Controller (e.g. Joystick
+ * or Xbox)
  */
 public class MotorPositionControl extends Command {
 	protected final PositionSensorMotor motor;
@@ -21,17 +20,19 @@ public class MotorPositionControl extends Command {
 	protected final Command fallbackCommand;
 
 	/**
-	 * This Command directly controls a SensorMotor's position based on an axis of the Controller.
-	 * This can allow an Operator to easily control the position of a single SensorMotor from an axis of the Controller.
+	 * This Command directly controls a SensorMotor's position based on an axis of
+	 * the Controller. This can allow an Operator to easily control the position of
+	 * a single SensorMotor from an axis of the Controller.
 	 *
 	 * @param motor
 	 * @param controller
 	 * @param axis
 	 * @param invert
-	 * @param fallbackCommand
-	 *        If the sensor fails for some reason, this command will be cancelled, then the fallbackCommand will start
+	 * @param fallbackCommand If the sensor fails for some reason, this command will
+	 *                        be cancelled, then the fallbackCommand will start
 	 */
-	public MotorPositionControl(PositionSensorMotor motor, Util.Range motorPositionRange, Controller controller, int axis, boolean invert, Command fallbackCommand) {
+	public MotorPositionControl(PositionSensorMotor motor, Util.Range motorPositionRange, Controller controller,
+			int axis, boolean invert, Command fallbackCommand) {
 		super("MotorPositionControl");
 		this.motor = motor;
 		this.motorPositionRange = motorPositionRange;
@@ -45,8 +46,9 @@ public class MotorPositionControl extends Command {
 	}
 
 	/**
-	 * This Command directly controls a SensorMotor's position based on an axis of the Controller.
-	 * This can allow an Operator to easily control the position of a single SensorMotor from an axis of the Controller.
+	 * This Command directly controls a SensorMotor's position based on an axis of
+	 * the Controller. This can allow an Operator to easily control the position of
+	 * a single SensorMotor from an axis of the Controller.
 	 *
 	 * @param motor
 	 * @param controller
@@ -54,7 +56,8 @@ public class MotorPositionControl extends Command {
 	 * @param invert
 	 */
 
-	public MotorPositionControl(PositionSensorMotor motor, Util.Range motorPositionRange, Controller controller, int axis, boolean invert) {
+	public MotorPositionControl(PositionSensorMotor motor, Util.Range motorPositionRange, Controller controller,
+			int axis, boolean invert) {
 		this(motor, motorPositionRange, controller, axis, invert, null);
 	}
 
@@ -70,8 +73,7 @@ public class MotorPositionControl extends Command {
 		LogKitten.d("MotorPositionControl executing: " + targetPosition);
 		try {
 			motor.setPositionSafely(targetPosition);
-		}
-		catch (InvalidSensorException e) {
+		} catch (InvalidSensorException e) {
 			cancel();
 			if (fallbackCommand != null) {
 				fallbackCommand.start();
@@ -85,7 +87,8 @@ public class MotorPositionControl extends Command {
 	}
 
 	@Override
-	protected void end() {}
+	protected void end() {
+	}
 
 	@Override
 	protected void interrupted() {

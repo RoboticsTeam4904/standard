@@ -1,6 +1,5 @@
 package org.usfirst.frc4904.standard.commands.healthchecks;
 
-
 import edu.wpi.first.wpilibj.Compressor;
 
 public class InterruptCompressor extends HealthProtectCommand {
@@ -21,7 +20,8 @@ public class InterruptCompressor extends HealthProtectCommand {
 	}
 
 	@Override
-	protected void execute() {}
+	protected void execute() {
+	}
 
 	@Override
 	protected boolean isFinished() {
@@ -29,8 +29,10 @@ public class InterruptCompressor extends HealthProtectCommand {
 	}
 
 	@Override
-	protected void end() {}
+	protected void end() {
+	}
 
 	@Override
-	protected void interrupted() {}
+	protected void interrupted() {
+	}
 }

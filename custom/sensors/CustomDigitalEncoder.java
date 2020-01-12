@@ -1,14 +1,11 @@
 package org.usfirst.frc4904.standard.custom.sensors;
 
-
 import edu.wpi.first.wpilibj.CounterBase;
 import edu.wpi.first.wpilibj.DigitalSource;
 import edu.wpi.first.wpilibj.Encoder;
 
 /**
- * A RoboRIO encoder that implements
- * the generic encoder class.
- *
+ * A RoboRIO encoder that implements the generic encoder class.
  */
 public class CustomDigitalEncoder extends Encoder implements CustomEncoder {
 	private double distancePerPulse;
@@ -23,7 +20,7 @@ public class CustomDigitalEncoder extends Encoder implements CustomEncoder {
 	}
 
 	public CustomDigitalEncoder(DigitalSource aSource, DigitalSource bSource, boolean reverseDirection,
-		CounterBase.EncodingType encodingType) {
+			CounterBase.EncodingType encodingType) {
 		super(aSource, bSource, reverseDirection, encodingType);
 	}
 
@@ -32,7 +29,7 @@ public class CustomDigitalEncoder extends Encoder implements CustomEncoder {
 	}
 
 	public CustomDigitalEncoder(DigitalSource aSource, DigitalSource bSource, DigitalSource indexSource,
-		boolean reverseDirection) {
+			boolean reverseDirection) {
 		super(aSource, bSource, indexSource, reverseDirection);
 	}
 
@@ -44,7 +41,8 @@ public class CustomDigitalEncoder extends Encoder implements CustomEncoder {
 		super(aChannel, bChannel, reverseDirection);
 	}
 
-	public CustomDigitalEncoder(int aChannel, int bChannel, boolean reverseDirection, CounterBase.EncodingType encodingType) {
+	public CustomDigitalEncoder(int aChannel, int bChannel, boolean reverseDirection,
+			CounterBase.EncodingType encodingType) {
 		super(aChannel, bChannel, reverseDirection, encodingType);
 	}
 

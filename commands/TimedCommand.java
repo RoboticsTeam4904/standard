@@ -1,15 +1,11 @@
 package org.usfirst.frc4904.standard.commands;
 
-
 import org.usfirst.frc4904.standard.LogKitten;
 import edu.wpi.first.wpilibj.command.Command;
 
 /**
- * Because the WPILib command timer
- * is only relative to the start of
- * the command, this class was
- * created to allow a timer to be
- * reset.
+ * Because the WPILib command timer is only relative to the start of the
+ * command, this class was created to allow a timer to be reset.
  *
  */
 public abstract class TimedCommand extends Command {
@@ -36,8 +32,7 @@ public abstract class TimedCommand extends Command {
 	}
 
 	/**
-	 * Returns true if there has been an
-	 * interval of time since the last reset
+	 * Returns true if there has been an interval of time since the last reset
 	 *
 	 * @return
 	 */
@@ -47,8 +42,7 @@ public abstract class TimedCommand extends Command {
 	}
 
 	/**
-	 * Resets the timer
-	 * This is public to allow other classes to reset timers
+	 * Resets the timer This is public to allow other classes to reset timers
 	 */
 	public void resetTimer() {
 		lastReset = timeSinceInitialized();

@@ -1,6 +1,5 @@
 package org.usfirst.frc4904.standard.commands.chassis;
 
-
 import org.usfirst.frc4904.standard.custom.ChassisController;
 import org.usfirst.frc4904.standard.custom.motioncontrollers.MotionController;
 import org.usfirst.frc4904.standard.custom.sensors.IMU;
@@ -18,18 +17,19 @@ public class ChassisTurn extends Command implements ChassisController {
 	protected boolean runOnce;
 
 	/**
-	 * Constructor
-	 * This command rotates the chassis to a position relative to the current angle of the robot
+	 * Constructor This command rotates the chassis to a position relative to the
+	 * current angle of the robot
 	 *
 	 * @param chassis
 	 * @param finalAngle
 	 * @param imu
-	 * @param fallbackCommand
-	 *        If the sensor fails for some reason, this command will be cancelled, then the fallbackCommand will start
+	 * @param fallbackCommand  If the sensor fails for some reason, this command
+	 *                         will be cancelled, then the fallbackCommand will
+	 *                         start
 	 * @param motionController
 	 */
 	public ChassisTurn(Chassis chassis, double finalAngle, IMU imu, Command fallbackCommand,
-		MotionController motionController) {
+			MotionController motionController) {
 		move = new ChassisMove(chassis, this);
 		this.finalAngle = -((finalAngle + 360) % 360 - 180);
 		this.imu = imu;
@@ -38,8 +38,8 @@ public class ChassisTurn extends Command implements ChassisController {
 	}
 
 	/**
-	 * Constructor
-	 * This command rotates the chassis to a position relative to the current angle of the robot
+	 * Constructor This command rotates the chassis to a position relative to the
+	 * current angle of the robot
 	 *
 	 * @param chassis
 	 * @param finalAngle
@@ -64,8 +64,7 @@ public class ChassisTurn extends Command implements ChassisController {
 	public double getTurnSpeed() {
 		try {
 			return motionController.getSafely();
-		}
-		catch (InvalidSensorException e) {
+		} catch (InvalidSensorException e) {
 			move.cancel();
 			cancel();
 			if (fallbackCommand != null) {
@@ -81,8 +80,7 @@ public class ChassisTurn extends Command implements ChassisController {
 		initialAngle = imu.getYaw();
 		try {
 			motionController.resetSafely();
-		}
-		catch (InvalidSensorException e) {
+		} catch (InvalidSensorException e) {
 			move.cancel();
 			cancel();
 			if (fallbackCommand != null) {

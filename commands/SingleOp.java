@@ -1,6 +1,5 @@
 package org.usfirst.frc4904.standard.commands;
 
-
 import edu.wpi.first.wpilibj.command.Command;
 
 public class SingleOp extends Command {

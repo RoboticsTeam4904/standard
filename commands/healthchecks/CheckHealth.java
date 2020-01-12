@@ -1,22 +1,20 @@
 package org.usfirst.frc4904.standard.commands.healthchecks;
 
-
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
 /**
- * CheckHealth runs a series of health checks.
- * It also includes a reset for all of the health checks.
+ * CheckHealth runs a series of health checks. It also includes a reset for all
+ * of the health checks.
  */
 public class CheckHealth extends CommandGroup {
 	protected final AbstractHealthCheck[] commands;
 
 	/**
-	 * CheckHealth runs a series of health checks.
-	 * It also includes a reset for all of the health checks.
+	 * CheckHealth runs a series of health checks. It also includes a reset for all
+	 * of the health checks.
 	 *
-	 * @param command
-	 *        The health check commands to run
+	 * @param command The health check commands to run
 	 */
 	public CheckHealth(AbstractHealthCheck... command) {
 		commands = command;
@@ -27,8 +25,7 @@ public class CheckHealth extends CommandGroup {
 	}
 
 	/**
-	 * Resets all of the health checks.
-	 * Should be run on disable.
+	 * Resets all of the health checks. Should be run on disable.
 	 */
 	public void reset() {
 		for (AbstractHealthCheck c : commands) {

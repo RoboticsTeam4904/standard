@@ -1,20 +1,14 @@
 package org.usfirst.frc4904.standard.commands.motor;
 
-
 import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.subsystems.motor.Motor;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.command.Command;
 
 /**
- * Sets a motor to a speed.
- * The speed can change through
- * use of the set command.
- * This is better than setting
- * the motor because it uses
- * requires to avoid having
- * multiple attempts to set a
- * motor simultaneously.
+ * Sets a motor to a speed. The speed can change through use of the set command.
+ * This is better than setting the motor because it uses requires to avoid
+ * having multiple attempts to set a motor simultaneously.
  *
  */
 public class MotorSet extends Command {

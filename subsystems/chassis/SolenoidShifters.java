@@ -1,6 +1,5 @@
 package org.usfirst.frc4904.standard.subsystems.chassis;
 
-
 import org.usfirst.frc4904.standard.commands.chassis.ChassisShift;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.command.Subsystem;
@@ -21,10 +20,8 @@ public class SolenoidShifters extends Subsystem {
 	/**
 	 * A subsystem for managing a solenoid for a shifting drivetrain.
 	 *
-	 * @param solenoid
-	 *        The DoubleSolenoid used to shift
-	 * @param isInverted
-	 *        To invert or not
+	 * @param solenoid   The DoubleSolenoid used to shift
+	 * @param isInverted To invert or not
 	 */
 	public SolenoidShifters(DoubleSolenoid solenoid, boolean isInverted) {
 		super("SolenoidShifters");
@@ -40,8 +37,7 @@ public class SolenoidShifters extends Subsystem {
 	/**
 	 * A subsystem for managing a solenoid for a shifting drivetrain.
 	 *
-	 * @param solenoid
-	 *        The DoubleSolenoid used to shift
+	 * @param solenoid The DoubleSolenoid used to shift
 	 */
 	public SolenoidShifters(DoubleSolenoid solenoid) {
 		this(solenoid, false);
@@ -50,10 +46,8 @@ public class SolenoidShifters extends Subsystem {
 	/**
 	 * A subsystem for managing a solenoid for a shifting drivetrain.
 	 *
-	 * @param portUp
-	 *        The first port of the double solenoid
-	 * @param portDown
-	 *        The second port of the double solenoid
+	 * @param portUp   The first port of the double solenoid
+	 * @param portDown The second port of the double solenoid
 	 */
 	public SolenoidShifters(int portUp, int portDown) {
 		this(new DoubleSolenoid(portUp, portDown), false);
@@ -62,12 +56,9 @@ public class SolenoidShifters extends Subsystem {
 	/**
 	 * A subsystem for managing a solenoid for a shifting drivetrain.
 	 *
-	 * @param module
-	 *        The ID of the PCM for the double solenoid
-	 * @param portUp
-	 *        The first port of the double solenoid
-	 * @param portDown
-	 *        The second port of the double solenoid
+	 * @param module   The ID of the PCM for the double solenoid
+	 * @param portUp   The first port of the double solenoid
+	 * @param portDown The second port of the double solenoid
 	 */
 	public SolenoidShifters(int module, int portUp, int portDown) {
 		this(new DoubleSolenoid(module, portUp, portDown), false);
@@ -79,8 +70,8 @@ public class SolenoidShifters extends Subsystem {
 	}
 
 	/**
-	 * Returns the current state of the solenoid shifters.
-	 * This is based on the set state, not a measured state.
+	 * Returns the current state of the solenoid shifters. This is based on the set
+	 * state, not a measured state.
 	 */
 	public ShiftState getShiftState() {
 		return state;
@@ -94,21 +85,21 @@ public class SolenoidShifters extends Subsystem {
 	public void shift(ShiftState state) {
 		this.state = state;
 		switch (state) {
-			case UP:
-				if (!isInverted) {
-					solenoid.set(DoubleSolenoid.Value.kForward);
-				} else {
-					solenoid.set(DoubleSolenoid.Value.kReverse);
-				}
-				return;
-			case DOWN:
-			default:
-				if (!isInverted) {
-					solenoid.set(DoubleSolenoid.Value.kReverse);
-				} else {
-					solenoid.set(DoubleSolenoid.Value.kForward);
-				}
-				return;
+		case UP:
+			if (!isInverted) {
+				solenoid.set(DoubleSolenoid.Value.kForward);
+			} else {
+				solenoid.set(DoubleSolenoid.Value.kReverse);
+			}
+			return;
+		case DOWN:
+		default:
+			if (!isInverted) {
+				solenoid.set(DoubleSolenoid.Value.kReverse);
+			} else {
+				solenoid.set(DoubleSolenoid.Value.kForward);
+			}
+			return;
 		}
 	}
 
@@ -117,14 +108,14 @@ public class SolenoidShifters extends Subsystem {
 	 */
 	public void shift() {
 		switch (state) {
-			case UP:
-				shift(ShiftState.DOWN);
-				return;
-			case DOWN:
-				shift(ShiftState.UP);
-				return;
-			default:
-				return;
+		case UP:
+			shift(ShiftState.DOWN);
+			return;
+		case DOWN:
+			shift(ShiftState.UP);
+			return;
+		default:
+			return;
 		}
 	}
 }

@@ -1,13 +1,13 @@
 package org.usfirst.frc4904.standard.subsystems;
 
-
 import org.usfirst.frc4904.standard.commands.solenoid.SolenoidSet;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 /**
- * A class that wraps multiple DoubleSolenoid objects with subsystem functionality.
- * Allows for easy inversion and setting of default state of solenoids
+ * A class that wraps multiple DoubleSolenoid objects with subsystem
+ * functionality. Allows for easy inversion and setting of default state of
+ * solenoids
  */
 public class SolenoidSubsystem extends Subsystem {
 	protected DoubleSolenoid[] solenoids;
@@ -16,17 +16,14 @@ public class SolenoidSubsystem extends Subsystem {
 	protected boolean isInverted;
 
 	/**
-	 * A class that wraps multiple DoubleSolenoid objects with subsystem functionality.
-	 * Allows for easy inversion and setting of default state of solenoids
+	 * A class that wraps multiple DoubleSolenoid objects with subsystem
+	 * functionality. Allows for easy inversion and setting of default state of
+	 * solenoids
 	 * 
-	 * @param name
-	 *                     Name of subsystem
-	 * @param isInverted
-	 *                     True if the solenoids should be inverted
-	 * @param defaultState
-	 *                     Set the default state of the SolenoidSystem
-	 * @param solenoids
-	 *                     Double solenoids of the system
+	 * @param name         Name of subsystem
+	 * @param isInverted   True if the solenoids should be inverted
+	 * @param defaultState Set the default state of the SolenoidSystem
+	 * @param solenoids    Double solenoids of the system
 	 */
 	public SolenoidSubsystem(String name, boolean isInverted, SolenoidState defaultState, DoubleSolenoid... solenoids) {
 		super(name);
@@ -37,80 +34,73 @@ public class SolenoidSubsystem extends Subsystem {
 	}
 
 	/**
-	 * A class that wraps multiple DoubleSolenoid objects with subsystem functionality.
-	 * Allows for easy inversion and setting of default state of solenoidss
+	 * A class that wraps multiple DoubleSolenoid objects with subsystem
+	 * functionality. Allows for easy inversion and setting of default state of
+	 * solenoidss
 	 * 
-	 * @param name
-	 *                   Name of subsystem
-	 * @param isInverted
-	 *                   True if the solenoids should be inverted
-	 * @param solenoids
-	 *                   Double solenoids of the system
+	 * @param name       Name of subsystem
+	 * @param isInverted True if the solenoids should be inverted
+	 * @param solenoids  Double solenoids of the system
 	 */
 	public SolenoidSubsystem(String name, boolean isInverted, DoubleSolenoid... solenoids) {
 		this(name, isInverted, SolenoidState.OFF, solenoids);
 	}
 
 	/**
-	 * A class that wraps multiple DoubleSolenoid objects with subsystem functionality.
-	 * Allows for easy inversion and setting of default state of solenoids
+	 * A class that wraps multiple DoubleSolenoid objects with subsystem
+	 * functionality. Allows for easy inversion and setting of default state of
+	 * solenoids
 	 * 
-	 * @param name
-	 *                     Name of subsystem
-	 * @param defaultState
-	 *                     Set the default state of the SolenoidSystem
-	 * @param solenoids
-	 *                     Double solenoids of the system
+	 * @param name         Name of subsystem
+	 * @param defaultState Set the default state of the SolenoidSystem
+	 * @param solenoids    Double solenoids of the system
 	 */
 	public SolenoidSubsystem(String name, SolenoidState defaultState, DoubleSolenoid... solenoids) {
 		this(name, false, defaultState, solenoids);
 	}
 
 	/**
-	 * A class that wraps multiple DoubleSolenoid objects with subsystem functionality.
-	 * Allows for easy inversion and setting of default state of solenoids
+	 * A class that wraps multiple DoubleSolenoid objects with subsystem
+	 * functionality. Allows for easy inversion and setting of default state of
+	 * solenoids
 	 * 
-	 * @param name
-	 *                  Name of subsystem
-	 * @param solenoids
-	 *                  Double solenoids of the system
+	 * @param name      Name of subsystem
+	 * @param solenoids Double solenoids of the system
 	 */
 	public SolenoidSubsystem(String name, DoubleSolenoid... solenoids) {
 		this(name, false, solenoids);
 	}
 
 	/**
-	 * A class that wraps multiple DoubleSolenoid objects with subsystem functionality.
-	 * Allows for easy inversion and setting of default state of solenoids
+	 * A class that wraps multiple DoubleSolenoid objects with subsystem
+	 * functionality. Allows for easy inversion and setting of default state of
+	 * solenoids
 	 * 
-	 * @param defaultState
-	 *                     Set the default state of the SolenoidSystem
-	 * @param solenoids
-	 *                     Double solenoids of the system
+	 * @param defaultState Set the default state of the SolenoidSystem
+	 * @param solenoids    Double solenoids of the system
 	 */
 	public SolenoidSubsystem(SolenoidState defaultState, DoubleSolenoid... solenoids) {
 		this("SolenoidSubsystem", defaultState, solenoids);
 	}
 
 	/**
-	 * A class that wraps multiple DoubleSolenoid objects with subsystem functionality.
-	 * Allows for easy inversion and setting of default state of solenoids
+	 * A class that wraps multiple DoubleSolenoid objects with subsystem
+	 * functionality. Allows for easy inversion and setting of default state of
+	 * solenoids
 	 * 
-	 * @param isInverted
-	 *                   True if the solenoids should be inverted
-	 * @param solenoids
-	 *                   Double solenoids of the system
+	 * @param isInverted True if the solenoids should be inverted
+	 * @param solenoids  Double solenoids of the system
 	 */
 	public SolenoidSubsystem(boolean isInverted, DoubleSolenoid... solenoids) {
 		this("SolenoidSubsystem", isInverted, solenoids);
 	}
 
 	/**
-	 * A class that wraps multiple DoubleSolenoid objects with subsystem functionality.
-	 * Allows for easy inversion and setting of default state of solenoids
+	 * A class that wraps multiple DoubleSolenoid objects with subsystem
+	 * functionality. Allows for easy inversion and setting of default state of
+	 * solenoids
 	 * 
-	 * @param solenoids
-	 *                  Double solenoids of the system
+	 * @param solenoids Double solenoids of the system
 	 */
 	public SolenoidSubsystem(DoubleSolenoid... solenoids) {
 		this("SolenoidSubsystem", solenoids);
@@ -121,6 +111,7 @@ public class SolenoidSubsystem extends Subsystem {
 	 */
 	public enum SolenoidState {
 		OFF(DoubleSolenoid.Value.kOff), EXTEND(DoubleSolenoid.Value.kForward), RETRACT(DoubleSolenoid.Value.kReverse);
+
 		public final DoubleSolenoid.Value value;
 
 		private SolenoidState(DoubleSolenoid.Value value) {
@@ -129,8 +120,7 @@ public class SolenoidSubsystem extends Subsystem {
 	}
 
 	/**
-	 * @param state
-	 *              Returns the current state of the system
+	 * @param state Returns the current state of the system
 	 */
 	public SolenoidState getState() {
 		return state;
@@ -139,28 +129,25 @@ public class SolenoidSubsystem extends Subsystem {
 	/**
 	 * Inverts the state given
 	 * 
-	 * @param state
-	 *              SolenoidState to be inverted
-	 * @return SolenoidState
-	 *         Inverted state
+	 * @param state SolenoidState to be inverted
+	 * @return SolenoidState Inverted state
 	 * 
 	 */
 	public SolenoidState invertState(SolenoidState state) {
 		switch (state) {
-			case EXTEND:
-				return SolenoidState.RETRACT;
-			case RETRACT:
-				return SolenoidState.EXTEND;
+		case EXTEND:
+			return SolenoidState.RETRACT;
+		case RETRACT:
+			return SolenoidState.EXTEND;
 		}
 		return state;
 	}
 
 	/**
-	 * Sets the state of the system
-	 * Only sets if current state is not equal to state to be set
+	 * Sets the state of the system Only sets if current state is not equal to state
+	 * to be set
 	 * 
-	 * @param state
-	 *              State to set system
+	 * @param state State to set system
 	 */
 	public void set(SolenoidState state) {
 		if (isInverted) {
@@ -177,8 +164,7 @@ public class SolenoidSubsystem extends Subsystem {
 	/**
 	 * Sets the state of the system regardless of current state
 	 * 
-	 * @param state
-	 *              State to set
+	 * @param state State to set
 	 */
 	public void setOverride(SolenoidState state) {
 		if (isInverted) {
@@ -191,8 +177,7 @@ public class SolenoidSubsystem extends Subsystem {
 	}
 
 	/**
-	 * @return solenoids
-	 *         DoubleSolenoid objects of the system
+	 * @return solenoids DoubleSolenoid objects of the system
 	 */
 	public DoubleSolenoid[] getSolenoids() {
 		return solenoids;

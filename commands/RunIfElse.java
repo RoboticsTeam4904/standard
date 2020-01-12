@@ -1,6 +1,5 @@
 package org.usfirst.frc4904.standard.commands;
 
-
 import java.util.function.BooleanSupplier;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Subsystem;
@@ -13,7 +12,8 @@ public class RunIfElse extends Command {
 	protected boolean hasRunOnce;
 
 	public RunIfElse(Command ifCommand, Command elseCommand, BooleanSupplier... booleanSuppliers) {
-		this("RunIf[" + ifCommand.getName() + "]Else[" + elseCommand.getName() + "]", ifCommand, elseCommand, booleanSuppliers);
+		this("RunIf[" + ifCommand.getName() + "]Else[" + elseCommand.getName() + "]", ifCommand, elseCommand,
+				booleanSuppliers);
 	}
 
 	protected RunIfElse(String name, Command ifCommand, Command elseCommand, BooleanSupplier... booleanSuppliers) {
@@ -42,7 +42,8 @@ public class RunIfElse extends Command {
 	}
 
 	@Override
-	protected void execute() {}
+	protected void execute() {
+	}
 
 	@Override
 	protected boolean isFinished() {

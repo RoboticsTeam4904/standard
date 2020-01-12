@@ -1,16 +1,15 @@
 package org.usfirst.frc4904.standard.commands.motor;
 
-
 import org.usfirst.frc4904.standard.custom.sensors.InvalidSensorException;
 import org.usfirst.frc4904.standard.subsystems.motor.PositionSensorMotor;
 import edu.wpi.first.wpilibj.command.Command;
 
 /**
- * MotorPositionConstant is a Command that runs while setting a SensorMotor's position
- * to the provided (double) value. If (boolean) endOnArrival is provided and set to false,
- * the command will run indefinitely. Otherwise, the command will end when the motor#onTarget()
- * returns true (as set by internal PID).
- *
+ * MotorPositionConstant is a Command that runs while setting a SensorMotor's
+ * position to the provided (double) value. If (boolean) endOnArrival is
+ * provided and set to false, the command will run indefinitely. Otherwise, the
+ * command will end when the motor#onTarget() returns true (as set by internal
+ * PID).
  */
 public class MotorPositionConstant extends Command {
 	protected PositionSensorMotor motor;
@@ -19,21 +18,20 @@ public class MotorPositionConstant extends Command {
 	protected final Command fallbackCommand;
 
 	/**
-	 * Constructor
-	 * MotorPositionConstant is a Command that runs while setting a SensorMotor's position
-	 * to the provided (double) value.
+	 * Constructor MotorPositionConstant is a Command that runs while setting a
+	 * SensorMotor's position to the provided (double) value.
 	 *
 	 * @param motor
-	 * @param position
-	 *        position to set the motor to
-	 * @param endOnArrival
-	 *        If (boolean) endOnArrival is provided and set to false,
-	 *        the command will run indefinitely. Otherwise, the command will end when the motor#onTarget()
-	 *        returns true (as set by internal PID).
-	 * @param fallbackCommand
-	 *        If the sensor fails for some reason, this command will be cancelled, then the fallbackCommand will start
+	 * @param position        position to set the motor to
+	 * @param endOnArrival    If (boolean) endOnArrival is provided and set to
+	 *                        false, the command will run indefinitely. Otherwise,
+	 *                        the command will end when the motor#onTarget() returns
+	 *                        true (as set by internal PID).
+	 * @param fallbackCommand If the sensor fails for some reason, this command will
+	 *                        be cancelled, then the fallbackCommand will start
 	 */
-	public MotorPositionConstant(PositionSensorMotor motor, double position, boolean endOnArrival, Command fallbackCommand) {
+	public MotorPositionConstant(PositionSensorMotor motor, double position, boolean endOnArrival,
+			Command fallbackCommand) {
 		super("MotorPositionConstant");
 		this.motor = motor;
 		this.position = position;
@@ -57,8 +55,7 @@ public class MotorPositionConstant extends Command {
 			motor.reset();
 			motor.enableMotionController();
 			motor.setPositionSafely(position);
-		}
-		catch (InvalidSensorException e) {
+		} catch (InvalidSensorException e) {
 			cancel();
 			if (fallbackCommand != null) {
 				fallbackCommand.start();
@@ -95,5 +92,6 @@ public class MotorPositionConstant extends Command {
 	}
 
 	@Override
-	protected void interrupted() {}
+	protected void interrupted() {
+	}
 }

@@ -1,6 +1,5 @@
 package org.usfirst.frc4904.standard.custom;
 
-
 import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.Util;
 import org.usfirst.frc4904.standard.custom.motioncontrollers.MotionController;
@@ -17,7 +16,7 @@ public class MCChassisController implements ChassisController {
 	protected MotionController motionController;
 
 	public MCChassisController(ChassisController controller, IMU imu, MotionController motionController,
-		double maxDegreesPerSecond) {
+			double maxDegreesPerSecond) {
 		this.controller = controller;
 		this.maxDegreesPerSecond = maxDegreesPerSecond;
 		this.imu = imu;
@@ -60,10 +59,10 @@ public class MCChassisController implements ChassisController {
 		}
 		try {
 			LogKitten.v(motionController.getSetpoint() + " " + imu.getYaw() + " " + motionController.getSafely());
+		} catch (InvalidSensorException e) {
 		}
-		catch (InvalidSensorException e) {}
-		targetYaw = targetYaw
-			+ ((controller.getTurnSpeed() * maxDegreesPerSecond) * ((System.currentTimeMillis() / 1000.0) - lastUpdate));
+		targetYaw = targetYaw + ((controller.getTurnSpeed() * maxDegreesPerSecond)
+				* ((System.currentTimeMillis() / 1000.0) - lastUpdate));
 		lastUpdate = System.currentTimeMillis() / 1000.0;
 		if (targetYaw > 180) {
 			targetYaw = -180 + (Math.abs(targetYaw) - 180);
@@ -73,8 +72,7 @@ public class MCChassisController implements ChassisController {
 		motionController.setSetpoint(targetYaw);
 		try {
 			return motionController.getSafely();
-		}
-		catch (InvalidSensorException e) {
+		} catch (InvalidSensorException e) {
 			return controller.getTurnSpeed();
 		}
 	}

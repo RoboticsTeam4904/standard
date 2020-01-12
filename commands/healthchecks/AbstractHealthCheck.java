@@ -1,12 +1,12 @@
 package org.usfirst.frc4904.standard.commands.healthchecks;
 
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.commands.TimedCommand;
 
-public abstract class AbstractHealthCheck extends TimedCommand { // Many of our healthchecks will use timing, so a TimedCommand is needed
+public abstract class AbstractHealthCheck extends TimedCommand { // Many of our healthchecks will use timing, so a
+																	// TimedCommand is needed
 	protected HashMap<HealthLevel, ArrayList<HealthProtectCommand>> commands;
 	protected volatile HealthLevel status;
 

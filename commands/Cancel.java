@@ -1,6 +1,5 @@
 package org.usfirst.frc4904.standard.commands;
 
-
 import org.usfirst.frc4904.standard.LogKitten;
 import edu.wpi.first.wpilibj.command.Command;
 
@@ -20,7 +19,8 @@ public class Cancel extends Command {
 	}
 
 	@Override
-	protected void execute() {}
+	protected void execute() {
+	}
 
 	@Override
 	protected boolean isFinished() {
@@ -28,8 +28,10 @@ public class Cancel extends Command {
 	}
 
 	@Override
-	protected void end() {}
+	protected void end() {
+	}
 
 	@Override
-	protected void interrupted() {}
+	protected void interrupted() {
+	}
 }
