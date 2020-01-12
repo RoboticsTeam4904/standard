@@ -13,12 +13,24 @@ public class Util {
 	 *
 	 * @param var
 	 *        The floating point number you want to compare
+	 * @param epsilon
+	 *		  The maximum value of var such that it can be considered zero
 	 * @return
-	 * 		Whether or not it is within Double.MIN_VALUE of zero
+	 * 		Whether or not var is within epsilon of zero
 	 */
 	public static boolean isZero(double var, double epsilon) {
 		return Math.abs(var) < epsilon;
 	}
+
+	/**
+	 * A function for determining if floating point numbers are effectively zero.
+	 * Floating point arithmetic tends to introduce very small errors.
+	 *
+	 * @param var
+	 *        The floating point number you want to compare
+	 * @return
+	 * 		Whether or not var is within Math.sqrt(Math.ulp(1.0)) of zero
+	 */
 	public static boolean isZero(double var) {
 		return isZero(var, Math.sqrt(Math.ulp(1.0)));
 	}
