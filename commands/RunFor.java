@@ -5,11 +5,13 @@ import java.util.Arrays;
 
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj.command.Command;
 
 public class RunFor extends CommandBase {
 	protected final double duration;
 	protected final CommandBase command;
 	protected boolean firstTick;
+	protected long startMillis;
 
 	/**
 	 * Run a command for a given amount of time, in seconds. The command will be
@@ -42,14 +44,19 @@ public class RunFor extends CommandBase {
 		this("RunFor[" + command.getName() + "]", command, duration);
 	}
 
+	public boolean isTimedOut() {
+		return System.currentTimeMillis() - startMillis > duration;
+	}
+
 	public void initialize() {
 		command.withTimeout(duration);
+		startMillis = System.currentTimeMillis();
 	}
 
 	public boolean isFinished() {
 		if (firstTick) {
 			firstTick = false;
-			return isTimedOut(); // TODO: needs to be changed
+			return isTimedOut();
 		}
 		return isTimedOut() || !command.isScheduled();
 	}
