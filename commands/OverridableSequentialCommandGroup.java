@@ -15,7 +15,6 @@ public abstract class OverridableSequentialCommandGroup extends SequentialComman
 
 	public final synchronized void addSequentialUnlessOverridden(Command command) {
         addCommands(new RunIf(command, overridable::isNotOverridden));
-		//addSequential(new RunIf(command, overridable::isNotOverridden));
 	}
 
 	public final synchronized void addSequentialUnlessOverridden(Command command, double timeout) {
