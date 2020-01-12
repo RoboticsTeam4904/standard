@@ -1,7 +1,5 @@
 package org.usfirst.frc4904.standard.commands;
 
-import java.util.HashSet;
-import java.util.Set;
 import java.util.function.BooleanSupplier;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Subsystem;

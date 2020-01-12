@@ -18,11 +18,9 @@ public class RunAllParallel extends ParallelCommandGroup {
      * @param commands The commands to be run in parallel
      */
     public RunAllParallel(Command... commands) {
-        super("RunAllParallel["
+        setName("RunAllParallel["
                 + Arrays.stream(commands).map((Command command) -> command.getName()).collect(Collectors.joining(" "))
                 + "]");
-        for (Command command : commands) {
-            addParallel(command);
-        }
+        addCommands(commands);
     }
 }

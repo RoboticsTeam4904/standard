@@ -17,11 +17,9 @@ public class RunAllSequential extends SequentialCommandGroup {
      * @param commands The commands to be run in sequence
      */
     public RunAllSequential(Command... commands) {
-        super("RunAllSequential["
+        setName("RunAllSequential["
                 + Arrays.stream(commands).map((Command command) -> command.getName()).collect(Collectors.joining(" "))
                 + "]");
-        for (Command command : commands) {
-            addSequential(command);
-        }
+        addCommands(commands);
     }
 }
