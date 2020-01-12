@@ -61,6 +61,8 @@ public class SolenoidSubsystem implements Subsystem {
 	 * A class that wraps multiple DoubleSolenoid objects with subsystem functionality.
 	 * Allows for easy inversion and setting of default state of solenoids
 	 * 
+	 * @param name
+	 *                  Name of subsystem
 	 * @param solenoids
 	 *                  Double solenoids of the system
 	 */
