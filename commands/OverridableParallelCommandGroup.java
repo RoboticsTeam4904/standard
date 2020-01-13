@@ -1,6 +1,5 @@
 package org.usfirst.frc4904.standard.commands;
 
-
 import org.usfirst.frc4904.standard.custom.Overridable;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
@@ -11,6 +10,11 @@ public abstract class OverridableParallelCommandGroup extends ParallelCommandGro
 	public OverridableParallelCommandGroup(Overridable overridable) {
 		super();
 		this.overridable = overridable;
+	}
+
+	public OverridableParallelCommandGroup(String name, Overridable overridable) {
+		this(overridable);
+		setName(name);
 	}
 
 	public final synchronized void addParallelUnlessOverridden(Command command) {
