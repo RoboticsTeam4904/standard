@@ -1,120 +1,216 @@
-package org.usfirst.frc4904.standard.subsystems.chassis;
+package org.usfirst.frc4904.standard.subsystems;
 
+
+import org.usfirst.frc4904.standard.commands.solenoid.SolenoidSet;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj2.command.Subsystem;
+import edu.wpi.first.wpilibj.command.Subsystem;
 
 /**
- * <h2>A subsystem for managing a solenoid for a shifting drivetrain.</h2> The
- * normal default command is <em><strong>ChassisShift</strong></em>(this,
- * SolenoidShifters.ShiftState.DOWN). It is set with
- * subsystemname..setDefaultCommand(...)
+ * A class that wraps multiple DoubleSolenoid objects with subsystem functionality.
+ * Allows for easy inversion and setting of default state of solenoids
  */
-public class SolenoidShifters extends SubsystemBase implements Subsystem {
-	protected final DoubleSolenoid solenoid;
-	protected final boolean isInverted;
-	protected ShiftState state;
+public class SolenoidSubsystem extends Subsystem {
+	protected DoubleSolenoid[] solenoids;
+	protected SolenoidState state;
+	protected SolenoidState defaultState;
+	protected boolean isInverted;
 
-	public enum ShiftState {
-		UP, DOWN;
+	/**
+	 * A class that wraps multiple DoubleSolenoid objects with subsystem functionality.
+	 * Allows for easy inversion and setting of default state of solenoids
+	 * 
+	 * @param name
+	 *                     Name of subsystem
+	 * @param isInverted
+	 *                     True if the solenoids should be inverted
+	 * @param defaultState
+	 *                     Set the default state of the SolenoidSystem
+	 * @param solenoids
+	 *                     Double solenoids of the system
+	 */
+	public SolenoidSubsystem(String name, boolean isInverted, SolenoidState defaultState, DoubleSolenoid... solenoids) {
+		super(name);
+		this.solenoids = solenoids;
+		this.isInverted = isInverted;
+		this.defaultState = defaultState;
+		this.state = defaultState;
 	}
 
 	/**
-	 * A subsystem for managing a solenoid for a shifting drivetrain.
-	 *
-	 * @param solenoid   The DoubleSolenoid used to shift
-	 * @param isInverted To invert or not
+	 * A class that wraps multiple DoubleSolenoid objects with subsystem functionality.
+	 * Allows for easy inversion and setting of default state of solenoidss
+	 * 
+	 * @param name
+	 *                   Name of subsystem
+	 * @param isInverted
+	 *                   True if the solenoids should be inverted
+	 * @param solenoids
+	 *                   Double solenoids of the system
 	 */
-	public SolenoidShifters(DoubleSolenoid solenoid, boolean isInverted) {
-		super();
-		this.solenoid = solenoid;
-		this.isInverted = isInverted;
-		if (!isInverted && solenoid.get() == DoubleSolenoid.Value.kForward) {
-			state = ShiftState.UP;
-		} else {
-			state = ShiftState.DOWN;
+	public SolenoidSubsystem(String name, boolean isInverted, DoubleSolenoid... solenoids) {
+		this(name, isInverted, SolenoidState.OFF, solenoids);
+	}
+
+	/**
+	 * A class that wraps multiple DoubleSolenoid objects with subsystem functionality.
+	 * Allows for easy inversion and setting of default state of solenoids
+	 * 
+	 * @param name
+	 *                     Name of subsystem
+	 * @param defaultState
+	 *                     Set the default state of the SolenoidSystem
+	 * @param solenoids
+	 *                     Double solenoids of the system
+	 */
+	public SolenoidSubsystem(String name, SolenoidState defaultState, DoubleSolenoid... solenoids) {
+		this(name, false, defaultState, solenoids);
+	}
+
+	/**
+	 * A class that wraps multiple DoubleSolenoid objects with subsystem functionality.
+	 * Allows for easy inversion and setting of default state of solenoids
+	 * 
+	 * @param name
+	 *                  Name of subsystem
+	 * @param solenoids
+	 *                  Double solenoids of the system
+	 */
+	public SolenoidSubsystem(String name, DoubleSolenoid... solenoids) {
+		this(name, false, solenoids);
+	}
+
+	/**
+	 * A class that wraps multiple DoubleSolenoid objects with subsystem functionality.
+	 * Allows for easy inversion and setting of default state of solenoids
+	 * 
+	 * @param defaultState
+	 *                     Set the default state of the SolenoidSystem
+	 * @param solenoids
+	 *                     Double solenoids of the system
+	 */
+	public SolenoidSubsystem(SolenoidState defaultState, DoubleSolenoid... solenoids) {
+		this("SolenoidSubsystem", defaultState, solenoids);
+	}
+
+	/**
+	 * A class that wraps multiple DoubleSolenoid objects with subsystem functionality.
+	 * Allows for easy inversion and setting of default state of solenoids
+	 * 
+	 * @param isInverted
+	 *                   True if the solenoids should be inverted
+	 * @param solenoids
+	 *                   Double solenoids of the system
+	 */
+	public SolenoidSubsystem(boolean isInverted, DoubleSolenoid... solenoids) {
+		this("SolenoidSubsystem", isInverted, solenoids);
+	}
+
+	/**
+	 * A class that wraps multiple DoubleSolenoid objects with subsystem functionality.
+	 * Allows for easy inversion and setting of default state of solenoids
+	 * 
+	 * @param solenoids
+	 *                  Double solenoids of the system
+	 */
+	public SolenoidSubsystem(DoubleSolenoid... solenoids) {
+		this("SolenoidSubsystem", solenoids);
+	}
+
+	/**
+	 * DoubleSolenoid.Value simplified to three simple states
+	 */
+	public enum SolenoidState {
+		OFF(DoubleSolenoid.Value.kOff), EXTEND(DoubleSolenoid.Value.kForward), RETRACT(DoubleSolenoid.Value.kReverse);
+		public final DoubleSolenoid.Value value;
+
+		private SolenoidState(DoubleSolenoid.Value value) {
+			this.value = value;
 		}
 	}
 
 	/**
-	 * A subsystem for managing a solenoid for a shifting drivetrain.
-	 *
-	 * @param solenoid The DoubleSolenoid used to shift
+	 * @param state
+	 *              Returns the current state of the system
 	 */
-	public SolenoidShifters(DoubleSolenoid solenoid) {
-		this(solenoid, false);
-	}
-
-	/**
-	 * A subsystem for managing a solenoid for a shifting drivetrain.
-	 *
-	 * @param portUp   The first port of the double solenoid
-	 * @param portDown The second port of the double solenoid
-	 */
-	public SolenoidShifters(int portUp, int portDown) {
-		this(new DoubleSolenoid(portUp, portDown), false);
-	}
-
-	/**
-	 * A subsystem for managing a solenoid for a shifting drivetrain.
-	 *
-	 * @param module   The ID of the PCM for the double solenoid
-	 * @param portUp   The first port of the double solenoid
-	 * @param portDown The second port of the double solenoid
-	 */
-	public SolenoidShifters(int module, int portUp, int portDown) {
-		this(new DoubleSolenoid(module, portUp, portDown), false);
-	}
-
-	/**
-	 * 
-	 * Returns the current state of the solenoid shifters. This is based on the set
-	 * state, not a measured state.
-	 * 
-	 */
-	public ShiftState getShiftState() {
+	public SolenoidState getState() {
 		return state;
 	}
 
 	/**
-	 * Shifts both gearboxes to up state or down state
-	 *
+	 * Inverts the state given
+	 * 
 	 * @param state
+	 *              SolenoidState to be inverted
+	 * @return SolenoidState
+	 *         Inverted state
+	 * 
 	 */
-	public void shift(ShiftState state) {
-		this.state = state;
+	public SolenoidState invertState(SolenoidState state) {
 		switch (state) {
-		case UP:
-			if (!isInverted) {
-				solenoid.set(DoubleSolenoid.Value.kForward);
-			} else {
-				solenoid.set(DoubleSolenoid.Value.kReverse);
+			case EXTEND:
+				return SolenoidState.RETRACT;
+			case RETRACT:
+				return SolenoidState.EXTEND;
+		}
+		return state;
+	}
+
+	/**
+	 * Sets the state of the system
+	 * Only sets if current state is not equal to state to be set
+	 * 
+	 * @param state
+	 *              State to set system
+	 */
+	public void set(SolenoidState state) {
+		if (isInverted) {
+			state = invertState(state);
+		}
+		if (this.state != state) {
+			this.state = state;
+			for (DoubleSolenoid solenoid : solenoids) {
+				solenoid.set(state.value);
 			}
-			return;
-		case DOWN:
-		default:
-			if (!isInverted) {
-				solenoid.set(DoubleSolenoid.Value.kReverse);
-			} else {
-				solenoid.set(DoubleSolenoid.Value.kForward);
-			}
-			return;
 		}
 	}
 
 	/**
-	 * Toggles current shift state for both gearboxes
+	 * Sets the state of the system regardless of current state
+	 * 
+	 * @param state
+	 *              State to set
 	 */
-	public void shift() {
-		switch (state) {
-		case UP:
-			shift(ShiftState.DOWN);
-			return;
-		case DOWN:
-			shift(ShiftState.UP);
-			return;
-		default:
-			return;
+	public void setOverride(SolenoidState state) {
+		if (isInverted) {
+			state = invertState(state);
 		}
+		this.state = state;
+		for (DoubleSolenoid solenoid : solenoids) {
+			solenoid.set(state.value);
+		}
+	}
+
+	/**
+	 * @return solenoids
+	 *         DoubleSolenoid objects of the system
+	 */
+	public DoubleSolenoid[] getSolenoids() {
+		return solenoids;
+	}
+
+	/**
+	 * Returns whether the solenoid is extended.
+	 * 
+	 * @return extended
+	 */
+	public boolean isExtended() {
+		return solenoids[0].get() == SolenoidState.EXTEND.value;
+	}
+
+	/**
+	 * Sets the defaultCommand to set the system to the defaultState of the system
+	 */
+	public void initDefaultCommand() {
+		setDefaultCommand(new SolenoidSet(this, defaultState));
 	}
 }

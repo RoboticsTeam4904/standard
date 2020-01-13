@@ -21,6 +21,7 @@ public class ChassisTurn extends CommandBase implements ChassisController {
 	 * Constructor This command rotates the chassis to a position relative to the
 	 * current angle of the robot
 	 *
+	 * @param name
 	 * @param chassis
 	 * @param finalAngle
 	 * @param imu
@@ -28,10 +29,8 @@ public class ChassisTurn extends CommandBase implements ChassisController {
 	 *                         will be cancelled, then the fallbackCommand will
 	 *                         start
 	 * @param motionController
-	 * @param name
 	 */
-	public ChassisTurn(final Chassis chassis, final double finalAngle, final IMU imu, final CommandBase fallbackCommand,
-			final MotionController motionController, String name) {
+	public ChassisTurn(String name, final Chassis chassis, final double finalAngle, final IMU imu, final CommandBase fallbackCommand,MotionController motionController) {
 		move = new ChassisMove(chassis, this);
 		this.finalAngle = -((finalAngle + 360) % 360 - 180);
 		this.imu = imu;
@@ -45,15 +44,14 @@ public class ChassisTurn extends CommandBase implements ChassisController {
 	 * Constructor This command rotates the chassis to a position relative to the
 	 * current angle of the robot
 	 *
+	 * @param name
 	 * @param chassis
 	 * @param finalAngle
 	 * @param imu
 	 * @param motionController
-	 * @param name
 	 */
-	public ChassisTurn(final Chassis chassis, final double finalAngle, final IMU imu,
-			final MotionController motionController, String name) {
-		this(chassis, finalAngle, imu, null, motionController, name);
+	public ChassisTurn(String name, Chassis chassis, double finalAngle, IMU imu, MotionController motionController) {
+		this(name, chassis, finalAngle, imu, null, motionController);
 	}
 
 	/**
@@ -66,9 +64,8 @@ public class ChassisTurn extends CommandBase implements ChassisController {
 	 * @param imu
 	 * @param motionController
 	 */
-	public ChassisTurn(final Chassis chassis, final double finalAngle, final IMU imu,
-			final MotionController motionController) {
-		this(chassis, finalAngle, imu, null, motionController, "Chassis Turn");
+	public ChassisTurn(Chassis chassis, double finalAngle, IMU imu, MotionController motionController) {
+		this("Chassis Turn", chassis, finalAngle, imu, null, motionController);
 	}
 
 	/**
@@ -84,9 +81,9 @@ public class ChassisTurn extends CommandBase implements ChassisController {
 	 *                         start
 	 * @param motionController
 	 */
-	public ChassisTurn(final Chassis chassis, final double finalAngle, final IMU imu, final CommandBase fallbackCommand,
-			final MotionController motionController) {
-		this(chassis, finalAngle, imu, fallbackCommand, motionController, "Chassis Turn");
+	public ChassisTurn(Chassis chassis, double finalAngle, IMU imu, CommandBase fallbackCommand,
+			MotionController motionController) {
+		this("Chassis Turn", chassis, finalAngle, imu, fallbackCommand, motionController);
 	}
 
 	@Override
@@ -107,7 +104,7 @@ public class ChassisTurn extends CommandBase implements ChassisController {
 			move.cancel();
 			cancel();
 			if (fallbackCommand != null) {
-				fallbackCommand.initialize();
+				fallbackCommand.schedule();
 			}
 			return 0;
 		}
@@ -115,7 +112,8 @@ public class ChassisTurn extends CommandBase implements ChassisController {
 
 	@Override
 	public void initialize() {
-		move.initialize();
+		move.schedule();
+		// ^ it might should be move.initialize() instead idk 
 		initialAngle = imu.getYaw();
 		try {
 			motionController.resetSafely();
@@ -123,7 +121,7 @@ public class ChassisTurn extends CommandBase implements ChassisController {
 			move.cancel();
 			cancel();
 			if (fallbackCommand != null) {
-				fallbackCommand.initialize();
+				fallbackCommand.schedule();
 			}
 			return;
 		}

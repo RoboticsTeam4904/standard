@@ -93,51 +93,47 @@ public class ChassisMove extends ParallelCommandGroup {
 
 	/**
 	 *
-	 * 
+	 * @param name
 	 * @param chassis    The robot's Chassis.
 	 * @param controller A ChassisController to control the Chassis, such as a
 	 *                   Driver or autonomous routine.
 	 * @param usePID     Whether to enable PID using any SensorMotors that Chassis
 	 *                   has.
-	 * 
 	 */
-	public ChassisMove(Chassis chassis, ChassisController controller, boolean usePID, String name) {
+	public ChassisMove(String name, Chassis chassis, ChassisController controller, boolean usePID) {
+		this.chassis = chassis;
 		this.controller = controller;
 		this.usePID = usePID;
 		motors = chassis.getMotors();
 		motorSpins = new MotorSet[motors.length];
 		for (int i = 0; i < motors.length; i++) {
 			motorSpins[i] = new MotorSet(motors[i]);
-			addCommands(motorSpins[i]);
-		}
+ 		}
 		addRequirements(chassis);
 		setName(name);
 	}
 
 	/**
 	 * 
-	 * 
+	 * @param name
 	 * @param chassis    The robot's chassis.
 	 * @param controller A ChassisController to control the Chassis, such as a
 	 *                   Driver or autonomous routine.
-	 * @param name
 	 */
-	public ChassisMove(Chassis chassis, ChassisController controller, String name) {
-		this(chassis, controller, false, name);
+	public ChassisMove(String name, Chassis chassis, ChassisController controller) {
+		this(name, chassis, controller, false);
 	}
 
 	/**
 	 *
-	 * 
 	 * @param chassis    The robot's Chassis.
 	 * @param controller A ChassisController to control the Chassis, such as a
 	 *                   Driver or autonomous routine.
 	 * @param usePID     Whether to enable PID using any SensorMotors that Chassis
 	 *                   has.
-	 * @param name
 	 */
 	public ChassisMove(Chassis chassis, ChassisController controller, boolean usePID) {
-		this(chassis, controller, usePID, "Chassis Move");
+		this("Chassis Move", chassis, controller, usePID);
 	}
 
 	/**
@@ -149,7 +145,7 @@ public class ChassisMove extends ParallelCommandGroup {
 	 * 
 	 */
 	public ChassisMove(Chassis chassis, ChassisController controller) {
-		this(chassis, controller, false, "Chassis Move");
+		this("Chassis Move", chassis, controller);
 	}
 
 	/**
@@ -198,11 +194,9 @@ public class ChassisMove extends ParallelCommandGroup {
 	}
 
 	/**
-	 * <p>
 	 * It's important to stop motor spins before the ChassisMove command stops.
 	 * Otherwise, the spins might briefly (for one tick) use the previously set
 	 * values if the ChassisMove command is reused.
-	 * </p>
 	 */
 	protected void stopMotorSpins() {
 		for (int i = 0; i < motors.length; i++) {

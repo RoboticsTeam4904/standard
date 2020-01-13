@@ -14,11 +14,10 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 public class ChassisIdle extends ParallelCommandGroup {
 	/**
 	 * 
+	 * @param name
 	 * @param chassis The robot Chassis to idle.
-	 * 
 	 */
-
-	public ChassisIdle(Chassis chassis, String name) {
+	public ChassisIdle(String name, Chassis chassis) {
 		Motor[] motors = chassis.getMotors();
 		for (Motor motor : motors) {
 			addCommands(new MotorIdle(motor));
@@ -26,20 +25,11 @@ public class ChassisIdle extends ParallelCommandGroup {
 		setName(name);
 		addRequirements(chassis);
 	}
-
+	/**
+	 * 
+	 * @param chassis The robot Chassis to idle.
+	 */
 	public ChassisIdle(Chassis chassis) {
-		this(chassis, "Chassis Idle");
-	}
-
-	@Override
-	public void initialize() {
-	}
-
-	@Override
-	public void execute() {
-	}
-
-	@Override
-	public void end(boolean interrupt) {
+		this("ChassisIdle", chassis);
 	}
 }

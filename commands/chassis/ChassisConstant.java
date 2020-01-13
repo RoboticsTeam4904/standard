@@ -12,8 +12,16 @@ public class ChassisConstant extends CommandBase implements ChassisController {
 	protected final double y;
 	protected double turn;
 	protected double timeout;
-
-	public ChassisConstant(Chassis chassis, double x, double y, double turn, double timeout, String name) {
+	/**
+	 * 
+	 * @param name
+	 * @param chassis
+	 * @param x
+	 * @param y
+	 * @param turn
+	 * @param timeout
+	 */
+	public ChassisConstant(String name, Chassis chassis, double x, double y, double turn, double timeout) {
 		move = new ChassisMove(chassis, this).withTimeout(timeout);
 		this.timeout = timeout;
 		this.x = x;
@@ -22,9 +30,16 @@ public class ChassisConstant extends CommandBase implements ChassisController {
 		setName(name);
 		addRequirements(chassis);
 	}
-
+	/**
+	 * 
+	 * @param chassis
+	 * @param x
+	 * @param y
+	 * @param turn
+	 * @param timeout
+	 */
 	public ChassisConstant(Chassis chassis, double x, double y, double turn, double timeout) {
-		this(chassis, x, y, turn, timeout, "Chassis Constant");
+		this("Chassis Constant", chassis, x, y, turn, timeout);
 	}
 
 	@Override
@@ -45,10 +60,6 @@ public class ChassisConstant extends CommandBase implements ChassisController {
 	@Override
 	public void initialize() {
 		move.schedule();
-	}
-
-	@Override
-	public void execute() {
 	}
 
 	/**

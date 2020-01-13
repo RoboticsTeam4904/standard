@@ -1,7 +1,7 @@
 package org.usfirst.frc4904.standard.subsystems.chassis;
 
 import org.usfirst.frc4904.standard.subsystems.motor.Motor;
-import edu.wpi.first.wpilibj2.command.Subsystem;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 /**
  * Generic Chassis class. In the 4904 standard, the Chassis is treated as a
@@ -9,10 +9,21 @@ import edu.wpi.first.wpilibj2.command.Subsystem;
  * should be called from RobotMap. The default command is a ChassisIdle.
  */
 
-public abstract class Chassis implements Subsystem {
+public abstract class Chassis extends SubsystemBase {
 	protected double[] motorSpeeds;
 	protected Motor[] motors;
 
+	/**
+	 *
+	 * @param name
+	 * @param motors all the motors that are part of this Chassis. Pass from front
+	 *               to back, left to right
+	 */
+	public Chassis(String name, Motor... motors) {
+		this.motors = motors;
+		motorSpeeds = new double[motors.length];
+		setName(name);
+	}
 	/**
 	 *
 	 * @param motors all the motors that are part of this Chassis. Pass from front
@@ -21,6 +32,7 @@ public abstract class Chassis implements Subsystem {
 	public Chassis(Motor... motors) {
 		this.motors = motors;
 		motorSpeeds = new double[motors.length];
+		setName("Chassis");
 	}
 
 	/**

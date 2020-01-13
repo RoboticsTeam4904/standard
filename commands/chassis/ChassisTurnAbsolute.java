@@ -16,7 +16,7 @@ public class ChassisTurnAbsolute extends ChassisTurn {
 	 * @param motionController
 	 */
 	public ChassisTurnAbsolute(Chassis chassis, double finalAngle, IMU imu, MotionController motionController) {
-		super(chassis, finalAngle, imu, motionController, "Chassis Turn Absolute");
+		super("Chassis Turn Absolute", chassis, finalAngle, imu, motionController);
 	}
 
 	/**
@@ -33,28 +33,28 @@ public class ChassisTurnAbsolute extends ChassisTurn {
 	 */
 	public ChassisTurnAbsolute(Chassis chassis, double finalAngle, IMU imu, CommandBase fallbackCommand,
 			MotionController motionController) {
-		super(chassis, finalAngle, imu, fallbackCommand, motionController, "Chassis Turn Absolute");
+		super("Chassis Turn Absolute", chassis, finalAngle, imu, fallbackCommand, motionController);
 	}
 
 	/**
 	 * Constructor This command rotates the chassis to a position relative to the
 	 * starting point of the robot (e.g. the position where the imu was last reset).
 	 *
+	 * @param name
 	 * @param chassis
 	 * @param finalAngle
 	 * @param imu
 	 * @param motionController
-	 * @param name
 	 */
-	public ChassisTurnAbsolute(Chassis chassis, double finalAngle, IMU imu, MotionController motionController,
-			String name) {
-		super(chassis, finalAngle, imu, motionController, name);
+	public ChassisTurnAbsolute(String name, Chassis chassis, double finalAngle, IMU imu, MotionController motionController) {
+		super(name, chassis, finalAngle, imu, motionController);
 	}
 
 	/**
 	 * Constructor This command rotates the chassis to a position relative to the
 	 * starting point of the robot (e.g. the position where the imu was last reset).
 	 *
+	 * @param name
 	 * @param chassis
 	 * @param finalAngle
 	 * @param imu
@@ -62,11 +62,10 @@ public class ChassisTurnAbsolute extends ChassisTurn {
 	 *                         will be cancelled, then the fallbackCommand will
 	 *                         start
 	 * @param motionController
-	 * @param name
 	 */
-	public ChassisTurnAbsolute(Chassis chassis, double finalAngle, IMU imu, CommandBase fallbackCommand,
-			MotionController motionController, String name) {
-		super(chassis, finalAngle, imu, fallbackCommand, motionController, name);
+	public ChassisTurnAbsolute(String name, Chassis chassis, double finalAngle, IMU imu, CommandBase fallbackCommand,
+			MotionController motionController) {
+		super(name, chassis, finalAngle, imu, fallbackCommand, motionController);
 	}
 
 	@Override
@@ -78,3 +77,4 @@ public class ChassisTurnAbsolute extends ChassisTurn {
 		super.initialAngle = 0.0;
 	}
 }
+ 

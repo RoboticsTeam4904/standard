@@ -18,9 +18,20 @@ public class MecanumChassis extends Chassis {
 	 */
 	public MecanumChassis(String name, Motor frontLeftWheel, Motor frontRightWheel, Motor backLeftWheel,
 			Motor backRightWheel) {
-		super(frontLeftWheel, frontRightWheel, backLeftWheel, backRightWheel);
+		super(name, frontLeftWheel, frontRightWheel, backLeftWheel, backRightWheel);
 	}
-
+	/**
+	 * Constructs a mecanum chassis
+	 *
+	 * @param frontLeftWheel
+	 * @param frontRightWheel
+	 * @param backLeftWheel
+	 * @param backRightWheel
+	 */
+	public MecanumChassis(Motor frontLeftWheel, Motor frontRightWheel, Motor backLeftWheel,
+			Motor backRightWheel) {
+		super("Mecanum Chassis", frontLeftWheel, frontRightWheel, backLeftWheel, backRightWheel);
+	}
 	/**
 	 * Sets the movement to be calculated by the MecanumChassis using 2d polar
 	 * coordinates.

@@ -20,6 +20,7 @@ public class ChassisMoveDistance extends CommandBase implements ChassisControlle
 	 * set of encoders. The distance is calculated as the average of the provided
 	 * encoders. The speed is decided by the provided motionController.
 	 *
+	 * @param name
 	 * @param chassis
 	 * @param distance         distance to move in encoder ticks
 	 * @param motionController
@@ -27,10 +28,9 @@ public class ChassisMoveDistance extends CommandBase implements ChassisControlle
 	 *                         will be cancelled, then the fallbackCommand will
 	 *                         start
 	 * @param encoders
-	 * @param name
 	 */
-	public ChassisMoveDistance(Chassis chassis, double distance, MotionController motionController,
-			Command fallbackCommand, String name) {
+	public ChassisMoveDistance(String name, Chassis chassis, double distance, MotionController motionController,
+			Command fallbackCommand) {
 		chassisMove = new ChassisMove(chassis, this, false);
 		this.motionController = motionController;
 		this.distance = distance;
@@ -52,7 +52,7 @@ public class ChassisMoveDistance extends CommandBase implements ChassisControlle
 	 * @param encoders
 	 */
 	public ChassisMoveDistance(Chassis chassis, double distance, MotionController motionController) {
-		this(chassis, distance, motionController, null, "Chassis Move Distance");
+		this("Chassis Move Distance", chassis, distance, motionController, null);
 	}
 
 	/**
@@ -67,8 +67,8 @@ public class ChassisMoveDistance extends CommandBase implements ChassisControlle
 	 * @param encoders
 	 * @param name
 	 */
-	public ChassisMoveDistance(Chassis chassis, double distance, MotionController motionController, String name) {
-		this(chassis, distance, motionController, null, name);
+	public ChassisMoveDistance(String name, Chassis chassis, double distance, MotionController motionController) {
+		this(name, chassis, distance, motionController, null);
 	}
 
 	/**
@@ -86,7 +86,7 @@ public class ChassisMoveDistance extends CommandBase implements ChassisControlle
 	 */
 	public ChassisMoveDistance(Chassis chassis, double distance, MotionController motionController,
 			Command fallbackCommand) {
-		this(chassis, distance, motionController, fallbackCommand, "Chassis Move Distance");
+		this("Chassis Move Distance", chassis, distance, motionController, fallbackCommand);
 	}
 
 	@Override
@@ -141,10 +141,6 @@ public class ChassisMoveDistance extends CommandBase implements ChassisControlle
 		motionController.disable();
 		motionController.reset();
 		runOnce = false;
-	}
-
-	@Override
-	public void execute() {
 	}
 
 	@Override

@@ -3,14 +3,13 @@ package org.usfirst.frc4904.standard.commands.motor;
 
 import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.subsystems.motor.Motor;
-import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj.command.Command;
 
 /**
  * Idles the motor (sets speed to 0).
  *
  */
-public class MotorIdle implements Command 
-{
+public class MotorIdle extends Command {
 	protected final Motor motor;
 
 	/**
@@ -18,8 +17,7 @@ public class MotorIdle implements Command
 	 *
 	 * @param motor
 	 */
-	public MotorIdle(Motor motor) 
-	{
+	public MotorIdle(Motor motor) {
 		super("MotorIdle");
 		this.motor = motor;
 		requires(motor);
@@ -28,34 +26,29 @@ public class MotorIdle implements Command
 	}
 
 	@Override
-	protected void initialize() 
-	{
+	protected void initialize() {
 		motor.set(0);
 		LogKitten.d("MotorIdle initialized");
 	}
 
 	@Override
-	protected void execute() 
-	{
+	protected void execute() {
 		motor.set(0);
 		LogKitten.d("MotorIdle executing");
 	}
 
 	@Override
-	protected boolean isFinished() 
-	{
+	protected boolean isFinished() {
 		return false; // default command
 	}
 
 	@Override
-	protected void end() 
-	{
+	protected void end() {
 		LogKitten.d("MotorIdle ended");
 	}
 
 	@Override
-	protected void interrupted() 
-	{
+	protected void interrupted() {
 		LogKitten.d("MotorIdle interupted");
 	}
 }

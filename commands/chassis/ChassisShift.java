@@ -14,6 +14,15 @@ public class ChassisShift extends CommandBase {
 	/**
 	 * Toggles the solenoids
 	 * 
+	 * @param name
+	 * @param solenoids
+	 */
+	public ChassisShift(String name, SolenoidShifters solenoids) {
+		this(name, solenoids, null);
+	}
+	/**
+	 * Toggles the solenoids
+	 * 
 	 * @param solenoids
 	 */
 	public ChassisShift(SolenoidShifters solenoids) {
@@ -27,19 +36,17 @@ public class ChassisShift extends CommandBase {
 	 * @param state
 	 */
 	public ChassisShift(SolenoidShifters solenoids, SolenoidShifters.ShiftState state) {
-		this(solenoids, state, "Chassis Shift");
+		this("Chassis Shift", solenoids, state);
 	}
 
 	/**
 	 * Shifts the solenoids to the provided state
-	 *
+	 * @param name
 	 * @param solenoids
 	 * @param state
-	 * @param name
 	 */
-	public ChassisShift(SolenoidShifters solenoids, SolenoidShifters.ShiftState state, String name) {
+	public ChassisShift(String name, SolenoidShifters solenoids, SolenoidShifters.ShiftState state) {
 		super();
-		// addRequirements(solenoids);
 		this.state = state;
 		this.solenoids = solenoids;
 		setName(name);
@@ -55,10 +62,6 @@ public class ChassisShift extends CommandBase {
 			// not null state means shift to it directly
 			solenoids.shift(state);
 		}
-	}
-
-	@Override
-	public void execute() {
 	}
 
 	@Override
