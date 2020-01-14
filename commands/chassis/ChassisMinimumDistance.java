@@ -10,6 +10,7 @@ public class ChassisMinimumDistance extends ChassisConstant {
 	protected final ChassisConstant fallbackCommand;
 	protected double distance;
 	protected double[] initialDistances;
+
 	/**
 	 * Constructor. This command moves the chassis forward a known distance via a
 	 * set of encoders. The distance is calculated as the average of the provided
@@ -24,14 +25,15 @@ public class ChassisMinimumDistance extends ChassisConstant {
 	 *                        be cancelled, then the fallbackCommand will start
 	 * @param encoders
 	 */
-	public ChassisMinimumDistance(String name, Chassis chassis, double distance, double speed, ChassisConstant fallbackCommand,
-			CustomEncoder... encoders) {
+	public ChassisMinimumDistance(String name, Chassis chassis, double distance, double speed,
+			ChassisConstant fallbackCommand, CustomEncoder... encoders) {
 		super(name, chassis, 0.0, speed, 0.0, Double.MAX_VALUE);
 		this.encoders = encoders;
 		this.distance = distance;
 		this.fallbackCommand = fallbackCommand;
 		initialDistances = new double[encoders.length];
 	}
+
 	/**
 	 * Constructor. This command moves the chassis forward a known distance via a
 	 * set of encoders. The distance is calculated as the average of the provided
@@ -49,6 +51,7 @@ public class ChassisMinimumDistance extends ChassisConstant {
 			CustomEncoder... encoders) {
 		this("Chassis Minimum Distance", chassis, distance, speed, fallbackCommand, encoders);
 	}
+
 	/**
 	 * Constructor. This command moves the chassis forward a known distance via a
 	 * set of encoders. The distance is calculated as the average of the provided
@@ -61,9 +64,11 @@ public class ChassisMinimumDistance extends ChassisConstant {
 	 * @param speed    the speed to move at
 	 * @param encoders
 	 */
-	public ChassisMinimumDistance(String name, Chassis chassis, double distance, double speed, CustomEncoder... encoders) {
+	public ChassisMinimumDistance(String name, Chassis chassis, double distance, double speed,
+			CustomEncoder... encoders) {
 		this(name, chassis, distance, speed, null, encoders);
 	}
+
 	/**
 	 * Constructor. This command moves the chassis forward a known distance via a
 	 * set of encoders. The distance is calculated as the average of the provided

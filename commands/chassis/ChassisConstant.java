@@ -12,6 +12,7 @@ public class ChassisConstant extends CommandBase implements ChassisController {
 	protected final double y;
 	protected double turn;
 	protected double timeout;
+
 	/**
 	 * 
 	 * @param name
@@ -30,6 +31,7 @@ public class ChassisConstant extends CommandBase implements ChassisController {
 		setName(name);
 		addRequirements(chassis);
 	}
+
 	/**
 	 * 
 	 * @param chassis

@@ -25,6 +25,7 @@ public class ChassisIdle extends ParallelCommandGroup {
 		setName(name);
 		addRequirements(chassis);
 	}
+
 	/**
 	 * 
 	 * @param chassis The robot Chassis to idle.

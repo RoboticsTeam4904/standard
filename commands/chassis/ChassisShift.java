@@ -12,35 +12,8 @@ public class ChassisShift extends CommandBase {
 	protected final SolenoidShifters.ShiftState state;
 
 	/**
-	 * Toggles the solenoids
-	 * 
-	 * @param name
-	 * @param solenoids
-	 */
-	public ChassisShift(String name, SolenoidShifters solenoids) {
-		this(name, solenoids, null);
-	}
-	/**
-	 * Toggles the solenoids
-	 * 
-	 * @param solenoids
-	 */
-	public ChassisShift(SolenoidShifters solenoids) {
-		this(solenoids, null);
-	}
-
-	/**
 	 * Shifts the solenoids to the provided state
-	 *
-	 * @param solenoids
-	 * @param state
-	 */
-	public ChassisShift(SolenoidShifters solenoids, SolenoidShifters.ShiftState state) {
-		this("Chassis Shift", solenoids, state);
-	}
-
-	/**
-	 * Shifts the solenoids to the provided state
+	 * 
 	 * @param name
 	 * @param solenoids
 	 * @param state
@@ -51,6 +24,35 @@ public class ChassisShift extends CommandBase {
 		this.solenoids = solenoids;
 		setName(name);
 		addRequirements(solenoids);
+	}
+
+	/**
+	 * Shifts the solenoids to the provided state
+	 *
+	 * @param solenoids
+	 * @param state
+	 */
+	public ChassisShift(SolenoidShifters solenoids, SolenoidShifters.ShiftState state) {
+		this("ChassisShift", solenoids, state);
+	}
+
+	/**
+	 * Toggles the solenoids
+	 * 
+	 * @param name
+	 * @param solenoids
+	 */
+	public ChassisShift(String name, SolenoidShifters solenoids) {
+		this(name, solenoids, null);
+	}
+
+	/**
+	 * Toggles the solenoids
+	 * 
+	 * @param solenoids
+	 */
+	public ChassisShift(SolenoidShifters solenoids) {
+		this("ChassisShift", solenoids);
 	}
 
 	@Override

@@ -30,7 +30,8 @@ public class ChassisTurn extends CommandBase implements ChassisController {
 	 *                         start
 	 * @param motionController
 	 */
-	public ChassisTurn(String name, final Chassis chassis, final double finalAngle, final IMU imu, final CommandBase fallbackCommand,MotionController motionController) {
+	public ChassisTurn(String name, final Chassis chassis, final double finalAngle, final IMU imu,
+			final CommandBase fallbackCommand, MotionController motionController) {
 		move = new ChassisMove(chassis, this);
 		this.finalAngle = -((finalAngle + 360) % 360 - 180);
 		this.imu = imu;
@@ -113,7 +114,7 @@ public class ChassisTurn extends CommandBase implements ChassisController {
 	@Override
 	public void initialize() {
 		move.schedule();
-		// ^ it might should be move.initialize() instead idk 
+		// ^ it might should be move.initialize() instead idk
 		initialAngle = imu.getYaw();
 		try {
 			motionController.resetSafely();

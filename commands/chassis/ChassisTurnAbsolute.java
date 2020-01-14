@@ -46,7 +46,8 @@ public class ChassisTurnAbsolute extends ChassisTurn {
 	 * @param imu
 	 * @param motionController
 	 */
-	public ChassisTurnAbsolute(String name, Chassis chassis, double finalAngle, IMU imu, MotionController motionController) {
+	public ChassisTurnAbsolute(String name, Chassis chassis, double finalAngle, IMU imu,
+			MotionController motionController) {
 		super(name, chassis, finalAngle, imu, motionController);
 	}
 
@@ -77,4 +78,3 @@ public class ChassisTurnAbsolute extends ChassisTurn {
 		super.initialAngle = 0.0;
 	}
 }
- 
