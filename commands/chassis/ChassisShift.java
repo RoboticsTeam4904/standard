@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
  */
 public class ChassisShift extends CommandBase {
 	protected final SolenoidShifters solenoids;
-	protected final SolenoidShifters.ShiftState state;
+	protected final SolenoidShifters.SolenoidState state;
 
 	/**
 	 * Shifts the solenoids to the provided state
@@ -18,7 +18,7 @@ public class ChassisShift extends CommandBase {
 	 * @param solenoids
 	 * @param state
 	 */
-	public ChassisShift(String name, SolenoidShifters solenoids, SolenoidShifters.ShiftState state) {
+	public ChassisShift(String name, SolenoidShifters solenoids, SolenoidShifters.SolenoidState state) {
 		super();
 		this.state = state;
 		this.solenoids = solenoids;
@@ -32,7 +32,7 @@ public class ChassisShift extends CommandBase {
 	 * @param solenoids
 	 * @param state
 	 */
-	public ChassisShift(SolenoidShifters solenoids, SolenoidShifters.ShiftState state) {
+	public ChassisShift(SolenoidShifters solenoids, SolenoidShifters.SolenoidState state) {
 		this("ChassisShift", solenoids, state);
 	}
 
@@ -59,10 +59,10 @@ public class ChassisShift extends CommandBase {
 	public void initialize() {
 		if (state == null) {
 			// null state means toggle
-			solenoids.shift();
+			solenoids.set(); // TODO: needs to be implemented
 		} else {
 			// not null state means shift to it directly
-			solenoids.shift(state);
+			solenoids.set(state);
 		}
 	}
 
