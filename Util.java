@@ -7,27 +7,26 @@ import edu.wpi.first.hal.util.BoundaryException;
  */
 public class Util {
 	/**
-	 * Returns true if {@code var} is less than {@code epsilon}. This is useful for
-	 * floating point numbers, which tend to introduce small errors when operated
-	 * on.
+	 * Returns true if {@code value} is less than {@code epsilon}. This is useful
+	 * for floating point numbers, whose arithmetic operations tend to introduce
+	 * small errors.
 	 *
 	 * @param value   The floating point number to be compared
 	 * @param epsilon The maximum magnitude of var such that it can be considered
 	 *                zero
-	 * @return Whether or not {@code var} is less than {@code epsilon}
+	 * @return Whether or not {@code value} is less than {@code epsilon}
 	 */
 	public static boolean isZero(double value, double epsilon) {
 		return Math.abs(value) < epsilon;
 	}
 
 	/**
-	 * Returns true if {@code var} is less than {@code epsilon}. This is useful for
-	 * floating point numbers, which tend to introduce small errors when operated
-	 * on.
+	 * Returns true if {@code value} is less than {@code epsilon}. This is useful
+	 * for floating point numbers, whose arithmetic operations tend to introduce
+	 * small errors.
 	 *
 	 * @param value The floating point number to be compared
-	 * @return Whether or not {@code var} is effectively zero, determined by the ULP
-	 *         heuristic
+	 * @return Whether or not {@code value} is effectively zero
 	 */
 	public static boolean isZero(double value) {
 		return isZero(value, Math.sqrt(Math.ulp(1.0)));
