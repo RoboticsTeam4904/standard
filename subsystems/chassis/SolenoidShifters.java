@@ -110,7 +110,7 @@ public class SolenoidShifters extends SubsystemBase {
 	 * DoubleSolenoid.Value simplified to three simple states
 	 */
 	public enum SolenoidState {
-		OFF(DoubleSolenoid.Value.kOff), EXTEND(DoubleSolenoid.Value.kForward), RETRACT(DoubleSolenoid.Value.kReverse);
+		EXTEND(DoubleSolenoid.Value.kForward), RETRACT(DoubleSolenoid.Value.kReverse);
 
 		public final DoubleSolenoid.Value value;
 
