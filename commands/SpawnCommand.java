@@ -1,12 +1,11 @@
 package org.usfirst.frc4904.standard.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.Command;
 
 public class SpawnCommand extends CommandBase {
-	private final Command childCommand;
+	private final CommandBase childCommand;
 
-	public SpawnCommand(Command childCommand) {
+	public SpawnCommand(CommandBase childCommand) {
 		super();
 		setName("SpawnCommand[" + childCommand.getName() + "]");
 		this.childCommand = childCommand;
