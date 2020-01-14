@@ -5,15 +5,14 @@ import edu.wpi.first.wpilibj2.command.CommandGroupBase;
 public abstract class InjectedCommandGroup extends CommandGroupBase {
 	private final CommandGroupBase previous;
 
-	public InjectedCommandGroup(CommandGroupBase previous) {
-		super();
-		this.previous = previous;
-	}
-
 	public InjectedCommandGroup(String name, CommandGroupBase previous) {
 		super();
 		setName(name);
 		this.previous = previous;
+	}
+
+	public InjectedCommandGroup(CommandGroupBase previous) {
+		this("InjectedCommandGroup", previous);
 	}
 
 	final public void initialize() {
