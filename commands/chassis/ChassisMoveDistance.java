@@ -50,9 +50,10 @@ public class ChassisMoveDistance extends CommandBase implements ChassisControlle
 	 * @param distance         distance to move in encoder ticks
 	 * @param motionController
 	 * @param encoders
+	 * @param name
 	 */
-	public ChassisMoveDistance(Chassis chassis, double distance, MotionController motionController) {
-		this("Chassis Move Distance", chassis, distance, motionController, null);
+	public ChassisMoveDistance(String name, Chassis chassis, double distance, MotionController motionController) {
+		this(name, chassis, distance, motionController, null);
 	}
 
 	/**
@@ -65,10 +66,9 @@ public class ChassisMoveDistance extends CommandBase implements ChassisControlle
 	 * @param distance         distance to move in encoder ticks
 	 * @param motionController
 	 * @param encoders
-	 * @param name
 	 */
-	public ChassisMoveDistance(String name, Chassis chassis, double distance, MotionController motionController) {
-		this(name, chassis, distance, motionController, null);
+	public ChassisMoveDistance(Chassis chassis, double distance, MotionController motionController) {
+		this("ChassisMoveDistance", chassis, distance, motionController);
 	}
 
 	/**
@@ -86,7 +86,7 @@ public class ChassisMoveDistance extends CommandBase implements ChassisControlle
 	 */
 	public ChassisMoveDistance(Chassis chassis, double distance, MotionController motionController,
 			Command fallbackCommand) {
-		this("Chassis Move Distance", chassis, distance, motionController, fallbackCommand);
+		this("ChassisMoveDistance", chassis, distance, motionController, fallbackCommand);
 	}
 
 	@Override
@@ -95,7 +95,7 @@ public class ChassisMoveDistance extends CommandBase implements ChassisControlle
 		try {
 			motionController.resetSafely();
 		} catch (InvalidSensorException e) {
-			LogKitten.w("Cancelling ChassisMoveDistance");
+			LogKitten.w("Cancelling ChassisMoveDistance with InvalidSensorException");
 			chassisMove.cancel();
 			cancel();
 			if (fallbackCommand != null) {
@@ -118,7 +118,7 @@ public class ChassisMoveDistance extends CommandBase implements ChassisControlle
 		try {
 			speed = motionController.getSafely();
 		} catch (InvalidSensorException e) {
-			LogKitten.w("Cancelling ChassisMoveDistance");
+			LogKitten.w("Cancelling ChassisMoveDistance with InvalidSensorException");
 			chassisMove.cancel();
 			cancel();
 			if (fallbackCommand != null) {
