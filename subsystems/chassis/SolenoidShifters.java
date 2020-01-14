@@ -1,15 +1,15 @@
-package org.usfirst.frc4904.standard.subsystems;
+package org.usfirst.frc4904.standard.subsystems.chassis;
 
 
 import org.usfirst.frc4904.standard.commands.solenoid.SolenoidSet;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
-import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 /**
  * A class that wraps multiple DoubleSolenoid objects with subsystem functionality.
  * Allows for easy inversion and setting of default state of solenoids
  */
-public class SolenoidSubsystem extends Subsystem {
+public class SolenoidShifters extends SubsystemBase {
 	protected DoubleSolenoid[] solenoids;
 	protected SolenoidState state;
 	protected SolenoidState defaultState;
@@ -28,8 +28,8 @@ public class SolenoidSubsystem extends Subsystem {
 	 * @param solenoids
 	 *                     Double solenoids of the system
 	 */
-	public SolenoidSubsystem(String name, boolean isInverted, SolenoidState defaultState, DoubleSolenoid... solenoids) {
-		super(name);
+	public SolenoidShifters(String name, boolean isInverted, SolenoidState defaultState, DoubleSolenoid... solenoids) {
+		setName(name);
 		this.solenoids = solenoids;
 		this.isInverted = isInverted;
 		this.defaultState = defaultState;
@@ -47,7 +47,7 @@ public class SolenoidSubsystem extends Subsystem {
 	 * @param solenoids
 	 *                   Double solenoids of the system
 	 */
-	public SolenoidSubsystem(String name, boolean isInverted, DoubleSolenoid... solenoids) {
+	public SolenoidShifters(String name, boolean isInverted, DoubleSolenoid... solenoids) {
 		this(name, isInverted, SolenoidState.OFF, solenoids);
 	}
 
@@ -62,7 +62,7 @@ public class SolenoidSubsystem extends Subsystem {
 	 * @param solenoids
 	 *                     Double solenoids of the system
 	 */
-	public SolenoidSubsystem(String name, SolenoidState defaultState, DoubleSolenoid... solenoids) {
+	public SolenoidShifters(String name, SolenoidState defaultState, DoubleSolenoid... solenoids) {
 		this(name, false, defaultState, solenoids);
 	}
 
@@ -75,7 +75,7 @@ public class SolenoidSubsystem extends Subsystem {
 	 * @param solenoids
 	 *                  Double solenoids of the system
 	 */
-	public SolenoidSubsystem(String name, DoubleSolenoid... solenoids) {
+	public SolenoidShifters(String name, DoubleSolenoid... solenoids) {
 		this(name, false, solenoids);
 	}
 
@@ -88,8 +88,8 @@ public class SolenoidSubsystem extends Subsystem {
 	 * @param solenoids
 	 *                     Double solenoids of the system
 	 */
-	public SolenoidSubsystem(SolenoidState defaultState, DoubleSolenoid... solenoids) {
-		this("SolenoidSubsystem", defaultState, solenoids);
+	public SolenoidShifters(SolenoidState defaultState, DoubleSolenoid... solenoids) {
+		this("SolenoidShifters", defaultState, solenoids);
 	}
 
 	/**
@@ -101,8 +101,8 @@ public class SolenoidSubsystem extends Subsystem {
 	 * @param solenoids
 	 *                   Double solenoids of the system
 	 */
-	public SolenoidSubsystem(boolean isInverted, DoubleSolenoid... solenoids) {
-		this("SolenoidSubsystem", isInverted, solenoids);
+	public SolenoidShifters(boolean isInverted, DoubleSolenoid... solenoids) {
+		this("SolenoidShifters", isInverted, solenoids);
 	}
 
 	/**
@@ -112,8 +112,8 @@ public class SolenoidSubsystem extends Subsystem {
 	 * @param solenoids
 	 *                  Double solenoids of the system
 	 */
-	public SolenoidSubsystem(DoubleSolenoid... solenoids) {
-		this("SolenoidSubsystem", solenoids);
+	public SolenoidShifters(DoubleSolenoid... solenoids) {
+		this("SolenoidShifters", solenoids);
 	}
 
 	/**
