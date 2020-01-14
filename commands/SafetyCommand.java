@@ -17,11 +17,11 @@ public abstract class SafetyCommand extends CommandBase {
 	}
 
 	public SafetyCommand() {
-		this("SafteyCommand");
+		this("SafetyCommand");
 	}
 
 	@Override
-	final public void execute() {
+	public final void execute() {
 		if (isSafe()) {
 			executeIfSafe();
 			return;
