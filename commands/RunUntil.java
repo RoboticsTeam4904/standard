@@ -1,17 +1,17 @@
 package org.usfirst.frc4904.standard.commands;
 
-import java.util.Set;
 import java.util.function.Supplier;
 import edu.wpi.first.wpilibj2.command.Subsystem;
-import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 
-public class RunUntil implements Command {
-	protected final Command command;
+public class RunUntil extends CommandBase {
+	protected final CommandBase command;
 	protected final Supplier<Boolean> stopCondition;
 
-	public RunUntil(Command command, Supplier<Boolean> stopCondition) {
+	public RunUntil(CommandBase command, Supplier<Boolean> stopCondition) {
 		this.command = command;
 		this.stopCondition = stopCondition;
+		addRequirements((Subsystem[]) command.getRequirements().toArray());
 	}
 
 	public void initialize() {
@@ -28,9 +28,5 @@ public class RunUntil implements Command {
 
 	public void interrupted() {
 		end();
-	}
-
-	public Set<Subsystem> getRequirements() {
-		return this.command.getRequirements();
 	}
 }
