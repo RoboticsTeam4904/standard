@@ -15,30 +15,24 @@ public abstract class InjectedCommandGroup extends CommandGroupBase {
 		this("InjectedCommandGroup", previous);
 	}
 
-	final public void initialize() {
-		if (previous != null && (previous.isScheduled())) {
+	public final void initialize() {
+		if (previous != null && previous.isScheduled()) {
 			previous.cancel();
 		}
-		onInitialize();
+		onInitialize(); // TODO: what should I do with this?
 	}
 
-	final protected void interrupted() {
-		onInterrupted();
-		if (previous != null && (!previous.isScheduled())) {
+	protected final void interrupted() {
+		onInterrupted(); // TODO: what should I do with this?
+		if (previous != null && !previous.isScheduled()) {
 			previous.schedule();
 		}
 	}
 
-	final protected void end() {
+	protected final void end() {
 		onEnd();
-		if (previous != null && (!previous.isScheduled())) {
+		if (previous != null && !previous.isScheduled()) {
 			previous.schedule();
 		}
 	}
-
-	abstract protected void onInitialize();
-
-	abstract protected void onInterrupted();
-
-	abstract protected void onEnd();
 }
