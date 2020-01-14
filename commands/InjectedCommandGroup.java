@@ -6,7 +6,7 @@ public abstract class InjectedCommandGroup extends CommandGroupBase {
 	private final CommandGroupBase previous;
 
 	public InjectedCommandGroup(String name, CommandGroupBase previous) {
-		super();
+		super(); // TODO: is this redundant? https://github.com/RoboticsTeam4904/standard/pull/254#discussion_r366097218
 		setName(name);
 		this.previous = previous;
 	}
