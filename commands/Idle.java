@@ -12,13 +12,12 @@ import edu.wpi.first.wpilibj2.command.Subsystem;
  */
 public class Idle extends CommandBase {
 	boolean verbose;
-	Set<Subsystem> requirements;
 
 	public Idle(String name, boolean verbose, Subsystem... subsystems) {
 		super();
 		setName(name);
 		this.verbose = verbose;
-		requirements = Set.of(subsystems);
+		addRequirements(subsystems);
 	}
 
 	public Idle(boolean verbose, Subsystem... subsystems) {
@@ -48,15 +47,13 @@ public class Idle extends CommandBase {
 		return false;
 	}
 
-	protected void end() {
+	public void end(boolean interrupted) {
 		if (verbose) {
-			LogKitten.v("Idle " + getName() + " end.");
-		}
-	}
-
-	protected void interrupted() {
-		if (verbose) {
-			LogKitten.v("Idle " + getName() + " interrupted.");
+			if(interrupted) {
+				LogKitten.v("Idle " + getName() + "ended with interrupt.");
+			} else {
+				LogKitten.v("Idle " + getName() + " ended.");
+			}
 		}
 	}
 }
