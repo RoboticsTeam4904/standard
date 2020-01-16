@@ -6,15 +6,13 @@ import org.usfirst.frc4904.standard.humaninput.Driver;
 import org.usfirst.frc4904.standard.humaninput.Operator;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
- * IterativeRobot is normally the base class for command based code,
- * but we think certain features will almost always be needed,
- * so we created the CommandRobotBase class.
- * Robot should extend this instead of iterative robot.
+ * IterativeRobot is normally the base class for command based code, but we
+ * think certain features will almost always be needed, so we created the
+ * CommandRobotBase class. Robot should extend this instead of iterative robot.
  */
 public abstract class CommandRobotBase extends TimedRobot {
 	private CommandBase autonomousCommand;
@@ -24,8 +22,8 @@ public abstract class CommandRobotBase extends TimedRobot {
 	protected TypedNamedSendableChooser<Operator> operatorChooser;
 
 	/**
-	 * This displays our choosers.
-	 * The default choosers are for autonomous type, driver control, sand operator control.
+	 * This displays our choosers. The default choosers are for autonomous type,
+	 * driver control, sand operator control.
 	 */
 	protected final void displayChoosers() {
 		SmartDashboard.putData("Auton Routine Selector", autoChooser);
@@ -34,9 +32,9 @@ public abstract class CommandRobotBase extends TimedRobot {
 	}
 
 	/**
-	 * This stops all commands from running on initialization of a state
-	 * so as to prevent commands from the previous state from interfering
-	 * with the current robot mode.
+	 * This stops all commands from running on initialization of a state so as to
+	 * prevent commands from the previous state from interfering with the current
+	 * robot mode.
 	 */
 	private void cleanup() {
 		if (autonomousCommand != null) {
@@ -48,9 +46,8 @@ public abstract class CommandRobotBase extends TimedRobot {
 	}
 
 	/**
-	 * This initializes the entire robot.
-	 * It is called by WPILib on robot code launch.
-	 * Year-specific code should be written in the initialize function.
+	 * This initializes the entire robot. It is called by WPILib on robot code
+	 * launch. Year-specific code should be written in the initialize function.
 	 */
 	@Override
 	public final void robotInit() {
@@ -71,9 +68,9 @@ public abstract class CommandRobotBase extends TimedRobot {
 	public abstract void initialize();
 
 	/**
-	 * This initializes the teleoperated portion of the robot code.
-	 * It is called by WPILib on teleop enable.
-	 * Year-specific code should be written in the teleopInitialize() function.
+	 * This initializes the teleoperated portion of the robot code. It is called by
+	 * WPILib on teleop enable. Year-specific code should be written in the
+	 * teleopInitialize() function.
 	 */
 	@Override
 	public final void teleopInit() {
@@ -99,8 +96,8 @@ public abstract class CommandRobotBase extends TimedRobot {
 	public abstract void teleopInitialize();
 
 	/**
-	 * This function is called by WPILib periodically during teleop.
-	 * Year-specific code should be written in the teleopExecute() function.
+	 * This function is called by WPILib periodically during teleop. Year-specific
+	 * code should be written in the teleopExecute() function.
 	 */
 	@Override
 	public final void teleopPeriodic() {
@@ -115,9 +112,9 @@ public abstract class CommandRobotBase extends TimedRobot {
 	public abstract void teleopExecute();
 
 	/**
-	 * This initializes the autonomous portion of the robot code.
-	 * It is called by WPILib on auton enable.
-	 * Year-specific code should be written in the autonomousInitialize() function.
+	 * This initializes the autonomous portion of the robot code. It is called by
+	 * WPILib on auton enable. Year-specific code should be written in the
+	 * autonomousInitialize() function.
 	 */
 	@Override
 	public final void autonomousInit() {
@@ -135,8 +132,8 @@ public abstract class CommandRobotBase extends TimedRobot {
 	public abstract void autonomousInitialize();
 
 	/**
-	 * This function is called by WPILib periodically during auton.
-	 * Year-specific code should be written in the autonomousExecute() function.
+	 * This function is called by WPILib periodically during auton. Year-specific
+	 * code should be written in the autonomousExecute() function.
 	 */
 	@Override
 	public final void autonomousPeriodic() {
@@ -151,8 +148,8 @@ public abstract class CommandRobotBase extends TimedRobot {
 	public abstract void autonomousExecute();
 
 	/**
-	 * This function is called by WPILib when the robot is disabled.
-	 * Year-specific code should be written in the disabledInitialize() function.
+	 * This function is called by WPILib when the robot is disabled. Year-specific
+	 * code should be written in the disabledInitialize() function.
 	 */
 	@Override
 	public final void disabledInit() {
@@ -166,8 +163,8 @@ public abstract class CommandRobotBase extends TimedRobot {
 	public abstract void disabledInitialize();
 
 	/**
-	 * This function is called by WPILib periodically while disabled.
-	 * Year-specific code should be written in the disabledExecute() function.
+	 * This function is called by WPILib periodically while disabled. Year-specific
+	 * code should be written in the disabledExecute() function.
 	 */
 	@Override
 	public final void disabledPeriodic() {
@@ -204,7 +201,6 @@ public abstract class CommandRobotBase extends TimedRobot {
 	public void testPeriodic() {
 		testExecute();
 		alwaysExecute();
-		
 	}
 
 	/**
