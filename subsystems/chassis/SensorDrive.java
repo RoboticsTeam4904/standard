@@ -5,7 +5,7 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package org.usfirst.frc4904.robot.subsystems;
+package org.usfirst.frc4904.standard.subsystems.chassis;
 
 import com.ctre.phoenix.sensors.CANCoder;
 
