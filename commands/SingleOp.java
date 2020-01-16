@@ -6,6 +6,7 @@ public class SingleOp extends CommandBase {
 	protected Runnable op;
 
 	public SingleOp(String name, Runnable op) {
+		super();
 		setName(name);
 		this.op = op;
 	}
