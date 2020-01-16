@@ -43,10 +43,10 @@ public class SolenoidShifters extends SubsystemBase {
 	 * @param solenoids  Double solenoids of the system
 	 */
 	public SolenoidShifters(String name, boolean isInverted, DoubleSolenoid... solenoids) {
-		this(name, isInverted, SolenoidState.OFF, solenoids);
+		this(name, isInverted, SolenoidState.RETRACT, solenoids);
 	}
 
-	/**
+	/** 
 	 * A class that wraps multiple DoubleSolenoid objects with subsystem
 	 * functionality. Allows for easy inversion and setting of default state of
 	 * solenoids
@@ -159,6 +159,10 @@ public class SolenoidShifters extends SubsystemBase {
 				solenoid.set(state.value);
 			}
 		}
+	}
+	
+	public void set() {
+		set(SolenoidState.RETRACT); // TODO: this may be needed to change 
 	}
 
 	/**
