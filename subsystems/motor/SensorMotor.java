@@ -47,6 +47,9 @@ public abstract class SensorMotor extends Motor {
 		this("SensorMotor", motionController, motors);
 	}
 
+	public MotionController getMotionController() {
+		return motionController;
+	}
 	public void reset() throws InvalidSensorException {
 		motionController.reset();
 	}
