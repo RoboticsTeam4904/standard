@@ -16,30 +16,30 @@ public abstract class InjectedCommand extends CommandBase {
 	}
 
 	@Override
-	final public void initialize() {
-		if (previous != null && (previous.isScheduled())) {
+	public final void initialize() {
+		if (previous != null && previous.isScheduled()) {
 			previous.cancel();
 		}
 		onInitialize();
 	}
 
-	final public void interrupted() {
+	public final void interrupted() {
 		onInterrupted();
-		if (previous != null && (!previous.isScheduled())) {
+		if (previous != null && !previous.isScheduled()) {
 			previous.schedule();
 		}
 	}
 
-	final public void end() {
+	public final void end() {
 		onEnd();
-		if (previous != null && (!previous.isScheduled())) {
+		if (previous != null && !previous.isScheduled()) {
 			previous.schedule();
 		}
 	}
 
-	abstract protected void onInitialize();
+	protected abstract void onInitialize();
 
-	abstract protected void onInterrupted();
+	protected abstract void onInterrupted();
 
-	abstract protected void onEnd();
+	protected abstract void onEnd();
 }
