@@ -14,7 +14,7 @@ public class CommandSendableChooser extends SendableChooser<CommandBase> {
 	 *
 	 * @param object
 	 */
-	public void addObject(CommandBase object) {
+	public void addOption(CommandBase object) {
 		super.addOption(object.getName(), object);
 	}
 
@@ -23,7 +23,7 @@ public class CommandSendableChooser extends SendableChooser<CommandBase> {
 	 *
 	 * @param object
 	 */
-	public void addDefault(CommandBase object) {
+	public void setDefaultOption(CommandBase object) {
 		super.setDefaultOption(object.getName() + " (default)", object);
 	}
 }
