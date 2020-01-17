@@ -2,14 +2,16 @@ package org.usfirst.frc4904.standard.custom.motioncontrollers;
 
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.function.DoubleSupplier;
 import java.util.function.DoubleConsumer;
 
 import org.usfirst.frc4904.standard.custom.sensors.InvalidSensorException;
 import org.usfirst.frc4904.standard.custom.sensors.PIDSensor;
 
+<<<<<<< HEAD
+=======
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.PIDCommand;
+>>>>>>> ec15c4d3ce027b53e65da79544416d753d6a0dcf
 import edu.wpi.first.hal.util.BoundaryException;
 
 /**

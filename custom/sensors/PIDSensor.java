@@ -3,8 +3,6 @@ package org.usfirst.frc4904.standard.custom.sensors;
 import org.usfirst.frc4904.standard.custom.CustomPIDSourceType;
 // import edu.wpi.first.wpilibj2.PIDController
 
-import edu.wpi.first.wpilibj.controller.PIDController;
-
 public interface PIDSensor {
 	/**
 	 * Set which parameter of the device you are using as a process control

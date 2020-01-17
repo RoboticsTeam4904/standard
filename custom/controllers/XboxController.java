@@ -622,3 +622,4 @@ public class XboxController extends Joystick {
 		rightStick.setDeadZone(number);
 	}
 }
+	

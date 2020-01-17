@@ -6,6 +6,11 @@ package org.usfirst.frc4904.standard.custom;
  * due to not noticing the runtime exception being thrown.
  */
 public class CANMessageUnavailableException extends Exception {
+	/**
+	 *
+	 */
+	private static final long serialVersionUID = 8066629002370614378L; //this is from a quick fix, if anything goes to hell, this is probably the problem.
+
 	public CANMessageUnavailableException() {
 		super();
 	}

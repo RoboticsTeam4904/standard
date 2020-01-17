@@ -5,9 +5,7 @@ import org.usfirst.frc4904.standard.custom.sensors.InvalidSensorException;
 import org.usfirst.frc4904.standard.custom.sensors.NativeDerivativeSensor;
 import org.usfirst.frc4904.standard.custom.sensors.PIDSensor;
 
-import edu.wpi.first.wpilibj.PIDSourceType;
 import org.usfirst.frc4904.standard.custom.CustomPIDSourceType;
-import edu.wpi.first.wpilibj.controller.PIDController;
 import org.usfirst.frc4904.standard.custom.motioncontrollers.CustomPIDController;
 import edu.wpi.first.hal.util.BoundaryException;
 

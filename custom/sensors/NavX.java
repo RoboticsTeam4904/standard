@@ -41,7 +41,7 @@ public class NavX extends AHRS implements IMU {
 
 	@Override
 	public double pidGet() {
-		if (getPIDSourceType() == PIDSourceType.kRate) {
+		if (getCustomPIDSourceType() == CustomPIDSourceType.kRate) {
 			return getRate();
 		} else {
 			return getYaw();
