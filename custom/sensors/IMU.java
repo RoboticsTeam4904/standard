@@ -1,10 +1,7 @@
 package org.usfirst.frc4904.standard.custom.sensors;
 
 
-import edu.wpi.first.wpilibj.PIDSource;
-import edu.wpi.first.wpilibj.controller.PIDController;
 import org.usfirst.frc4904.standard.custom.CustomPIDSourceType;
-import org.usfirst.frc4904.standard.custom.motioncontrollers.CustomPIDController;
 import org.usfirst.frc4904.standard.custom.CustomPIDSource;
 
 public interface IMU extends CustomPIDSource {

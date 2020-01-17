@@ -6,7 +6,6 @@ import org.usfirst.frc4904.standard.custom.CustomPIDSourceType;
 
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.I2C;
-import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -43,7 +42,7 @@ public class NavX extends AHRS implements IMU {
 
 	@Override
 	public double pidGet() {
-		if (getPIDSourceType() == PIDSourceType.kRate) {
+		if (getCustomPIDSourceType() == CustomPIDSourceType.kRate) {
 			return getRate();
 		} else {
 			return getYaw();

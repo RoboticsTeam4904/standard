@@ -4,7 +4,6 @@ package org.usfirst.frc4904.standard.custom.sensors;
 import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.Util;
 import org.usfirst.frc4904.standard.custom.CustomPIDSourceType;
-import edu.wpi.first.wpilibj.PIDSourceType;
 
 /**
  * Amalgamates the data of several encoders for the purpose

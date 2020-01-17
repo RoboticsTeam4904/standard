@@ -1,12 +1,11 @@
 package org.usfirst.frc4904.standard.custom.sensors;
 
 
-import edu.wpi.first.wpilibj.PIDSource;
-import edu.wpi.first.wpilibj.PIDSourceType;
+
 import org.usfirst.frc4904.standard.custom.CustomPIDSourceType;
 // import edu.wpi.first.wpilibj2.PIDController
 
-import edu.wpi.first.wpilibj.controller.PIDController;
+
 
 // public interface PIDSensor {
 // 	/**
