@@ -1,6 +1,6 @@
 package org.usfirst.frc4904.standard.commands;
 
-import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
 import java.util.Arrays;
@@ -16,9 +16,10 @@ public class RunAllSequential extends SequentialCommandGroup {
      * 
      * @param commands The commands to be run in sequence
      */
-    public RunAllSequential(Command... commands) {
+    public RunAllSequential(CommandBase commands) {
+        super()
         setName("RunAllSequential["
-                + Arrays.stream(commands).map((Command command) -> command.getName()).collect(Collectors.joining(" "))
+                + Arrays.stream(commands).map((CommandBase command) -> command.getName()).collect(Collectors.joining(" "))
                 + "]");
         addCommands(commands);
     }

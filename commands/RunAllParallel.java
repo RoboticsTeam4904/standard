@@ -1,6 +1,6 @@
 package org.usfirst.frc4904.standard.commands;
 
-import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 
 import java.util.Arrays;
@@ -17,10 +17,10 @@ public class RunAllParallel extends ParallelCommandGroup {
      * 
      * @param commands The commands to be run in parallel
      */
-    public RunAllParallel(Command... commands) {
-        setName("RunAllParallel["
-                + Arrays.stream(commands).map((Command command) -> command.getName()).collect(Collectors.joining(" "))
-                + "]");
+    public RunAllParallel(CommandBase... commands) {
+        super();
+        setName("RunAllParallel[" + Arrays.stream(commands).map((CommandBase command) -> command.getName())
+                .collect(Collectors.joining(" ")) + "]");
         addCommands(commands);
     }
 }
