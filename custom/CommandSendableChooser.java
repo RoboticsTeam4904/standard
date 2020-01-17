@@ -1,7 +1,7 @@
 package org.usfirst.frc4904.standard.custom;
 
 
-import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 
 /**
@@ -16,8 +16,8 @@ public class CommandSendableChooser extends SendableChooser<Command> {
 	 *
 	 * @param object
 	 */
-	public void addObject(Command object) {
-		super.addObject(object.getName(), object);
+	public void addOption(Command object) {
+		super.addOption(object.getName(), object);
 	}
 
 	/**
@@ -26,7 +26,7 @@ public class CommandSendableChooser extends SendableChooser<Command> {
 	 *
 	 * @param object
 	 */
-	public void addDefault(Command object) {
-		super.addDefault(object.getName() + " (default)", object);
+	public void setDefaultOption(Command object) {
+		super.setDefaultOption(object.getName() + " (default)", object);
 	}
 }
