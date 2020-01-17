@@ -148,8 +148,12 @@ public class LogKitten {
 	private static void reportErrorToDriverStation(String details, String errorMessage, KittenLevel logLevel) {
 		HAL.sendError(true, logLevel.getSeverity(), false, errorMessage, details, "", false);
 	}
+	
+	public static void indirectedLogMessage(Object message, KittenLevel level, boolean override) {
+		logMessage(message, level, override);
+	}
 
-	public static synchronized void logMessage(Object message, KittenLevel level, boolean override) {
+	private static synchronized void logMessage(Object message, KittenLevel level, boolean override) {
 		message = message.toString(); // Not strictly needed, but good practice
 		if (LogKitten.logLevel.compareTo(level) >= 0) {
 			String content = LogKitten.timestamp() + " " + level.getName() + ": " + LogKitten.getLoggerMethodCallerMethodName()
