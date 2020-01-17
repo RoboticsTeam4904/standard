@@ -11,7 +11,10 @@ public class RunIfElse extends CommandBase {
 	protected final BooleanSupplier[] booleanSuppliers;
 	protected boolean hasRunOnce;
 
-	protected RunIfElse(CommandBase ifCommand, CommandBase elseCommand, BooleanSupplier... booleanSuppliers) {
+	protected RunIfElse(String name, CommandBase ifCommand, CommandBase elseCommand,
+			BooleanSupplier... booleanSuppliers) {
+		super();
+		setName(name);
 		this.ifCommand = ifCommand;
 		this.elseCommand = elseCommand;
 		this.booleanSuppliers = booleanSuppliers;
@@ -20,6 +23,11 @@ public class RunIfElse extends CommandBase {
 		addRequirements((Subsystem[]) elseCommand.getRequirements().toArray());
 	}
 
+	protected RunIfElse(CommandBase ifCommand, CommandBase elseCommand, BooleanSupplier... booleanSuppliers) {
+		this("RunIfElse", ifCommand, elseCommand, booleanSuppliers);
+	}
+
+	@Override
 	public void initialize() {
 		for (BooleanSupplier booleanSupplier : booleanSuppliers) {
 			if (!booleanSupplier.getAsBoolean()) {
@@ -32,9 +40,7 @@ public class RunIfElse extends CommandBase {
 		runningCommand = ifCommand;
 	}
 
-	public void execute() {
-	}
-
+	@Override
 	public boolean isFinished() {
 		if (runningCommand.isScheduled() && !hasRunOnce) {
 			hasRunOnce = true;
@@ -42,13 +48,10 @@ public class RunIfElse extends CommandBase {
 		return !runningCommand.isScheduled() && hasRunOnce;
 	}
 
-	public void end() {
+	@Override
+	public void end(boolean interrupted) {
 		ifCommand.cancel();
 		elseCommand.cancel();
 		hasRunOnce = false;
-	}
-
-	public void interrupted() {
-		end();
 	}
 }
