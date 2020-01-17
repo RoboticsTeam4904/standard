@@ -1,11 +1,7 @@
 package org.usfirst.frc4904.standard.commands;
 
-import java.util.Set;
-import java.util.Arrays;
-
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj.command.Command;
 
 public class RunFor extends CommandBase {
 	protected final double duration;
@@ -24,6 +20,7 @@ public class RunFor extends CommandBase {
 	 * @param interruptible Whether this command should be interruptible
 	 */
 	public RunFor(String name, CommandBase command, double duration) {
+		super();
 		setName(name);
 		this.duration = duration;
 		this.command = command;
@@ -48,11 +45,13 @@ public class RunFor extends CommandBase {
 		return System.currentTimeMillis() - startMillis > duration;
 	}
 
+	@Override
 	public void initialize() {
 		command.withTimeout(duration);
 		startMillis = System.currentTimeMillis();
 	}
 
+	@Override
 	public boolean isFinished() {
 		if (firstTick) {
 			firstTick = false;
