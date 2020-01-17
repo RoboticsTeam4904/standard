@@ -39,6 +39,17 @@ public class SolenoidRetract extends SolenoidSet {
 	 * Command to set the state of a SolenoidSubsystem to
 	 * RETRACT(DoubleSolenoid.Value.kReverse)
 	 * 
+	 * @param name   Name of the retraction
+	 * @param system SolenoidSubsystem to set
+	 */
+	public SolenoidRetract(String name, SolenoidSubsystem system) {
+		super(name, system, SolenoidState.RETRACT);
+	}
+
+	/**
+	 * Command to set the state of a SolenoidSubsystem to
+	 * RETRACT(DoubleSolenoid.Value.kReverse)
+	 * 
 	 * @param system SolenoidSubsystem to set
 	 */
 	public SolenoidRetract(SolenoidSubsystem system) {
