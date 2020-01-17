@@ -1,7 +1,7 @@
 package org.usfirst.frc4904.standard.commands;
 
 import org.usfirst.frc4904.standard.custom.Overridable;
-import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 
 public abstract class OverridableParallelCommandGroup extends ParallelCommandGroup {
@@ -17,19 +17,19 @@ public abstract class OverridableParallelCommandGroup extends ParallelCommandGro
 		setName(name);
 	}
 
-	public final synchronized void addParallelUnlessOverridden(Command command) {
+	public final synchronized void addParallelUnlessOverridden(CommandBase command) {
 		addCommands(new RunIf(command, overridable::isNotOverridden));
 	}
 
-	public final synchronized void addParallelUnlessOverridden(Command command, double timeout) {
+	public final synchronized void addParallelUnlessOverridden(CommandBase command, double timeout) {
 		addCommands(new RunIf(command.withTimeout(timeout), overridable::isNotOverridden));
 	}
 
-	public final synchronized void addParallelIfOverridden(Command command) {
+	public final synchronized void addParallelIfOverridden(CommandBase command) {
 		addCommands(new RunIf(command, overridable::isOverridden));
 	}
 
-	public final synchronized void addParallelIfOverridden(Command command, double timeout) {
+	public final synchronized void addParallelIfOverridden(CommandBase command, double timeout) {
 		addCommands(new RunIf(command.withTimeout(timeout), overridable::isOverridden));
 	}
 }
