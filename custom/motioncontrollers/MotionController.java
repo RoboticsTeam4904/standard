@@ -7,6 +7,11 @@ import java.util.function.DoubleConsumer;
 import org.usfirst.frc4904.standard.custom.sensors.InvalidSensorException;
 import org.usfirst.frc4904.standard.custom.sensors.PIDSensor;
 
+<<<<<<< HEAD
+=======
+import edu.wpi.first.wpilibj.controller.PIDController;
+import edu.wpi.first.wpilibj2.command.PIDCommand;
+>>>>>>> ec15c4d3ce027b53e65da79544416d753d6a0dcf
 import edu.wpi.first.hal.util.BoundaryException;
 
 /**
@@ -82,9 +87,6 @@ public abstract class MotionController {
 	 *        The sensor associated with the output you are
 	 *        trying to control
 	 */
-	//public MotionController(PIDController source) {
-		//this(new PIDSensor.PIDSourceWrapper(source));
-	//}
 
 	/**
 	 * This should return the motion controller
