@@ -16,8 +16,8 @@ public class RunAllSequential extends SequentialCommandGroup {
      * 
      * @param commands The commands to be run in sequence
      */
-    public RunAllSequential(CommandBase commands) {
-        super()
+    public RunAllSequential(CommandBase... commands) {
+        super();
         setName("RunAllSequential["
                 + Arrays.stream(commands).map((CommandBase command) -> command.getName()).collect(Collectors.joining(" "))
                 + "]");
