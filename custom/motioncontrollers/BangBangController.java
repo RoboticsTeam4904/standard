@@ -5,6 +5,7 @@ import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.custom.sensors.InvalidSensorException;
 import org.usfirst.frc4904.standard.custom.sensors.PIDSensor;
 import edu.wpi.first.wpilibj.PIDSource;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * A bang bang controller.
@@ -18,6 +19,7 @@ public class BangBangController extends MotionController {
 	protected double A;
 	protected double F;
 	protected double threshold;
+	protected static final String DEFAULT_SMARTDASHBOARD_PREFIX = "!!";
 
 	/**
 	 * BangBang controller
@@ -116,6 +118,60 @@ public class BangBangController extends MotionController {
 	}
 
 	/**
+	 * @return
+	 * 		The current A value
+	 */
+	public double getA() {
+		return A;
+	}
+
+	/**
+	 * @return
+	 * 		The current F (feed forward) value
+	 */
+	public double getF() {
+		return F;
+	}
+
+	/**
+	 * @return
+	 * 		The current D value
+	 */
+	public double getThreshold() {
+		return threshold;
+	}
+
+	/**
+	 * Set the value of the A constant
+	 * 
+	 * @param the
+	 *        desired A value
+	 */
+	public void setA(double A) {
+		this.A = A;
+	}
+
+	/**
+	 * Set the value of the F (feed forward) constant
+	 * 
+	 * @param the
+	 *        desired F value
+	 */
+	public void setF(double F) {
+		this.F = F;
+	}
+
+	/**
+	 * Set the value of the bang-bang threshold
+	 * 
+	 * @param the
+	 *        desired threshold value
+	 */
+	public void setThreshold(double threshold) {
+		this.threshold = threshold;
+	}
+
+	/**
 	 * Sets the stored error value to zero (0)
 	 */
 	@Override
@@ -187,5 +243,67 @@ public class BangBangController extends MotionController {
 	@Override
 	public double getError() {
 		return error;
+	}
+
+	/**
+	 * Put the PID controller to SmartDashboard for tuning.
+	 * Puts the error, setpoint, sensor value, and output.
+	 * This method adds a very small random value to everything
+	 * so that graphs show properly on SmartDashboard.
+	 * 
+	 * @param prefix
+	 *        The prefix to use when putting things on SmartDashboard.
+	 */
+	@Override
+	public void putToSmartDashboard(String prefix) {
+		double noise = (Math.random() - 0.5) * 0.0000001; // Generate very small noise centered at zero
+		SmartDashboard.putNumber(prefix + "_Error", getError() + noise);
+		SmartDashboard.putNumber(prefix + "_Setpoint", getSetpoint() + noise);
+		SmartDashboard.putNumber(prefix + "_Sensor", getSensorValue() + noise);
+		SmartDashboard.putNumber(prefix + "_Output", get() + noise);
+	}
+
+	/**
+	 * Put the PID controller to SmartDashboard for tuning.
+	 * Puts the error, setpoint, sensor value, and output.
+	 * This method adds a very small random value to everything
+	 * so that graphs show properly on SmartDashboard.
+	 */
+	@Override
+	public void putToSmartDashboard() {
+		putToSmartDashboard(BangBangController.DEFAULT_SMARTDASHBOARD_PREFIX);
+	}
+
+	/**
+	 * Update the PID controller from SmartDashboard for tuning.
+	 * Gets the P, I, D, and F constants from SmartDashboard,
+	 * or puts the current ones there if there's no constants.
+	 * 
+	 * @param prefix
+	 *        The prefix to use when putting things on SmartDashboard.
+	 */
+	@Override
+	public void updateFromSmartDashboard(String prefix) {
+		// If we're missing any constants on SmartDashboard, put the current ones
+		if (!(SmartDashboard.containsKey(prefix + "_A") && SmartDashboard.containsKey(prefix + "_F")
+			&& SmartDashboard.containsKey(prefix + "_threshold"))) {
+			SmartDashboard.putNumber(prefix + "_A", getA());
+			SmartDashboard.putNumber(prefix + "_F", getF());
+			SmartDashboard.putNumber(prefix + "_threshold", getThreshold());
+			return;
+		}
+		setA(SmartDashboard.getNumber(prefix + "_A", getA()));
+		setF(SmartDashboard.getNumber(prefix + "_F", getF()));
+		setThreshold(SmartDashboard.getNumber(prefix + "_threshold", getThreshold()));
+	}
+
+	/**
+	 * Update the PID controller from SmartDashboard for tuning.
+	 * Gets the P, I, D, and F constants from SmartDashboard,
+	 * or puts the current ones there if there's no constants.
+	 */
+	@Override
+	public void updateFromSmartDashboard() {
+		updateFromSmartDashboard(BangBangController.DEFAULT_SMARTDASHBOARD_PREFIX);
 	}
 }

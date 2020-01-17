@@ -7,6 +7,7 @@ import org.usfirst.frc4904.standard.custom.sensors.NativeDerivativeSensor;
 import org.usfirst.frc4904.standard.custom.sensors.PIDSensor;
 import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.hal.util.BoundaryException;
 
 /**
@@ -28,6 +29,7 @@ public class CustomPIDController extends MotionController {
 	protected double lastErrorDerivative;
 	protected double derivativeTolerance;
 	protected double minimumNominalOutput = 0.0;
+	protected static final String DEFAULT_SMARTDASHBOARD_PREFIX = "PID";
 
 	/**
 	 * An extremely basic PID controller.
@@ -421,6 +423,70 @@ public class CustomPIDController extends MotionController {
 		}
 	}
 
+	/**
+	 * Put the PID controller to SmartDashboard for tuning.
+	 * Puts the error, setpoint, sensor value, and output.
+	 * This method adds a very small random value to everything
+	 * so that graphs show properly on SmartDashboard.
+	 * 
+	 * @param prefix
+	 *        The prefix to use when putting things on SmartDashboard.
+	 */
+	@Override
+	public void putToSmartDashboard(String prefix) {
+		double noise = (Math.random() - 0.5) * 0.0000001; // Generate very small noise centered at zero
+		SmartDashboard.putNumber(prefix + "_Error", getError() + noise);
+		SmartDashboard.putNumber(prefix + "_Setpoint", getSetpoint() + noise);
+		SmartDashboard.putNumber(prefix + "_Sensor", getSensorValue() + noise);
+		SmartDashboard.putNumber(prefix + "_Output", get() + noise);
+	}
+
+	/**
+	 * Put the PID controller to SmartDashboard for tuning.
+	 * Puts the error, setpoint, sensor value, and output.
+	 * This method adds a very small random value to everything
+	 * so that graphs show properly on SmartDashboard.
+	 */
+	@Override
+	public void putToSmartDashboard() {
+		putToSmartDashboard(CustomPIDController.DEFAULT_SMARTDASHBOARD_PREFIX);
+	}
+
+	/**
+	 * Update the PID controller from SmartDashboard for tuning.
+	 * Gets the P, I, D, and F constants from SmartDashboard,
+	 * or puts the current ones there if there's no constants.
+	 * 
+	 * @param prefix
+	 *        The prefix to use when putting things on SmartDashboard.
+	 */
+	@Override
+	public void updateFromSmartDashboard(String prefix) {
+		// If we're missing any constants on SmartDashboard, put the current ones
+		if (!(SmartDashboard.containsKey(prefix + "_P") && SmartDashboard.containsKey(prefix + "_I")
+			&& SmartDashboard.containsKey(prefix + "_D") && SmartDashboard.containsKey(prefix + "_F"))) {
+			SmartDashboard.putNumber(prefix + "_P", getP());
+			SmartDashboard.putNumber(prefix + "_I", getI());
+			SmartDashboard.putNumber(prefix + "_D", getD());
+			SmartDashboard.putNumber(prefix + "_F", getF());
+			return;
+		}
+		setPIDF(SmartDashboard.getNumber(prefix + "_P", getP()),
+			SmartDashboard.getNumber(prefix + "_I", getI()),
+			SmartDashboard.getNumber(prefix + "_D", getD()),
+			SmartDashboard.getNumber(prefix + "_F", getF()));
+	}
+
+	/**
+	 * Update the PID controller from SmartDashboard for tuning.
+	 * Gets the P, I, D, and F constants from SmartDashboard,
+	 * or puts the current ones there if there's no constants.
+	 */
+	@Override
+	public void updateFromSmartDashboard() {
+		updateFromSmartDashboard(CustomPIDController.DEFAULT_SMARTDASHBOARD_PREFIX);
+	}
+
 	public boolean derivativeOnTarget() {
 		return derivativeTolerance == 0 || Math.abs(lastErrorDerivative) < derivativeTolerance;
 	}
@@ -428,5 +494,6 @@ public class CustomPIDController extends MotionController {
 	@Override
 	public boolean onTarget() {
 		return super.onTarget() && derivativeOnTarget();
+
 	}
 }

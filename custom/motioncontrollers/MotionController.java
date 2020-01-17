@@ -32,6 +32,7 @@ public abstract class MotionController {
 	protected Exception sensorException;
 	private volatile boolean justReset;
 	private final Object lock = new Object();
+	protected static final String DEFAULT_SMARTDASHBOARD_PREFIX = "MC";
 
 	/**
 	 * A MotionController modifies an output using a sensor
@@ -396,5 +397,47 @@ public abstract class MotionController {
 				sensorException = e;
 			}
 		}
+	}
+
+	/**
+	 * Put the controller constants to SmartDashboard for tuning.
+	 * as well as the error, setpoint, sensor value, and output.
+	 * This method adds a very small random value to everything
+	 * so that graphs show properly on SmartDashboard.
+	 * 
+	 * @param prefix
+	 *        The prefix to use when putting things on SmartDashboard.
+	 */
+	public abstract void putToSmartDashboard(String prefix);
+
+	/**
+	 * Put the controller constants to SmartDashboard for tuning.
+	 * as well as the error, setpoint, sensor value, and output.
+	 * This method adds a very small random value to everything
+	 * so that graphs show properly on SmartDashboard.
+	 * 
+	 * Uses the default prefix {@value #DEFAULT_SMARTDASHBOARD_PREFIX}
+	 */
+	public void putToSmartDashboard() {
+		putToSmartDashboard(MotionController.DEFAULT_SMARTDASHBOARD_PREFIX);
+	}
+
+	/**
+	 * Update the controller constants from SmartDashboard for tuning.
+	 * Gets new constants from SmartDashboard, defaulting to the current ones.
+	 *
+	 * @param prefix
+	 *        The prefix to use when putting things on SmartDashboard.
+	 */
+	public abstract void updateFromSmartDashboard(String prefix);
+
+	/**
+	 * Update the controller constants from SmartDashboard for tuning.
+	 * Gets new constants from SmartDashboard, defaulting to the current ones.
+	 * 
+	 * Uses the default prefix {@value #DEFAULT_SMARTDASHBOARD_PREFIX}
+	 */
+	public void updateFromSmartDashboard() {
+		updateFromSmartDashboard(MotionController.DEFAULT_SMARTDASHBOARD_PREFIX);
 	}
 }
