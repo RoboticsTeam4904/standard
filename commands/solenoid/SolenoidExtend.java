@@ -14,7 +14,7 @@ public class SolenoidExtend extends SolenoidSet {
 	 * Command to set the state of a SolenoidSubsystem to
 	 * EXTEND(DoubleSolenoid.Value.kForward)
 	 * 
-	 * @param name             Name of the extension
+	 * @param name             Name of extending system
 	 * @param system           SolenoidSubsystem to set
 	 * @param booleanSuppliers conditions that if true, prevent the setting of the
 	 *                         system
