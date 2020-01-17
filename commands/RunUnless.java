@@ -16,6 +16,10 @@ public class RunUnless extends RunIfElse {
 	 * @param booleanSuppliers A condition function using Java 8's colon syntax
 	 *                         (will run unless the condition is true)
 	 */
+	public RunUnless(String name, CommandBase command, BooleanSupplier... booleanSuppliers) {
+		super(name, new Noop(), command, booleanSuppliers);
+	}
+
 	public RunUnless(CommandBase command, BooleanSupplier... booleanSuppliers) {
 		super(new Noop(), command, booleanSuppliers);
 	}
