@@ -18,13 +18,15 @@ public class SolenoidSet extends CommandBase {
 	/**
 	 * Sets the state of a SolenoidSubsystem
 	 * 
-	 * @param name             Name of the Command
+	 * @param name             Name of the SolenoidSubsystem
 	 * @param system           SolenoidSubsystem to set
 	 * @param state            state to set system
 	 * @param booleanSuppliers conditions that if true, prevents solenoidSubsystem
 	 *                         from setting
 	 */
 	public SolenoidSet(String name, SolenoidSubsystem system, SolenoidState state, BooleanSupplier... booleanSuppliers) {
+		super();
+		setName(name);
 		this.system = system;
 		this.state = state;
 		this.booleanSuppliers = booleanSuppliers;
@@ -35,7 +37,6 @@ public class SolenoidSet extends CommandBase {
 	/**
 	 * Sets the state of a SolenoidSubsystem
 	 * 
-	 * @param name             Name of the Command
 	 * @param system           SolenoidSubsystem to set
 	 * @param state            state to set system
 	 * @param booleanSuppliers conditions that if true, prevents solenoidSubsystem
@@ -45,6 +46,25 @@ public class SolenoidSet extends CommandBase {
 		this("SolenoidSet", system, state, booleanSuppliers);
 	}
 
+	/**
+	 * Sets the state of a SolenoidSubsystem
+	 * 
+	 * @param name   Name of the SolenoidSubsystem
+	 * @param system SolenoidSubsystem to set
+	 * @param state  state to set system
+	 */
+	public SolenoidSet(String name, SolenoidSubsystem system, SolenoidState state) {
+		this(name, system, state, () -> {
+			return false;
+		});
+	}
+
+	/**
+	 * Sets the state of a SolenoidSubsystem
+	 * 
+	 * @param system SolenoidSubsystem to set
+	 * @param state  state to set system
+	 */
 	public SolenoidSet(SolenoidSubsystem system, SolenoidState state) {
 		this("SolenoidSet", system, state);
 	}
