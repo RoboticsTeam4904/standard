@@ -6,7 +6,7 @@ public abstract class InjectedCommandGroup extends CommandGroupBase {
 	private final CommandGroupBase previous;
 
 	public InjectedCommandGroup(String name, CommandGroupBase previous) {
-		super(); // TODO: is this redundant? https://github.com/RoboticsTeam4904/standard/pull/254#discussion_r366097218
+		super();
 		setName(name);
 		this.previous = previous;
 	}
@@ -19,11 +19,11 @@ public abstract class InjectedCommandGroup extends CommandGroupBase {
 		if (previous != null && previous.isScheduled()) {
 			previous.cancel();
 		}
-		onInitialize(); // TODO: what should I do with this?
-	}
+		onInitialize();
+	} 
 
 	protected final void interrupted() {
-		onInterrupted(); // TODO: what should I do with this?
+		onInterrupted();
 		if (previous != null && !previous.isScheduled()) {
 			previous.schedule();
 		}
@@ -35,4 +35,10 @@ public abstract class InjectedCommandGroup extends CommandGroupBase {
 			previous.schedule();
 		}
 	}
+
+	protected abstract void onInitialize();
+
+	protected abstract void onInterrupted();
+
+	protected abstract void onEnd();
 }
