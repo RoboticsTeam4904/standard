@@ -2,7 +2,7 @@ package org.usfirst.frc4904.standard.commands;
 
 
 import org.usfirst.frc4904.standard.custom.Overridable;
-import edu.wpi.first.wpilibj.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 
 public class OverrideSet extends InstantCommand {
 	protected final boolean isOverridden;
