@@ -1,8 +1,5 @@
 package org.usfirst.frc4904.standard.custom.sensors;
 
-
-import edu.wpi.first.wpilibj.PIDSource;
-import edu.wpi.first.wpilibj.controller.PIDController;
 import org.usfirst.frc4904.standard.custom.CustomPIDSourceType;
 import org.usfirst.frc4904.standard.custom.motioncontrollers.CustomPIDController;
 import org.usfirst.frc4904.standard.custom.CustomPIDSource;
@@ -14,30 +11,25 @@ public interface IMU extends CustomPIDSource {
 	public void reset();
 
 	/**
-	 * @return
-	 * 		Rate of rotation about yaw axis
+	 * @return Rate of rotation about yaw axis
 	 */
 	public double getRate();
 
 	/**
-	 * @return
-	 * 		Current yaw value
+	 * @return Current yaw value
 	 */
 	public float getYaw();
 
 	/**
-	 * @return
-	 * 		Current pitch value
+	 * @return Current pitch value
 	 */
 	public float getPitch();
 
 	/**
-	 * @return
-	 * 		Current roll value
+	 * @return Current roll value
 	 */
 	public float getRoll();
 
 	public void setCustomPIDSourceType(CustomPIDSourceType kdisplacement);
-
 
 }

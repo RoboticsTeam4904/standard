@@ -1,6 +1,5 @@
 package org.usfirst.frc4904.standard.custom.controllers;
 
-
 import org.usfirst.frc4904.standard.commands.Cancel;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -19,7 +18,8 @@ public class CustomButton extends JoystickButton {
 	}
 
 	/**
-	 * Returns true the first time the button is pressed and the function is called.
+	 * Returns true the first time the button is pressed andÍ the function is
+	 * called.
 	 *
 	 * @return whether the button was pressed since the last call to this function
 	 */
@@ -35,8 +35,7 @@ public class CustomButton extends JoystickButton {
 	/**
 	 * Cancels a command when the button is released
 	 *
-	 * @param command
-	 *        The command to be cancelled.
+	 * @param command The command to be cancelled.
 	 */
 	public void cancelWhenReleased(Command command) {
 		whenReleased(new Cancel(command));
@@ -45,8 +44,7 @@ public class CustomButton extends JoystickButton {
 	/**
 	 * Run a command once when a button is held.
 	 *
-	 * @param command
-	 *        The command to be run
+	 * @param command The command to be run
 	 */
 	public void onlyWhileHeld(Command command) {
 		whenPressed(command);
@@ -56,8 +54,7 @@ public class CustomButton extends JoystickButton {
 	/**
 	 * Runs a command unless a button is held.
 	 *
-	 * @param command
-	 *        The command to be run.
+	 * @param command The command to be run.
 	 */
 	public void onlyWhileReleased(Command command) {
 		command.schedule();

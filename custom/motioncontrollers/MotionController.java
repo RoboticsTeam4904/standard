@@ -13,8 +13,8 @@ import edu.wpi.first.wpilibj2.command.PIDCommand;
 import edu.wpi.first.hal.util.BoundaryException;
 
 /**
- * A MotionController modifies an output using a sensor
- * to precisely maintain a certain input.
+ * A MotionController modifies an output using a sensor to precisely maintain a
+ * certain input.
  *
  */
 public abstract class MotionController {
@@ -37,12 +37,10 @@ public abstract class MotionController {
 	private final Object lock = new Object();
 
 	/**
-	 * A MotionController modifies an output using a sensor
-	 * to precisely maintain a certain input.
+	 * A MotionController modifies an output using a sensor to precisely maintain a
+	 * certain input.
 	 *
-	 * @param sensor
-	 *        The sensor associated with the output you are
-	 *        trying to control
+	 * @param sensor The sensor associated with the output you are trying to control
 	 */
 	public MotionController(PIDSensor sensor) {
 		this.sensor = sensor;
@@ -63,32 +61,26 @@ public abstract class MotionController {
 		sensorException = null;
 	}
 
-
 	/**
-	 * Sets the output for this MotionController.
-	 * Once every MotionController tick, the output will
-	 * be set to the results from the motion control
-	 * calculation via the pidWrite function.
+	 * Sets the output for this MotionController. Once every MotionController tick,
+	 * the output will be set to the results from the motion control calculation via
+	 * the pidWrite function.
 	 *
-	 * @param output
-	 *        The output to control
+	 * @param output The output to control
 	 */
 	public void setOutput(DoubleConsumer output) {
 		this.output = output;
 	}
 
 	/**
-	 * A MotionController modifies an output using a sensor
-	 * to precisely maintain a certain input.
+	 * A MotionController modifies an output using a sensor to precisely maintain a
+	 * certain input.
 	 *
-	 * @param sensor
-	 *        The sensor associated with the output you are
-	 *        trying to control
+	 * @param sensor The sensor associated with the output you are trying to control
 	 */
 
 	/**
-	 * This should return the motion controller
-	 * to a state such that it returns 0.
+	 * This should return the motion controller to a state such that it returns 0.
 	 *
 	 * @warning this does not indicate sensor errors
 	 */
@@ -99,8 +91,7 @@ public abstract class MotionController {
 	}
 
 	/**
-	 * This should return the motion controller
-	 * to a state such that it returns 0.
+	 * This should return the motion controller to a state such that it returns 0.
 	 */
 	public final void resetSafely() throws InvalidSensorException {
 		resetErrorToZero();
@@ -109,31 +100,24 @@ public abstract class MotionController {
 	}
 
 	/**
-	 * Method-specific method for resetting the
-	 * motion controller without indicating sensor
-	 * errors.
+	 * Method-specific method for resetting the motion controller without indicating
+	 * sensor errors.
 	 */
 	protected abstract void resetErrorToZero();
 
 	/**
-	 * The calculated output value to achieve the
-	 * current setpoint.
+	 * The calculated output value to achieve the current setpoint.
 	 *
-	 * @return
-	 * 		Output value. If output range is set,
-	 *         this will be restricted to within
-	 *         that range.
+	 * @return Output value. If output range is set, this will be restricted to
+	 *         within that range.
 	 */
 	public abstract double getSafely() throws InvalidSensorException;
 
 	/**
-	 * The calculated output value to achieve the
-	 * current setpoint.
+	 * The calculated output value to achieve the current setpoint.
 	 *
-	 * @return
-	 * 		Output value. If output range is set,
-	 *         this will be restricted to within
-	 *         that range.
+	 * @return Output value. If output range is set, this will be restricted to
+	 *         within that range.
 	 * @warning does not indicate sensor errors
 	 */
 	public abstract double get();
@@ -141,9 +125,7 @@ public abstract class MotionController {
 	/**
 	 * A very recent error.
 	 *
-	 * @return
-	 * 		The most recent error calculated by
-	 *         the get function.
+	 * @return The most recent error calculated by the get function.
 	 */
 	public abstract double getError();
 
@@ -170,16 +152,15 @@ public abstract class MotionController {
 	/**
 	 * The most recent setpoint.
 	 *
-	 * @return
-	 * 		The most recent setpoint.
+	 * @return The most recent setpoint.
 	 */
 	public double getSetpoint() {
 		return setpoint;
 	}
 
 	/**
-	 * Sets the setpoint of the motion controller.
-	 * This is the value that the motion controller seeks.
+	 * Sets the setpoint of the motion controller. This is the value that the motion
+	 * controller seeks.
 	 *
 	 * @param setpoint
 	 */
@@ -192,9 +173,8 @@ public abstract class MotionController {
 	}
 
 	/**
-	 * Sets the tolerance of the motion controller.
-	 * When the error is less than the tolerance,
-	 * onTarget returns true.
+	 * Sets the tolerance of the motion controller. When the error is less than the
+	 * tolerance, onTarget returns true.
 	 *
 	 * @param absoluteTolerance
 	 */
@@ -207,8 +187,8 @@ public abstract class MotionController {
 	}
 
 	/**
-	 * Returns the absolute tolerance set on the
-	 * motion controller. Will return {@link org.usfirst.frc4904.standard.Util#EPSILON Util.EPSILON}
+	 * Returns the absolute tolerance set on the motion controller. Will return
+	 * {@link org.usfirst.frc4904.standard.Util#EPSILON Util.EPSILON}
 	 *
 	 * @return absolute tolerance
 	 */
@@ -217,10 +197,9 @@ public abstract class MotionController {
 	}
 
 	/**
-	 * Sets the input range of the motion controller.
-	 * This is only used to work with continuous inputs.
-	 * If minimum is greater than maximum, this will throw
-	 * an exception.
+	 * Sets the input range of the motion controller. This is only used to work with
+	 * continuous inputs. If minimum is greater than maximum, this will throw an
+	 * exception.
 	 *
 	 * @param minimum
 	 * @param maximum
@@ -234,9 +213,8 @@ public abstract class MotionController {
 	}
 
 	/**
-	 * Sets the output range of the motion controller.
-	 * Results from the motion control calculation will be
-	 * capped at these values. The cap is automatically
+	 * Sets the output range of the motion controller. Results from the motion
+	 * control calculation will be capped at these values. The cap is automatically
 	 * enabled by calling this function.
 	 *
 	 * @param minimum
@@ -256,12 +234,9 @@ public abstract class MotionController {
 	}
 
 	/**
-	 * Sets the input range to continuous.
-	 * This means that it will treat the
-	 * maximum and minimum sensor and input values as
-	 * being at the same point, e.g. the controller
-	 * will try to pass through the maximum
-	 * to get to a point beyond it.
+	 * Sets the input range to continuous. This means that it will treat the maximum
+	 * and minimum sensor and input values as being at the same point, e.g. the
+	 * controller will try to pass through the maximum to get to a point beyond it.
 	 *
 	 * @param continuous
 	 */
@@ -283,14 +258,13 @@ public abstract class MotionController {
 			// justReset is written to by both the main thread and the Task,
 			// so there is a 10 millisecond delay in the initial execution of
 			// the task, which should reduce blocking
-		}
-		catch (IllegalStateException e) {} // Do not die if the timer is already running
+		} catch (IllegalStateException e) {
+		} // Do not die if the timer is already running
 	}
 
 	/**
-	 * Bypasses the motion controller.
-	 * In some cases, this will still scale by
-	 * a feed forward term of the motion controller.
+	 * Bypasses the motion controller. In some cases, this will still scale by a
+	 * feed forward term of the motion controller.
 	 */
 	public void disable() {
 		if (isOverridden()) {
@@ -311,8 +285,7 @@ public abstract class MotionController {
 	}
 
 	/**
-	 * Set whether or not the motion controller
-	 * is overridden.
+	 * Set whether or not the motion controller is overridden.
 	 * 
 	 * @see #startOverriding()
 	 * @see #stopOverriding()
@@ -322,9 +295,8 @@ public abstract class MotionController {
 	}
 
 	/**
-	 * Starts overriding the controller.
-	 * The controller will disable and not be allowed
-	 * to enable until the override is turned off.
+	 * Starts overriding the controller. The controller will disable and not be
+	 * allowed to enable until the override is turned off.
 	 * 
 	 * @see #stopOverriding()
 	 */
@@ -334,8 +306,8 @@ public abstract class MotionController {
 	}
 
 	/**
-	 * Stops overriding the motion controller.
-	 * Enabling the controller will now be allowed.
+	 * Stops overriding the motion controller. Enabling the controller will now be
+	 * allowed.
 	 * 
 	 * @see #startOverriding()
 	 */
@@ -353,8 +325,8 @@ public abstract class MotionController {
 	}
 
 	/**
-	 * True if the error in the motion controller is
-	 * less than the tolerance of the motion controller.
+	 * True if the error in the motion controller is less than the tolerance of the
+	 * motion controller.
 	 *
 	 * @return
 	 */
@@ -363,9 +335,8 @@ public abstract class MotionController {
 	}
 
 	/**
-	 * Check if the motion controller has generated
-	 * an exception within the TimerTask. If there is
-	 * not an exception, the function returns null.
+	 * Check if the motion controller has generated an exception within the
+	 * TimerTask. If there is not an exception, the function returns null.
 	 *
 	 * @return the exception (probably null)
 	 */
@@ -374,8 +345,8 @@ public abstract class MotionController {
 	}
 
 	/**
-	 * The thread in which the output is updated with the
-	 * results of the motion controller calculation.
+	 * The thread in which the output is updated with the results of the motion
+	 * controller calculation.
 	 *
 	 */
 	protected class MotionControllerTask extends TimerTask {
@@ -392,8 +363,7 @@ public abstract class MotionController {
 				if (output != null && isEnabled()) {
 					output.accept(value);
 				}
-			}
-			catch (Exception e) {
+			} catch (Exception e) {
 				sensorException = e;
 			}
 		}

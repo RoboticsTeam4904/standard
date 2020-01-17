@@ -1,19 +1,13 @@
 package org.usfirst.frc4904.standard.custom.motioncontrollers;
 
-
 import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.custom.sensors.InvalidSensorException;
 import org.usfirst.frc4904.standard.custom.sensors.PIDSensor;
-<<<<<<< Updated upstream
-import edu.wpi.first.wpilibj.controller.PIDController;
-=======
->>>>>>> Stashed changes
 
 /**
- * A bang bang controller.
- * The bang bang controller increases the value of the output
- * if it is below the setpoint or decreases the value of the
- * output if it is above the setpoint.
+ * A bang bang controller. The bang bang controller increases the value of the
+ * output if it is below the setpoint or decreases the value of the output if it
+ * is above the setpoint.
  *
  */
 public class BangBangController extends MotionController {
@@ -23,23 +17,15 @@ public class BangBangController extends MotionController {
 	protected double threshold;
 
 	/**
-	 * BangBang controller
-	 * A bang bang controller.
-	 * The bang bang controller increases the value of the output
-	 * if it is below the setpoint or decreases the value of the
-	 * output if it is above the setpoint.
+	 * BangBang controller A bang bang controller. The bang bang controller
+	 * increases the value of the output if it is below the setpoint or decreases
+	 * the value of the output if it is above the setpoint.
 	 *
-	 * @param sensor
-	 *        Sensor
-	 * @param A
-	 *        Adjustment term
-	 *        The is the amount the setpoint is increase
-	 *        or decrease by.
-	 * @param F
-	 *        Feedforward term
-	 *        The scalar on the input.
-	 * @param threshold
-	 *        The threshold for the bangbang to start doing something.
+	 * @param sensor    Sensor
+	 * @param A         Adjustment term The is the amount the setpoint is increased
+	 *                  or decreased by.
+	 * @param F         Feedforward term The scalar on the input.
+	 * @param threshold The threshold for the bangbang to start doing something.
 	 */
 	public BangBangController(PIDSensor sensor, double A, double F, double threshold) {
 		super(sensor);
@@ -50,83 +36,23 @@ public class BangBangController extends MotionController {
 	}
 
 	/**
-	 * BangBang controller
-	 * A bang bang controller.
-	 * The bang bang controller increases the value of the output
-	 * if it is below the setpoint or decreases the value of the
-	 * output if it is above the setpoint.
+	 * BangBang controller A bang bang controller. The bang bang controller
+	 * increases the value of the output if it is below the setpoint or decreases
+	 * the value of the output if it is above the setpoint.
 	 *
-	 * @param source
-	 *        Sensor
-	 * @param A
-	 *        Adjustment term
-	 *        The is the amount the setpoint is increase
-	 *        or decrease by.
-	 * @param F
-	 *        Feedforward term
-	 *        The scalar on the input.
-	 * @param threshold
-	 *        The threshold for the bangbang to start doing something.
+	 * @param source    Sensor
+	 * @param A         Adjustment term The is the amount the setpoint is increased
+	 *                  or decreased by.
+	 * @param F         Feedforward term The scalar on the input.
+	 * @param threshold The threshold for the bangbang to start doing something.
 	 */
-<<<<<<< Updated upstream
-	public BangBangController(PIDController source, double A, double F, double threshold) {
-		super(source);
-		this.A = A;
-		this.F = F;
-		this.threshold = threshold;
-		reset();
-	}
-=======
->>>>>>> Stashed changes
 
-	/**
-	 * BangBang controller
-	 * A bang bang controller.
-	 * The bang bang controller increases the value of the output
-	 * if it is below the setpoint or decreases the value of the
-	 * output if it is above the setpoint.
-	 *
-	 * @param sensor
-	 *        Sensor
-	 * @param A
-	 *        Adjustment term
-	 *        The is the amount the setpoint is increase
-	 *        or decrease by.
-	 * @param F
-	 *        Feedforward term
-	 *        The scalar on the input.
-	 */
 	public BangBangController(PIDSensor sensor, double A, double F) {
-		//this(sensor, A, F, Double.MIN_VALUE);
+		// this(sensor, A, F, Double.MIN_VALUE);
 		super(sensor);
 		this.A = A;
 		this.F = F;
-		this.threshold = threshold;
 	}
-
-	/**
-	 * BangBang controller
-	 * A bang bang controller.
-	 * The bang bang controller increases the value of the output
-	 * if it is below the setpoint or decreases the value of the
-	 * output if it is above the setpoint.
-	 *
-	 * @param source
-	 *        Sensor
-	 * @param A
-	 *        Adjustment term
-	 *        The is the amount the setpoint is increase
-	 *        or decrease by.
-	 * @param F
-	 *        Feedforward term
-	 *        The scalar on the input.
-	 */
-<<<<<<< Updated upstream
-	public BangBangController(PIDController source, double A, double F) {
-		this(source, A, F, Double.MIN_VALUE);
-	}
-=======
->>>>>>> Stashed changes
 
 	/**
 	 * Sets the stored error value to zero (0)
@@ -137,11 +63,10 @@ public class BangBangController extends MotionController {
 	}
 
 	/**
-	 * Get the current output of the bang bang controller.
-	 * This should be used to set the output.
+	 * Get the current output of the bang bang controller. This should be used to
+	 * set the output.
 	 *
-	 * @return
-	 * 		The current output of the bang bang controller.
+	 * @return The current output of the bang bang controller.
 	 * @throws InvalidSensorException
 	 */
 	@Override
@@ -155,7 +80,8 @@ public class BangBangController extends MotionController {
 		LogKitten.v(input + " " + setpoint + " " + error);
 		if (continuous) {
 			double range = inputMax - inputMin;
-			// If the error is more than half of the range, it is faster to increase the error and loop around the boundary
+			// If the error is more than half of the range, it is faster to increase the
+			// error and loop around the boundary
 			if (Math.abs(error) > range / 2) {
 				if (error > 0) {
 					error -= range;
@@ -175,27 +101,24 @@ public class BangBangController extends MotionController {
 	}
 
 	/**
-	 * Get the current output of the bang bang controller.
-	 * This should be used to set the output.
+	 * Get the current output of the bang bang controller. This should be used to
+	 * set the output.
 	 *
-	 * @return
-	 * 		The current output of the bang bang controller.
+	 * @return The current output of the bang bang controller.
 	 * @warning does not indicate sensor error
 	 */
 	@Override
 	public double get() {
 		try {
 			return getSafely();
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			LogKitten.ex(e);
 			return 0;
 		}
 	}
 
 	/**
-	 * @return
-	 * 		The most recent error.
+	 * @return The most recent error.
 	 */
 	@Override
 	public double getError() {

@@ -5,7 +5,6 @@ import org.usfirst.frc4904.standard.Util;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import org.usfirst.frc4904.standard.custom.CustomPIDSourceType;
-import edu.wpi.first.wpilibj.PIDSourceType;
 
 public class CANTalonEncoder implements CustomEncoder {
 	protected final TalonSRX talon;
