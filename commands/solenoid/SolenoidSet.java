@@ -6,7 +6,6 @@ import java.util.Set;
 import org.usfirst.frc4904.standard.subsystems.SolenoidSubsystem;
 import org.usfirst.frc4904.standard.subsystems.SolenoidSubsystem.SolenoidState;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.Subsystem;
 
 /**
  * Command to set the state of a SolenoidSubsystem
@@ -15,7 +14,6 @@ public class SolenoidSet extends CommandBase {
 	protected final SolenoidSubsystem system;
 	protected final SolenoidState state;
 	protected final BooleanSupplier[] booleanSuppliers;
-	protected final Set<Subsystem> requirements;
 
 	/**
 	 * Sets the state of a SolenoidSubsystem
@@ -31,7 +29,7 @@ public class SolenoidSet extends CommandBase {
 		this.state = state;
 		this.booleanSuppliers = booleanSuppliers;
 
-		requirements = Set.of((Subsystem) system);
+		addRequirements(system);
 	}
 
 	/**
@@ -48,9 +46,7 @@ public class SolenoidSet extends CommandBase {
 	}
 
 	public SolenoidSet(SolenoidSubsystem system, SolenoidState state) {
-		this(system, state, () -> {
-			return false;
-		});
+		this("SolenoidSet", system, state);
 	}
 
 	/**
@@ -64,13 +60,6 @@ public class SolenoidSet extends CommandBase {
 			}
 		}
 		system.set(state);
-	}
-
-	/**
-	 * Gets requirements
-	 */
-	public Set<Subsystem> getRequirements() {
-		return requirements;
 	}
 
 	/**

@@ -81,7 +81,7 @@ public class SolenoidSubsystem extends SubsystemBase {
 	 * @param solenoids
 	 *                  Double solenoids of the system
 	 */
-	public SolenoidSubsystem( DoubleSolenoid... solenoids) {
+	public SolenoidSubsystem(DoubleSolenoid... solenoids) {
 		this(false, solenoids);
 	}
 

@@ -32,7 +32,7 @@ public class SolenoidRetract extends SolenoidSet {
 	 *                         system
 	 */
 	public SolenoidRetract(SolenoidSubsystem system, BooleanSupplier... booleanSuppliers) {
-		super("Retracting " + system.getName(), system, SolenoidState.RETRACT, booleanSuppliers);
+		this("Retracting " + system.getName(), system, booleanSuppliers);
 	}
 
 	/**
@@ -53,6 +53,6 @@ public class SolenoidRetract extends SolenoidSet {
 	 * @param system SolenoidSubsystem to set
 	 */
 	public SolenoidRetract(SolenoidSubsystem system) {
-		super("Retracting " + system.getName(), system, SolenoidState.RETRACT);
+		this("Retracting " + system.getName(), system);
 	}
 }
