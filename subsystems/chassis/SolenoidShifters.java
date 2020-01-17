@@ -46,7 +46,7 @@ public class SolenoidShifters extends SubsystemBase {
 		this(name, isInverted, SolenoidState.RETRACT, solenoids);
 	}
 
-	/** 
+	/**
 	 * A class that wraps multiple DoubleSolenoid objects with subsystem
 	 * functionality. Allows for easy inversion and setting of default state of
 	 * solenoids
@@ -160,9 +160,24 @@ public class SolenoidShifters extends SubsystemBase {
 			}
 		}
 	}
-	
-	public void set() {
-		set(SolenoidState.RETRACT); // TODO: this may be needed to change 
+
+	/**
+	 * Sets the state of the system Only sets if current state is not equal to state
+	 * to be set
+	 * 
+	 * This implementation takes no parameters, as it just reverses the current
+	 * state TODO: this may need to be changed
+	 * 
+	 * @throws Exception if the solenoid state currently is off
+	 */
+	public void set() throws Exception {
+		if (state == SolenoidState.RETRACT) {
+			set(SolenoidState.EXTEND);
+		} else if (state == SolenoidState.EXTEND) {
+			set(SolenoidState.RETRACT);
+		} else {
+			throw new Exception("Solenoid state is off, which it should not have been set to.");
+		}
 	}
 
 	/**

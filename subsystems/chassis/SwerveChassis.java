@@ -32,7 +32,8 @@ public class SwerveChassis extends Chassis {
 	}
 
 	public SwerveChassis(Motor frontLeftWheel, Motor frontRightWheel, Motor backLeftWheel, Motor backRightWheel,
-			Motor frontLeftWheelSwerve, Motor frontRightWheelSwerve, Motor backLeftWheelSwerve, Motor backRightWheelSwerve) {
+			Motor frontLeftWheelSwerve, Motor frontRightWheelSwerve, Motor backLeftWheelSwerve,
+			Motor backRightWheelSwerve) {
 		this("SwerveChassis", frontLeftWheel, frontRightWheel, backLeftWheel, backRightWheel, frontLeftWheelSwerve,
 				frontRightWheelSwerve, backLeftWheelSwerve, backRightWheelSwerve);
 	}
