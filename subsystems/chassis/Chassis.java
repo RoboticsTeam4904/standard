@@ -31,9 +31,7 @@ public abstract class Chassis extends SubsystemBase {
 	 *               to back, left to right
 	 */
 	public Chassis(Motor... motors) {
-		this.motors = motors;
-		motorSpeeds = new double[motors.length];
-		setName("Chassis");
+		this("Chassis", motors);
 	}
 
 	/**

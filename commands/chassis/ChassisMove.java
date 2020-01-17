@@ -94,7 +94,6 @@ public class ChassisMove extends ParallelCommandGroup {
 	public void initialize() {
 		for (Motor motor : motors) {
 			if (motor instanceof VelocitySensorMotor) {
-
 				if (usePID) {
 					((VelocitySensorMotor) motor).enableMotionController();
 				} else {

@@ -27,6 +27,7 @@ public class SolenoidShifters extends SubsystemBase {
 	 */
 	public SolenoidShifters(String name, boolean isInverted, SolenoidState defaultState, DoubleSolenoid... solenoids) {
 		setName(name);
+		setDefaultCommand(new SolenoidSet(this, defaultState));
 		this.solenoids = solenoids;
 		this.isInverted = isInverted;
 		this.defaultState = defaultState;
@@ -46,7 +47,7 @@ public class SolenoidShifters extends SubsystemBase {
 		this(name, isInverted, SolenoidState.RETRACT, solenoids);
 	}
 
-	/** 
+	/**
 	 * A class that wraps multiple DoubleSolenoid objects with subsystem
 	 * functionality. Allows for easy inversion and setting of default state of
 	 * solenoids
@@ -153,16 +154,16 @@ public class SolenoidShifters extends SubsystemBase {
 		if (isInverted) {
 			state = invertState(state);
 		}
+		this.state = state;
 		if (this.state != state) {
-			this.state = state;
 			for (DoubleSolenoid solenoid : solenoids) {
 				solenoid.set(state.value);
 			}
 		}
 	}
-	
+
 	public void set() {
-		set(SolenoidState.RETRACT); // TODO: this may be needed to change 
+		set(SolenoidState.RETRACT); // TODO: this may be needed to change
 	}
 
 	/**
@@ -194,12 +195,5 @@ public class SolenoidShifters extends SubsystemBase {
 	 */
 	public boolean isExtended() {
 		return solenoids[0].get() == SolenoidState.EXTEND.value;
-	}
-
-	/**
-	 * Sets the defaultCommand to set the system to the defaultState of the system
-	 */
-	public void initDefaultCommand() {
-		setDefaultCommand(new SolenoidSet(this, defaultState));
 	}
 }

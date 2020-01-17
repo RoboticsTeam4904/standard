@@ -112,8 +112,8 @@ public class ChassisMinimumDistance extends ChassisConstant {
 				return true;
 			}
 		}
-		double distanceAvg = distanceSum / encoders.length;
-		return distanceAvg >= distance;
+
+		return distanceSum / (double) encoders.length >= distance;
 	}
 
 	@Override

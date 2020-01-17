@@ -4,6 +4,7 @@ import org.usfirst.frc4904.standard.commands.motor.MotorIdle;
 import org.usfirst.frc4904.standard.subsystems.chassis.Chassis;
 import org.usfirst.frc4904.standard.subsystems.motor.Motor;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.Command;
 
 /**
  * 
@@ -18,10 +19,10 @@ public class ChassisIdle extends ParallelCommandGroup {
 	 * @param chassis The robot Chassis to idle.
 	 */
 	public ChassisIdle(String name, Chassis chassis) {
-		Motor[] motors = chassis.getMotors();
-		for (Motor motor : motors) {
-			addCommands(new MotorIdle(motor));
+		for (Motor motor : chassis.getMotors()) {
+			addCommands((Command) new MotorIdle(motor));
 		}
+
 		setName(name);
 		addRequirements(chassis);
 	}

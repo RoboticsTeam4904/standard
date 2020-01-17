@@ -114,7 +114,6 @@ public class ChassisTurn extends CommandBase implements ChassisController {
 	@Override
 	public void initialize() {
 		move.schedule();
-		// ^ it might should be move.initialize() instead idk
 		initialAngle = imu.getYaw();
 		try {
 			motionController.resetSafely();

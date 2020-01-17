@@ -30,7 +30,7 @@ public class MecanumChassis extends Chassis {
 	 * @param backRightWheel
 	 */
 	public MecanumChassis(Motor frontLeftWheel, Motor frontRightWheel, Motor backLeftWheel, Motor backRightWheel) {
-		super("Mecanum Chassis", frontLeftWheel, frontRightWheel, backLeftWheel, backRightWheel);
+		this("Mecanum Chassis", frontLeftWheel, frontRightWheel, backLeftWheel, backRightWheel);
 	}
 
 	/**
