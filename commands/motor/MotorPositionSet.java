@@ -22,6 +22,7 @@ public class MotorPositionSet extends CommandBase {
 	public MotorPositionSet(String name, PositionSensorMotor motor, CommandBase fallbackCommand) {
 		super();
 		setName(name);
+		addRequirements(motor);
 		this.motor = motor;
 		this.fallbackCommand = fallbackCommand;
 	}

@@ -20,6 +20,7 @@ public class MotorConstant extends CommandBase {
 		setName(name);
 		this.motor = motor;
 		this.motorSpeed = motorSpeed;
+		addRequirements(motor);
 	}
 
 	/**

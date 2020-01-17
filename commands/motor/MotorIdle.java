@@ -20,15 +20,17 @@ public class MotorIdle extends CommandBase {
 	public MotorIdle(String name, Motor motor) {
 		super();
 		setName(name);
+		addRequirements(motor);
 		this.motor = motor;
 		LogKitten.d("MotorIdle created");
 	}
+
 	/**
-	 * Constructor. 
+	 * Constructor.
 	 * 
 	 * @param motor
 	 */
-	public MotorIdle(Motor motor){
+	public MotorIdle(Motor motor) {
 		this("MotorIdle", motor);
 	}
 

@@ -2,6 +2,8 @@ package org.usfirst.frc4904.standard.commands.motor;
 
 import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.subsystems.motor.Motor;
+
+import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /**
@@ -11,12 +13,13 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
  *
  */
 public class MotorSet extends CommandBase {
-	protected final Motor motor;
+	protected final SpeedController motor;
 	protected double speed;
 
 	public MotorSet(String name, Motor motor) {
 		super();
 		setName(name);
+		addRequirements(motor);
 		this.motor = motor;
 		speed = 0;
 		LogKitten.d("MotorSet created for " + motor.getName());
@@ -43,7 +46,7 @@ public class MotorSet extends CommandBase {
 
 	@Override
 	public void end(boolean interrupted) {
-		if (interrupted) {
+		if (!interrupted) {
 			motor.set(0);
 			LogKitten.d("MotorSet ended (motor speed set to 0)");
 		} else {
