@@ -8,25 +8,30 @@ public class RunWhile extends CommandBase {
 	protected final CommandBase command;
 	protected final Supplier<Boolean> stopCondition;
 
-	public RunWhile(CommandBase command, Supplier<Boolean> stopCondition) {
+	public RunWhile(String name, CommandBase command, Supplier<Boolean> stopCondition) {
+		super();
+		setName(name);
 		this.command = command;
 		this.stopCondition = stopCondition;
 		addRequirements((Subsystem[]) command.getRequirements().toArray());
 	}
 
+	public RunWhile(CommandBase command, Supplier<Boolean> stopCondition) {
+		this("RunWhile", command, stopCondition);
+	}
+
+	@Override
 	public void initialize() {
 		command.schedule();
 	}
 
+	@Override
 	public boolean isFinished() {
 		return !stopCondition.get();
 	}
 
-	public void end() {
+	@Override
+	public void end(boolean interrupted) {
 		command.cancel();
-	}
-
-	public void interrupted() {
-		end();
 	}
 }
