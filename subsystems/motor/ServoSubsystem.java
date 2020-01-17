@@ -23,6 +23,7 @@ public class ServoSubsystem extends SubsystemBase {
 	 *                   multiple Servos.
 	 */
 	public ServoSubsystem(String name, boolean isInverted, Servo... servos) {
+		setDefaultCommand(new Idle(this));
 		this.servos = servos;
 		this.isInverted = isInverted;
 		set(0);
@@ -64,9 +65,9 @@ public class ServoSubsystem extends SubsystemBase {
 		this("ServoSubsystem", servos);
 	}
 
-	protected void initDefaultCommand() {
-		setDefaultCommand(new Idle(this));
-	}
+	// protected void initDefaultCommand() {
+	// 	setDefaultCommand(new Idle(this));
+	// }
 
 	/**
 	 * Get the servo position.

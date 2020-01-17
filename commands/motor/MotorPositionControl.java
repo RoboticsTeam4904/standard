@@ -25,6 +25,7 @@ public class MotorPositionControl extends CommandBase {
 	 * the Controller. This can allow an Operator to easily control the position of
 	 * a single SensorMotor from an axis of the Controller.
 	 *
+	 * @param name
 	 * @param motor
 	 * @param controller
 	 * @param axis
@@ -32,9 +33,10 @@ public class MotorPositionControl extends CommandBase {
 	 * @param fallbackCommand If the sensor fails for some reason, this command will
 	 *                        be cancelled, then the fallbackCommand will start
 	 */
-	public MotorPositionControl(PositionSensorMotor motor, Util.Range motorPositionRange, Controller controller,
+	public MotorPositionControl(String name, PositionSensorMotor motor, Util.Range motorPositionRange, Controller controller,
 			int axis, boolean invert, CommandBase fallbackCommand) {
 		super();
+		setName(name);
 		this.motor = motor;
 		this.motorPositionRange = motorPositionRange;
 		this.controller = controller;
@@ -48,7 +50,7 @@ public class MotorPositionControl extends CommandBase {
 	 * This Command directly controls a SensorMotor's position based on an axis of
 	 * the Controller. This can allow an Operator to easily control the position of
 	 * a single SensorMotor from an axis of the Controller.
-	 *
+	 * @param name
 	 * @param motor
 	 * @param controller
 	 * @param axis
@@ -57,7 +59,7 @@ public class MotorPositionControl extends CommandBase {
 
 	public MotorPositionControl(PositionSensorMotor motor, Util.Range motorPositionRange, Controller controller,
 			int axis, boolean invert) {
-		this(motor, motorPositionRange, controller, axis, invert, null);
+		this("MotorPositionControl", motor, motorPositionRange, controller, axis, invert, null);
 	}
 
 	@Override

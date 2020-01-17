@@ -21,7 +21,7 @@ public class MotorPositionConstant extends CommandBase {
 	/**
 	 * Constructor MotorPositionConstant is a Command that runs while setting a
 	 * SensorMotor's position to the provided (double) value.
-	 *
+	 * @param name
 	 * @param motor
 	 * @param position        position to set the motor to
 	 * @param endOnArrival    If (boolean) endOnArrival is provided and set to
@@ -31,21 +31,29 @@ public class MotorPositionConstant extends CommandBase {
 	 * @param fallbackCommand If the sensor fails for some reason, this command will
 	 *                        be cancelled, then the fallbackCommand will start
 	 */
-	public MotorPositionConstant(PositionSensorMotor motor, double position, boolean endOnArrival,
+	public MotorPositionConstant(String name, PositionSensorMotor motor, double position, boolean endOnArrival,
 			CommandBase fallbackCommand) {
 		super();
+		setName(name);
 		this.motor = motor;
 		this.position = position;
 		this.endOnArrival = endOnArrival;
 		this.fallbackCommand = fallbackCommand;
 	}
-
+	/**
+	 * @param motor
+	 * @param position
+	 * @param endOnArrival
+	 */
 	public MotorPositionConstant(PositionSensorMotor motor, double position, boolean endOnArrival) {
-		this(motor, position, endOnArrival, null);
+		this("MotorPositionConstant",motor, position, endOnArrival, null);
 	}
-
+	/**
+	 * @param motor
+	 * @param position
+	 */
 	public MotorPositionConstant(PositionSensorMotor motor, double position) {
-		this(motor, position, true, null);
+		this("MotorPositionConstant",motor, position, true, null);
 	}
 
 	@Override

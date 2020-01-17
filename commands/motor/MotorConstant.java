@@ -17,6 +17,7 @@ public class MotorConstant extends CommandBase {
 	 */
 	public MotorConstant(String name, Motor motor, double motorSpeed) {
 		super();
+		setName(name);
 		this.motor = motor;
 		this.motorSpeed = motorSpeed;
 	}

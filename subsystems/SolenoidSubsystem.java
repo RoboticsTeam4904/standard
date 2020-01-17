@@ -3,13 +3,13 @@ package org.usfirst.frc4904.standard.subsystems;
 
 import org.usfirst.frc4904.standard.commands.solenoid.SolenoidSet;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
-import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 /**
  * A class that wraps multiple DoubleSolenoid objects with subsystem functionality.
  * Allows for easy inversion and setting of default state of solenoids
  */
-public class SolenoidSubsystem extends Subsystem {
+public class SolenoidSubsystem extends SubsystemBase {
 	protected DoubleSolenoid[] solenoids;
 	protected SolenoidState state;
 	protected SolenoidState defaultState;
@@ -29,7 +29,8 @@ public class SolenoidSubsystem extends Subsystem {
 	 *                     Double solenoids of the system
 	 */
 	public SolenoidSubsystem(String name, boolean isInverted, SolenoidState defaultState, DoubleSolenoid... solenoids) {
-		super(name);
+		super();
+		setName(name);
 		this.solenoids = solenoids;
 		this.isInverted = isInverted;
 		this.defaultState = defaultState;
@@ -190,7 +191,7 @@ public class SolenoidSubsystem extends Subsystem {
 		}
 	}
 
-	/**
+	/** rm -rf *.
 	 * @return solenoids
 	 *         DoubleSolenoid objects of the system
 	 */
@@ -205,12 +206,5 @@ public class SolenoidSubsystem extends Subsystem {
 	 */
 	public boolean isExtended() {
 		return solenoids[0].get() == SolenoidState.EXTEND.value;
-	}
-
-	/**
-	 * Sets the defaultCommand to set the system to the defaultState of the system
-	 */
-	public void initDefaultCommand() {
-		setDefaultCommand(new SolenoidSet(this, defaultState));
 	}
 }

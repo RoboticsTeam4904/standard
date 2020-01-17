@@ -19,8 +19,9 @@ public class MotorPositionSet extends CommandBase {
 	 * @param fallbackCommand If the sensor fails for some reason, this command will
 	 *                        be cancelled, then the fallbackCommand will start
 	 */
-	public MotorPositionSet(PositionSensorMotor motor, CommandBase fallbackCommand) {
+	public MotorPositionSet(String name, PositionSensorMotor motor, CommandBase fallbackCommand) {
 		super();
+		setName(name);
 		this.motor = motor;
 		this.fallbackCommand = fallbackCommand;
 	}
@@ -31,7 +32,7 @@ public class MotorPositionSet extends CommandBase {
 	 * @param motor A Motor that also implements PositionSensorMotor.
 	 */
 	public MotorPositionSet(PositionSensorMotor motor) {
-		this(motor, null);
+		this("MotorPositionSet", motor, null);
 	}
 
 	/**

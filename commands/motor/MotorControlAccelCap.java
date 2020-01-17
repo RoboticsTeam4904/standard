@@ -25,14 +25,16 @@ public class MotorControlAccelCap extends CommandBase {
 	 * This can allow an Operator to easily control a single Motor from an axis of
 	 * the Controller. Has an acceleration cap (but not deceleration cap)
 	 *
+	 * @param name
 	 * @param motor
 	 * @param controller
 	 * @param axis
 	 * @param scale
 	 * @param accel_cap  This is the maximum change in motor speed per second
 	 */
-	public MotorControlAccelCap(Motor motor, Controller controller, int axis, double scale, double accel_cap) {
-		super();
+	public MotorControlAccelCap(String name, Motor motor, Controller controller, int axis, double scale, double accel_cap) {
+		 super();
+		setName(name);
 		this.motor = motor;
 		this.controller = controller;
 		this.axis = axis;
@@ -42,7 +44,35 @@ public class MotorControlAccelCap extends CommandBase {
 		last_t = System.currentTimeMillis();
 		LogKitten.d("MotorControl created for " + motor.getName());
 	}
+	/**
+	 * This Command directly controls a Motor based on an axis of the Controller.
+	 * This can allow an Operator to easily control a single Motor from an axis of
+	 * the Controller. Has an acceleration cap (but not deceleration cap)
+	 *
+	 * @param motor
+	 * @param controller
+	 * @param axis
+	 * @param scale
+	 * @param accel_cap  This is the maximum change in motor speed per second
+	 */
+	public MotorControlAccelCap(Motor motor, Controller controller, int axis, double scale, double accel_cap) {
+		this("MotorControlAccelCap", motor, controller, axis, scale, accel_cap);
+	}
 
+	/**
+	 * This Command directly controls a Motor based on an axis of the Controller.
+	 * This can allow an Operator to easily control a single Motor from an axis of
+	 * the Controller.
+	 *
+	 * @param name
+	 * @param motor
+	 * @param controller
+	 * @param axis
+	 * @param accel_cap  This is the maximum change in motor speed per second
+	 */
+	public MotorControlAccelCap(String name, Motor motor, Controller controller, int axis, double accel_cap) {
+		this(name, motor, controller, axis, 1.0, accel_cap);
+	}
 	/**
 	 * This Command directly controls a Motor based on an axis of the Controller.
 	 * This can allow an Operator to easily control a single Motor from an axis of
@@ -51,7 +81,6 @@ public class MotorControlAccelCap extends CommandBase {
 	 * @param motor
 	 * @param controller
 	 * @param axis
-	 * @param scale
 	 * @param accel_cap  This is the maximum change in motor speed per second
 	 */
 	public MotorControlAccelCap(Motor motor, Controller controller, int axis, double accel_cap) {

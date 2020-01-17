@@ -6,14 +6,14 @@ import org.usfirst.frc4904.standard.subsystems.motor.speedmodifiers.IdentityModi
 import org.usfirst.frc4904.standard.subsystems.motor.speedmodifiers.SpeedModifier;
 import edu.wpi.first.wpilibj.SpeedController;
 import com.ctre.phoenix.motorcontrol.IMotorController;
-import edu.wpi.first.wpilibj2.command.Subsystem;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 /**
  * A class that wraps around a variable number of SpeedController objects
  * to give them Subsystem functionality. Can also modify their speed with a
  * SpeedModifier for things like scaling or brownout protection.
  */
-public class Motor implements Subsystem, SpeedController {
+public class Motor extends SubsystemBase implements SpeedController {
 	protected final SpeedController[] motors;
 	protected final SpeedModifier speedModifier;
 	protected final String name;
@@ -37,6 +37,8 @@ public class Motor implements Subsystem, SpeedController {
 	 *                      SpeedControllers.
 	 */
 	public Motor(String name, boolean isInverted, SpeedModifier speedModifier, SpeedController... motors) {
+		super();
+		setName(name);
 		this.name = name;
 		this.isInverted = false;
 		this.speedModifier = speedModifier;
@@ -182,7 +184,8 @@ public class Motor implements Subsystem, SpeedController {
 		double newSpeed = speedModifier.modify(speed);
 		lastSpeed = newSpeed;
 		for (SpeedController motor : motors) {
-			motor.pidWrite(newSpeed);
+			motor.set(newSpeed);
+
 		}
 	}
 

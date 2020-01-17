@@ -2,9 +2,10 @@ package org.usfirst.frc4904.standard.subsystems;
 
 
 import org.usfirst.frc4904.standard.custom.Overridable;
-import edu.wpi.first.wpilibj.command.Subsystem;
+// import edu.wpi.first.wpilibj2.command.Subsystem;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public abstract class OverridableSubsystem extends Subsystem implements Overridable {
+public abstract class OverridableSubsystem extends SubsystemBase implements Overridable {
 	private boolean isOverridden = false;
 
 	@Override

@@ -9,6 +9,7 @@ public class PositionSensorMotor extends SensorMotor {
 	public PositionSensorMotor(String name, boolean isInverted, SpeedModifier speedModifier,
 			MotionController motionController, SpeedController... motors) {
 		super(name, isInverted, speedModifier, motionController, motors);
+		setName(name);
 	}
 
 	public PositionSensorMotor(String name, boolean isInverted, MotionController motionController,

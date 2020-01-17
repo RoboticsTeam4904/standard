@@ -22,20 +22,21 @@ public class MotorControl extends CommandBase {
 	 * This can allow an Operator to easily control a single Motor from an axis of
 	 * the Controller.
 	 *
+	 * @param name
 	 * @param motor
 	 * @param controller
 	 * @param axis
 	 * @param scale
 	 */
-	public MotorControl(Motor motor, Controller controller, int axis, double scale) {
+	public MotorControl(String name, Motor motor, Controller controller, int axis, double scale) {
 		super();
+		setName(name);
 		this.motor = motor;
 		this.controller = controller;
 		this.axis = axis;
 		this.scale = scale;
 		LogKitten.d("MotorControl created.");
 	}
-
 	/**
 	 * This Command directly controls a Motor based on an axis of the Controller.
 	 * This can allow an Operator to easily control a single Motor from an axis of
@@ -45,6 +46,32 @@ public class MotorControl extends CommandBase {
 	 * @param controller
 	 * @param axis
 	 * @param scale
+	 */
+	public MotorControl(Motor motor, Controller controller, int axis, double scale) {
+		this("Motor Control", motor, controller, axis, scale);
+	}
+
+	/**
+	 * This Command directly controls a Motor based on an axis of the Controller.
+	 * This can allow an Operator to easily control a single Motor from an axis of
+	 * the Controller.
+	 *
+	 * @param name
+	 * @param motor
+	 * @param controller
+	 * @param axis
+	 */
+	public MotorControl(String name, Motor motor, Controller controller, int axis) {
+		this(name, motor, controller, axis, 1.0);
+	}
+	/**
+	 * This Command directly controls a Motor based on an axis of the Controller.
+	 * This can allow an Operator to easily control a single Motor from an axis of
+	 * the Controller.
+	 *
+	 * @param motor
+	 * @param controller
+	 * @param axis
 	 */
 	public MotorControl(Motor motor, Controller controller, int axis) {
 		this(motor, controller, axis, 1.0);

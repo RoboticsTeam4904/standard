@@ -14,8 +14,9 @@ public class MotorSet extends CommandBase {
 	protected final Motor motor;
 	protected double speed;
 
-	public MotorSet(Motor motor) {
+	public MotorSet(String name, Motor motor) {
 		super();
+		setName(name);
 		this.motor = motor;
 		speed = 0;
 		LogKitten.d("MotorSet created for " + motor.getName());
