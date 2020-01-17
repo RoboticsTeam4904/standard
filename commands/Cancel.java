@@ -21,11 +21,6 @@ public class Cancel extends CommandBase {
 	}
 
 	public boolean isFinished() {
-		if (!command.isScheduled()) {
-			return true;
-		}
-		else {
-			return false;
-		}
+		return true;
 	}
 }
