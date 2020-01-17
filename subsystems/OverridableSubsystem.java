@@ -8,13 +8,20 @@ public abstract class OverridableSubsystem extends SubsystemBase implements Over
 	private boolean isOverridden = false;
 
 	public OverridableSubsystem(String name) {
+		super();
 		setName(name);
 	}
 
+	public OverridableSubsystem() {
+		this("OverridableSubsystem");
+	}
+
+	@Override
 	public void setOverridden(boolean isOverridden) {
 		this.isOverridden = isOverridden;
 	}
 
+	@Override
 	public boolean isOverridden() {
 		return isOverridden;
 	}
