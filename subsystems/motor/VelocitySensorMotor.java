@@ -10,7 +10,6 @@ public class VelocitySensorMotor extends SensorMotor {
 	public VelocitySensorMotor(String name, boolean isInverted, SpeedModifier slopeController,
 			MotionController motionController, SpeedController... motors) {
 		super(name, isInverted, slopeController, motionController, motors);
-		setName(name);
 	}
 
 	public VelocitySensorMotor(String name, boolean isInverted, MotionController motionController,

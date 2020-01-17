@@ -1,13 +1,16 @@
 package org.usfirst.frc4904.standard.subsystems.motor.speedmodifiers;
 
+import org.usfirst.frc4904.standard.commands.Idle;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class EnableableModifier extends SubsystemBase implements SpeedModifier{
+public class EnableableModifier extends SubsystemBase implements SpeedModifier {
 	protected boolean enabled;
 	protected final SpeedModifier modifier;
 
 	public EnableableModifier(SpeedModifier modifier) {
+		super();
+		setDefaultCommand(new Idle(this));
 		this.modifier = modifier;
 		enabled = false;
 	}

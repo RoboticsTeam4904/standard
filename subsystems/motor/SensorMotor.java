@@ -13,7 +13,6 @@ public abstract class SensorMotor extends Motor {
 	public SensorMotor(String name, boolean inverted, SpeedModifier speedModifier, MotionController motionController,
 			SpeedController... motors) {
 		super(name, inverted, speedModifier, motors);
-		setName(name);
 		this.motionController = motionController;
 	}
 
