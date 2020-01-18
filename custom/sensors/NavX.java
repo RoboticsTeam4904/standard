@@ -1,6 +1,4 @@
 package org.usfirst.frc4904.standard.custom.sensors;
-
-import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.custom.CustomPIDSourceType;
 
 import com.kauailabs.navx.frc.AHRS;
@@ -18,6 +16,7 @@ public class NavX extends AHRS implements IMU {
 	protected float lastRoll;
 	protected double lastYawRate;
 	protected int getYawCalls;
+	protected CustomPIDSourceType sensortype;
 	protected static final double MAX_DEGREES_PER_TICK = 90.0;
 	protected static final double MAX_DEGREES_PER_SECOND_PER_TICK = 180;
 
@@ -122,9 +121,10 @@ public class NavX extends AHRS implements IMU {
 		lastYaw = 0;
 	}
 
-	@Override
-	public void setPIDSourceType(CustomPIDSourceType pidSource) {
+
+	public void setPIDSourceType(CustomPIDSourceType sensortype) {
 		// TODO Auto-generated method stub
+		this.sensortype = sensortype;
 
 	}
 
@@ -136,6 +136,7 @@ public class NavX extends AHRS implements IMU {
 	@Override
 	public void setCustomPIDSourceType(CustomPIDSourceType kdisplacement) {
 		// TODO Auto-generated method stub
+	
 
 	}
 }

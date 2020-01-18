@@ -585,41 +585,4 @@ public class XboxController extends Joystick {
 		return controller;
 	}
 
-	/* Set Methods */
-	/**
-	 * Make the controller vibrate
-	 * 
-	 * @param hand      The side of the controller to rumble
-	 * @param intensity How strong the rumble is
-	 */
-	public void setRumble(HAND hand, double intensity) {
-		final float amount = new Float(intensity);
-		if (hand == HAND.LEFT) {
-			controller.setRumble(RumbleType.kLeftRumble, amount);
-		} else {
-			controller.setRumble(RumbleType.kRightRumble, amount);
-		}
-	}
-
-	/**
-	 * Make the controller vibrate
-	 * 
-	 * @param intensity How strong the rumble is
-	 */
-	public void setRumble(double intensity) {
-		final float amount = new Float(intensity);
-		controller.setRumble(RumbleType.kLeftRumble, amount);
-		controller.setRumble(RumbleType.kRightRumble, amount);
-	}
-
-	/*
-	 * Set both axis deadzones of both thumbsticks
-	 * 
-	 * @param number
-	 */
-	public void setDeadZone(double number) {
-		leftStick.setDeadZone(number);
-		rightStick.setDeadZone(number);
-	}
 }
-	

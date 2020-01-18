@@ -3,7 +3,7 @@ package org.usfirst.frc4904.standard.custom.controllers;
 import org.usfirst.frc4904.standard.commands.Cancel;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /**
  * A button with better toggle detection
@@ -37,7 +37,7 @@ public class CustomButton extends JoystickButton {
 	 *
 	 * @param command The command to be cancelled.
 	 */
-	public void cancelWhenReleased(Command command) {
+	public void cancelWhenReleased(CommandBase command) {
 		whenReleased(new Cancel(command));
 	}
 
@@ -46,7 +46,7 @@ public class CustomButton extends JoystickButton {
 	 *
 	 * @param command The command to be run
 	 */
-	public void onlyWhileHeld(Command command) {
+	public void onlyWhileHeld(CommandBase command) {
 		whenPressed(command);
 		cancelWhenReleased(command);
 	}
@@ -56,7 +56,7 @@ public class CustomButton extends JoystickButton {
 	 *
 	 * @param command The command to be run.
 	 */
-	public void onlyWhileReleased(Command command) {
+	public void onlyWhileReleased(CommandBase command) {
 		command.schedule();
 		whenReleased(command);
 		cancelWhenPressed(command);
