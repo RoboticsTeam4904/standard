@@ -4,8 +4,6 @@ import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.custom.sensors.InvalidSensorException;
 import org.usfirst.frc4904.standard.custom.sensors.PIDSensor;
 
-
-
 /**
  * A bang bang controller. The bang bang controller increases the value of the
  * output if it is below the setpoint or decreases the value of the output if it
@@ -48,15 +46,10 @@ public class BangBangController extends MotionController {
 	 * @param F         Feedforward term The scalar on the input.
 	 * @param threshold The threshold for the bangbang to start doing something.
 	 */
-	
 
 	public BangBangController(PIDSensor sensor, double A, double F) {
-		// this(sensor, A, F, Double.MIN_VALUE);
-		super(sensor);
-		this.A = A;
-		this.F = F;
+		this(sensor, A, F, Double.MIN_VALUE);
 	}
-
 
 	/**
 	 * Sets the stored error value to zero (0)

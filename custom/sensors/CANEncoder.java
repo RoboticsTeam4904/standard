@@ -220,13 +220,11 @@ public class CANEncoder extends CANSensor implements CustomEncoder {
 
 	@Override
 	public void setCustomPIDSourceType(CustomPIDSourceType pidSource) {
-		// TODO Auto-generated method stub
-
+		this.pidSource = pidSource;
 	}
 
 	@Override
 	public CustomPIDSourceType getCustomPIDSourceType() {
-		// TODO Auto-generated method stub
-		return null;
+		return pidSource;
 	}
 }

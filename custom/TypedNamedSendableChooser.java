@@ -14,7 +14,7 @@ public class TypedNamedSendableChooser<T extends Nameable> extends SendableChoos
 	 *
 	 * @param object
 	 */
-	public void addObject(T object) {
+	public void addOption(T object) {
 		super.addOption(object.getName(), object);
 	}
 
@@ -23,7 +23,7 @@ public class TypedNamedSendableChooser<T extends Nameable> extends SendableChoos
 	 *
 	 * @param object
 	 */
-	public void addDefault(T object) {
+	public void setDefaultOption(T object) {
 		super.setDefaultOption(object.getName() + " (default)", object);
 	}
 

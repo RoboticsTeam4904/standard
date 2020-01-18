@@ -10,50 +10,61 @@ import org.usfirst.frc4904.standard.custom.CustomPIDSourceType;
  *
  */
 public class CustomDigitalEncoder extends Encoder implements CustomEncoder {
+	private CustomPIDSourceType pidSource;
 	private double distancePerPulse;
 	private boolean reverseDirection;
 
 	public CustomDigitalEncoder(DigitalSource aSource, DigitalSource bSource) {
 		super(aSource, bSource);
+		setCustomPIDSourceType(CustomPIDSourceType.kDisplacement);
 	}
 
 	public CustomDigitalEncoder(DigitalSource aSource, DigitalSource bSource, boolean reverseDirection) {
 		super(aSource, bSource, reverseDirection);
+		setCustomPIDSourceType(CustomPIDSourceType.kDisplacement);
 	}
 
 	public CustomDigitalEncoder(DigitalSource aSource, DigitalSource bSource, boolean reverseDirection,
 			CounterBase.EncodingType encodingType) {
 		super(aSource, bSource, reverseDirection, encodingType);
+		setCustomPIDSourceType(CustomPIDSourceType.kDisplacement);
 	}
 
 	public CustomDigitalEncoder(DigitalSource aSource, DigitalSource bSource, DigitalSource indexSource) {
 		super(aSource, bSource, indexSource);
+		setCustomPIDSourceType(CustomPIDSourceType.kDisplacement);
 	}
 
 	public CustomDigitalEncoder(DigitalSource aSource, DigitalSource bSource, DigitalSource indexSource,
 			boolean reverseDirection) {
 		super(aSource, bSource, indexSource, reverseDirection);
+		setCustomPIDSourceType(CustomPIDSourceType.kDisplacement);
 	}
 
 	public CustomDigitalEncoder(int aChannel, int bChannel) {
 		super(aChannel, bChannel);
+		setCustomPIDSourceType(CustomPIDSourceType.kDisplacement);
 	}
 
 	public CustomDigitalEncoder(int aChannel, int bChannel, boolean reverseDirection) {
 		super(aChannel, bChannel, reverseDirection);
+		setCustomPIDSourceType(CustomPIDSourceType.kDisplacement);
 	}
 
 	public CustomDigitalEncoder(int aChannel, int bChannel, boolean reverseDirection,
 			CounterBase.EncodingType encodingType) {
 		super(aChannel, bChannel, reverseDirection, encodingType);
+		setCustomPIDSourceType(CustomPIDSourceType.kDisplacement);
 	}
 
 	public CustomDigitalEncoder(int aChannel, int bChannel, int indexChannel) {
 		super(aChannel, bChannel, indexChannel);
+		setCustomPIDSourceType(CustomPIDSourceType.kDisplacement);
 	}
 
 	public CustomDigitalEncoder(int aChannel, int bChannel, int indexChannel, boolean reverseDirection) {
 		super(aChannel, bChannel, indexChannel, reverseDirection);
+		setCustomPIDSourceType(CustomPIDSourceType.kDisplacement);
 	}
 
 	@Override
@@ -79,8 +90,11 @@ public class CustomDigitalEncoder extends Encoder implements CustomEncoder {
 	}
 
 	@Override
-	public double pidGetSafely() {
-		return pidGet();
+	public double pidGetSafely() throws InvalidSensorException {
+		if (pidSource == CustomPIDSourceType.kDisplacement) {
+			return getDistance();
+		}
+		return getRate();
 	}
 
 	@Override
@@ -110,13 +124,11 @@ public class CustomDigitalEncoder extends Encoder implements CustomEncoder {
 
 	@Override
 	public void setCustomPIDSourceType(CustomPIDSourceType pidSource) {
-		// TODO Auto-generated method stub
-
+		this.pidSource = pidSource;
 	}
 
 	@Override
 	public CustomPIDSourceType getCustomPIDSourceType() {
-		// TODO Auto-generated method stub
-		return null;
+		return pidSource;
 	}
 }
