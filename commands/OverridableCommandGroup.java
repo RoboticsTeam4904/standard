@@ -2,12 +2,10 @@ package org.usfirst.frc4904.standard.commands;
 
 
 import org.usfirst.frc4904.standard.custom.Overridable;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;;
+import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.command.CommandGroup;
 
-
-public abstract class OverridableCommandGroup extends SequentialCommandGroup, ParallelCommandGroup {
+public abstract class OverridableCommandGroup extends CommandGroup {
 	protected final Overridable overridable;
 
 	public OverridableCommandGroup(Overridable overridable) {
@@ -15,17 +13,17 @@ public abstract class OverridableCommandGroup extends SequentialCommandGroup, Pa
 		this.overridable = overridable;
 	}
 
-	public OverridableCommandGroup(Command[] name, Overridable overridable) {
+	public OverridableCommandGroup(String name, Overridable overridable) {
 		super(name);
 		this.overridable = overridable;
 	}
 
 	public final synchronized void addSequentialUnlessOverridden(Command command) {
-		addCommands(new RunIf(command, overridable::isNotOverridden));
+		addSequential(new RunIf(command, overridable::isNotOverridden));
 	}
 
 	public final synchronized void addSequentialUnlessOverridden(Command command, double timeout) {
-		addCommands(new RunIf(command, overridable::isNotOverridden), timeout);
+		addSequential(new RunIf(command, overridable::isNotOverridden), timeout);
 	}
 
 	public final synchronized void addParallelUnlessOverridden(Command command) {
