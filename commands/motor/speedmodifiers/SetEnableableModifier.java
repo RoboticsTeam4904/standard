@@ -1,30 +1,28 @@
 package org.usfirst.frc4904.standard.commands.motor.speedmodifiers;
 
-
 import org.usfirst.frc4904.standard.subsystems.motor.speedmodifiers.EnableableModifier;
-import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 
-public class SetEnableableModifier extends Command {
+public class SetEnableableModifier extends CommandBase {
 	protected final EnableableModifier[] modifiers;
 	protected final boolean enable;
 
 	public SetEnableableModifier(boolean enable, EnableableModifier... modifiers) {
+		super();
 		this.modifiers = modifiers;
 		this.enable = enable;
-		for (EnableableModifier modifier : modifiers) {
-			requires(modifier);
-		}
+		addRequirements(modifiers);
 	}
 
 	@Override
-	protected void initialize() {
+	public void initialize() {
 		for (EnableableModifier modifier : modifiers) {
 			modifier.setEnabled(enable);
 		}
 	}
 
 	@Override
-	protected boolean isFinished() {
+	public boolean isFinished() {
 		return true;
 	}
 }
