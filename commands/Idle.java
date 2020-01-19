@@ -1,6 +1,5 @@
 package org.usfirst.frc4904.standard.commands;
 
-import java.util.Set;
 
 import org.usfirst.frc4904.standard.LogKitten;
 

@@ -1,7 +1,6 @@
 package org.usfirst.frc4904.standard.commands.solenoid;
 
 import java.util.function.BooleanSupplier;
-import java.util.Set;
 
 import org.usfirst.frc4904.standard.subsystems.SolenoidSubsystem;
 import org.usfirst.frc4904.standard.subsystems.SolenoidSubsystem.SolenoidState;

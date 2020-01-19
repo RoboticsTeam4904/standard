@@ -40,7 +40,7 @@ public class ChassisMove extends ParallelCommandGroup {
 		motors = chassis.getMotors();
 		motorSpins = new MotorSet[motors.length];
 		for (int i = 0; i < motors.length; i++) {
-			motorSpins[i] = new MotorSet(motors[i]);
+			motorSpins[i] = new MotorSet(motors[i].getName(), motors[i]);
 		}
 		addRequirements(chassis);
 		setName(name);
