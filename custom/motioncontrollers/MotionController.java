@@ -7,7 +7,6 @@ import java.util.function.DoubleConsumer;
 import org.usfirst.frc4904.standard.custom.sensors.InvalidSensorException;
 import org.usfirst.frc4904.standard.custom.sensors.PIDSensor;
 
-
 import edu.wpi.first.hal.util.BoundaryException;
 
 /**

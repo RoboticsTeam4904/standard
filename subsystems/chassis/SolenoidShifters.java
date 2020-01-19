@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
  * functionality. Allows for easy inversion and setting of default state of
  * solenoids
  */
-public class SolenoidShifters extends SubsystemBase { //TODO: make solenoidshifters extend solenoidsubsystem
+public class SolenoidShifters extends SubsystemBase { // TODO: make solenoidshifters extend solenoidsubsystem
 	protected DoubleSolenoid[] solenoids;
 	protected SolenoidState state;
 	protected SolenoidState defaultState;
@@ -169,12 +169,12 @@ public class SolenoidShifters extends SubsystemBase { //TODO: make solenoidshift
 	 * 
 	 * @throws Exception if the solenoid state currently is off
 	 */
-	public void set() { //TODO: consider OFF case
+	public void set() { // TODO: consider OFF case
 		if (state == SolenoidState.RETRACT) {
 			set(SolenoidState.EXTEND);
 		} else if (state == SolenoidState.EXTEND) {
 			set(SolenoidState.RETRACT);
-		} 
+		}
 	}
 
 	/**

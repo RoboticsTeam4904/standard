@@ -18,9 +18,8 @@ public class RunAllSequential extends SequentialCommandGroup {
      */
     public RunAllSequential(CommandBase... commands) {
         super();
-        setName("RunAllSequential["
-                + Arrays.stream(commands).map((CommandBase command) -> command.getName()).collect(Collectors.joining(" "))
-                + "]");
+        setName("RunAllSequential[" + Arrays.stream(commands).map((CommandBase command) -> command.getName())
+                .collect(Collectors.joining(" ")) + "]");
         addCommands(commands);
     }
 }

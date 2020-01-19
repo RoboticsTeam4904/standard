@@ -82,4 +82,3 @@ public class ChassisConstant extends CommandBase implements ChassisController {
         move.cancel();
     }
 }
-

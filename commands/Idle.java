@@ -1,6 +1,5 @@
 package org.usfirst.frc4904.standard.commands;
 
-
 import org.usfirst.frc4904.standard.LogKitten;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -48,7 +47,7 @@ public class Idle extends CommandBase {
 
 	public void end(boolean interrupted) {
 		if (verbose) {
-			if(interrupted) {
+			if (interrupted) {
 				LogKitten.v("Idle " + getName() + "ended with interrupt.");
 			} else {
 				LogKitten.v("Idle " + getName() + " ended.");

@@ -11,14 +11,13 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 public abstract class SafetyCommand extends CommandBase {
 	protected String reasonUnsafe;
 
-	public SafetyCommand(String name, double timeout)
-	{
+	public SafetyCommand(String name, double timeout) {
 		super();
 		setName(name);
 		withTimeout(timeout);
 	}
-	public SafetyCommand(double timeout)
-	{
+
+	public SafetyCommand(double timeout) {
 		this("SafetyCommand", timeout);
 	}
 
