@@ -14,7 +14,7 @@ public class SolenoidOff extends SolenoidSet {
 	 * Command to set the state of a SolenoidSubsystem to
 	 * OFF(DoubleSolenoid.Value.kOff)
 	 * 
-	 * @param name             Name of Command
+	 * @param name             Name of system to be turned off
 	 * @param system           SolenoidSubsystem to set
 	 * @param booleanSuppliers conditions that if true, prevent the setting of the
 	 *                         system
@@ -32,29 +32,16 @@ public class SolenoidOff extends SolenoidSet {
 	 *                         system
 	 */
 	public SolenoidOff(SolenoidSubsystem system, BooleanSupplier... booleanSuppliers) {
-		super("SolenoidOff", system, SolenoidState.OFF, booleanSuppliers);
+		this("Turning off " + system.getName(), system, booleanSuppliers);
 	}
 
 	/**
 	 * Command to set the state of a SolenoidSubsystem to
 	 * OFF(DoubleSolenoid.Value.kOff)
 	 * 
-	 * @param name   Name of Command
 	 * @param system SolenoidSubsystem to set
-	 */
-	public SolenoidOff(String name, SolenoidSubsystem system) {
-		super(name, system, SolenoidState.OFF);
-	}
-
-	/**
-	 * Command to set the state of a SolenoidSubsystem to
-	 * OFF(DoubleSolenoid.Value.kOff)
-	 * 
-	 * @param name   Name of Command
-	 * @param system SolenoidSubsystem to set
-	 * 
 	 */
 	public SolenoidOff(SolenoidSubsystem system) {
-		this("SolenoidOff", system);
+		this("Turning off " + system.getName(), system);
 	}
 }

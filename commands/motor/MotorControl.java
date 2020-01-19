@@ -1,18 +1,17 @@
 package org.usfirst.frc4904.standard.commands.motor;
 
-
 import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.custom.controllers.Controller;
 import org.usfirst.frc4904.standard.subsystems.motor.Motor;
 import org.usfirst.frc4904.standard.subsystems.motor.PositionSensorMotor;
-import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /**
  * Controls a Motor directly from a Controller (e.g. Joystick or Xbox)
  *
  *
  */
-public class MotorControl extends Command {
+public class MotorControl extends CommandBase {
 	protected final Motor motor;
 	protected final Controller controller;
 	protected final int axis;
@@ -20,7 +19,30 @@ public class MotorControl extends Command {
 
 	/**
 	 * This Command directly controls a Motor based on an axis of the Controller.
-	 * This can allow an Operator to easily control a single Motor from an axis of the Controller.
+	 * This can allow an Operator to easily control a single Motor from an axis of
+	 * the Controller.
+	 *
+	 * @param name
+	 * @param motor
+	 * @param controller
+	 * @param axis
+	 * @param scale
+	 */
+	public MotorControl(String name, Motor motor, Controller controller, int axis, double scale) {
+		super();
+		setName(name);
+		this.motor = motor;
+		this.controller = controller;
+		this.axis = axis;
+		this.scale = scale;
+		addRequirements(motor);
+		LogKitten.d("MotorControl created.");
+	}
+
+	/**
+	 * This Command directly controls a Motor based on an axis of the Controller.
+	 * This can allow an Operator to easily control a single Motor from an axis of
+	 * the Controller.
 	 *
 	 * @param motor
 	 * @param controller
@@ -28,31 +50,38 @@ public class MotorControl extends Command {
 	 * @param scale
 	 */
 	public MotorControl(Motor motor, Controller controller, int axis, double scale) {
-		super("MotorControl");
-		this.motor = motor;
-		this.controller = controller;
-		this.axis = axis;
-		this.scale = scale;
-		requires(motor);
-		setInterruptible(true);
-		LogKitten.d("MotorControl created for " + motor.getName());
+		this("Motor Control", motor, controller, axis, scale);
 	}
 
 	/**
 	 * This Command directly controls a Motor based on an axis of the Controller.
-	 * This can allow an Operator to easily control a single Motor from an axis of the Controller.
+	 * This can allow an Operator to easily control a single Motor from an axis of
+	 * the Controller.
+	 *
+	 * @param name
+	 * @param motor
+	 * @param controller
+	 * @param axis
+	 */
+	public MotorControl(String name, Motor motor, Controller controller, int axis) {
+		this(name, motor, controller, axis, 1.0);
+	}
+
+	/**
+	 * This Command directly controls a Motor based on an axis of the Controller.
+	 * This can allow an Operator to easily control a single Motor from an axis of
+	 * the Controller.
 	 *
 	 * @param motor
 	 * @param controller
 	 * @param axis
-	 * @param scale
 	 */
 	public MotorControl(Motor motor, Controller controller, int axis) {
 		this(motor, controller, axis, 1.0);
 	}
 
 	@Override
-	protected void initialize() {
+	public void initialize() {
 		LogKitten.d("MotorControl initialized");
 		if (motor instanceof PositionSensorMotor) {
 			((PositionSensorMotor) motor).disableMotionController();
@@ -60,21 +89,20 @@ public class MotorControl extends Command {
 	}
 
 	@Override
-	protected void execute() {
+	public void execute() {
 		LogKitten.d("MotorControl executing: " + controller.getAxis(axis));
 		motor.set(controller.getAxis(axis) * scale);
 	}
 
 	@Override
-	protected boolean isFinished() {
+	public boolean isFinished() {
 		return false;
 	}
 
 	@Override
-	protected void end() {}
-
-	@Override
-	protected void interrupted() {
-		LogKitten.d("MotorControl interrupted");
+	public void end(boolean interrupted) {
+		if (interrupted) {
+			LogKitten.d("MotorControl interrupted");
+		}
 	}
 }
