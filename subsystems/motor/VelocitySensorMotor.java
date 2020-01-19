@@ -1,5 +1,7 @@
 package org.usfirst.frc4904.standard.subsystems.motor;
 
+import java.util.function.DoubleConsumer;
+
 import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.custom.motioncontrollers.MotionController;
 import org.usfirst.frc4904.standard.subsystems.motor.speedmodifiers.IdentityModifier;
@@ -52,5 +54,10 @@ public class VelocitySensorMotor extends SensorMotor {
 		} else {
 			super.set(speed);
 		}
+	}
+
+	@Override
+	public void accept(double arg0) {
+		this.set(arg0);
 	}
 }

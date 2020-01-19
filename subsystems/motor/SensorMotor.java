@@ -1,5 +1,7 @@
 package org.usfirst.frc4904.standard.subsystems.motor;
 
+import java.util.function.DoubleConsumer;
+
 import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.custom.motioncontrollers.MotionController;
 import org.usfirst.frc4904.standard.custom.sensors.InvalidSensorException;
@@ -7,7 +9,7 @@ import org.usfirst.frc4904.standard.subsystems.motor.speedmodifiers.IdentityModi
 import org.usfirst.frc4904.standard.subsystems.motor.speedmodifiers.SpeedModifier;
 import edu.wpi.first.wpilibj.SpeedController;
 
-public abstract class SensorMotor extends Motor {
+public abstract class SensorMotor extends Motor implements DoubleConsumer {
 	protected final MotionController motionController;
 
 	public SensorMotor(String name, boolean inverted, SpeedModifier speedModifier, MotionController motionController,
@@ -16,8 +18,7 @@ public abstract class SensorMotor extends Motor {
 		this.motionController = motionController;
 	}
 
-	public SensorMotor(String name, boolean isInverted, MotionController motionController,
-			SpeedController... motors) {
+	public SensorMotor(String name, boolean isInverted, MotionController motionController, SpeedController... motors) {
 		this(name, isInverted, new IdentityModifier(), motionController, motors);
 	}
 
@@ -39,8 +40,7 @@ public abstract class SensorMotor extends Motor {
 		this("SensorMotor", isInverted, motionController, motors);
 	}
 
-	public SensorMotor(SpeedModifier speedModifier, MotionController motionController,
-			SpeedController... motors) {
+	public SensorMotor(SpeedModifier speedModifier, MotionController motionController, SpeedController... motors) {
 		this("SensorMotor", speedModifier, motionController, motors);
 	}
 
@@ -64,6 +64,9 @@ public abstract class SensorMotor extends Motor {
 	public void disableMotionController() {
 		motionController.disable();
 	}
+
+	@Override
+	public abstract void accept(double arg0);
 
 	/**
 	 * Starts overriding the controller. The controller will disable and not be
