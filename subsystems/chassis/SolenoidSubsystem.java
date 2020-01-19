@@ -1,15 +1,15 @@
 package org.usfirst.frc4904.standard.subsystems.chassis;
 
-import org.usfirst.frc4904.standard.commands.solenoid.SolenoidSet;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import org.usfirst.frc4904.standard.commands.solenoid.SolenoidSet;
 
 /**
  * A class that wraps multiple DoubleSolenoid objects with subsystem
  * functionality. Allows for easy inversion and setting of default state of
  * solenoids
  */
-public class SolenoidShifters extends SubsystemBase {
+public class SolenoidSubsystem extends SubsystemBase {
 	protected DoubleSolenoid[] solenoids;
 	protected SolenoidState state;
 	protected SolenoidState defaultState;
@@ -25,7 +25,7 @@ public class SolenoidShifters extends SubsystemBase {
 	 * @param defaultState Set the default state of the SolenoidSystem
 	 * @param solenoids    Double solenoids of the system
 	 */
-	public SolenoidShifters(String name, boolean isInverted, SolenoidState defaultState, DoubleSolenoid... solenoids) {
+	public SolenoidSubsystem(String name, boolean isInverted, SolenoidState defaultState, DoubleSolenoid... solenoids) {
 		setName(name);
 		setDefaultCommand(new SolenoidSet(this, defaultState));
 		this.solenoids = solenoids;
@@ -43,7 +43,7 @@ public class SolenoidShifters extends SubsystemBase {
 	 * @param isInverted True if the solenoids should be inverted
 	 * @param solenoids  Double solenoids of the system
 	 */
-	public SolenoidShifters(String name, boolean isInverted, DoubleSolenoid... solenoids) {
+	public SolenoidSubsystem(String name, boolean isInverted, DoubleSolenoid... solenoids) {
 		this(name, isInverted, SolenoidState.RETRACT, solenoids);
 	}
 
@@ -56,7 +56,7 @@ public class SolenoidShifters extends SubsystemBase {
 	 * @param defaultState Set the default state of the SolenoidSystem
 	 * @param solenoids    Double solenoids of the system
 	 */
-	public SolenoidShifters(String name, SolenoidState defaultState, DoubleSolenoid... solenoids) {
+	public SolenoidSubsystem(String name, SolenoidState defaultState, DoubleSolenoid... solenoids) {
 		this(name, false, defaultState, solenoids);
 	}
 
@@ -68,7 +68,7 @@ public class SolenoidShifters extends SubsystemBase {
 	 * @param name      Name of subsystem
 	 * @param solenoids Double solenoids of the system
 	 */
-	public SolenoidShifters(String name, DoubleSolenoid... solenoids) {
+	public SolenoidSubsystem(String name, DoubleSolenoid... solenoids) {
 		this(name, false, solenoids);
 	}
 
@@ -80,8 +80,8 @@ public class SolenoidShifters extends SubsystemBase {
 	 * @param defaultState Set the default state of the SolenoidSystem
 	 * @param solenoids    Double solenoids of the system
 	 */
-	public SolenoidShifters(SolenoidState defaultState, DoubleSolenoid... solenoids) {
-		this("SolenoidShifters", defaultState, solenoids);
+	public SolenoidSubsystem(SolenoidState defaultState, DoubleSolenoid... solenoids) {
+		this("SolenoidSubsystem", defaultState, solenoids);
 	}
 
 	/**
@@ -92,8 +92,8 @@ public class SolenoidShifters extends SubsystemBase {
 	 * @param isInverted True if the solenoids should be inverted
 	 * @param solenoids  Double solenoids of the system
 	 */
-	public SolenoidShifters(boolean isInverted, DoubleSolenoid... solenoids) {
-		this("SolenoidShifters", isInverted, solenoids);
+	public SolenoidSubsystem(boolean isInverted, DoubleSolenoid... solenoids) {
+		this("SolenoidSubsystem", isInverted, solenoids);
 	}
 
 	/**
@@ -101,17 +101,19 @@ public class SolenoidShifters extends SubsystemBase {
 	 * functionality. Allows for easy inversion and setting of default state of
 	 * solenoids
 	 * 
+	 * Name of subsystem
+	 * 
 	 * @param solenoids Double solenoids of the system
 	 */
-	public SolenoidShifters(DoubleSolenoid... solenoids) {
-		this("SolenoidShifters", solenoids);
+	public SolenoidSubsystem(DoubleSolenoid... solenoids) {
+		this("Solenoid Subsystem", solenoids);
 	}
 
 	/**
 	 * DoubleSolenoid.Value simplified to three simple states
 	 */
 	public enum SolenoidState {
-		EXTEND(DoubleSolenoid.Value.kForward), RETRACT(DoubleSolenoid.Value.kReverse);
+		OFF(DoubleSolenoid.Value.kOff), EXTEND(DoubleSolenoid.Value.kForward), RETRACT(DoubleSolenoid.Value.kReverse);
 
 		public final DoubleSolenoid.Value value;
 
@@ -140,6 +142,8 @@ public class SolenoidShifters extends SubsystemBase {
 			return SolenoidState.RETRACT;
 		case RETRACT:
 			return SolenoidState.EXTEND;
+		case OFF:
+			return SolenoidState.OFF;
 		}
 		return state;
 	}
@@ -154,30 +158,11 @@ public class SolenoidShifters extends SubsystemBase {
 		if (isInverted) {
 			state = invertState(state);
 		}
-		this.state = state;
 		if (this.state != state) {
+			this.state = state;
 			for (DoubleSolenoid solenoid : solenoids) {
 				solenoid.set(state.value);
 			}
-		}
-	}
-
-	/**
-	 * Sets the state of the system Only sets if current state is not equal to state
-	 * to be set
-	 * 
-	 * This implementation takes no parameters, as it just reverses the current
-	 * state TODO: this may need to be changed
-	 * 
-	 * @throws Exception if the solenoid state currently is off
-	 */
-	public void set() throws Exception {
-		if (state == SolenoidState.RETRACT) {
-			set(SolenoidState.EXTEND);
-		} else if (state == SolenoidState.EXTEND) {
-			set(SolenoidState.RETRACT);
-		} else {
-			throw new Exception("Solenoid state is off, which it should not have been set to.");
 		}
 	}
 

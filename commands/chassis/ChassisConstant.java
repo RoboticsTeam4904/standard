@@ -1,59 +1,85 @@
 package org.usfirst.frc4904.standard.commands.chassis;
 
-
 import org.usfirst.frc4904.standard.custom.ChassisController;
 import org.usfirst.frc4904.standard.subsystems.chassis.Chassis;
-import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 
-public class ChassisConstant extends Command implements ChassisController {
-	protected final ChassisMove move;
-	protected final double x;
-	protected final double y;
-	protected final double turn;
+public class ChassisConstant extends CommandBase implements ChassisController {
+    protected final ChassisMove move;
+    protected final double x;
+    protected final double y;
+    protected double turn;
+    protected double timeout;
 
-	public ChassisConstant(Chassis chassis, double x, double y, double turn, double timeout) {
-		move = new ChassisMove(chassis, this);
-		this.x = x;
-		this.y = y;
-		this.turn = turn;
-		setTimeout(timeout);
-	}
+    /**
+     * 
+     * @param name
+     * @param chassis
+     * @param x
+     * @param y
+     * @param turn
+     * @param timeout
+     */
+    public ChassisConstant(String name, Chassis chassis, double x, double y, double turn, double timeout) {
+        move = new ChassisMove(chassis, this);
+        move.withTimeout(timeout);
+        this.timeout = timeout;
+        this.x = x;
+        this.y = y;
+        this.turn = turn;
+        setName(name);
+        addRequirements(chassis);
+    }
 
-	@Override
-	public double getX() {
-		return x;
-	}
+    /**
+     * 
+     * @param chassis
+     * @param x
+     * @param y
+     * @param turn
+     * @param timeout
+     */
+    public ChassisConstant(Chassis chassis, double x, double y, double turn, double timeout) {
+        this("Chassis Constant", chassis, x, y, turn, timeout);
+    }
 
-	@Override
-	public double getY() {
-		return y;
-	}
+    @Override
+    public double getX() {
+        return x;
+    }
 
-	@Override
-	public double getTurnSpeed() {
-		return turn;
-	}
+    @Override
+    public double getY() {
+        return y;
+    }
 
-	@Override
-	protected void initialize() {
-		move.start();
-	}
+    @Override
+    public double getTurnSpeed() {
+        return turn;
+    }
 
-	@Override
-	protected void execute() {}
+    @Override
+    public void initialize() {
+        move.schedule();
+    }
 
-	@Override
-	protected boolean isFinished() {
-		return move.isFinished() || isTimedOut();
-	}
+    /**
+     *
+     * The command has timed out if the time since scheduled is greater than the
+     * timeout
+     * 
+     * @return finished
+     * 
+     */
+    @Override
+    public boolean isFinished() {
+        return move.isFinished() || CommandScheduler.getInstance().timeSinceScheduled(this) >= this.timeout;
+    }
 
-	@Override
-	protected void end() {
-		move.cancel();
-	}
-
-	@Override
-	protected void interrupted() {
-		move.cancel();
-	}
+    @Override
+    public void end(boolean interrupted) {
+        move.cancel();
+    }
 }
+
