@@ -1,5 +1,7 @@
 package org.usfirst.frc4904.standard.custom.motioncontrollers;
 
+import java.util.function.DoubleConsumer;
+
 import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.custom.sensors.InvalidSensorException;
 import org.usfirst.frc4904.standard.custom.sensors.NativeDerivativeSensor;
@@ -28,6 +30,26 @@ public class CustomPIDController extends MotionController {
 	protected double lastErrorDerivative;
 	protected double derivativeTolerance;
 	protected double minimumNominalOutput = 0.0;
+
+
+	/**
+	 * An extremely basic PID controller. It does not differentiate between rate and
+	 * distance.
+	 *
+	 * @param P      Initial P constant
+	 * @param I      Initial I constant
+	 * @param D      Initial D constant
+	 * @param F      Initial F (feed forward) constant
+	 * @param sensor The sensor linked to the output
+	 * @param output A motor that accepts PID controller inputs
+	 */
+	public CustomPIDController(double P, double I, double D, double F, PIDSensor sensor, DoubleConsumer output) {
+		super(sensor, output);
+		this.P = P;
+		this.I = I;
+		this.D = D;
+		this.F = F;
+	}
 
 	/**
 	 * An extremely basic PID controller. It does not differentiate between rate and
@@ -58,11 +80,7 @@ public class CustomPIDController extends MotionController {
 	 * @param sensor The sensor linked to the output
 	 */
 	public CustomPIDController(double P, double I, double D, double F, PIDSensor sensor, double integralThreshold) {
-		super(sensor);
-		this.P = P;
-		this.I = I;
-		this.D = D;
-		this.F = F;
+		this(P, I, D, F, sensor);
 		this.setIThreshold(integralThreshold);
 	}
 
