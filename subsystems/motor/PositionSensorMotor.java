@@ -1,7 +1,5 @@
 package org.usfirst.frc4904.standard.subsystems.motor;
 
-import java.util.function.DoubleConsumer;
-
 import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.custom.motioncontrollers.MotionController;
 import org.usfirst.frc4904.standard.custom.sensors.InvalidSensorException;
