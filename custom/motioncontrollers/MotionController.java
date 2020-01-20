@@ -1,7 +1,5 @@
 package org.usfirst.frc4904.standard.custom.motioncontrollers;
 
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.function.DoubleConsumer;
 
 import org.usfirst.frc4904.standard.custom.sensors.InvalidSensorException;
@@ -17,8 +15,6 @@ import edu.wpi.first.wpilibj2.command.Subsystem;
  */
 public abstract class MotionController implements Subsystem {
 	protected DoubleConsumer output;
-	protected Timer timer;
-	protected MotionControllerTask task;
 	protected final PIDSensor sensor;
 	protected double setpoint;
 	protected double absoluteTolerance;
