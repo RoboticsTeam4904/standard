@@ -23,7 +23,8 @@ public class SolenoidSet extends CommandBase {
 	 * @param booleanSuppliers conditions that if true, prevents solenoidSubsystem
 	 *                         from setting
 	 */
-	public SolenoidSet(String name, SolenoidSubsystem system, SolenoidState state, BooleanSupplier... booleanSuppliers) {
+	public SolenoidSet(String name, SolenoidSubsystem system, SolenoidState state,
+			BooleanSupplier... booleanSuppliers) {
 		super();
 		setName(name);
 		this.system = system;

@@ -2,7 +2,6 @@ package org.usfirst.frc4904.standard.custom.sensors;
 
 import org.usfirst.frc4904.standard.custom.CustomPIDSourceType;
 
-
 public interface IMU {
 	/**
 	 * Resets the IMU.

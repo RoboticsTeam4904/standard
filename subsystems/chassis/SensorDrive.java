@@ -20,12 +20,14 @@ import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 
-public class SensorDrive implements Subsystem { // Based largely on https://github.com/wpilibsuite/allwpilib/blob/master/wpilibjExamples/src/main/java/edu/wpi/first/wpilibj/examples/ramsetecommand/subsystems/DriveSubsystem.java
+public class SensorDrive implements Subsystem { // Based largely on
+                                                // https://github.com/wpilibsuite/allwpilib/blob/master/wpilibjExamples/src/main/java/edu/wpi/first/wpilibj/examples/ramsetecommand/subsystems/DriveSubsystem.java
   private final TankDrive driveBase;
   private final CANCoder leftEncoder;
   private final CANCoder rightEncoder;
   private final IMU gyro;
   private final DifferentialDriveOdometry odometry;
+
   /**
    * Creates a new DriveSubsystem.
    */
@@ -81,10 +83,10 @@ public class SensorDrive implements Subsystem { // Based largely on https://gith
    */
   public void tankDriveVolts(double leftVolts, double rightVolts) {
     Motor[] motors = driveBase.getMotors();
-    if(motors.length == 2){
+    if (motors.length == 2) {
       driveBase.getMotors()[0].setVoltage(leftVolts);
       driveBase.getMotors()[1].setVoltage(rightVolts);
-    }else{
+    } else {
       driveBase.getMotors()[0].setVoltage(leftVolts);
       driveBase.getMotors()[1].setVoltage(leftVolts);
       driveBase.getMotors()[2].setVoltage(rightVolts);
@@ -99,6 +101,7 @@ public class SensorDrive implements Subsystem { // Based largely on https://gith
     leftEncoder.setPosition(0);
     rightEncoder.setPosition(0);
   }
+
   /**
    * Returns the heading of the robot.
    *

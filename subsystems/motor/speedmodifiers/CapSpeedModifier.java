@@ -1,6 +1,5 @@
 package org.usfirst.frc4904.standard.subsystems.motor.speedmodifiers;
 
-
 import org.usfirst.frc4904.standard.Util;
 
 public class CapSpeedModifier implements SpeedModifier {

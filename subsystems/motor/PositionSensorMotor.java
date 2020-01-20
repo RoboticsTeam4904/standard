@@ -1,6 +1,8 @@
 package org.usfirst.frc4904.standard.subsystems.motor;
 
+import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.custom.motioncontrollers.MotionController;
+import org.usfirst.frc4904.standard.custom.sensors.InvalidSensorException;
 import org.usfirst.frc4904.standard.subsystems.motor.speedmodifiers.IdentityModifier;
 import org.usfirst.frc4904.standard.subsystems.motor.speedmodifiers.SpeedModifier;
 import edu.wpi.first.wpilibj.SpeedController;
@@ -46,5 +48,14 @@ public class PositionSensorMotor extends SensorMotor {
 
 	public void setPosition(double position) {
 		motionController.setSetpoint(position);
+	}
+
+	@Override
+	public void accept(double arg0) {
+		try {
+			super.setPositionSafely(arg0);
+		} catch (InvalidSensorException e) {
+			LogKitten.e(e.getMessage());
+		}
 	}
 }

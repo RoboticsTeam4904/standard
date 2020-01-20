@@ -1,6 +1,5 @@
 package org.usfirst.frc4904.standard.commands;
 
-
 import org.usfirst.frc4904.standard.LogKitten;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 

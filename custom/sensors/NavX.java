@@ -1,4 +1,5 @@
 package org.usfirst.frc4904.standard.custom.sensors;
+
 import org.usfirst.frc4904.standard.custom.CustomPIDSourceType;
 
 import com.kauailabs.navx.frc.AHRS;
@@ -119,7 +120,6 @@ public class NavX extends AHRS implements IMU {
 		super.zeroYaw();
 		lastYaw = 0;
 	}
-
 
 	public CustomPIDSourceType getCustomPIDSourceType() {
 		return sensortype;

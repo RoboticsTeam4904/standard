@@ -1,6 +1,5 @@
 package org.usfirst.frc4904.standard.custom.controllers;
 
-
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 
@@ -21,9 +20,8 @@ public class TeensyController extends Joystick implements Controller {
 	}
 
 	/**
-	 * Returns true if the joystick is actually connected.
-	 * It determines this by counting the number of buttons
-	 * (more than 0 means the joystick is connected).
+	 * Returns true if the joystick is actually connected. It determines this by
+	 * counting the number of buttons (more than 0 means the joystick is connected).
 	 *
 	 * @return
 	 */

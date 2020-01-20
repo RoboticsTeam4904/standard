@@ -1,6 +1,5 @@
 package org.usfirst.frc4904.standard.custom.motioncontrollers;
 
-
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import edu.wpi.first.wpilibj.SpeedController;
 

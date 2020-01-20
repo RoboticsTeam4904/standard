@@ -20,7 +20,7 @@ public abstract class InjectedCommandGroup extends CommandGroupBase {
 			previous.cancel();
 		}
 		onInitialize();
-	} 
+	}
 
 	protected final void interrupted() {
 		onInterrupted();
