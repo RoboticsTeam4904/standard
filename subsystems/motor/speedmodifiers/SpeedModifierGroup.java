@@ -1,6 +1,5 @@
 package org.usfirst.frc4904.standard.subsystems.motor.speedmodifiers;
 
-
 public class SpeedModifierGroup implements SpeedModifier {
 	protected SpeedModifier[] speedModifiers;
 

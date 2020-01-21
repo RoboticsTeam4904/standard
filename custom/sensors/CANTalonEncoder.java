@@ -1,14 +1,13 @@
 package org.usfirst.frc4904.standard.custom.sensors;
 
-
 import org.usfirst.frc4904.standard.Util;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-import edu.wpi.first.wpilibj.PIDSourceType;
+import org.usfirst.frc4904.standard.custom.CustomPIDSourceType;
 
 public class CANTalonEncoder implements CustomEncoder {
 	protected final TalonSRX talon;
-	protected PIDSourceType pidSource;
+	protected CustomPIDSourceType pidSource;
 	protected double distancePerPulse;
 	protected boolean reverseDirection;
 
@@ -17,7 +16,7 @@ public class CANTalonEncoder implements CustomEncoder {
 		talon.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 0);
 		this.reverseDirection = reverseDirection;
 		this.distancePerPulse = distancePerPulse;
-		setPIDSourceType(PIDSourceType.kDisplacement);
+		setCustomPIDSourceType(CustomPIDSourceType.kDisplacement);
 	}
 
 	public CANTalonEncoder(String name, TalonSRX talon, boolean reverseDirection) {
@@ -45,18 +44,18 @@ public class CANTalonEncoder implements CustomEncoder {
 	}
 
 	@Override
-	public void setPIDSourceType(PIDSourceType pidSource) {
+	public void setCustomPIDSourceType(CustomPIDSourceType pidSource) {
 		this.pidSource = pidSource;
 	}
 
 	@Override
-	public PIDSourceType getPIDSourceType() {
+	public CustomPIDSourceType getCustomPIDSourceType() {
 		return pidSource;
 	}
 
 	@Override
 	public double pidGet() {
-		if (pidSource == PIDSourceType.kDisplacement) {
+		if (pidSource == CustomPIDSourceType.kDisplacement) {
 			return getDistance();
 		}
 		return getRate();

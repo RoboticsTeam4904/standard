@@ -1,9 +1,7 @@
 package org.usfirst.frc4904.standard.custom.sensors;
 
-
 /**
- * This is an extremely minimal encoder
- * that can be either a normal encoder or a
+ * This is an extremely minimal encoder that can be either a normal encoder or a
  * CAN encoder.
  *
  */

@@ -1,14 +1,13 @@
-/*----------------------------------------------------------------------------*/
-/* Copyright (c) 2019 FIRST. All Rights Reserved.                             */
-/* Open Source Software - may be modified and shared by FRC teams. The code   */
-/* must be accompanied by the FIRST BSD license file in the root directory of */
-/* the project.                                                               */
-/*----------------------------------------------------------------------------*/
+// Based on software from FIRST and WPI
 
 package org.usfirst.frc4904.standard.commands.chassis;
 
 import java.util.List;
 
+<<<<<<< HEAD
+=======
+import org.usfirst.frc4904.robot.RobotMap;
+>>>>>>> 2020-update
 import org.usfirst.frc4904.standard.subsystems.chassis.SensorDrive;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -46,9 +45,7 @@ public class SimpleSplines extends SequentialCommandGroup {
         new PIDController(driveConstants.kPDriveVel, 0, 0),
         new PIDController(driveConstants.kPDriveVel, 0, 0),
         // RamseteCommand passes volts to the callback
-        robotDrive::tankDriveVolts,
-        robotDrive
-    ), new InstantCommand(() -> robotDrive.tankDriveVolts(0, 0)));
+        robotDrive::tankDriveVolts, robotDrive), new InstantCommand(() -> robotDrive.tankDriveVolts(0, 0)));
   }
 
   public static class AutoConstants {

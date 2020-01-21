@@ -1,6 +1,5 @@
 package org.usfirst.frc4904.standard.custom.sensors;
 
-
 /**
  * A highly generic interface for a button
  *

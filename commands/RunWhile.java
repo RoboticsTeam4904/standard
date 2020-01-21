@@ -1,35 +1,37 @@
 package org.usfirst.frc4904.standard.commands;
 
-
 import java.util.function.Supplier;
-import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Subsystem;
 
-public class RunWhile extends Command {
-	protected final Command command;
+public class RunWhile extends CommandBase {
+	protected final CommandBase command;
 	protected final Supplier<Boolean> stopCondition;
 
-	public RunWhile(Command command, Supplier<Boolean> stopCondition) {
+	public RunWhile(String name, CommandBase command, Supplier<Boolean> stopCondition) {
+		super();
+		setName(name);
 		this.command = command;
 		this.stopCondition = stopCondition;
+		addRequirements((Subsystem[]) command.getRequirements().toArray());
+	}
+
+	public RunWhile(CommandBase command, Supplier<Boolean> stopCondition) {
+		this("RunWhile", command, stopCondition);
 	}
 
 	@Override
-	protected void initialize() {
-		command.start();
+	public void initialize() {
+		command.schedule();
 	}
 
 	@Override
-	protected boolean isFinished() {
+	public boolean isFinished() {
 		return !stopCondition.get();
 	}
 
 	@Override
-	protected void end() {
+	public void end(boolean interrupted) {
 		command.cancel();
-	}
-
-	@Override
-	protected void interrupted() {
-		end();
 	}
 }
