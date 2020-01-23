@@ -4,10 +4,7 @@ package org.usfirst.frc4904.standard.commands.chassis;
 
 import java.util.List;
 
-<<<<<<< HEAD
-=======
 import org.usfirst.frc4904.robot.RobotMap;
->>>>>>> 2020-update
 import org.usfirst.frc4904.standard.subsystems.chassis.SensorDrive;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
