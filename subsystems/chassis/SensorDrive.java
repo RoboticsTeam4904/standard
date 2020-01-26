@@ -7,6 +7,8 @@
 
 package org.usfirst.frc4904.standard.subsystems.chassis;
 
+import java.util.List;
+
 import com.ctre.phoenix.sensors.CANCoder;
 
 import org.usfirst.frc4904.standard.commands.chassis.SimpleSplines;
@@ -14,10 +16,20 @@ import org.usfirst.frc4904.standard.custom.sensors.IMU;
 import org.usfirst.frc4904.standard.subsystems.chassis.TankDrive;
 import org.usfirst.frc4904.standard.subsystems.motor.Motor;
 
+import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
+import edu.wpi.first.wpilibj.spline.Spline;
+import edu.wpi.first.wpilibj.spline.SplineHelper;
+import edu.wpi.first.wpilibj.trajectory.Trajectory;
+import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
+import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
+import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator.ControlVectorList;
+import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveVoltageConstraint;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 
@@ -30,6 +42,7 @@ public class SensorDrive implements Subsystem { // Based largely on
   private final SimpleSplines.DriveConstants driveConstants;
   private final IMU gyro;
   private final DifferentialDriveOdometry odometry;
+  private TrajectoryConfig pathConfig;
 
   /**
    * Creates a new DriveSubsystem.
@@ -42,6 +55,7 @@ public class SensorDrive implements Subsystem { // Based largely on
     this.driveConstants = driveConstants;
     this.gyro = gyro;
 
+    configuratePath(10);
     resetEncoders();
     odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()));
     CommandScheduler.getInstance().registerSubsystem(this);
@@ -122,5 +136,24 @@ public class SensorDrive implements Subsystem { // Based largely on
    */
   public double getHeading() {
     return gyro.getYaw() * -1;
+  }
+
+  public void configuratePath(double maxVoltage){
+    pathConfig = new TrajectoryConfig(autoConstants.kMaxSpeedMetersPerSecond, autoConstants.kMaxAccelerationMetersPerSecondSquared)
+        .setKinematics(driveConstants.kDriveKinematics)
+        .addConstraint(new DifferentialDriveVoltageConstraint(
+          new SimpleMotorFeedforward(driveConstants.ksVolts, 
+          driveConstants.kvVoltSecondsPerMeter, 
+          driveConstants.kaVoltSecondsSquaredPerMeter), 
+          driveConstants.kDriveKinematics, 
+          maxVoltage));
+  }
+
+  public Trajectory generateSimpleTrajectory(Pose2d init_pos, List<Translation2d> inter_points, Pose2d final_pos){
+    return TrajectoryGenerator.generateTrajectory(init_pos, inter_points, final_pos, pathConfig);
+  }
+
+  public Trajectory generateQuinticTrajectory(List<Pose2d> waypoints){
+    return TrajectoryGenerator.generateTrajectory(waypoints, pathConfig);
   }
 }
