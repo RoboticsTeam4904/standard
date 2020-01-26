@@ -41,7 +41,7 @@ public class MotorSet extends CommandBase {
 	@Override
 	public void execute() {
 		motor.set(speed);
-		LogKitten.d("MotorSet executing with speed " + speed);
+		LogKitten.wtf("MotorSet executing with speed " + speed);
 	}
 
 	@Override

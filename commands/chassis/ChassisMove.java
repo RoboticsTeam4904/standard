@@ -34,6 +34,9 @@ public class ChassisMove extends ParallelCommandGroup {
 	 *                   has.
 	 */
 	public ChassisMove(String name, Chassis chassis, ChassisController controller, boolean usePID) {
+		super();
+		addRequirements(chassis);
+		setName(name);
 		this.chassis = chassis;
 		this.controller = controller;
 		this.usePID = usePID;
@@ -42,8 +45,7 @@ public class ChassisMove extends ParallelCommandGroup {
 		for (int i = 0; i < motors.length; i++) {
 			motorSpins[i] = new MotorSet(motors[i].getName(), motors[i]);
 		}
-		addRequirements(chassis);
-		setName(name);
+		addCommands(motorSpins);
 	}
 
 	/**
@@ -113,6 +115,7 @@ public class ChassisMove extends ParallelCommandGroup {
 		for (int i = 0; i < motorSpins.length; i++) {
 			LogKitten.d(Double.toString(motorSpeeds[i]));
 			motorSpins[i].set(motorSpeeds[i]);
+			// chassis.getMotors()[i].set(motorSpeeds[i]);
 			motorSpeedsString.append(' ');
 			motorSpeedsString.append(motorSpeeds[i]);
 		}
