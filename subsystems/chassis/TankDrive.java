@@ -113,7 +113,16 @@ public class TankDrive extends Chassis {
 
 	@Override
 	public void movePolar(double speed, double angle, double turnSpeed) {
-		// TODO Auto-generated method stub
+		turnSpeed += turnCorrection * speed; // turns to deal with constant turning error due to unbalanced weight or
+												// dead CIM
+		double normalize = Math.max(Math.max(Math.abs(speed + turnSpeed), Math.abs(speed - turnSpeed)), 1);
+		double leftSpeed = (speed + turnSpeed) / normalize;
+		double rightSpeed = (speed - turnSpeed) / normalize;
+		if (motors.length == 2) {
+			motorSpeeds = new double[] { leftSpeed, rightSpeed };
+		} else {
+			motorSpeeds = new double[] { leftSpeed, leftSpeed, rightSpeed, rightSpeed };
+		}
 	}
 
 }
