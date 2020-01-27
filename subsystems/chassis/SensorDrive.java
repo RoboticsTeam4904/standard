@@ -55,9 +55,9 @@ public class SensorDrive implements Subsystem { // Based largely on
     this.driveConstants = driveConstants;
     this.gyro = gyro;
 
-    configuratePath(10);
     resetEncoders();
     odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()));
+    configuratePath(10);
     CommandScheduler.getInstance().registerSubsystem(this);
   }
 
@@ -135,7 +135,7 @@ public class SensorDrive implements Subsystem { // Based largely on
    * @return the robot's heading in degrees, from 180 to 180
    */
   public double getHeading() {
-    return gyro.getYaw() * -1;
+    return gyro.getYaw();
   }
 
   public void configuratePath(double maxVoltage){
