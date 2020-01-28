@@ -34,16 +34,18 @@ public class ChassisMove extends ParallelCommandGroup {
 	 *                   has.
 	 */
 	public ChassisMove(String name, Chassis chassis, ChassisController controller, boolean usePID) {
+		super();
 		this.chassis = chassis;
 		this.controller = controller;
 		this.usePID = usePID;
+		addRequirements(chassis);
+		setName(name);
 		motors = chassis.getMotors();
 		motorSpins = new MotorSet[motors.length];
 		for (int i = 0; i < motors.length; i++) {
 			motorSpins[i] = new MotorSet(motors[i].getName(), motors[i]);
 		}
-		addRequirements(chassis);
-		setName(name);
+		addCommands(motorSpins);
 	}
 
 	/**
@@ -92,6 +94,7 @@ public class ChassisMove extends ParallelCommandGroup {
 	 */
 	@Override
 	public void initialize() {
+		super.initialize();
 		for (Motor motor : motors) {
 			if (motor instanceof VelocitySensorMotor) {
 				if (usePID) {
@@ -106,6 +109,7 @@ public class ChassisMove extends ParallelCommandGroup {
 
 	@Override
 	public void execute() {
+		super.execute();
 		chassis.moveCartesian(controller.getX(), controller.getY(), controller.getTurnSpeed());
 		motorSpeeds = chassis.getMotorSpeeds();
 		StringBuilder motorSpeedsString = new StringBuilder();
@@ -138,6 +142,7 @@ public class ChassisMove extends ParallelCommandGroup {
 
 	@Override
 	public void end(boolean interrupted) {
+		super.end(interrupted);
 		stopMotorSpins();
 
 		if (interrupted) {
