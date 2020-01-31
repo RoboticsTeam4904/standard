@@ -2,10 +2,12 @@ package org.usfirst.frc4904.standard.custom.motioncontrollers;
 
 import java.util.function.DoubleConsumer;
 
+import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.custom.sensors.InvalidSensorException;
 import org.usfirst.frc4904.standard.custom.sensors.PIDSensor;
 
 import edu.wpi.first.hal.util.BoundaryException;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 
 /**
@@ -45,6 +47,7 @@ public abstract class MotionController implements Subsystem {
 		reset();
 		justReset = true;
 		sensorException = null;
+		CommandScheduler.getInstance().registerSubsystem(this);
 	}
 	/**
 	 * A MotionController modifies an output using a sensor to precisely maintain a
@@ -58,6 +61,7 @@ public abstract class MotionController implements Subsystem {
 
 	@Override
 	public void periodic() {
+		// LogKitten.wtf("running periodic and enabled: " + isEnabled());
 		try {
 			double value = getSafely(); // Always calculate MC output
 			synchronized (lock) {
@@ -66,7 +70,10 @@ public abstract class MotionController implements Subsystem {
 					return;
 				}
 			}
+			// LogKitten.wtf("MotionController Setpoint:" + getSetpoint());
+			// LogKitten.wtf("MotionController Value: " + getSensorValue());
 			if (output != null && isEnabled()) {
+				// LogKitten.wtf("Setting in Motioncontroller to: " + value);
 				output.accept(value);
 			}
 		} catch (Exception e) {

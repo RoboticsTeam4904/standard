@@ -283,6 +283,9 @@ public class CustomPIDController extends MotionController {
 		double input = 0.0;
 		input = sensor.pidGet();
 		double error = setpoint - input;
+		// LogKitten.wtf("Received SETPONT in PIDController: " + setpoint);
+		// LogKitten.wtf("Input in PIDController:" + input);
+		// LogKitten.wtf("PID Controller error: " + error);
 		// Account for continuous input ranges
 		if (continuous) {
 			double range = inputMax - inputMin;
@@ -332,6 +335,7 @@ public class CustomPIDController extends MotionController {
 		// Calculate the result using the PIDF formula
 		double PIDresult = P * error + I * totalError + D * errorDerivative + F * Math.signum(error);
 		double output = PIDresult + IPrime * accumulatedOutput;
+		// LogKitten.wtf("Output in PIDController: " + output);
 		accumulatedOutput += PIDresult * timeDiff;
 		// Save the error for calculating future derivatives
 		lastError = error;
@@ -345,6 +349,7 @@ public class CustomPIDController extends MotionController {
 		if (Math.abs(output) < minimumNominalOutput) {
 			output = Math.signum(output) * minimumNominalOutput;
 		}
+		// LogKitten.wtf("PID Final Output:" + output);
 		return output;
 	}
 
