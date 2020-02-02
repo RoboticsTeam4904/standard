@@ -58,7 +58,7 @@ public class VelocitySensorMotor extends SensorMotor {
 
 	@Override
 	public void accept(double speed) {
-		// LogKitten.wtf("Setting Motor Speed in Accept Method in VSM to:  " + speed);
+		LogKitten.wtf("Setting Motor Speed in Accept Method in VSM to:  " + speed);
 		super.set(speed);
 	}
 }

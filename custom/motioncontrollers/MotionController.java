@@ -73,8 +73,10 @@ public abstract class MotionController implements Subsystem {
 			// LogKitten.wtf("MotionController Setpoint:" + getSetpoint());
 			// LogKitten.wtf("MotionController Value: " + getSensorValue());
 			if (output != null && isEnabled()) {
+				// LogKitten.wtf("MotionController Output: " + output);
 				// LogKitten.wtf("Setting in Motioncontroller to: " + value);
-				output.accept(value);
+				LogKitten.wtf("Sensor Value: " + sensor.pidGet());
+				output.accept(sensor.pidGet() + value);
 			}
 		} catch (Exception e) {
 			sensorException = e;

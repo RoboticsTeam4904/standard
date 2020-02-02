@@ -283,9 +283,9 @@ public class CustomPIDController extends MotionController {
 		double input = 0.0;
 		input = sensor.pidGet();
 		double error = setpoint - input;
-		// LogKitten.wtf("Received SETPONT in PIDController: " + setpoint);
-		// LogKitten.wtf("Input in PIDController:" + input);
-		// LogKitten.wtf("PID Controller error: " + error);
+		LogKitten.wtf("Received SETPONT in PIDController: " + setpoint);
+		LogKitten.wtf("Input in PIDController:" + input);
+		LogKitten.wtf("PID Controller error: " + error);
 		// Account for continuous input ranges
 		if (continuous) {
 			double range = inputMax - inputMin;
