@@ -2,9 +2,14 @@ package org.usfirst.frc4904.standard.custom.sensors;
 
 import org.usfirst.frc4904.standard.Util;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.can.BaseTalon;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import org.usfirst.frc4904.standard.custom.CustomPIDSourceType;
 
+/**
+ * Encoder class for the Built-in Encoders on Talon Motor Controllers 
+ * Works for both Falcons (CANTalonFX) and SRXs (CANTalonSRX)
+ */
 public class CANTalonEncoder implements CustomEncoder {
 	protected static final double DEFAULT_DISTANCE_PER_PULSE = 1.0;
 	protected static final boolean DEFAULT_REVERSE_DIRECTION = false;
@@ -14,12 +19,12 @@ public class CANTalonEncoder implements CustomEncoder {
 	protected static final int PID_IDX = 0;
 	protected static final CustomPIDSourceType DEFAULT_CUSTOM_PID_SOURCE_TYPE = CustomPIDSourceType.kDisplacement;
 	protected static final FeedbackDevice DEFAULT_FEEDBACK_DEVICE = FeedbackDevice.QuadEncoder;
-	protected final TalonSRX talon;
+	protected final BaseTalon talon;
 	protected CustomPIDSourceType pidSource;
 	protected double distancePerPulse;
 	protected boolean reverseDirection;
 
-	public CANTalonEncoder(String name, TalonSRX talon, boolean reverseDirection, double distancePerPulse,
+	public CANTalonEncoder(String name, BaseTalon talon, boolean reverseDirection, double distancePerPulse,
 			CustomPIDSourceType sensorType, FeedbackDevice feedbackDevice) {
 		this.talon = talon;
 		talon.configSelectedFeedbackSensor(feedbackDevice);
