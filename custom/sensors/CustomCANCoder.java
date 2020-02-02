@@ -2,42 +2,38 @@ package org.usfirst.frc4904.standard.custom.sensors;
 
 import com.ctre.phoenix.sensors.CANCoder;
 import com.ctre.phoenix.sensors.CANCoderConfiguration;
+import com.ctre.phoenix.sensors.SensorTimeBase;
 
 import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.Util;
 import org.usfirst.frc4904.standard.custom.CustomPIDSourceType;
 
 public class CustomCANCoder extends CANCoder implements CustomEncoder {
-    protected static final double DEFAULT_DISTANCE_PER_PULSE = 1.0;
     protected static final CustomPIDSourceType DEFAULT_SOURCE_TYPE = CustomPIDSourceType.kDisplacement;
     protected static final boolean DEFAULT_REVERSE_DIRECTION = false;
     protected CustomPIDSourceType sensorType;
     protected double distancePerPulse;
     protected boolean reverseDirection;
-    // protected CANCoderConfiguration config;
+    protected CANCoderConfiguration config;
     
 
 
-    public CustomCANCoder(int deviceNum, CustomPIDSourceType sensorType, boolean reverseDirection, double distancePerPulse) {
+    public CustomCANCoder(int deviceNum, double distancePerPulse, CustomPIDSourceType sensorType, boolean reverseDirection) {
         super(deviceNum);
-        // config = new CANCoderConfiguration();
-        // this.configAllSettings(config);
-        // this.configSensorDirection(bSensorDirection);
-        setReverseDirection(reverseDirection);
+        config = new CANCoderConfiguration();
+        super.configAllSettings(config);
         setDistancePerPulse(distancePerPulse);
         setCustomPIDSourceType(sensorType);
+        setReverseDirection(reverseDirection);
+        reset();
     }
 
-    public CustomCANCoder(int deviceNum, CustomPIDSourceType sensorType, boolean reverseDirection) {
-        this(deviceNum, sensorType, reverseDirection, DEFAULT_DISTANCE_PER_PULSE);
+    public CustomCANCoder(int deviceNum, double distancePerPulse, CustomPIDSourceType sensorType) {
+        this(deviceNum, distancePerPulse, sensorType, DEFAULT_REVERSE_DIRECTION);
     }
 
-    public CustomCANCoder(int deviceNum, CustomPIDSourceType sensorType) {
-        this(deviceNum, sensorType, DEFAULT_REVERSE_DIRECTION);
-    }
-
-    public CustomCANCoder(int deviceNum) {
-        this(deviceNum, DEFAULT_SOURCE_TYPE);
+    public CustomCANCoder(int deviceNum, double distancePerPulse) {
+        this(deviceNum, distancePerPulse, DEFAULT_SOURCE_TYPE);
     }
 
     public CustomPIDSourceType getCustomPIDSourceType() {
@@ -48,8 +44,13 @@ public class CustomCANCoder extends CANCoder implements CustomEncoder {
         this.sensorType = sensorType;
     }
 
+    public void setDistancePerPulse (double pulse, SensorTimeBase collectionPeriod) {
+        this.distancePerPulse = pulse;
+        super.configFeedbackCoefficient(pulse, "meters", collectionPeriod);
+    }
+
     public void setDistancePerPulse (double pulse) {
-        distancePerPulse = pulse;
+        setDistancePerPulse(pulse, SensorTimeBase.PerSecond);
     }
 
     @Override
@@ -74,12 +75,7 @@ public class CustomCANCoder extends CANCoder implements CustomEncoder {
 
     @Override
     public double getRateSafely() throws InvalidSensorException {
-        if (reverseDirection) {
-            return getVelocity() * distancePerPulse * -1.0;
-        }
-        else {
-            return getVelocity() * distancePerPulse;
-        }
+        return getVelocity();
 
     }
 
@@ -113,12 +109,7 @@ public class CustomCANCoder extends CANCoder implements CustomEncoder {
 
     @Override
     public double getDistanceSafely() throws InvalidSensorException {
-        if (reverseDirection) {
-            return getPosition() * distancePerPulse * -1.0;
-        }
-        else {
-            return getPosition() * distancePerPulse;
-        }
+        return getPosition();
     }
 
     @Override
@@ -164,6 +155,7 @@ public class CustomCANCoder extends CANCoder implements CustomEncoder {
     @Override
     public void setReverseDirection(boolean reverseDirection) {
         this.reverseDirection = reverseDirection;
+        super.configSensorDirection(!reverseDirection);
 
     }
 
