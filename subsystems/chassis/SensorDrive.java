@@ -38,8 +38,8 @@ public class SensorDrive implements Subsystem { // Based largely on
   private final TankDrive driveBase;
   private final CANCoder leftEncoder;
   private final CANCoder rightEncoder;
-  private final SimpleSplines.AutoConstants autoConstants;
-  private final SimpleSplines.DriveConstants driveConstants;
+  private final SimpleSplines.SplineAutoConstants autoConstants;
+  private final SimpleSplines.SplineDriveConstants driveConstants;
   private final IMU gyro;
   private final DifferentialDriveOdometry odometry;
   private TrajectoryConfig pathConfig;
@@ -47,7 +47,7 @@ public class SensorDrive implements Subsystem { // Based largely on
   /**
    * Creates a new DriveSubsystem.
    */
-  public SensorDrive(TankDrive driveBase, SimpleSplines.AutoConstants autoConstants, SimpleSplines.DriveConstants driveConstants, CANCoder leftEncoder, CANCoder rightEncoder, IMU gyro) {
+  public SensorDrive(TankDrive driveBase, SimpleSplines.SplineAutoConstants autoConstants, SimpleSplines.SplineDriveConstants driveConstants, CANCoder leftEncoder, CANCoder rightEncoder, IMU gyro) {
     this.driveBase = driveBase;
     this.leftEncoder = leftEncoder;
     this.rightEncoder = rightEncoder;
@@ -66,12 +66,16 @@ public class SensorDrive implements Subsystem { // Based largely on
     odometry.update(Rotation2d.fromDegrees(getHeading()), leftEncoder.getPosition(), rightEncoder.getPosition());
   }
 
-  public SimpleSplines.AutoConstants getAutoConstants(){
+  public SimpleSplines.SplineAutoConstants getAutoConstants(){
     return autoConstants;
   }
 
-  public SimpleSplines.DriveConstants getDriveConstants(){
+  public SimpleSplines.SplineDriveConstants getDriveConstants(){
     return driveConstants;
+  }
+
+  public TankDrive getDriveBase(){
+    return this.driveBase;
   }
 
   /**
@@ -136,6 +140,25 @@ public class SensorDrive implements Subsystem { // Based largely on
    */
   public double getHeading() {
     return gyro.getYaw();
+  }
+
+  public void configuratePath(double maxVoltage){
+    pathConfig = new TrajectoryConfig(autoConstants.kMaxSpeedMetersPerSecond, autoConstants.kMaxAccelerationMetersPerSecondSquared)
+        .setKinematics(driveConstants.kDriveKinematics)
+        .addConstraint(new DifferentialDriveVoltageConstraint(
+          new SimpleMotorFeedforward(driveConstants.ksVolts, 
+          driveConstants.kvVoltSecondsPerMeter, 
+          driveConstants.kaVoltSecondsSquaredPerMeter), 
+          driveConstants.kDriveKinematics, 
+          maxVoltage));
+  }
+
+  public Trajectory generateSimpleTrajectory(Pose2d init_pos, List<Translation2d> inter_points, Pose2d final_pos){
+    return TrajectoryGenerator.generateTrajectory(init_pos, inter_points, final_pos, pathConfig);
+  }
+
+  public Trajectory generateQuinticTrajectory(List<Pose2d> waypoints){
+    return TrajectoryGenerator.generateTrajectory(waypoints, pathConfig);
   }
 
   public void configuratePath(double maxVoltage){

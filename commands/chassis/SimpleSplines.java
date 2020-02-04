@@ -28,7 +28,7 @@ public class SimpleSplines extends SequentialCommandGroup {
         new PIDController(robotDrive.getDriveConstants().kPDriveVel, 0, 0),
         new PIDController(robotDrive.getDriveConstants().kPDriveVel, 0, 0),
         // RamseteCommand passes volts to the callback
-        robotDrive::tankDriveVolts, robotDrive), nextCommand);
+        robotDrive::tankDriveVolts, robotDrive.getDriveBase().getMotors()), nextCommand);
   } 
 
   public SimpleSplines(SensorDrive robotDrive, Trajectory trajectory){
@@ -38,13 +38,13 @@ public class SimpleSplines extends SequentialCommandGroup {
   /**
    * Class to store autonomous constants used for Ramsete Pathing.
    */
-  public static class AutoConstants {
+  public static class SplineAutoConstants {
     public double kMaxSpeedMetersPerSecond;
 		public double kMaxAccelerationMetersPerSecondSquared;
 		public double kRamseteB;
 		public double kRamseteZeta;
 
-    public AutoConstants(double kMaxSpeedMetersPerSecond, double kMaxAccelerationMetersPerSecondSquared, double kRamseteB, double kRamseteZeta) {
+    public SplineAutoConstants(double kMaxSpeedMetersPerSecond, double kMaxAccelerationMetersPerSecondSquared, double kRamseteB, double kRamseteZeta) {
       this.kMaxSpeedMetersPerSecond = kMaxSpeedMetersPerSecond;
       this.kMaxAccelerationMetersPerSecondSquared = kMaxAccelerationMetersPerSecondSquared;
       this.kRamseteB = kRamseteB;
@@ -55,7 +55,7 @@ public class SimpleSplines extends SequentialCommandGroup {
   /**
    * Class to store drive constants used for Ramsete pathing.
    */
-  public static class DriveConstants {
+  public static class SplineDriveConstants {
     public double ksVolts;
 		public double kvVoltSecondsPerMeter;
     public double kaVoltSecondsSquaredPerMeter;
@@ -63,7 +63,7 @@ public class SimpleSplines extends SequentialCommandGroup {
 		public DifferentialDriveKinematics kDriveKinematics;
     public double kPDriveVel;
     
-    public DriveConstants(double ksVolts, double kvVoltSecondsPerMeter, double kaVoltSecondsSquaredPerMeter, double kTrackwidthMeters, double kPDriveVel){
+    public SplineDriveConstants(double ksVolts, double kvVoltSecondsPerMeter, double kaVoltSecondsSquaredPerMeter, double kTrackwidthMeters, double kPDriveVel){
       this.ksVolts = ksVolts;
       this.kvVoltSecondsPerMeter = kvVoltSecondsPerMeter;
       this.kaVoltSecondsSquaredPerMeter = kaVoltSecondsSquaredPerMeter;
