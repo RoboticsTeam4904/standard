@@ -160,23 +160,4 @@ public class SensorDrive implements Subsystem { // Based largely on
   public Trajectory generateQuinticTrajectory(List<Pose2d> waypoints){
     return TrajectoryGenerator.generateTrajectory(waypoints, pathConfig);
   }
-
-  public void configuratePath(double maxVoltage){
-    pathConfig = new TrajectoryConfig(autoConstants.kMaxSpeedMetersPerSecond, autoConstants.kMaxAccelerationMetersPerSecondSquared)
-        .setKinematics(driveConstants.kDriveKinematics)
-        .addConstraint(new DifferentialDriveVoltageConstraint(
-          new SimpleMotorFeedforward(driveConstants.ksVolts, 
-          driveConstants.kvVoltSecondsPerMeter, 
-          driveConstants.kaVoltSecondsSquaredPerMeter), 
-          driveConstants.kDriveKinematics, 
-          maxVoltage));
-  }
-
-  public Trajectory generateSimpleTrajectory(Pose2d init_pos, List<Translation2d> inter_points, Pose2d final_pos){
-    return TrajectoryGenerator.generateTrajectory(init_pos, inter_points, final_pos, pathConfig);
-  }
-
-  public Trajectory generateQuinticTrajectory(List<Pose2d> waypoints){
-    return TrajectoryGenerator.generateTrajectory(waypoints, pathConfig);
-  }
 }
