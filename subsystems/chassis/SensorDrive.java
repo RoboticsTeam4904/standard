@@ -139,7 +139,7 @@ public class SensorDrive implements Subsystem { // Based largely on
    * @return the robot's heading in degrees, from 180 to 180
    */
   public double getHeading() {
-    return gyro.getYaw();
+    return gyro.getYaw() * -1;
   }
 
   public void configuratePath(double maxVoltage){
