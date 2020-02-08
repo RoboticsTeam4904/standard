@@ -1,6 +1,5 @@
 package org.usfirst.frc4904.standard;
 
-
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -36,20 +35,19 @@ public class LogKitten {
 			if (!logPathDirectory.isDirectory()) { // ensure that the directory /home/lvuser/logs/ exists
 				logPathDirectory.mkdirs(); // otherwise create all the directories of the path
 			}
-		}
-		catch (SecurityException se) {
+		} catch (SecurityException se) {
 			System.out.println("Could not create log directory");
 			se.printStackTrace();
 		}
-		String filePath = LogKitten.LOG_PATH + LogKitten.timestamp() + ".log"; // Set this sessions log to /home/lvuser/logs/[current time].log
+		String filePath = LogKitten.LOG_PATH + LogKitten.timestamp() + ".log"; // Set this sessions log to
+																				// /home/lvuser/logs/[current time].log
 		File file = new File(filePath);
 		try {
 			// Create new file if it doesn't exist (this should happen)
 			file.createNewFile(); // creates if does not exist
 			// Create FileOutputStream to actually write to the file.
 			LogKitten.fileOutput = new BufferedOutputStream(new FileOutputStream(file));
-		}
-		catch (IOException ioe) {
+		} catch (IOException ioe) {
 			System.out.println("Could not open logfile");
 			ioe.printStackTrace();
 		}
@@ -59,8 +57,7 @@ public class LogKitten {
 				logAlias.delete();
 			}
 			Files.createSymbolicLink(logAlias.toPath(), file.toPath());
-		}
-		catch (IOException ioe) {
+		} catch (IOException ioe) {
 			System.out.println("Could not alias logfile");
 			ioe.printStackTrace();
 		}
@@ -72,7 +69,8 @@ public class LogKitten {
 	 * @return the caller for the callee `f`, `e`, `w`, `v`, or `d`
 	 */
 	private static String getLoggerMethodCallerMethodName() {
-		return Thread.currentThread().getStackTrace()[4].getMethodName(); // caller of the logger method is fifth in the stack trace
+		return Thread.currentThread().getStackTrace()[4].getMethodName(); // caller of the logger method is fifth in the
+																			// stack trace
 	}
 
 	/**
@@ -81,7 +79,9 @@ public class LogKitten {
 	 * @return the caller for the callee `f`, `e`, `w`, `v`, or `d`
 	 */
 	private static String getLoggerMethodCallerClassName() {
-		String[] trace = Thread.currentThread().getStackTrace()[4].getClassName().split("\\."); // caller of the logger method is fifth in the stack trace
+		String[] trace = Thread.currentThread().getStackTrace()[4].getClassName().split("\\."); // caller of the logger
+																								// method is fifth in
+																								// the stack trace
 		if (trace.length == 0) {
 			return "";
 		}
@@ -89,30 +89,30 @@ public class LogKitten {
 	}
 
 	/**
-	 * Set the default level for which logs will be streamed to a file (for all LogKitten instances)
+	 * Set the default level for which logs will be streamed to a file (for all
+	 * LogKitten instances)
 	 *
-	 * @param DEFAULT_LOG_LEVEL
-	 *        default write-to-file level
+	 * @param DEFAULT_LOG_LEVEL default write-to-file level
 	 */
 	public static void setDefaultLogLevel(KittenLevel DEFAULT_LOG_LEVEL) {
 		LogKitten.logLevel = DEFAULT_LOG_LEVEL;
 	}
 
 	/**
-	 * Set the default level for which logs will be printed to the console (for all LogKitten instances)
+	 * Set the default level for which logs will be printed to the console (for all
+	 * LogKitten instances)
 	 *
-	 * @param DEFAULT_PRINT_LEVEL
-	 *        default console log level
+	 * @param DEFAULT_PRINT_LEVEL default console log level
 	 */
 	public static void setDefaultPrintLevel(KittenLevel DEFAULT_PRINT_LEVEL) {
 		LogKitten.printLevel = DEFAULT_PRINT_LEVEL;
 	}
 
 	/**
-	 * Set the default level for which logs will be printed to the driver station (for all LogKitten instances)
+	 * Set the default level for which logs will be printed to the driver station
+	 * (for all LogKitten instances)
 	 *
-	 * @param DEFAULT_DS_LEVEL
-	 *        default driver station level
+	 * @param DEFAULT_DS_LEVEL default driver station level
 	 */
 	public static void setDefaultDSLevel(KittenLevel DEFAULT_DS_LEVEL) {
 		LogKitten.dsLevel = DEFAULT_DS_LEVEL;
@@ -121,16 +121,14 @@ public class LogKitten {
 	/**
 	 * Set the logfile path for all LogKitten instances
 	 *
-	 * @param LOG_PATH
-	 *        logfile path as a string
+	 * @param LOG_PATH logfile path as a string
 	 */
 	public static void setLogPath(String LOG_PATH) {
 		LogKitten.LOG_PATH = LOG_PATH;
 	}
 
 	/**
-	 * Mutes all messages except those overriding
-	 * (useful for debugging)
+	 * Mutes all messages except those overriding (useful for debugging)
 	 *
 	 * @param mute
 	 */
@@ -139,8 +137,8 @@ public class LogKitten {
 	}
 
 	/**
-	 * Like DriverStation.reportError, but without stack trace nor printing to System.err
-	 * (updated for 2017 WPILib release)
+	 * Like DriverStation.reportError, but without stack trace nor printing to
+	 * System.err (updated for 2017 WPILib release)
 	 *
 	 * @see edu.wpi.first.wpilibj.DriverStation.reportError
 	 * @param errorString
@@ -152,36 +150,36 @@ public class LogKitten {
 	public static synchronized void logMessage(Object message, KittenLevel level, boolean override) {
 		message = message.toString(); // Not strictly needed, but good practice
 		if (LogKitten.logLevel.compareTo(level) >= 0) {
-			String content = LogKitten.timestamp() + " " + level.getName() + ": " + LogKitten.getLoggerMethodCallerMethodName()
-				+ ": " + message + " \n";
+			String content = LogKitten.timestamp() + " " + level.getName() + ": "
+					+ LogKitten.getLoggerMethodCallerMethodName() + ": " + message + " \n";
 			try {
 				if (LogKitten.fileOutput != null) {
 					LogKitten.fileOutput.write(content.getBytes());
 				} else {
 					System.out.println("Error logging: logfile not open");
 				}
-			}
-			catch (IOException ioe) {
+			} catch (IOException ioe) {
 				System.out.println("Error logging " + level.getName() + " message");
 				ioe.printStackTrace();
 			}
 		}
 		if (!LogKitten.PRINT_MUTE || override) {
 			String printContent = level.getName() + ": " + LogKitten.getLoggerMethodCallerClassName() + "#"
-				+ LogKitten.getLoggerMethodCallerMethodName() + ": " + message + " \n";
+					+ LogKitten.getLoggerMethodCallerMethodName() + ": " + message + " \n";
 			if (LogKitten.printLevel.compareTo(level) >= 0) {
 				System.out.println(printContent);
 			}
 			if (LogKitten.dsLevel.compareTo(level) >= 0) {
 				LogKitten.reportErrorToDriverStation(
-					LogKitten.getLoggerMethodCallerClassName() + "#" + LogKitten.getLoggerMethodCallerMethodName(),
-					level.getName() + ": " + message, level);
+						LogKitten.getLoggerMethodCallerClassName() + "#" + LogKitten.getLoggerMethodCallerMethodName(),
+						level.getName() + ": " + message, level);
 			}
 		}
 	}
 
 	/**
-	 * What a Terrible Failure: Report a condition that should never happen, allowing override
+	 * What a Terrible Failure: Report a condition that should never happen,
+	 * allowing override
 	 *
 	 * @param message
 	 * @param override
@@ -193,8 +191,7 @@ public class LogKitten {
 	/**
 	 * What a Terrible Failure: Report a condition that should never happen
 	 *
-	 * @param message
-	 *        the message to log
+	 * @param message the message to log
 	 */
 	public static void wtf(Object message) { // Log WTF message
 		LogKitten.logMessage(message, KittenLevel.WTF, false);
@@ -213,8 +210,7 @@ public class LogKitten {
 	/**
 	 * Log message at level FATAL
 	 *
-	 * @param message
-	 *        the message to log
+	 * @param message the message to log
 	 */
 	public static void f(Object message) { // Log fatal message
 		LogKitten.logMessage(message, KittenLevel.FATAL, false);
@@ -233,8 +229,7 @@ public class LogKitten {
 	/**
 	 * Log message at level ERROR
 	 *
-	 * @param message
-	 *        the message to log
+	 * @param message the message to log
 	 */
 	public static void e(Object message) { // Log error message
 		LogKitten.logMessage(message, KittenLevel.ERROR, false);
@@ -253,8 +248,7 @@ public class LogKitten {
 	/**
 	 * Log message at level WARN
 	 *
-	 * @param message
-	 *        the message to log
+	 * @param message the message to log
 	 */
 	public static void w(Object message) { // Log warn message
 		LogKitten.logMessage(message, KittenLevel.WARN, false);
@@ -273,8 +267,7 @@ public class LogKitten {
 	/**
 	 * Log message at level VERBOSE
 	 *
-	 * @param message
-	 *        the message to log
+	 * @param message the message to log
 	 */
 	public static void v(Object message) { // Log verbose message
 		LogKitten.logMessage(message, KittenLevel.VERBOSE, false);
@@ -312,8 +305,7 @@ public class LogKitten {
 	/**
 	 * Log message at level DEBUG
 	 *
-	 * @param message
-	 *        the message to log
+	 * @param message the message to log
 	 */
 	public static void d(Object message) { // Log debug message
 		LogKitten.logMessage(message, KittenLevel.DEBUG, false);
@@ -322,10 +314,8 @@ public class LogKitten {
 	/**
 	 * Log exception at level ERROR allowing override
 	 *
-	 * @param ex
-	 *        the exception to log
-	 * @param override
-	 *        whether or not to override
+	 * @param ex       the exception to log
+	 * @param override whether or not to override
 	 */
 	public static void ex(Exception ex, boolean override) {
 		StringWriter stackTraceString = new StringWriter();
@@ -336,8 +326,7 @@ public class LogKitten {
 	/**
 	 * Log exception at level ERROR
 	 *
-	 * @param ex
-	 *        the exception to log
+	 * @param ex the exception to log
 	 */
 	public static void ex(Exception ex) {
 		LogKitten.ex(ex, false);
@@ -351,8 +340,7 @@ public class LogKitten {
 			if (LogKitten.fileOutput != null) {
 				LogKitten.fileOutput.close();
 			}
-		}
-		catch (IOException ioe) {
+		} catch (IOException ioe) {
 			System.out.println("Could not close logfile output. This should never happen");
 			ioe.printStackTrace();
 		}
@@ -368,15 +356,18 @@ public class LogKitten {
 	}
 
 	public static enum KittenLevel {
-		// Defined in decreasing order of severity. Enum.compareTo uses the definition order to compare enum values.
+		// Defined in decreasing order of severity. Enum.compareTo uses the definition
+		// order to compare enum values.
 		WTF, FATAL, ERROR, WARN, VERBOSE, DEBUG;
+
 		/**
 		 * Get the level severity
 		 *
 		 * @return the level severity as an int
 		 */
 		public int getSeverity() {
-			// Severity is the same as the ordinal, which increases with the order of the enum values
+			// Severity is the same as the ordinal, which increases with the order of the
+			// enum values
 			return ordinal();
 		}
 

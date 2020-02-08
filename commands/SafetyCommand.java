@@ -1,35 +1,37 @@
 package org.usfirst.frc4904.standard.commands;
 
-
 import org.usfirst.frc4904.standard.LogKitten;
-import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /**
- * A command that will only run if the isSafe() method returns safe.
- * To use, implement an isSafe() method,
- * and use executeIfSafe() in place of the execute() method
+ * A command that will only run if the isSafe() method returns safe. To use,
+ * implement an isSafe() method, and use executeIfSafe() in place of the
+ * execute() method
  */
-public abstract class SafetyCommand extends Command {
+public abstract class SafetyCommand extends CommandBase {
 	protected String reasonUnsafe;
 
-	public SafetyCommand() {
+	public SafetyCommand(String name, double timeout) {
 		super();
-	}
-
-	public SafetyCommand(String name) {
-		super(name);
+		setName(name);
+		withTimeout(timeout);
 	}
 
 	public SafetyCommand(double timeout) {
-		super(timeout);
+		this("SafetyCommand", timeout);
 	}
 
-	public SafetyCommand(String name, double timeout) {
-		super(name, timeout);
+	public SafetyCommand(String name) {
+		super();
+		setName(name);
+	}
+
+	public SafetyCommand() {
+		this("SafetyCommand");
 	}
 
 	@Override
-	protected final void execute() {
+	public final void execute() {
 		if (isSafe()) {
 			executeIfSafe();
 			return;
@@ -46,15 +48,15 @@ public abstract class SafetyCommand extends Command {
 	}
 
 	/**
-	 * This execute method is called the first time this Command is run after being started,
-	 * on the condition that isSafe() returns true.
+	 * This execute method is called the first time this Command is run after being
+	 * started, on the condition that isSafe() returns true.
 	 */
 	protected abstract void executeIfSafe();
 
 	/**
-	 * Determines if the command is safe to run.
-	 * setUnsafeReason(String) should be called to describe a safety failure.
-	 * (Will be called every execute iteration.)
+	 * Determines if the command is safe to run. setUnsafeReason(String) should be
+	 * called to describe a safety failure. (Will be called every execute
+	 * iteration.)
 	 *
 	 * @return is the command safe to run?
 	 */
