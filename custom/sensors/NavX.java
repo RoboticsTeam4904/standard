@@ -1,10 +1,9 @@
 package org.usfirst.frc4904.standard.custom.sensors;
 
+import org.usfirst.frc4904.standard.custom.CustomPIDSourceType;
 
-import org.usfirst.frc4904.standard.LogKitten;
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.I2C;
-import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -12,7 +11,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * Local NavX interface.
  *
  */
-public class NavX extends AHRS implements IMU {
+public class NavX extends AHRS implements IMU, PIDSensor {
+	private CustomPIDSourceType pidSource;
 	protected float lastYaw;
 	protected float lastPitch;
 	protected float lastRoll;
@@ -29,7 +29,7 @@ public class NavX extends AHRS implements IMU {
 		lastRoll = 0.0f;
 		getYawCalls = 0;
 	}
-	
+
 	public NavX(I2C.Port port) {
 		super(port);
 		super.zeroYaw();
@@ -41,7 +41,7 @@ public class NavX extends AHRS implements IMU {
 
 	@Override
 	public double pidGet() {
-		if (getPIDSourceType() == PIDSourceType.kRate) {
+		if (getCustomPIDSourceType() == CustomPIDSourceType.kRate) {
 			return getRate();
 		} else {
 			return getYaw();
@@ -66,17 +66,17 @@ public class NavX extends AHRS implements IMU {
 		SmartDashboard.putNumber("navx_yaw", yaw);
 		SmartDashboard.putNumber("navx_last_yaw", lastYaw);
 		if ((Math.abs(yaw - lastYaw) > NavX.MAX_DEGREES_PER_TICK)
-			&& (Math.abs(Math.abs(yaw - lastYaw) - 360) > NavX.MAX_DEGREES_PER_TICK)) { // Smoothing
+				&& (Math.abs(Math.abs(yaw - lastYaw) - 360) > NavX.MAX_DEGREES_PER_TICK)) { // Smoothing
 			return lastYaw;
 		}
 		lastYaw = yaw;
 		return yaw;
 	}
-	
+
 	@Override
 	public float getYaw() {
 		getYawCalls += 1;
-//		LogKitten.e(Integer.toString(getYawCalls));
+		// LogKitten.e(Integer.toString(getYawCalls));
 		return super.getYaw();
 	}
 
@@ -120,5 +120,24 @@ public class NavX extends AHRS implements IMU {
 	public void zeroYaw() {
 		super.zeroYaw();
 		lastYaw = 0;
+	}
+
+	@Override
+	public double pidGetSafely() throws InvalidSensorException {
+		if (getCustomPIDSourceType() == CustomPIDSourceType.kRate) {
+			return getRate();
+		} else {
+			return getYaw();
+		}
+	}
+
+	@Override
+	public CustomPIDSourceType getCustomPIDSourceType() {
+		return pidSource;
+	}
+
+	@Override
+	public void setCustomPIDSourceType(CustomPIDSourceType kdisplacement) {
+		this.pidSource = kdisplacement;
 	}
 }
