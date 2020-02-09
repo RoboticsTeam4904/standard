@@ -9,13 +9,14 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.controller.RamseteController;
 import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
+import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
 public class SimpleSplines extends SequentialCommandGroup {
-  public SimpleSplines(SensorDrive robotDrive, Trajectory trajectory, Command nextCommand){
+  public SimpleSplines(SensorDrive robotDrive, Trajectory trajectory, Command nextCommand, Pose2d initialPos){
     super(new RamseteCommand(
         trajectory,
         robotDrive::getPose,
@@ -28,8 +29,12 @@ public class SimpleSplines extends SequentialCommandGroup {
         new PIDController(robotDrive.getDriveConstants().kPDriveVel, 0, 0),
         new PIDController(robotDrive.getDriveConstants().kPDriveVel, 0, 0),
         robotDrive::tankDriveVolts, robotDrive.getDriveBase().getMotors()), nextCommand);
-    robotDrive.resetOdometry(trajectory.getStates().get(0).poseMeters); //TODO: Is there any case in which we wouldn't want to assume this starting pose?
+    robotDrive.resetOdometry(initialPos);
   } 
+
+  public SimpleSplines(SensorDrive robotDrive, Trajectory trajectory, Command nextCommand){
+    this(robotDrive, trajectory, nextCommand, trajectory.getStates().get(0).poseMeters);
+  }
 
   public SimpleSplines(SensorDrive robotDrive, Trajectory trajectory){
     this(robotDrive, trajectory, new InstantCommand(() -> robotDrive.tankDriveVolts(0, 0)));
