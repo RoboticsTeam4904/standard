@@ -11,6 +11,7 @@ import java.util.List;
 
 import com.ctre.phoenix.sensors.CANCoder;
 
+import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.commands.chassis.SimpleSplines;
 import org.usfirst.frc4904.standard.custom.sensors.IMU;
 import org.usfirst.frc4904.standard.subsystems.chassis.TankDrive;
@@ -66,14 +67,25 @@ public class SensorDrive implements Subsystem { // Based largely on
     odometry.update(Rotation2d.fromDegrees(getHeading()), leftEncoder.getPosition(), rightEncoder.getPosition());
   }
 
+  /**
+   * Gets the auto constants.
+   * @return the auto constants.
+   */
   public SimpleSplines.SplineAutoConstants getAutoConstants(){
     return autoConstants;
   }
 
+  /**
+   * Gets the drive constants.
+   * @return the drive constants.
+   */
   public SimpleSplines.SplineDriveConstants getDriveConstants(){
     return driveConstants;
   }
 
+  /**
+   * Gets the drive base.
+   */
   public TankDrive getDriveBase(){
     return this.driveBase;
   }
@@ -142,6 +154,11 @@ public class SensorDrive implements Subsystem { // Based largely on
     return gyro.getYaw() * -1;
   }
 
+  /**
+   * Sets the pathConfig based on the maxVoltage allowed.
+   * 
+   * @param maxVoltage the max voltage to be allowed in the chassis.
+   */
   public void configuratePath(double maxVoltage){
     pathConfig = new TrajectoryConfig(autoConstants.kMaxSpeedMetersPerSecond, autoConstants.kMaxAccelerationMetersPerSecondSquared)
         .setKinematics(driveConstants.kDriveKinematics)
@@ -153,10 +170,22 @@ public class SensorDrive implements Subsystem { // Based largely on
           maxVoltage));
   }
 
+  /**
+   * Generates a trajectory using clamped cubic splines, allowing the input of a starting and ending Pose2d and intermediate Translation2d Points.
+   * @param init_pos the initial pose to start at - unless otherwise specified, RamseteCommand will automatically assume this to be the robot's initial position.
+   * @param inter_points the intermediate (x,y) Translation2d waypoints. Can create using List.of().
+   * @param final_pos the final pose of the robot.
+   * @return the trajectory.
+   */
   public Trajectory generateSimpleTrajectory(Pose2d init_pos, List<Translation2d> inter_points, Pose2d final_pos){
     return TrajectoryGenerator.generateTrajectory(init_pos, inter_points, final_pos, pathConfig);
   }
 
+  /**
+   * Generates a trajectory using quintic splines, allowing the input of a list of Pose2d waypoints.
+   * @param waypoints the waypoints that the spline should intersect.
+   * @return the trajectory.
+   */
   public Trajectory generateQuinticTrajectory(List<Pose2d> waypoints){
     return TrajectoryGenerator.generateTrajectory(waypoints, pathConfig);
   }

@@ -26,7 +26,8 @@ public class SimpleSplines extends SequentialCommandGroup {
    * @param initialPos the initial pose to reset the robot's odometry to.
    */
   public SimpleSplines(SensorDrive robotDrive, Trajectory trajectory, Command nextCommand, Pose2d initialPos){
-    super(new RamseteCommand(
+    super(new InstantCommand(() -> robotDrive.resetOdometry(initialPos)),
+      new RamseteCommand(
         trajectory,
         robotDrive::getPose,
         new RamseteController(robotDrive.getAutoConstants().kRamseteB, robotDrive.getAutoConstants().kRamseteZeta),
@@ -38,7 +39,7 @@ public class SimpleSplines extends SequentialCommandGroup {
         new PIDController(robotDrive.getDriveConstants().kPDriveVel, 0, 0),
         new PIDController(robotDrive.getDriveConstants().kPDriveVel, 0, 0),
         robotDrive::tankDriveVolts, robotDrive.getDriveBase().getMotors()), nextCommand);
-    robotDrive.resetOdometry(initialPos);
+    addRequirements(robotDrive.getDriveBase());
   } 
 
   /**
