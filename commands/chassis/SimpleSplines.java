@@ -27,8 +27,8 @@ public class SimpleSplines extends SequentialCommandGroup {
         robotDrive::getWheelSpeeds,
         new PIDController(robotDrive.getDriveConstants().kPDriveVel, 0, 0),
         new PIDController(robotDrive.getDriveConstants().kPDriveVel, 0, 0),
-        // RamseteCommand passes volts to the callback
         robotDrive::tankDriveVolts, robotDrive.getDriveBase().getMotors()), nextCommand);
+    robotDrive.resetOdometry(trajectory.getStates().get(0).poseMeters); //TODO: Is there any case in which we wouldn't want to assume this starting pose?
   } 
 
   public SimpleSplines(SensorDrive robotDrive, Trajectory trajectory){
