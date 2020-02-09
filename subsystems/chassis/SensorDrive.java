@@ -11,7 +11,6 @@ import java.util.List;
 
 import com.ctre.phoenix.sensors.CANCoder;
 
-import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.commands.chassis.SimpleSplines;
 import org.usfirst.frc4904.standard.custom.sensors.IMU;
 import org.usfirst.frc4904.standard.subsystems.chassis.TankDrive;
