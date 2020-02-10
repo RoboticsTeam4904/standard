@@ -16,7 +16,7 @@ import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
 /**
- * This command creates a simple spline to follow a Trajectory using a SensorDrive. Note that while the nextCommand to run after the robot finishes driving and the initialPos are both configuraable, they will almost always be set automatically.
+ * This command creates a simple spline to follow a Trajectory using a SensorDrive. Note that while the nextCommand to run after the robot finishes driving and the initialPos are both configurable, they will almost always be set automatically.
  */
 public class SimpleSplines extends SequentialCommandGroup {
   /**
@@ -72,16 +72,23 @@ public class SimpleSplines extends SequentialCommandGroup {
    * Class to store autonomous constants used for Ramsete Pathing.
    */
   public static class SplineAutoConstants {
-    public double kMaxSpeedMetersPerSecond;
-		public double kMaxAccelerationMetersPerSecondSquared;
-		public double kRamseteB;
-		public double kRamseteZeta;
-
-    public SplineAutoConstants(double kMaxSpeedMetersPerSecond, double kMaxAccelerationMetersPerSecondSquared, double kRamseteB, double kRamseteZeta) {
-      this.kMaxSpeedMetersPerSecond = kMaxSpeedMetersPerSecond;
-      this.kMaxAccelerationMetersPerSecondSquared = kMaxAccelerationMetersPerSecondSquared;
-      this.kRamseteB = kRamseteB;
-      this.kRamseteZeta = kRamseteZeta;
+    public double MAX_SPEED_MS;
+		public double MAX_ACCEL_MSS;
+		public double RAMSETE_B;
+    public double RAMSETE_ZETA;
+    
+    /**
+     * Constructor for the auto constants.
+     * @param MAX_SPEED_MS max speed of the robot. Meters per second.
+     * @param MAX_ACCEL_MSS max acceleration of the robot. Meters per second squared.
+     * @param RAMSETE_B B coefficient. Should be 2.0 for most contexts.
+     * @param kRamseteZeta Zeta coefficient. Should be 0.7 for most contexts.
+     */
+    public SplineAutoConstants(double MAX_SPEED_MS, double MAX_ACCEL_MSS, double RAMSETE_B, double RAMSETE_ZETA) {
+      this.MAX_SPEED_MS = MAX_SPEED_MS;
+      this.MAX_ACCEL_MSS = MAX_ACCEL_MSS;
+      this.RAMSETE_B = RAMSETE_B;
+      this.RAMSETE_ZETA = RAMSETE_ZETA;
     }
   }
 
@@ -89,20 +96,28 @@ public class SimpleSplines extends SequentialCommandGroup {
    * Class to store drive constants used for Ramsete pathing.
    */
   public static class SplineDriveConstants {
-    public double ksVolts;
-		public double kvVoltSecondsPerMeter;
-    public double kaVoltSecondsSquaredPerMeter;
-    public double kTrackwidthMeters;
+    public double KS;
+		public double KV;
+    public double KA;
+    public double TRACK_WIDTH;
 		public DifferentialDriveKinematics kDriveKinematics;
-    public double kPDriveVel;
+    public double KP_DRIVE_VEL;
     
-    public SplineDriveConstants(double ksVolts, double kvVoltSecondsPerMeter, double kaVoltSecondsSquaredPerMeter, double kTrackwidthMeters, double kPDriveVel){
-      this.ksVolts = ksVolts;
-      this.kvVoltSecondsPerMeter = kvVoltSecondsPerMeter;
-      this.kaVoltSecondsSquaredPerMeter = kaVoltSecondsSquaredPerMeter;
-      this.kTrackwidthMeters = kTrackwidthMeters;
-      this.kDriveKinematics = new DifferentialDriveKinematics(kTrackwidthMeters);
-      this.kPDriveVel = kPDriveVel;
+    /**
+     * Constructor for the drive constants.
+     * @param KS ksVolts (from characterization).
+     * @param KV kvVoltSecondsPerMeter (from characterization).
+     * @param KA kaVoltSecondsSquaredPerMeter (from characterization).
+     * @param TRACK_WIDTH kTrackwidthMeters (from characterization).
+     * @param KP_DRIVE_VEL kPDriveVel (from characterization).
+     */
+    public SplineDriveConstants(double KS, double KV, double KA, double TRACK_WIDTH, double KP_DRIVE_VEL){
+      this.KS = KS;
+      this.KV = KV;
+      this.KA = KA;
+      this.TRACK_WIDTH = TRACK_WIDTH;
+      this.kDriveKinematics = new DifferentialDriveKinematics(TRACK_WIDTH);
+      this.KP_DRIVE_VEL = KP_DRIVE_VEL;
     }
   }
 }
