@@ -26,18 +26,21 @@ public class Idle extends CommandBase {
 		this("Idle", false, subsystems);
 	}
 
+	@Override
 	public void initialize() {
 		if (verbose) {
 			LogKitten.v("Idle " + getName() + " initialized.");
 		}
 	}
 
+	@Override
 	public void execute() {
 		if (verbose) {
 			LogKitten.v("Idle " + getName() + " executed.");
 		}
 	}
 
+	@Override
 	public boolean isFinished() {
 		if (verbose) {
 			LogKitten.v("Idle " + getName() + " isFinished?");
@@ -45,6 +48,7 @@ public class Idle extends CommandBase {
 		return false;
 	}
 
+	@Override
 	public void end(boolean interrupted) {
 		if (verbose) {
 			if (interrupted) {
