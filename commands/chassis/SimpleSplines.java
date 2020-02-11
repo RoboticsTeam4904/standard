@@ -30,14 +30,14 @@ public class SimpleSplines extends SequentialCommandGroup {
       new RamseteCommand(
         trajectory,
         robotDrive::getPose,
-        new RamseteController(robotDrive.getAutoConstants().kRamseteB, robotDrive.getAutoConstants().kRamseteZeta),
-        new SimpleMotorFeedforward(robotDrive.getDriveConstants().ksVolts,
-        robotDrive.getDriveConstants().kvVoltSecondsPerMeter,
-        robotDrive.getDriveConstants().kaVoltSecondsSquaredPerMeter),
-        robotDrive.getDriveConstants().kDriveKinematics,
+        new RamseteController(robotDrive.getAutoConstants().RAMSETE_B, robotDrive.getAutoConstants().RAMSETE_ZETA),
+        new SimpleMotorFeedforward(robotDrive.getDriveConstants().KS,
+        robotDrive.getDriveConstants().KV,
+        robotDrive.getDriveConstants().KA),
+        robotDrive.getDriveConstants().DRIVE_KINEMATICS,
         robotDrive::getWheelSpeeds,
-        new PIDController(robotDrive.getDriveConstants().kPDriveVel, 0, 0),
-        new PIDController(robotDrive.getDriveConstants().kPDriveVel, 0, 0),
+        new PIDController(robotDrive.getDriveConstants().KP_DRIVE_VEL, 0, 0),
+        new PIDController(robotDrive.getDriveConstants().KP_DRIVE_VEL, 0, 0),
         robotDrive::tankDriveVolts, robotDrive.getDriveBase().getMotors()), nextCommand);
     addRequirements(robotDrive.getDriveBase());
   } 
@@ -72,8 +72,8 @@ public class SimpleSplines extends SequentialCommandGroup {
    * Class to store autonomous constants used for Ramsete Pathing.
    */
   public static class SplineAutoConstants {
-    public double MAX_SPEED_MS;
-		public double MAX_ACCEL_MSS;
+    public double MAX_SPEED;
+		public double MAX_ACCEL;
 		public double RAMSETE_B;
     public double RAMSETE_ZETA;
     
@@ -84,9 +84,9 @@ public class SimpleSplines extends SequentialCommandGroup {
      * @param RAMSETE_B B coefficient. Should be 2.0 for most contexts.
      * @param kRamseteZeta Zeta coefficient. Should be 0.7 for most contexts.
      */
-    public SplineAutoConstants(double MAX_SPEED_MS, double MAX_ACCEL_MSS, double RAMSETE_B, double RAMSETE_ZETA) {
-      this.MAX_SPEED_MS = MAX_SPEED_MS;
-      this.MAX_ACCEL_MSS = MAX_ACCEL_MSS;
+    public SplineAutoConstants(double MAX_SPEED, double MAX_ACCEL, double RAMSETE_B, double RAMSETE_ZETA) {
+      this.MAX_SPEED = MAX_SPEED;
+      this.MAX_ACCEL = MAX_ACCEL;
       this.RAMSETE_B = RAMSETE_B;
       this.RAMSETE_ZETA = RAMSETE_ZETA;
     }
@@ -100,7 +100,7 @@ public class SimpleSplines extends SequentialCommandGroup {
 		public double KV;
     public double KA;
     public double TRACK_WIDTH;
-		public DifferentialDriveKinematics kDriveKinematics;
+		public DifferentialDriveKinematics DRIVE_KINEMATICS;
     public double KP_DRIVE_VEL;
     
     /**
@@ -116,7 +116,7 @@ public class SimpleSplines extends SequentialCommandGroup {
       this.KV = KV;
       this.KA = KA;
       this.TRACK_WIDTH = TRACK_WIDTH;
-      this.kDriveKinematics = new DifferentialDriveKinematics(TRACK_WIDTH);
+      this.DRIVE_KINEMATICS = new DifferentialDriveKinematics(TRACK_WIDTH);
       this.KP_DRIVE_VEL = KP_DRIVE_VEL;
     }
   }

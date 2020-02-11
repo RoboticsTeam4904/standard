@@ -159,13 +159,13 @@ public class SensorDrive implements Subsystem { // Based largely on
    * @param maxVoltage the max voltage to be allowed in the chassis.
    */
   public void configuratePath(double maxVoltage){
-    pathConfig = new TrajectoryConfig(autoConstants.kMaxSpeedMetersPerSecond, autoConstants.kMaxAccelerationMetersPerSecondSquared)
-        .setKinematics(driveConstants.kDriveKinematics)
+    pathConfig = new TrajectoryConfig(autoConstants.MAX_SPEED, autoConstants.MAX_ACCEL)
+        .setKinematics(driveConstants.DRIVE_KINEMATICS)
         .addConstraint(new DifferentialDriveVoltageConstraint(
-          new SimpleMotorFeedforward(driveConstants.ksVolts, 
-          driveConstants.kvVoltSecondsPerMeter, 
-          driveConstants.kaVoltSecondsSquaredPerMeter), 
-          driveConstants.kDriveKinematics, 
+          new SimpleMotorFeedforward(driveConstants.KS, 
+          driveConstants.KV, 
+          driveConstants.KA), 
+          driveConstants.DRIVE_KINEMATICS, 
           maxVoltage));
   }
 
