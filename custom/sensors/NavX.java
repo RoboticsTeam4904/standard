@@ -77,7 +77,6 @@ public class NavX extends AHRS implements IMU, PIDSensor {
     @Override
     public float getYaw() {
         getYawCalls += 1;
-        // LogKitten.e(Integer.toString(getYawCalls));
         return super.getYaw();
     }
 
@@ -133,8 +132,8 @@ public class NavX extends AHRS implements IMU, PIDSensor {
     }
 
     @Override
-    public void setCustomPIDSourceType(CustomPIDSourceType kdisplacement) {
-        this.pidSource = kdisplacement;
+    public void setCustomPIDSourceType(CustomPIDSourceType sourceType) {
+        this.pidSource = sourceType;
     }
 
 	@Override
