@@ -102,10 +102,6 @@ public class CANTalonEncoder implements CustomEncoder {
 		return talon.getSelectedSensorPosition(PID_IDX);
 	}
 
-	public void configSomeShit(){
-		this.talon.configVelocityMeasurementPeriod(VelocityMeasPeriod.Period_20Ms); //TODO: Perhaps we should read this value from the CommandRobotBase.
-	}
-
 	@Override
 	public double getDistance() {
 		if (reverseDirection) {
@@ -141,7 +137,6 @@ public class CANTalonEncoder implements CustomEncoder {
 
 	@Override
 	public void setDistancePerPulse(double distancePerPulse) {
-		// talon.configSelectedFeedbackCoefficient(distancePerPulse);
 		this.distancePerPulse = distancePerPulse;
 	}
 

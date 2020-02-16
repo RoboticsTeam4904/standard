@@ -51,6 +51,7 @@ public abstract class MotionController implements Subsystem {
 		sensorException = null;
 		CommandScheduler.getInstance().registerSubsystem(this);
 	}
+
 	/**
 	 * A MotionController modifies an output using a sensor to precisely maintain a
 	 * certain input.
@@ -63,7 +64,6 @@ public abstract class MotionController implements Subsystem {
 
 	@Override
 	public void periodic() {
-		// LogKitten.wtf("running periodic and enabled: " + isEnabled());
 		try {
 			double value = getSafely(); // Always calculate MC output
 			synchronized (lock) {
@@ -72,20 +72,14 @@ public abstract class MotionController implements Subsystem {
 					return;
 				}
 			}
-			// LogKitten.wtf("MotionController Setpoint:" + getSetpoint());
-			// LogKitten.wtf("MotionController Value: " + getSensorValue());
 			if (output != null && isEnabled()) {
-				// LogKitten.wtf("MotionController Output: " + output);
-				// LogKitten.wtf("Setting in Motioncontroller to: " + value);
-				// LogKitten.wtf("Sensor Value: " + sensor.pidGet());
-				// LogKitten.wtf("Motor input: " + value);
 				output.accept(value);
-				// lastInput = lastInput + value;
 			}
 		} catch (Exception e) {
 			sensorException = e;
 		}
 	}
+
 	/**
 	 * Sets the output for this MotionController. Once every MotionController tick,
 	 * the output will be set to the results from the motion control calculation via
