@@ -283,7 +283,7 @@ public class CustomPIDController extends MotionController {
 		double input = 0.0;
 		input = sensor.pidGet();
 		double error = setpoint - input;
-		LogKitten.wtf("Received SETPONT in PIDController: " + setpoint);
+		// LogKitten.wtf("Received SETPONT in PIDController: " + setpoint);
 		LogKitten.wtf("Input in PIDController:" + input);
 		LogKitten.wtf("PID Controller error: " + error);
 		// Account for continuous input ranges
@@ -334,13 +334,14 @@ public class CustomPIDController extends MotionController {
 		}
 		// Calculate the result using the PIDF formula
 		double PIDresult = P * error + I * totalError + D * errorDerivative + F * Math.signum(error);
-		double output = PIDresult + IPrime * accumulatedOutput;
+		// double output = PIDresult + IPrime * accumulatedOutput;
+		double output = PIDresult;
 		// LogKitten.wtf("Output in PIDController: " + output);
 		accumulatedOutput += PIDresult * timeDiff;
 		// Save the error for calculating future derivatives
 		lastError = error;
 		lastErrorDerivative = errorDerivative;
-		LogKitten.v(input + " " + setpoint + " " + output);
+		// LogKitten.v(input + " " + setpoint + " " + output);
 		// SmartDashboard.putNumber("PID/PID_Output", output);
 		if (capOutput) {
 			// Limit the result to be within the output range [outputMin, outputMax]

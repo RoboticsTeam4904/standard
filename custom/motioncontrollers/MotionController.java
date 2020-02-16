@@ -26,6 +26,7 @@ public abstract class MotionController implements Subsystem {
 	protected boolean capOutput;
 	protected double outputMax;
 	protected double outputMin;
+	protected double lastInput;
 	protected boolean enable;
 	protected boolean overridden;
 	protected Exception sensorException;
@@ -44,6 +45,7 @@ public abstract class MotionController implements Subsystem {
 		inputMax = 0.0;
 		outputMin = 0.0;
 		outputMax = 0.0;
+		lastInput = 0.0;
 		reset();
 		justReset = true;
 		sensorException = null;
@@ -75,8 +77,10 @@ public abstract class MotionController implements Subsystem {
 			if (output != null && isEnabled()) {
 				// LogKitten.wtf("MotionController Output: " + output);
 				// LogKitten.wtf("Setting in Motioncontroller to: " + value);
-				LogKitten.wtf("Sensor Value: " + sensor.pidGet());
-				output.accept(sensor.pidGet() + value);
+				// LogKitten.wtf("Sensor Value: " + sensor.pidGet());
+				// LogKitten.wtf("Motor input: " + value);
+				output.accept(value);
+				// lastInput = lastInput + value;
 			}
 		} catch (Exception e) {
 			sensorException = e;
