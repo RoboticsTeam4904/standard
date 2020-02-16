@@ -268,6 +268,18 @@ public class CustomPIDController extends MotionController {
 	}
 
 	/**
+	 * Feedforward constant. If a position controller, the F constant is multiplied by the sign of the setpoint. If a velocity controller, F is multiplied by setpoint.
+	 * @return the feedforward value for the given setpoint.
+	 */
+	private double feedForward() {
+		if(sensor.getCustomPIDSourceType() == CustomPIDSourceType.kDisplacement){
+			return F * Math.signum(setpoint);
+		} else {
+			return F * setpoint;
+		}
+	}
+
+	/**
 	 * Get the current output of the PID loop. This should be used to set the output
 	 * (like a Motor).
 	 *
@@ -278,7 +290,7 @@ public class CustomPIDController extends MotionController {
 	public double getSafely() throws InvalidSensorException {
 		// If PID is not enabled, use feedforward only
 		if (!isEnabled()) {
-			return F * setpoint;
+			return feedForward();
 		}
 		double input = 0.0;
 		input = sensor.pidGet();
@@ -309,7 +321,7 @@ public class CustomPIDController extends MotionController {
 		// lastTime and lastError for next tick.
 		if (didJustReset()) {
 			lastError = error;
-			return F * Math.signum(error);
+			return feedForward();
 		}
 		// Check if the sensor supports native derivative calculations and that we're
 		// doing displacement PID
@@ -330,7 +342,7 @@ public class CustomPIDController extends MotionController {
 			totalError = 0.0;
 		}
 		// Calculate the result using the PIDF formula
-		double PIDresult = P * error + I * totalError + D * errorDerivative + F * setpoint;
+		double PIDresult = P * error + I * totalError + D * errorDerivative + feedForward();
 		double output = PIDresult;
 		accumulatedOutput += PIDresult * timeDiff;
 		// Save the error for calculating future derivatives
