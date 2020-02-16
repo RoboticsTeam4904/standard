@@ -343,7 +343,7 @@ public class CustomPIDController extends MotionController {
 		}
 		// Calculate the result using the PIDF formula
 		double PIDresult = P * error + I * totalError + D * errorDerivative + feedForward();
-		double output = PIDresult;
+		double output = PIDresult + IPrime * accumulatedOutput;
 		accumulatedOutput += PIDresult * timeDiff;
 		// Save the error for calculating future derivatives
 		lastError = error;
