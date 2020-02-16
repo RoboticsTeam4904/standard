@@ -26,7 +26,6 @@ public abstract class MotionController implements Subsystem {
 	protected boolean capOutput;
 	protected double outputMax;
 	protected double outputMin;
-	protected double lastInput;
 	protected boolean enable;
 	protected boolean overridden;
 	protected Exception sensorException;
@@ -45,7 +44,6 @@ public abstract class MotionController implements Subsystem {
 		inputMax = 0.0;
 		outputMin = 0.0;
 		outputMax = 0.0;
-		lastInput = 0.0;
 		reset();
 		justReset = true;
 		sensorException = null;
