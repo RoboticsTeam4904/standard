@@ -1,9 +1,10 @@
 package org.usfirst.frc4904.standard.custom.sensors;
 
+import org.usfirst.frc4904.robot.Robot;
 import org.usfirst.frc4904.standard.Util;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.VelocityMeasPeriod;
 import com.ctre.phoenix.motorcontrol.can.BaseTalon;
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import org.usfirst.frc4904.standard.custom.CustomPIDSourceType;
 
 /**
@@ -14,6 +15,7 @@ public class CANTalonEncoder implements CustomEncoder {
 	protected static final double DEFAULT_DISTANCE_PER_PULSE = 1.0;
 	protected static final boolean DEFAULT_REVERSE_DIRECTION = false;
 	protected static final String DEFAULT_NAME = "CANTalonEncoder";
+	protected static final int DEFAULT_PERIOD = 20;
 	protected static final double DECI_SECONDS_TO_SECONDS = 10.0; // getSpeed must be converted from ticks per 100ms to
 																	// ticks per second, so *10.
 	protected static final int PID_IDX = 1;
@@ -25,45 +27,51 @@ public class CANTalonEncoder implements CustomEncoder {
 	protected boolean reverseDirection;
 
 	public CANTalonEncoder(String name, BaseTalon talon, boolean reverseDirection, double distancePerPulse,
-			CustomPIDSourceType sensorType, FeedbackDevice feedbackDevice) {
+			CustomPIDSourceType sensorType, FeedbackDevice feedbackDevice, double period) {
 		this.talon = talon;
 		setReverseDirection(reverseDirection);
 		setDistancePerPulse(distancePerPulse);
 		setCustomPIDSourceType(sensorType);
 		setFeedbackDevice(feedbackDevice);
+		this.talon.configVelocityMeasurementPeriod(VelocityMeasPeriod.valueOf(period));
 	}
 
-	public CANTalonEncoder(String name, TalonSRX talon, boolean reverseDirection, double distancePerPulse,
+	public CANTalonEncoder(String name, BaseTalon talon, boolean reverseDirection, double distancePerPulse,
+			CustomPIDSourceType sensorType, FeedbackDevice feedbackDevice) {
+		this(name, talon, reverseDirection, distancePerPulse, sensorType, feedbackDevice, DEFAULT_PERIOD);
+	}
+
+	public CANTalonEncoder(String name, BaseTalon talon, boolean reverseDirection, double distancePerPulse,
 			CustomPIDSourceType sensorType) {
 		this(name, talon, reverseDirection, distancePerPulse, DEFAULT_CUSTOM_PID_SOURCE_TYPE, DEFAULT_FEEDBACK_DEVICE);
 
 	}
 
-	public CANTalonEncoder(String name, TalonSRX talon, boolean reverseDirection, double distancePerPulse) {
+	public CANTalonEncoder(String name, BaseTalon talon, boolean reverseDirection, double distancePerPulse) {
 		this(name, talon, reverseDirection, distancePerPulse, DEFAULT_CUSTOM_PID_SOURCE_TYPE);
 	}
 
-	public CANTalonEncoder(String name, TalonSRX talon, boolean reverseDirection) {
+	public CANTalonEncoder(String name, BaseTalon talon, boolean reverseDirection) {
 		this(name, talon, reverseDirection, DEFAULT_DISTANCE_PER_PULSE);
 	}
 
-	public CANTalonEncoder(String name, TalonSRX talon, double distancePerPulse) {
+	public CANTalonEncoder(String name, BaseTalon talon, double distancePerPulse) {
 		this(name, talon, DEFAULT_REVERSE_DIRECTION, distancePerPulse);
 	}
 
-	public CANTalonEncoder(String name, TalonSRX talon) {
+	public CANTalonEncoder(String name, BaseTalon talon) {
 		this(name, talon, DEFAULT_REVERSE_DIRECTION);
 	}
 
-	public CANTalonEncoder(TalonSRX talon, boolean reverseDirection, double distancePerPulse) {
+	public CANTalonEncoder(BaseTalon talon, boolean reverseDirection, double distancePerPulse) {
 		this(DEFAULT_NAME, talon, reverseDirection, distancePerPulse);
 	}
 
-	public CANTalonEncoder(TalonSRX talon, double distancePerPulse) {
+	public CANTalonEncoder(BaseTalon talon, double distancePerPulse) {
 		this(DEFAULT_NAME, talon, distancePerPulse);
 	}
 
-	public CANTalonEncoder(TalonSRX talon) {
+	public CANTalonEncoder(BaseTalon talon) {
 		this(DEFAULT_NAME, talon);
 	}
 
@@ -92,6 +100,10 @@ public class CANTalonEncoder implements CustomEncoder {
 	@Override
 	public int get() {
 		return talon.getSelectedSensorPosition(PID_IDX);
+	}
+
+	public void configSomeShit(){
+		this.talon.configVelocityMeasurementPeriod(VelocityMeasPeriod.Period_20Ms); //TODO: Perhaps we should read this value from the CommandRobotBase.
 	}
 
 	@Override
