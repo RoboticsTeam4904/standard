@@ -333,7 +333,7 @@ public class CustomPIDController extends MotionController {
 			totalError = 0.0;
 		}
 		// Calculate the result using the PIDF formula
-		double PIDresult = P * error + I * totalError + D * errorDerivative + F * Math.signum(error);
+		double PIDresult = P * error + I * totalError + D * errorDerivative + F * setpoint;
 		// double output = PIDresult + IPrime * accumulatedOutput;
 		double output = PIDresult;
 		// LogKitten.wtf("Output in PIDController: " + output);
