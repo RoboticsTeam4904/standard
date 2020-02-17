@@ -1,6 +1,5 @@
 package org.usfirst.frc4904.standard.custom.sensors;
 
-
 import org.usfirst.frc4904.standard.LogKitten;
 
 public class CANUltrasonicDistanceSensor extends CANSensor implements DistanceSensor {
@@ -9,10 +8,9 @@ public class CANUltrasonicDistanceSensor extends CANSensor implements DistanceSe
 	/**
 	 * Construct a new Ultrasonic Distance Sensor connected via CAN
 	 *
-	 * @param name
-	 *        name of the CAN sensor
-	 * @param id
-	 *        ID of CAN sensor (0x600 to 0x700, must correspond to a Teensy or similar)
+	 * @param name name of the CAN sensor
+	 * @param id   ID of CAN sensor (0x600 to 0x700, must correspond to a Teensy or
+	 *             similar)
 	 */
 	public CANUltrasonicDistanceSensor(String name, int id) {
 		super(name, id);
@@ -22,8 +20,7 @@ public class CANUltrasonicDistanceSensor extends CANSensor implements DistanceSe
 	public double getDistance() {
 		try {
 			return getDistanceSafely();
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			LogKitten.ex(e);
 			return 0;
 		}

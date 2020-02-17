@@ -1,13 +1,11 @@
 package org.usfirst.frc4904.standard.humaninput;
 
-
 import org.usfirst.frc4904.standard.custom.ChassisController;
 import org.usfirst.frc4904.standard.custom.Nameable;
 
 /**
- * Driver specific version of HumanInterface.
- * Also designed to be passed around to control
- * the chassis.
+ * Driver specific version of HumanInterface. Also designed to be passed around
+ * to control the chassis.
  *
  */
 public abstract class Driver extends HumanInput implements Nameable, ChassisController {
@@ -17,24 +15,21 @@ public abstract class Driver extends HumanInput implements Nameable, ChassisCont
 
 	/**
 	 *
-	 * @return
-	 * 		X value that the Driver wants
+	 * @return X value that the Driver wants
 	 */
 	@Override
 	public abstract double getX();
 
 	/**
 	 *
-	 * @return
-	 * 		Y value that the Driver wants
+	 * @return Y value that the Driver wants
 	 */
 	@Override
 	public abstract double getY();
 
 	/**
 	 *
-	 * @return
-	 * 		Turn speed that the Driver wants
+	 * @return Turn speed that the Driver wants
 	 */
 	@Override
 	public abstract double getTurnSpeed();

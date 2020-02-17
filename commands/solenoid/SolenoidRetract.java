@@ -14,7 +14,7 @@ public class SolenoidRetract extends SolenoidSet {
 	 * Command to set the state of a SolenoidSubsystem to
 	 * RETRACT(DoubleSolenoid.Value.kReverse)
 	 * 
-	 * @param name             Name of Command
+	 * @param name             Name of retracting system
 	 * @param system           SolenoidSubsystem to set
 	 * @param booleanSuppliers conditions that if true, prevent the setting of the
 	 *                         system
@@ -27,7 +27,19 @@ public class SolenoidRetract extends SolenoidSet {
 	 * Command to set the state of a SolenoidSubsystem to
 	 * RETRACT(DoubleSolenoid.Value.kReverse)
 	 * 
-	 * @param name   Name of Command
+	 * @param system           SolenoidSubsystem to set
+	 * @param booleanSuppliers conditions that if true, prevent the setting of the
+	 *                         system
+	 */
+	public SolenoidRetract(SolenoidSubsystem system, BooleanSupplier... booleanSuppliers) {
+		this("Retracting " + system.getName(), system, booleanSuppliers);
+	}
+
+	/**
+	 * Command to set the state of a SolenoidSubsystem to
+	 * RETRACT(DoubleSolenoid.Value.kReverse)
+	 * 
+	 * @param name   Name of the retraction
 	 * @param system SolenoidSubsystem to set
 	 */
 	public SolenoidRetract(String name, SolenoidSubsystem system) {
@@ -38,22 +50,9 @@ public class SolenoidRetract extends SolenoidSet {
 	 * Command to set the state of a SolenoidSubsystem to
 	 * RETRACT(DoubleSolenoid.Value.kReverse)
 	 * 
-	 * @param name             Name of Command
-	 * @param system           SolenoidSubsystem to set
-	 * @param booleanSuppliers conditions that if true, prevent the setting of the
-	 *                         system
-	 */
-	public SolenoidRetract(SolenoidSubsystem system, BooleanSupplier... booleanSuppliers) {
-		super("SolenoidRetract", system, SolenoidState.RETRACT, booleanSuppliers);
-	}
-
-	/**
-	 * Command to set the state of a SolenoidSubsystem to
-	 * RETRACT(DoubleSolenoid.Value.kReverse)
-	 * 
 	 * @param system SolenoidSubsystem to set
 	 */
 	public SolenoidRetract(SolenoidSubsystem system) {
-		this("SolenoidRetract", system);
+		this("Retracting " + system.getName(), system);
 	}
 }

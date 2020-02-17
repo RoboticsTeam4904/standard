@@ -1,6 +1,5 @@
 package org.usfirst.frc4904.standard.custom.sensors;
 
-
 import java.nio.ByteBuffer;
 import java.util.LinkedHashMap;
 import java.util.Map.Entry;
@@ -15,12 +14,13 @@ import org.usfirst.frc4904.standard.custom.CustomCAN;
 public class CANSensor extends CustomCAN {
 	private final int[] values;
 	private long lastRead; // data age
-	private static final long MAX_AGE = 100; // How long to keep the last CAN message before throwing an error (milliseconds)
+	private static final long MAX_AGE = 100; // How long to keep the last CAN message before throwing an error
+												// (milliseconds)
 	private static LinkedHashMap<CANSensor, Boolean> sensorOnlineByInstance = new LinkedHashMap<CANSensor, Boolean>();
 
 	public static String[] getSensorStatuses() {
-		return sensorOnlineByInstance.entrySet().stream()
-			.map(CANSensor::describeSensorStatusEntry).toArray(String[]::new);
+		return sensorOnlineByInstance.entrySet().stream().map(CANSensor::describeSensorStatusEntry)
+				.toArray(String[]::new);
 	}
 
 	private static String describeSensorStatusEntry(Entry<CANSensor, Boolean> entry) {
@@ -31,10 +31,9 @@ public class CANSensor extends CustomCAN {
 
 	/**
 	 *
-	 * @param name
-	 *        Name of CAN sensor (not really needed)
-	 * @param id
-	 *        ID of CAN sensor (0x600 to 0x700, must correspond to a Teensy or similar)
+	 * @param name Name of CAN sensor (not really needed)
+	 * @param id   ID of CAN sensor (0x600 to 0x700, must correspond to a Teensy or
+	 *             similar)
 	 */
 	public CANSensor(String name, int id) {
 		super(name, id);
@@ -48,20 +47,17 @@ public class CANSensor extends CustomCAN {
 	/**
 	 * Read the pair of ints from a CAN sensor
 	 *
-	 * @return
-	 * 		The latest pair of integers from the sensor
+	 * @return The latest pair of integers from the sensor
 	 *
-	 * @throws InvalidSensorException
-	 *         If the available data is more than one tenth of a second old,
-	 *         this function will throw an InvalidSensorException
-	 *         to indicate that.
+	 * @throws InvalidSensorException If the available data is more than one tenth
+	 *                                of a second old, this function will throw an
+	 *                                InvalidSensorException to indicate that.
 	 */
 	public int[] readSensor() throws InvalidSensorException {
 		ByteBuffer rawData = ByteBuffer.allocateDirect(8);
 		try {
 			rawData.put(super.readBuffer());
-		}
-		catch (CANMessageUnavailableException e) {
+		} catch (CANMessageUnavailableException e) {
 			rawData = null; // Do not throw exception immediately, wait for timeout
 		}
 		if (rawData != null && rawData.remaining() <= 0) { // 8 is minimum CAN message length
@@ -76,7 +72,7 @@ public class CANSensor extends CustomCAN {
 		if (System.currentTimeMillis() - lastRead > CANSensor.MAX_AGE) {
 			CANSensor.sensorOnlineByInstance.put(this, false); // Mark sensor offline
 			throw new InvalidSensorException(
-				"CAN data oudated For CAN sensor " + getName() + " with ID 0x" + Integer.toHexString(messageID));
+					"CAN data oudated For CAN sensor " + getName() + " with ID 0x" + Integer.toHexString(messageID));
 		}
 		LogKitten.v("Cached Sensor Value Used\n");
 		return values;

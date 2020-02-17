@@ -1,14 +1,10 @@
 package org.usfirst.frc4904.standard.humaninput;
 
-
 import org.usfirst.frc4904.standard.custom.Nameable;
 
 /**
- * A generic human interface class.
- * This is designed to be used to
- * bind commands to controllers.
- * bindCommands should only be called
- * during teleop init.
+ * A generic human interface class. This is designed to be used to bind commands
+ * to controllers. bindCommands should only be called during teleop init.
  *
  */
 public abstract class HumanInput implements Nameable {

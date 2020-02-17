@@ -1,13 +1,12 @@
 package org.usfirst.frc4904.standard.commands;
 
-
 import org.usfirst.frc4904.standard.LogKitten;
-import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /**
  *
  */
-public class KittenCommand extends Command {
+public class KittenCommand extends CommandBase {
 	protected final String message;
 	protected final LogKitten.KittenLevel level;
 
@@ -17,21 +16,12 @@ public class KittenCommand extends Command {
 	}
 
 	@Override
-	protected void initialize() {
+	public void initialize() {
 		LogKitten.logMessage(message, level, false);
 	}
 
 	@Override
-	protected void execute() {}
-
-	@Override
-	protected boolean isFinished() {
+	public boolean isFinished() {
 		return true;
 	}
-
-	@Override
-	protected void end() {}
-
-	@Override
-	protected void interrupted() {}
 }

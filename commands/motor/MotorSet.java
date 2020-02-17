@@ -1,37 +1,32 @@
 package org.usfirst.frc4904.standard.commands.motor;
 
-
 import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.subsystems.motor.Motor;
+
 import edu.wpi.first.wpilibj.SpeedController;
-import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /**
- * Sets a motor to a speed.
- * The speed can change through
- * use of the set command.
- * This is better than setting
- * the motor because it uses
- * requires to avoid having
- * multiple attempts to set a
- * motor simultaneously.
+ * Sets a motor to a speed. The speed can change through use of the set command.
+ * This is better than setting the motor because it uses requires to avoid
+ * having multiple attempts to set a motor simultaneously.
  *
  */
-public class MotorSet extends Command {
+public class MotorSet extends CommandBase {
 	protected final SpeedController motor;
 	protected double speed;
 
-	public MotorSet(Motor motor) {
-		super("MotorSet");
+	public MotorSet(String name, Motor motor) {
+		super();
+		setName(name);
+		addRequirements(motor);
 		this.motor = motor;
 		speed = 0;
 		LogKitten.d("MotorSet created for " + motor.getName());
-		requires(motor);
-		setInterruptible(true);
 	}
 
 	@Override
-	protected void initialize() {
+	public void initialize() {
 		LogKitten.d("MotorSet initialized");
 	}
 
@@ -44,24 +39,23 @@ public class MotorSet extends Command {
 	}
 
 	@Override
-	protected void execute() {
+	public void execute() {
 		motor.set(speed);
 		LogKitten.d("MotorSet executing with speed " + speed);
 	}
 
 	@Override
-	protected void end() {
-		motor.set(0);
-		LogKitten.d("MotorSet ended (motor speed set to 0)");
+	public void end(boolean interrupted) {
+		if (!interrupted) {
+			motor.set(0);
+			LogKitten.d("MotorSet ended (motor speed set to 0)");
+		} else {
+			LogKitten.d("MotorSet interrupted (motor speed undefined)");
+		}
 	}
 
 	@Override
-	protected void interrupted() {
-		LogKitten.d("MotorSet interupted (motor speed undefined)");
-	}
-
-	@Override
-	protected boolean isFinished() {
+	public boolean isFinished() {
 		return false;
 	}
 }

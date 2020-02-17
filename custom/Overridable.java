@@ -1,12 +1,10 @@
 package org.usfirst.frc4904.standard.custom;
 
-
 public interface Overridable {
 	/**
 	 * Set whether this object is overridden.
 	 * 
-	 * @param isOverridden
-	 *        Whether to override the object or not
+	 * @param isOverridden Whether to override the object or not
 	 */
 	public void setOverridden(boolean isOverridden);
 
@@ -18,8 +16,8 @@ public interface Overridable {
 	public boolean isOverridden();
 
 	/**
-	 * Get whether this object is NOT overridden.
-	 * Useful for creating BooleanSuppliers with Java 8 syntax (e.g. this::isNotOverridden).
+	 * Get whether this object is NOT overridden. Useful for creating
+	 * BooleanSuppliers with Java 8 syntax (e.g. this::isNotOverridden).
 	 * 
 	 * @returns Whether this object is NOT overridden.
 	 */

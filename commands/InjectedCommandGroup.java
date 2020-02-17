@@ -1,49 +1,44 @@
 package org.usfirst.frc4904.standard.commands;
 
+import edu.wpi.first.wpilibj2.command.CommandGroupBase;
 
-import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.command.CommandGroup;
+public abstract class InjectedCommandGroup extends CommandGroupBase {
+	private final CommandGroupBase previous;
 
-public abstract class InjectedCommandGroup extends CommandGroup {
-	private final Command previous;
-	
-	public InjectedCommandGroup(Command previous) {
+	public InjectedCommandGroup(String name, CommandGroupBase previous) {
 		super();
+		setName(name);
 		this.previous = previous;
 	}
-	
-	public InjectedCommandGroup(String name, Command previous) {
-		super(name);
-		this.previous = previous;
+
+	public InjectedCommandGroup(CommandGroupBase previous) {
+		this("InjectedCommandGroup", previous);
 	}
-	
-	@Override
-	final protected void initialize() {
-		if (previous != null && (previous.isRunning() || !previous.isCanceled())) {
+
+	public final void initialize() {
+		if (previous != null && previous.isScheduled()) {
 			previous.cancel();
 		}
 		onInitialize();
 	}
-	
-	@Override
-	final protected void interrupted() {
+
+	protected final void interrupted() {
 		onInterrupted();
-		if (previous != null && (!previous.isRunning() || previous.isCanceled())) {
-			previous.start();
+		if (previous != null && !previous.isScheduled()) {
+			previous.schedule();
 		}
 	}
-	
-	@Override
-	final protected void end() {
+
+	protected final void end() {
 		onEnd();
-		if (previous != null && (!previous.isRunning() || previous.isCanceled())) {
-			previous.start();
+		if (previous != null && !previous.isScheduled()) {
+			previous.schedule();
 		}
 	}
-	
-	abstract protected void onInitialize();
-	
-	abstract protected void onInterrupted();
-	
-	abstract protected void onEnd();
+
+	protected abstract void onInitialize();
+
+	protected abstract void onInterrupted();
+
+	protected abstract void onEnd();
 }

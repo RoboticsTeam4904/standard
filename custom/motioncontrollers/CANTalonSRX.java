@@ -24,4 +24,9 @@ public class CANTalonSRX extends WPI_TalonSRX implements SpeedController, Brakea
 	public void setBrakeMode() {
 		setNeutralMode(NeutralMode.Brake);
 	}
+
+	public CANTalonSRX(int deviceNumber, NeutralMode mode) {
+		this(deviceNumber);
+		setNeutralMode(mode);
+	}
 }
