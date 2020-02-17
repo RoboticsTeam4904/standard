@@ -80,4 +80,16 @@ public interface CustomEncoder extends PIDSensor, NativeDerivativeSensor {
 	 * Resets the encoder
 	 */
 	void reset();
+
+	/**
+	 * Set the value from encoder get methods to a setpoint
+	 */
+	void setSensorValue(double setpoint);
+
+	/**
+	 * Set the value from encoder get methods 0.0, essentially resetting the encoder
+	 */
+	default void setSensorValue() {
+		setSensorValue(0.0);
+	}
 }
