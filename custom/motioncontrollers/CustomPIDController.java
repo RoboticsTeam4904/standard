@@ -28,9 +28,8 @@ public class CustomPIDController extends MotionController {
 	protected double accumulatedOutput;
 	protected long lastTime;
 	protected double lastErrorDerivative;
-	protected double derivativeTolerance;
+	protected double derivativeTolerance = Double.MIN_VALUE;
 	protected double minimumNominalOutput = 0.0;
-
 
 	/**
 	 * An extremely basic PID controller. It does not differentiate between rate and
