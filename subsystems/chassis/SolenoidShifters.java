@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
  * functionality. Allows for easy inversion and setting of default state of
  * solenoids
  */
-public class SolenoidShifters extends SolenoidSubsystem { // TODO: make solenoidshifters extend solenoidsubsystem
+public class SolenoidShifters extends SolenoidSubsystem { 
 
 	/**
 	 * A class that wraps multiple DoubleSolenoid objects with subsystem
