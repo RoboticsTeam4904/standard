@@ -1,6 +1,5 @@
 package org.usfirst.frc4904.standard.humaninput;
 
-
 import org.usfirst.frc4904.standard.custom.Nameable;
 
 /**

@@ -5,8 +5,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.XboxController;
 
 /**
- * An XboxController that implements
- * the generic controller class.
+ * An XboxController that implements the generic controller class.
  *
  */
 public class CustomXbox extends XboxController implements Controller {

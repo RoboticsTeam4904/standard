@@ -1,27 +1,16 @@
 package org.usfirst.frc4904.standard.commands;
 
+import edu.wpi.first.wpilibj2.command.CommandBase;
 
-import edu.wpi.first.wpilibj.command.Command;
-
-public class Noop extends Command {
+public class Noop extends CommandBase {
 	public Noop() {
-		super("Noop");
+		super();
+		setName("NOOP");
 	}
 
 	@Override
-	protected void initialize() {}
-
-	@Override
-	protected void execute() {}
-
-	@Override
-	protected boolean isFinished() {
+	public boolean isFinished() {
 		return true;
 	}
 
-	@Override
-	protected void end() {}
-
-	@Override
-	protected void interrupted() {}
 }

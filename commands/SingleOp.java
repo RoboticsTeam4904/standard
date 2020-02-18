@@ -1,22 +1,27 @@
 package org.usfirst.frc4904.standard.commands;
 
+import edu.wpi.first.wpilibj2.command.CommandBase;
 
-import edu.wpi.first.wpilibj.command.Command;
-
-public class SingleOp extends Command {
+public class SingleOp extends CommandBase {
 	protected Runnable op;
 
-	public SingleOp(Runnable op) {
+	public SingleOp(String name, Runnable op) {
+		super();
+		setName(name);
 		this.op = op;
 	}
 
+	public SingleOp(Runnable op) {
+		this("SingleOp", op);
+	}
+
 	@Override
-	protected void initialize() {
+	public void initialize() {
 		op.run();
 	}
 
 	@Override
-	protected boolean isFinished() {
+	public boolean isFinished() {
 		return true;
 	}
 }

@@ -1,15 +1,13 @@
 package org.usfirst.frc4904.standard.custom.sensors;
 
-
 import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.custom.CANMessageUnavailableException;
 import org.usfirst.frc4904.standard.custom.CustomCAN;
-import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotController;
 
 /**
- * Simplified version of the PowerDistributionPanel class
- * This class throws exceptions that can actually be caught
- * Based on code from here:
+ * Simplified version of the PowerDistributionPanel class This class throws
+ * exceptions that can actually be caught Based on code from here:
  * https://github.com/wpilibsuite/allwpilib/blob/master/hal/lib/athena/ctre/PDP.cpp
  */
 public class PDP {
@@ -32,13 +30,14 @@ public class PDP {
 	protected double cachedEnergy;
 	protected double cachedPower;
 	protected long lastRead;
-	private static final long MAX_AGE = 100; // How long to keep the last CAN message before throwing an error (milliseconds)
+	private static final long MAX_AGE = 100; // How long to keep the last CAN message before throwing an error
+												// (milliseconds)
 
 	/**
 	 * PDP constructor
 	 *
-	 * @param ID
-	 *        ID of the PDP. This should be the same as the ID found on the RoboRIO web console.
+	 * @param ID ID of the PDP. This should be the same as the ID found on the
+	 *           RoboRIO web console.
 	 */
 	public PDP(int ID) {
 		status1 = new CustomCAN("PDP STATUS 1", PDP.PDP_ID_STATUS_1 | ID);
@@ -47,7 +46,7 @@ public class PDP {
 		statusEnergy = new CustomCAN("PDP STATUS ENERGY", PDP.PDP_ID_STATUS_ENERGY | ID);
 		cachedVoltage = PDP.DEFAULT_VOLTAGE;
 		cachedCurrent = 0;
-		cachedChannelCurrents = new double[] {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+		cachedChannelCurrents = new double[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 		cachedResistance = PDP.DEFAULT_RESISTANCE;
 		cachedEnergy = 0;
 		cachedPower = 0;
@@ -77,8 +76,8 @@ public class PDP {
 				LogKitten.w("Trying to read PDP status " + status + ", which does not exist!");
 				return;
 			}
+		} catch (CANMessageUnavailableException e) {
 		}
-		catch (CANMessageUnavailableException e) {}
 		if (rawArray != null) {
 			double[] tempCurrents = new double[numberCurrents];
 			tempCurrents[0] = ((rawArray[0] & 0xFF) << 2 | ((rawArray[1] & 0xC0) >> 6)) * 0.125;
@@ -93,7 +92,8 @@ public class PDP {
 				cachedVoltage = (rawArray[6] & 0xFF) * 0.05 + 4.0;
 			}
 			for (int i = 0; i < numberCurrents; i++) {
-				if (tempCurrents[i] < 128) { // deals with occasional issue with PDP reporting 1000+ amps (this is not a bug in this code, it was observed in PowerDistributionPanel as well
+				if (tempCurrents[i] < 128) { // deals with occasional issue with PDP reporting 1000+ amps (this is not a
+												// bug in this code, it was observed in PowerDistributionPanel as well
 					cachedChannelCurrents[i + (status - 1) * 6] = tempCurrents[i];
 				}
 			}
@@ -107,13 +107,13 @@ public class PDP {
 		byte[] rawArray = null;
 		try {
 			rawArray = statusEnergy.readSafely();
+		} catch (CANMessageUnavailableException e) {
 		}
-		catch (CANMessageUnavailableException e) {}
 		if (rawArray != null) {
 			cachedCurrent = (((rawArray[1] & 0xFF) << 4) | ((rawArray[2] & 0xF0) >> 4)) * 0.125;
 			cachedPower = (((rawArray[1] & 0x0F) << 12) | (rawArray[2] << 4) | ((rawArray[4] & 0xF0) >> 4)) * 0.125;
-			cachedEnergy = (((rawArray[4] & 0x0F) << 24) | (rawArray[5] << 16) | (rawArray[6] << 8) | (rawArray[7])) * 0.000125
-				* rawArray[0];
+			cachedEnergy = (((rawArray[4] & 0x0F) << 24) | (rawArray[5] << 16) | (rawArray[6] << 8) | (rawArray[7]))
+					* 0.000125 * rawArray[0];
 			lastRead = System.currentTimeMillis();
 		} else if (System.currentTimeMillis() - lastRead > PDP.MAX_AGE) {
 			throw new InvalidSensorException("Can not read energy from PDP");
@@ -121,31 +121,29 @@ public class PDP {
 	}
 
 	/**
-	 * Gets the current voltage. This is the same for all channels.
-	 * This function defaults to the Driver Station voltage if the PDP becomes disconnected.
-	 * Note that this data will then be invalid. If you care, use the getVoltageSafely function and catch the exceptions.
+	 * Gets the current voltage. This is the same for all channels. This function
+	 * defaults to the Driver Station voltage if the PDP becomes disconnected. Note
+	 * that this data will then be invalid. If you care, use the getVoltageSafely
+	 * function and catch the exceptions.
 	 *
-	 * @return
-	 * 		Current voltage.
+	 * @return Current voltage.
 	 *
 	 */
 	public double getVoltage() {
 		try {
 			return getVoltageSafely();
-		}
-		catch (InvalidSensorException e) {
+		} catch (InvalidSensorException e) {
 			LogKitten.ex(e);
-			return DriverStation.getInstance().getBatteryVoltage();
+			return RobotController.getBatteryVoltage();
 		}
 	}
 
 	/**
 	 * Gets the voltage on the battery.
 	 *
-	 * @return
-	 * 		Current battery voltage.
-	 * @throws InvalidSensorException
-	 *         If PDP connection is lost, InvalidSensorException will be thrown.
+	 * @return Current battery voltage.
+	 * @throws InvalidSensorException If PDP connection is lost,
+	 *                                InvalidSensorException will be thrown.
 	 */
 	public double getVoltageSafely() throws InvalidSensorException {
 		readStatus(3);
@@ -155,8 +153,7 @@ public class PDP {
 	public double getBatteryResistance() {
 		try {
 			return getBatteryResistanceSafely();
-		}
-		catch (InvalidSensorException e) {
+		} catch (InvalidSensorException e) {
 			LogKitten.ex(e);
 			return cachedResistance;
 		}
@@ -170,8 +167,7 @@ public class PDP {
 	public double getTotalCurrent() {
 		try {
 			return getTotalCurrentSafely();
-		}
-		catch (InvalidSensorException e) {
+		} catch (InvalidSensorException e) {
 			LogKitten.ex(e);
 			return cachedCurrent;
 		}
@@ -180,10 +176,9 @@ public class PDP {
 	/**
 	 * Gets the total current used by channels 0-15 of the PDP.
 	 *
-	 * @return
-	 * 		Total robot current used.
-	 * @throws InvalidSensorException
-	 *         If PDP connection is lost, InvalidSensorException will be thrown.
+	 * @return Total robot current used.
+	 * @throws InvalidSensorException If PDP connection is lost,
+	 *                                InvalidSensorException will be thrown.
 	 */
 	public double getTotalCurrentSafely() throws InvalidSensorException {
 		readEnergy();
@@ -193,26 +188,24 @@ public class PDP {
 	/**
 	 * Gets the total power used by channels 0-15 of the PDP.
 	 * 
-	 * @return
-	 * 		Total robot power
+	 * @return Total robot power
 	 */
 	public double getTotalPower() {
 		try {
 			return getTotalPowerSafely();
-		}
-		catch (InvalidSensorException e) {
+		} catch (InvalidSensorException e) {
 			LogKitten.ex(e);
 			return cachedPower;
 		}
 	}
 
 	/**
-	 * Gets the total power used by channels 0-15 of the PDP, throwing an exception when the PDP is disconnected.
+	 * Gets the total power used by channels 0-15 of the PDP, throwing an exception
+	 * when the PDP is disconnected.
 	 * 
-	 * @return
-	 * 		Total robot power
-	 * @throws InvalidSensorException
-	 *         If PDP connection is lost, InvalidSensorException will be thrown.
+	 * @return Total robot power
+	 * @throws InvalidSensorException If PDP connection is lost,
+	 *                                InvalidSensorException will be thrown.
 	 */
 	public double getTotalPowerSafely() throws InvalidSensorException {
 		readEnergy();
@@ -222,26 +215,24 @@ public class PDP {
 	/**
 	 * Gets the total energy used by channels 0-15 of the PDP.
 	 * 
-	 * @return
-	 * 		Total robot energy used
+	 * @return Total robot energy used
 	 */
 	public double getTotalEnergy() {
 		try {
 			return getTotalEnergySafely();
-		}
-		catch (InvalidSensorException e) {
+		} catch (InvalidSensorException e) {
 			LogKitten.ex(e);
 			return cachedEnergy;
 		}
 	}
 
 	/**
-	 * Gets the total energy used by channels 0-15 of the PDP, throwing an exception when the PDP is disconnected.
+	 * Gets the total energy used by channels 0-15 of the PDP, throwing an exception
+	 * when the PDP is disconnected.
 	 * 
-	 * @return
-	 * 		Total robot energy used
-	 * @throws InvalidSensorException
-	 *         If PDP connection is lost, InvalidSensorException will be thrown.
+	 * @return Total robot energy used
+	 * @throws InvalidSensorException If PDP connection is lost,
+	 *                                InvalidSensorException will be thrown.
 	 */
 	public double getTotalEnergySafely() throws InvalidSensorException {
 		readEnergy();
@@ -251,12 +242,9 @@ public class PDP {
 	/**
 	 * Gets the current used by a single channel.
 	 *
-	 * @param channel
-	 *        the channel to read the current for
-	 * @return
-	 * 		the current from that channel
-	 * @throws InvalidSensorException
-	 *         if the PDP is not sending data
+	 * @param channel the channel to read the current for
+	 * @return the current from that channel
+	 * @throws InvalidSensorException if the PDP is not sending data
 	 */
 	public double getCurrentSafely(int channel) throws InvalidSensorException {
 		if (channel < 0) {
@@ -277,16 +265,13 @@ public class PDP {
 	/**
 	 * Gets the current used by a single channel.
 	 *
-	 * @param channel
-	 *        the channel to read the current for
-	 * @return
-	 * 		the current from that channel
+	 * @param channel the channel to read the current for
+	 * @return the current from that channel
 	 */
 	public double getCurrent(int channel) {
 		try {
 			return getCurrentSafely(channel);
-		}
-		catch (InvalidSensorException e) {
+		} catch (InvalidSensorException e) {
 			LogKitten.ex(e);
 			return cachedChannelCurrents[channel];
 		}

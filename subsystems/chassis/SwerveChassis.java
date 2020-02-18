@@ -1,6 +1,5 @@
 package org.usfirst.frc4904.standard.subsystems.chassis;
 
-
 import org.usfirst.frc4904.standard.subsystems.motor.Motor;
 
 public class SwerveChassis extends Chassis {
@@ -22,13 +21,21 @@ public class SwerveChassis extends Chassis {
 	 * @param backLeftWheelSwerve
 	 * @param backRightWheelSwerve
 	 */
-	public SwerveChassis(String name, Motor frontLeftWheel, Motor frontRightWheel, Motor backLeftWheel, Motor backRightWheel,
-		Motor frontLeftWheelSwerve, Motor frontRightWheelSwerve, Motor backLeftWheelSwerve, Motor backRightWheelSwerve) {
-		super(name, frontLeftWheel, frontRightWheel, backLeftWheel, backRightWheel);
+	public SwerveChassis(String name, Motor frontLeftWheel, Motor frontRightWheel, Motor backLeftWheel,
+			Motor backRightWheel, Motor frontLeftWheelSwerve, Motor frontRightWheelSwerve, Motor backLeftWheelSwerve,
+			Motor backRightWheelSwerve) {
+		super(frontLeftWheel, frontRightWheel, backLeftWheel, backRightWheel);
 		this.frontLeftWheelSwerve = frontLeftWheelSwerve;
 		this.frontRightWheelSwerve = frontRightWheelSwerve;
 		this.backLeftWheelSwerve = backLeftWheelSwerve;
 		this.backRightWheelSwerve = backRightWheelSwerve;
+	}
+
+	public SwerveChassis(Motor frontLeftWheel, Motor frontRightWheel, Motor backLeftWheel, Motor backRightWheel,
+			Motor frontLeftWheelSwerve, Motor frontRightWheelSwerve, Motor backLeftWheelSwerve,
+			Motor backRightWheelSwerve) {
+		this("SwerveChassis", frontLeftWheel, frontRightWheel, backLeftWheel, backRightWheel, frontLeftWheelSwerve,
+				frontRightWheelSwerve, backLeftWheelSwerve, backRightWheelSwerve);
 	}
 
 	@Override
