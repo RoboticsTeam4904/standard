@@ -1,5 +1,6 @@
 package org.usfirst.frc4904.standard.commands.motor;
 
+import org.usfirst.frc4904.robot.RobotMap;
 import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.commands.Noop;
 import org.usfirst.frc4904.standard.custom.sensors.InvalidSensorException;
@@ -27,6 +28,7 @@ public class MotorVelocitySet extends CommandBase {
 		super();
 		setName(name);
 		addRequirements(motor);
+		addRequirements(RobotMap.Component.flywheelMotorA, RobotMap.Component.flywheelMotorB); // TODO: @Daniel-E-B requirements should be done in the classes that extend this
 		this.motor = motor;
 		this.fallbackCommand = fallbackCommand;
 		this.setVelocity(velocity);
@@ -63,26 +65,26 @@ public class MotorVelocitySet extends CommandBase {
 
 	@Override
 	public void initialize() {
-		try {
-			motor.reset();
+		// try { // TODO: @Daniel-E-B uncomment and test
+		// 	motor.reset();
 			motor.enableMotionController();
 			motor.set(velocity);
-		} catch (InvalidSensorException e) {
-			cancel();
-			fallbackCommand.schedule();
-		}
+		// } catch (InvalidSensorException e) {
+		// 	cancel();
+		// 	fallbackCommand.schedule();
+		// }
 	}
 
 	@Override
 	public void execute() {
 		motor.set(velocity);
-		Exception potentialSensorException = motor.checkSensorException();
-		if (potentialSensorException != null) {
-			cancel();
-			if (!fallbackCommand.isScheduled()) {
-				fallbackCommand.schedule();
-			}
-		}
+		// Exception potentialSensorException = motor.checkSensorException(); // TODO: @Daniel-E-B uncomment and test
+		// if (potentialSensorException != null) {
+		// 	cancel();
+		// 	if (!fallbackCommand.isScheduled()) {
+		// 		fallbackCommand.schedule();
+		// 	}
+		// }
 	}
 
 	@Override
