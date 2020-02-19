@@ -13,13 +13,13 @@ import org.usfirst.frc4904.standard.custom.CustomPIDSourceType;
  *          the same rate (before setDistancePerTick).
  */
 public class EncoderPair implements CustomEncoder {
-	private final CustomEncoder[] encoders;
-	private final int[] offset; // Do not reset encoders, just store an offset value
-	private CustomPIDSourceType pidSource;
-	private boolean reverseDirection;
-	private double distancePerPulse;
-	private final double distanceTolerance;
-	private final double rateTolerance;
+	protected final CustomEncoder[] encoders;
+	protected final int[] offset; // Do not reset encoders, just store an offset value
+	protected CustomPIDSourceType pidSource;
+	protected boolean reverseDirection;
+	protected double distancePerPulse;
+	protected final double distanceTolerance;
+	protected final double rateTolerance;
 	protected static final double DEFAULT_DISTANCE_TOLERANCE = 10;
 	protected static final double DEFAULT_RATE_TOLERANCE = 10;
 
@@ -104,6 +104,8 @@ public class EncoderPair implements CustomEncoder {
 			return 0;
 		}
 	}
+
+
 
 	@Override
 	public double getDistanceSafely() throws InvalidSensorException {
