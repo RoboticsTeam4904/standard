@@ -25,6 +25,7 @@ public class ChassisEncoders extends EncoderPair implements Subsystem {
         this(leftEncoder, rightEncoder, DEFAULT_DISTANCE_TOLERANCE, DEFAULT_RATE_TOLERANCE, robotWidth);
     }
 
+    @Override
     public void periodic() {
         updateDisplacement();
     }
