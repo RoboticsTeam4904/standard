@@ -9,16 +9,17 @@ import edu.wpi.first.wpilibj2.command.Subsystem;
 public class ChassisEncoders extends EncoderPair implements Subsystem {
 
     protected double robotWidth;
-    protected double netDisplacement = 0.0;
-    protected double netDisplacementAngle = 0.0; // in radians
-    protected double lastLeftEncoderDistance = 0.0;
-    protected double lastRightEncoderDistance = 0.0;
+    protected double netDisplacement;
+    protected double netDisplacementAngle; // in radians
+    protected double lastLeftEncoderDistance;
+    protected double lastRightEncoderDistance;
 
     public ChassisEncoders(CustomEncoder leftEncoder, CustomEncoder rightEncoder, double distanceTolerance,
             double rateTolerance, double robotWidth) {
         super(leftEncoder, rightEncoder, distanceTolerance, rateTolerance);
         CommandScheduler.getInstance().registerSubsystem(this);
         setRobotWidth(robotWidth);
+        reset();
     }
 
     public ChassisEncoders(CustomEncoder leftEncoder, CustomEncoder rightEncoder, double robotWidth) {
