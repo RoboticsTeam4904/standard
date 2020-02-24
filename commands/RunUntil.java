@@ -13,7 +13,6 @@ public class RunUntil extends CommandBase {
 		setName(name);
 		this.command = command;
 		this.stopCondition = stopCondition;
-		addRequirements((Subsystem[]) command.getRequirements().toArray());
 	}
 
 	public RunUntil(CommandBase command, Supplier<Boolean> stopCondition) {
