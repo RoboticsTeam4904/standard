@@ -19,7 +19,9 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
  * This command creates a simple spline to follow a Trajectory using a SensorDrive. Note that while the nextCommand to run after the robot finishes driving and the initialPos are both configurable, they will almost always be set automatically.
  */
 public class SimpleSplines extends SequentialCommandGroup {
-  /**
+  public Trajectory trajectory;
+
+/**
    * @param robotDrive the SensorDrive used to follow the trajectory.
    * @param trajectory the Trajectory to follow.
    * @param nextCommand the command to run immediately following the spline completion. In most cases, this should be setting the chassis voltages all to 0.
@@ -40,6 +42,7 @@ public class SimpleSplines extends SequentialCommandGroup {
         new PIDController(robotDrive.getDriveConstants().KP_DRIVE_VEL, 0, 0),
         robotDrive::tankDriveVolts, robotDrive.getDriveBase().getMotors()), nextCommand);
     addRequirements(robotDrive.getDriveBase());
+    this.trajectory = trajectory;
   } 
 
   /**
