@@ -11,7 +11,7 @@ public class RunIfElse extends CommandBase {
 	protected final BooleanSupplier[] booleanSuppliers;
 	protected boolean hasRunOnce;
 
-	protected RunIfElse(String name, CommandBase ifCommand, CommandBase elseCommand,
+	public RunIfElse(String name, CommandBase ifCommand, CommandBase elseCommand,
 			BooleanSupplier... booleanSuppliers) {
 		super();
 		setName(name);
@@ -23,7 +23,7 @@ public class RunIfElse extends CommandBase {
 		addRequirements((Subsystem[]) elseCommand.getRequirements().toArray());
 	}
 
-	protected RunIfElse(CommandBase ifCommand, CommandBase elseCommand, BooleanSupplier... booleanSuppliers) {
+	public RunIfElse(CommandBase ifCommand, CommandBase elseCommand, BooleanSupplier... booleanSuppliers) {
 		this("RunIfElse", ifCommand, elseCommand, booleanSuppliers);
 	}
 

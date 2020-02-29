@@ -15,10 +15,9 @@ public class CustomCANCoder extends CANCoder implements CustomEncoder {
     protected double distancePerPulse;
     protected boolean reverseDirection;
     protected CANCoderConfiguration config;
-    
 
-
-    public CustomCANCoder(int deviceNum, double distancePerPulse, CustomPIDSourceType sensorType, boolean reverseDirection) {
+    public CustomCANCoder(int deviceNum, double distancePerPulse, CustomPIDSourceType sensorType,
+            boolean reverseDirection) {
         super(deviceNum);
         config = new CANCoderConfiguration();
         super.configAllSettings(config);
@@ -40,37 +39,45 @@ public class CustomCANCoder extends CANCoder implements CustomEncoder {
         return sensorType;
     }
 
-    public void setCustomPIDSourceType (CustomPIDSourceType sensorType) {
+    public void setCustomPIDSourceType(CustomPIDSourceType sensorType) {
         this.sensorType = sensorType;
     }
 
-    public void setDistancePerPulse (double pulse, SensorTimeBase collectionPeriod) {
+    public void setDistancePerPulse(double pulse, SensorTimeBase collectionPeriod) {
         this.distancePerPulse = pulse;
         super.configFeedbackCoefficient(pulse, "meters", collectionPeriod);
     }
 
-    public void setDistancePerPulse (double pulse) {
+    public void setDistancePerPulse(double pulse) {
         setDistancePerPulse(pulse, SensorTimeBase.PerSecond);
     }
 
     @Override
     public double pidGet() {
-        return get();
+        try {
+            return pidGetSafely();
+        } catch (Exception e) {
+            LogKitten.ex(e);
+            return 0;
+        }
     }
 
     @Override
     public double pidGetSafely() throws InvalidSensorException {
-        return getSafely();
+        if (getCustomPIDSourceType() == CustomPIDSourceType.kDisplacement) {
+            return getDistance();
+        }
+        return getRate();
     }
 
     @Override
     public double getRate() {
         try {
-			return getRateSafely();
-		} catch (Exception e) {
-			LogKitten.ex(e);
-			return 0;
-		}
+            return getRateSafely();
+        } catch (Exception e) {
+            LogKitten.ex(e);
+            return 0;
+        }
     }
 
     @Override
@@ -82,11 +89,11 @@ public class CustomCANCoder extends CANCoder implements CustomEncoder {
     @Override
     public int get() {
         try {
-			return getSafely();
-		} catch (Exception e) {
-			LogKitten.ex(e);
-			return 0;
-		}
+            return getSafely();
+        } catch (Exception e) {
+            LogKitten.ex(e);
+            return 0;
+        }
     }
 
     @Override
@@ -100,11 +107,11 @@ public class CustomCANCoder extends CANCoder implements CustomEncoder {
     @Override
     public double getDistance() {
         try {
-			return getDistanceSafely();
-		} catch (Exception e) {
-			LogKitten.ex(e);
-			return 0;
-		}
+            return getDistanceSafely();
+        } catch (Exception e) {
+            LogKitten.ex(e);
+            return 0;
+        }
     }
 
     @Override
@@ -115,11 +122,11 @@ public class CustomCANCoder extends CANCoder implements CustomEncoder {
     @Override
     public boolean getDirection() {
         try {
-			return getDirectionSafely();
-		} catch (Exception e) {
-			LogKitten.ex(e);
-			return false;
-		}
+            return getDirectionSafely();
+        } catch (Exception e) {
+            LogKitten.ex(e);
+            return false;
+        }
     }
 
     @Override
@@ -130,11 +137,11 @@ public class CustomCANCoder extends CANCoder implements CustomEncoder {
     @Override
     public boolean getStopped() {
         try {
-			return getStoppedSafely();
-		} catch (Exception e) {
-			LogKitten.ex(e);
-			return false;
-		}
+            return getStoppedSafely();
+        } catch (Exception e) {
+            LogKitten.ex(e);
+            return false;
+        }
     }
 
     @Override
@@ -149,7 +156,7 @@ public class CustomCANCoder extends CANCoder implements CustomEncoder {
 
     @Override
     public boolean getReverseDirection() {
-       return reverseDirection;
+        return reverseDirection;
     }
 
     @Override
@@ -164,6 +171,5 @@ public class CustomCANCoder extends CANCoder implements CustomEncoder {
         setPosition(0.0);
 
     }
-
 
 }

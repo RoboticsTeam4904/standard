@@ -46,7 +46,6 @@ public class VelocitySensorMotor extends SensorMotor {
 
 	@Override
 	public void set(double speed) {
-		LogKitten.v(speed + "");
 		if (motionController.isEnabled()) {
 			motionController.setSetpoint(speed);
 		} else {
@@ -55,7 +54,7 @@ public class VelocitySensorMotor extends SensorMotor {
 	}
 
 	@Override
-	public void accept(double arg0) {
-		this.set(arg0);
+	public void accept(double speed) {
+		super.set(speed);
 	}
 }

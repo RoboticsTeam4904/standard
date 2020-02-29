@@ -1,5 +1,7 @@
 package org.usfirst.frc4904.standard.custom.motioncontrollers;
 
+import java.util.function.DoubleConsumer;
+
 import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.custom.sensors.InvalidSensorException;
 import org.usfirst.frc4904.standard.custom.sensors.PIDSensor;
@@ -16,6 +18,13 @@ public class BangBangController extends MotionController {
 	protected double F;
 	protected double threshold;
 
+	public BangBangController(PIDSensor sensor, DoubleConsumer output, double A, double F, double threshold) {
+		super(sensor, output);
+		this.A = A;
+		this.F = F;
+		this.threshold = threshold;
+		reset();
+	}
 	/**
 	 * BangBang controller A bang bang controller. The bang bang controller
 	 * increases the value of the output if it is below the setpoint or decreases

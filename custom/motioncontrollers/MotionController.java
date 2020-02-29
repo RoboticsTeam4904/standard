@@ -1,23 +1,22 @@
 package org.usfirst.frc4904.standard.custom.motioncontrollers;
 
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.function.DoubleConsumer;
 
+import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.custom.sensors.InvalidSensorException;
 import org.usfirst.frc4904.standard.custom.sensors.PIDSensor;
 
 import edu.wpi.first.hal.util.BoundaryException;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.Subsystem;
 
 /**
  * A MotionController modifies an output using a sensor to precisely maintain a
  * certain input.
  *
  */
-public abstract class MotionController {
+public abstract class MotionController implements Subsystem {
 	protected DoubleConsumer output;
-	protected Timer timer;
-	protected MotionControllerTask task;
 	protected final PIDSensor sensor;
 	protected double setpoint;
 	protected double absoluteTolerance;
@@ -33,17 +32,9 @@ public abstract class MotionController {
 	private volatile boolean justReset;
 	private final Object lock = new Object();
 
-	/**
-	 * A MotionController modifies an output using a sensor to precisely maintain a
-	 * certain input.
-	 *
-	 * @param sensor The sensor associated with the output you are trying to control
-	 */
-	public MotionController(PIDSensor sensor) {
+	public MotionController(PIDSensor sensor, DoubleConsumer output) {
 		this.sensor = sensor;
-		output = null;
-		timer = new Timer();
-		task = new MotionControllerTask();
+		setOutput(output);
 		enable = false;
 		overridden = false;
 		absoluteTolerance = Double.MIN_VALUE; // Nonzero to avoid floating point errors
@@ -56,6 +47,35 @@ public abstract class MotionController {
 		reset();
 		justReset = true;
 		sensorException = null;
+		CommandScheduler.getInstance().registerSubsystem(this);
+	}
+
+	/**
+	 * A MotionController modifies an output using a sensor to precisely maintain a
+	 * certain input.
+	 *
+	 * @param sensor The sensor associated with the output you are trying to control
+	 */
+	public MotionController(PIDSensor sensor) {
+		this(sensor, null);
+	}
+
+	@Override
+	public void periodic() {
+		try {
+			double value = getSafely(); // Always calculate MC output
+			synchronized (lock) {
+				if (justReset) {
+					justReset = false;
+					return;
+				}
+			}
+			if (output != null && isEnabled()) {
+				output.accept(value);
+			}
+		} catch (Exception e) {
+			sensorException = e;
+		}
 	}
 
 	/**
@@ -249,14 +269,6 @@ public abstract class MotionController {
 			return;
 		}
 		enable = true;
-		try {
-			timer.scheduleAtFixedRate(task, 10, 20);
-			justReset = true;
-			// justReset is written to by both the main thread and the Task,
-			// so there is a 10 millisecond delay in the initial execution of
-			// the task, which should reduce blocking
-		} catch (IllegalStateException e) {
-		} // Do not die if the timer is already running
 	}
 
 	/**
@@ -268,9 +280,6 @@ public abstract class MotionController {
 			return;
 		}
 		enable = false;
-		task.cancel();
-		timer.purge();
-		task = new MotionControllerTask();
 		setpoint = sensor.pidGet();
 	}
 
@@ -339,30 +348,5 @@ public abstract class MotionController {
 	 */
 	public Exception checkException() {
 		return sensorException;
-	}
-
-	/**
-	 * The thread in which the output is updated with the results of the motion
-	 * controller calculation.
-	 *
-	 */
-	protected class MotionControllerTask extends TimerTask {
-		@Override
-		public void run() {
-			try {
-				double value = getSafely(); // Always calculate MC output
-				synchronized (lock) {
-					if (justReset) {
-						justReset = false;
-						return;
-					}
-				}
-				if (output != null && isEnabled()) {
-					output.accept(value);
-				}
-			} catch (Exception e) {
-				sensorException = e;
-			}
-		}
 	}
 }

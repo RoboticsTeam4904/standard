@@ -1,5 +1,7 @@
 package org.usfirst.frc4904.standard.custom.motioncontrollers;
 
+import java.util.function.DoubleConsumer;
+
 import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.custom.sensors.InvalidSensorException;
 import org.usfirst.frc4904.standard.custom.sensors.NativeDerivativeSensor;
@@ -26,8 +28,27 @@ public class CustomPIDController extends MotionController {
 	protected double accumulatedOutput;
 	protected long lastTime;
 	protected double lastErrorDerivative;
-	protected double derivativeTolerance;
+	protected double derivativeTolerance = Double.MIN_VALUE;
 	protected double minimumNominalOutput = 0.0;
+
+	/**
+	 * An extremely basic PID controller. It does not differentiate between rate and
+	 * distance.
+	 *
+	 * @param P      Initial P constant
+	 * @param I      Initial I constant
+	 * @param D      Initial D constant
+	 * @param F      Initial F (feed forward) constant
+	 * @param sensor The sensor linked to the output
+	 * @param output A motor that accepts PID controller inputs
+	 */
+	public CustomPIDController(double P, double I, double D, double F, PIDSensor sensor, DoubleConsumer output) {
+		super(sensor, output);
+		this.P = P;
+		this.I = I;
+		this.D = D;
+		this.F = F;
+	}
 
 	/**
 	 * An extremely basic PID controller. It does not differentiate between rate and
@@ -58,11 +79,7 @@ public class CustomPIDController extends MotionController {
 	 * @param sensor The sensor linked to the output
 	 */
 	public CustomPIDController(double P, double I, double D, double F, PIDSensor sensor, double integralThreshold) {
-		super(sensor);
-		this.P = P;
-		this.I = I;
-		this.D = D;
-		this.F = F;
+		this(P, I, D, F, sensor);
 		this.setIThreshold(integralThreshold);
 	}
 
@@ -250,6 +267,18 @@ public class CustomPIDController extends MotionController {
 	}
 
 	/**
+	 * Feedforward constant. If a position controller, the F constant is multiplied by the sign of the setpoint. If a velocity controller, F is multiplied by setpoint.
+	 * @return the feedforward value for the given setpoint.
+	 */
+	private double feedForward() {
+		if(sensor.getCustomPIDSourceType() == CustomPIDSourceType.kDisplacement){
+			return F * Math.signum(setpoint);
+		} else {
+			return F * setpoint;
+		}
+	}
+
+	/**
 	 * Get the current output of the PID loop. This should be used to set the output
 	 * (like a Motor).
 	 *
@@ -260,7 +289,7 @@ public class CustomPIDController extends MotionController {
 	public double getSafely() throws InvalidSensorException {
 		// If PID is not enabled, use feedforward only
 		if (!isEnabled()) {
-			return F * setpoint;
+			return feedForward();
 		}
 		double input = 0.0;
 		input = sensor.pidGet();
@@ -291,7 +320,7 @@ public class CustomPIDController extends MotionController {
 		// lastTime and lastError for next tick.
 		if (didJustReset()) {
 			lastError = error;
-			return F * Math.signum(error);
+			return feedForward();
 		}
 		// Check if the sensor supports native derivative calculations and that we're
 		// doing displacement PID
@@ -312,14 +341,12 @@ public class CustomPIDController extends MotionController {
 			totalError = 0.0;
 		}
 		// Calculate the result using the PIDF formula
-		double PIDresult = P * error + I * totalError + D * errorDerivative + F * Math.signum(error);
+		double PIDresult = P * error + I * totalError + D * errorDerivative + feedForward();
 		double output = PIDresult + IPrime * accumulatedOutput;
 		accumulatedOutput += PIDresult * timeDiff;
 		// Save the error for calculating future derivatives
 		lastError = error;
 		lastErrorDerivative = errorDerivative;
-		LogKitten.v(input + " " + setpoint + " " + output);
-		// SmartDashboard.putNumber("PID/PID_Output", output);
 		if (capOutput) {
 			// Limit the result to be within the output range [outputMin, outputMax]
 			output = Math.max(Math.min(output, outputMax), outputMin);
