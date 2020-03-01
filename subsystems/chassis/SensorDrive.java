@@ -26,20 +26,16 @@ public class SensorDrive implements Subsystem { // Based largely on
   private final TankDrive driveBase;
   private final CANCoder leftEncoder;
   private final CANCoder rightEncoder;
-  private final SimpleSplines.AutoConstants autoConstants;
-  private final SimpleSplines.DriveConstants driveConstants;
   private final IMU gyro;
   private final DifferentialDriveOdometry odometry;
 
   /**
    * Creates a new DriveSubsystem.
    */
-  public SensorDrive(TankDrive driveBase, SimpleSplines.AutoConstants autoConstants, SimpleSplines.DriveConstants driveConstants, CANCoder leftEncoder, CANCoder rightEncoder, IMU gyro) {
+  public SensorDrive(TankDrive driveBase, CANCoder leftEncoder, CANCoder rightEncoder, IMU gyro) {
     this.driveBase = driveBase;
     this.leftEncoder = leftEncoder;
     this.rightEncoder = rightEncoder;
-    this.autoConstants = autoConstants;
-    this.driveConstants = driveConstants;
     this.gyro = gyro;
 
     resetEncoders();
@@ -50,14 +46,6 @@ public class SensorDrive implements Subsystem { // Based largely on
   @Override
   public void periodic() {
     odometry.update(Rotation2d.fromDegrees(getHeading()), leftEncoder.getPosition(), rightEncoder.getPosition());
-  }
-
-  public SimpleSplines.AutoConstants getAutoConstants(){
-    return autoConstants;
-  }
-
-  public SimpleSplines.DriveConstants getDriveConstants(){
-    return driveConstants;
   }
 
   /**
