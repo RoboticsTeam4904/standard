@@ -92,6 +92,8 @@ public class MotorVelocitySet extends CommandBase {
 
 	@Override
 	public void end(boolean interrupted) {
+		motor.disableMotionController();
+		motor.set(0.0);
 		if (!interrupted) {
 			motor.set(0.0);
 		}
