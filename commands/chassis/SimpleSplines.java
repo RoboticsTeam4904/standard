@@ -3,6 +3,7 @@
 package org.usfirst.frc4904.standard.commands.chassis;
 
 import org.usfirst.frc4904.standard.subsystems.chassis.SensorDrive;
+import org.usfirst.frc4904.standard.subsystems.chassis.SplinesDrive;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -19,15 +20,13 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
  * This command creates a simple spline to follow a Trajectory using a SensorDrive. Note that while the nextCommand to run after the robot finishes driving and the initialPos are both configurable, they will almost always be set automatically.
  */
 public class SimpleSplines extends SequentialCommandGroup {
-  public Trajectory trajectory;
-
-/**
+  /**
    * @param robotDrive the SensorDrive used to follow the trajectory.
    * @param trajectory the Trajectory to follow.
    * @param nextCommand the command to run immediately following the spline completion. In most cases, this should be setting the chassis voltages all to 0.
    * @param initialPos the initial pose to reset the robot's odometry to.
    */
-  public SimpleSplines(SensorDrive robotDrive, Trajectory trajectory, Command nextCommand, Pose2d initialPos){
+  public SimpleSplines(SplinesDrive robotDrive, Trajectory trajectory, Command nextCommand, Pose2d initialPos){
     super(new InstantCommand(() -> robotDrive.resetOdometry(initialPos)),
       new RamseteCommand(
         trajectory,
@@ -42,7 +41,6 @@ public class SimpleSplines extends SequentialCommandGroup {
         new PIDController(robotDrive.getDriveConstants().KP_DRIVE_VEL, 0, 0),
         robotDrive::tankDriveVolts, robotDrive.getDriveBase().getMotors()), nextCommand);
     addRequirements(robotDrive.getDriveBase());
-    this.trajectory = trajectory;
   } 
 
   /**
@@ -50,7 +48,7 @@ public class SimpleSplines extends SequentialCommandGroup {
    * @param trajectory the Trajectory to follow.
    * @param initialPos the initial pose to reset the robot's odometry to.
    */
-  public SimpleSplines(SensorDrive robotDrive, Trajectory trajectory, Pose2d initialPos){
+  public SimpleSplines(SplinesDrive robotDrive, Trajectory trajectory, Pose2d initialPos){
     this(robotDrive, trajectory, new InstantCommand(() -> robotDrive.tankDriveVolts(0, 0)), initialPos);
   }
 
@@ -59,7 +57,7 @@ public class SimpleSplines extends SequentialCommandGroup {
    * @param trajectory the Trajectory to follow.
    * @param nextCommand the command to run immediately following the spline completion. In most cases, this should be setting the chassis voltages all to 0.
    */
-  public SimpleSplines(SensorDrive robotDrive, Trajectory trajectory, Command nextCommand){
+  public SimpleSplines(SplinesDrive robotDrive, Trajectory trajectory, Command nextCommand){
     this(robotDrive, trajectory, nextCommand, trajectory.getStates().get(0).poseMeters);
   }
 
@@ -67,7 +65,7 @@ public class SimpleSplines extends SequentialCommandGroup {
    * @param robotDrive the SensorDrive used to follow the trajectory.
    * @param trajectory the Trajectory to follow.
    */
-  public SimpleSplines(SensorDrive robotDrive, Trajectory trajectory){
+  public SimpleSplines(SplinesDrive robotDrive, Trajectory trajectory){
     this(robotDrive, trajectory, new InstantCommand(() -> robotDrive.tankDriveVolts(0, 0)));
   }
 

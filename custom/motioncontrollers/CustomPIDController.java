@@ -272,7 +272,7 @@ public class CustomPIDController extends MotionController {
 	 */
 	private double feedForward() {
 		if(sensor.getCustomPIDSourceType() == CustomPIDSourceType.kDisplacement){
-			return F * Math.signum(setpoint);
+			return F * Math.signum(lastError);
 		} else {
 			return F * setpoint;
 		}

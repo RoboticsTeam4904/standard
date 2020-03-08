@@ -184,4 +184,8 @@ public class CANTalonEncoder implements CustomEncoder {
 	public double getRateSafely() {
 		return getRate();
 	}
+
+	public BaseTalon getTalon() {
+		return talon;
+	}
 }
