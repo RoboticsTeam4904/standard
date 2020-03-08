@@ -66,7 +66,9 @@ public abstract class SensorMotor extends Motor implements DoubleConsumer {
 	}
 
 	@Override
-	public abstract void accept(double arg0);
+	public void accept(double speed) {
+		super.set(speed);
+	}
 
 	/**
 	 * Starts overriding the controller. The controller will disable and not be

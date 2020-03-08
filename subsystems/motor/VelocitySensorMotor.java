@@ -52,9 +52,4 @@ public class VelocitySensorMotor extends SensorMotor {
 			super.set(speed);
 		}
 	}
-
-	@Override
-	public void accept(double speed) {
-		super.set(speed);
-	}
 }

@@ -267,12 +267,15 @@ public class CustomPIDController extends MotionController {
 	}
 
 	/**
-	 * Feedforward constant. If a position controller, the F constant is multiplied by the sign of the setpoint. If a velocity controller, F is multiplied by setpoint.
+	 * Feedforward constant. If a position controller, the F constant is multiplied
+	 * by the sign of the setpoint. If a velocity controller, F is multiplied by
+	 * setpoint.
+	 * 
 	 * @return the feedforward value for the given setpoint.
 	 */
 	private double feedForward() {
-		if(sensor.getCustomPIDSourceType() == CustomPIDSourceType.kDisplacement){
-			return F * Math.signum(setpoint);
+		if (sensor.getCustomPIDSourceType() == CustomPIDSourceType.kDisplacement) {
+			return F * Math.signum(lastError);
 		} else {
 			return F * setpoint;
 		}
