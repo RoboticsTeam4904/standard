@@ -26,7 +26,7 @@ public class MotorVelocitySet extends CommandBase {
 	public MotorVelocitySet(String name, VelocitySensorMotor motor, double velocity, CommandBase fallbackCommand) {
 		super();
 		setName(name);
-		addRequirements(motor);
+		// addRequirements(motor);
 		this.motor = motor;
 		this.fallbackCommand = fallbackCommand;
 		this.setVelocity(velocity);
