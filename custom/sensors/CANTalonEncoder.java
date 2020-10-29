@@ -1,62 +1,97 @@
 package org.usfirst.frc4904.standard.custom.sensors;
 
-
+import org.usfirst.frc4904.robot.Robot;
 import org.usfirst.frc4904.standard.Util;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-import edu.wpi.first.wpilibj.PIDSourceType;
+import com.ctre.phoenix.motorcontrol.VelocityMeasPeriod;
+import com.ctre.phoenix.motorcontrol.can.BaseTalon;
+import org.usfirst.frc4904.standard.custom.CustomPIDSourceType;
 
+/**
+ * Encoder class for the Built-in Encoders on Talon Motor Controllers 
+ * Works for both Falcons (CANTalonFX) and SRXs (CANTalonSRX)
+ */
 public class CANTalonEncoder implements CustomEncoder {
-	protected final TalonSRX talon;
-	protected PIDSourceType pidSource;
+	protected static final double DEFAULT_DISTANCE_PER_PULSE = 1.0;
+	protected static final boolean DEFAULT_REVERSE_DIRECTION = false;
+	protected static final String DEFAULT_NAME = "CANTalonEncoder";
+	protected static final int DEFAULT_PERIOD = 20;
+	protected static final double DECI_SECONDS_TO_SECONDS = 10.0; // getSpeed must be converted from ticks per 100ms to
+																	// ticks per second, so *10.
+	protected static final int PID_IDX = 1;
+	protected static final CustomPIDSourceType DEFAULT_CUSTOM_PID_SOURCE_TYPE = CustomPIDSourceType.kDisplacement;
+	protected static final FeedbackDevice DEFAULT_FEEDBACK_DEVICE = FeedbackDevice.IntegratedSensor;
+	protected final BaseTalon talon;
+	protected CustomPIDSourceType pidSource;
 	protected double distancePerPulse;
 	protected boolean reverseDirection;
 
-	public CANTalonEncoder(String name, TalonSRX talon, boolean reverseDirection, double distancePerPulse) {
+	public CANTalonEncoder(String name, BaseTalon talon, boolean reverseDirection, double distancePerPulse,
+			CustomPIDSourceType sensorType, FeedbackDevice feedbackDevice, double period) {
 		this.talon = talon;
-		talon.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 0);
-		this.reverseDirection = reverseDirection;
-		this.distancePerPulse = distancePerPulse;
-		setPIDSourceType(PIDSourceType.kDisplacement);
+		setReverseDirection(reverseDirection);
+		setDistancePerPulse(distancePerPulse);
+		setCustomPIDSourceType(sensorType);
+		setFeedbackDevice(feedbackDevice);
+		this.talon.configVelocityMeasurementPeriod(VelocityMeasPeriod.valueOf(period));
 	}
 
-	public CANTalonEncoder(String name, TalonSRX talon, boolean reverseDirection) {
-		this(name, talon, reverseDirection, 1.0);
+	public CANTalonEncoder(String name, BaseTalon talon, boolean reverseDirection, double distancePerPulse,
+			CustomPIDSourceType sensorType, FeedbackDevice feedbackDevice) {
+		this(name, talon, reverseDirection, distancePerPulse, sensorType, feedbackDevice, DEFAULT_PERIOD);
 	}
 
-	public CANTalonEncoder(String name, TalonSRX talon, double distancePerPulse) {
-		this(name, talon, false, distancePerPulse);
+	public CANTalonEncoder(String name, BaseTalon talon, boolean reverseDirection, double distancePerPulse,
+			CustomPIDSourceType sensorType) {
+		this(name, talon, reverseDirection, distancePerPulse, DEFAULT_CUSTOM_PID_SOURCE_TYPE, DEFAULT_FEEDBACK_DEVICE);
+
 	}
 
-	public CANTalonEncoder(String name, TalonSRX talon) {
-		this(name, talon, false);
+	public CANTalonEncoder(String name, BaseTalon talon, boolean reverseDirection, double distancePerPulse) {
+		this(name, talon, reverseDirection, distancePerPulse, DEFAULT_CUSTOM_PID_SOURCE_TYPE);
 	}
 
-	public CANTalonEncoder(TalonSRX talon, boolean reverseDirection, double distancePerPulse) {
-		this("CANTalonEncoder", talon, reverseDirection, distancePerPulse);
+	public CANTalonEncoder(String name, BaseTalon talon, boolean reverseDirection) {
+		this(name, talon, reverseDirection, DEFAULT_DISTANCE_PER_PULSE);
 	}
 
-	public CANTalonEncoder(TalonSRX talon, double distancePerPulse) {
-		this("CANTalonEncoder", talon, distancePerPulse);
+	public CANTalonEncoder(String name, BaseTalon talon, double distancePerPulse) {
+		this(name, talon, DEFAULT_REVERSE_DIRECTION, distancePerPulse);
 	}
 
-	public CANTalonEncoder(TalonSRX talon) {
-		this("CANTalonEncoder", talon);
+	public CANTalonEncoder(String name, BaseTalon talon) {
+		this(name, talon, DEFAULT_REVERSE_DIRECTION);
+	}
+
+	public CANTalonEncoder(BaseTalon talon, boolean reverseDirection, double distancePerPulse) {
+		this(DEFAULT_NAME, talon, reverseDirection, distancePerPulse);
+	}
+
+	public CANTalonEncoder(BaseTalon talon, double distancePerPulse) {
+		this(DEFAULT_NAME, talon, distancePerPulse);
+	}
+
+	public CANTalonEncoder(BaseTalon talon) {
+		this(DEFAULT_NAME, talon);
+	}
+
+	public void setFeedbackDevice(FeedbackDevice feedbackDevice) {
+		talon.configSelectedFeedbackSensor(feedbackDevice);
 	}
 
 	@Override
-	public void setPIDSourceType(PIDSourceType pidSource) {
+	public void setCustomPIDSourceType(CustomPIDSourceType pidSource) {
 		this.pidSource = pidSource;
 	}
 
 	@Override
-	public PIDSourceType getPIDSourceType() {
+	public CustomPIDSourceType getCustomPIDSourceType() {
 		return pidSource;
 	}
 
 	@Override
 	public double pidGet() {
-		if (pidSource == PIDSourceType.kDisplacement) {
+		if (pidSource == CustomPIDSourceType.kDisplacement) {
 			return getDistance();
 		}
 		return getRate();
@@ -64,21 +99,21 @@ public class CANTalonEncoder implements CustomEncoder {
 
 	@Override
 	public int get() {
-		return (int) talon.getSelectedSensorPosition(0);
+		return talon.getSelectedSensorPosition(PID_IDX);
 	}
 
 	@Override
 	public double getDistance() {
 		if (reverseDirection) {
-			return distancePerPulse * talon.getSelectedSensorPosition(0) * -1.0;
+			return distancePerPulse * talon.getSelectedSensorPosition(PID_IDX) * -1.0;
 		} else {
-			return distancePerPulse * talon.getSelectedSensorPosition(0);
+			return distancePerPulse * talon.getSelectedSensorPosition(PID_IDX);
 		}
 	}
 
 	@Override
 	public boolean getDirection() {
-		return !reverseDirection == (talon.getSelectedSensorVelocity(0) >= 0);
+		return !reverseDirection == (talon.getSelectedSensorVelocity(PID_IDX) >= 0);
 	}
 
 	@Override
@@ -89,10 +124,9 @@ public class CANTalonEncoder implements CustomEncoder {
 	@Override
 	public double getRate() {
 		if (reverseDirection) {
-			return talon.getSelectedSensorVelocity(0) * -10.0 * distancePerPulse;
-			// getSpeed must be converted from ticks to 100ms to ticks per second, so *10.
+			return distancePerPulse * talon.getSelectedSensorVelocity(PID_IDX) * -DECI_SECONDS_TO_SECONDS;
 		} else {
-			return talon.getSelectedSensorVelocity(0) * 10.0 * distancePerPulse;
+			return distancePerPulse * talon.getSelectedSensorVelocity(PID_IDX) * DECI_SECONDS_TO_SECONDS;
 		}
 	}
 
@@ -118,7 +152,7 @@ public class CANTalonEncoder implements CustomEncoder {
 
 	@Override
 	public void reset() {
-		talon.setSelectedSensorPosition(0, 0, 0);
+		talon.setSelectedSensorPosition(0);
 	}
 
 	@Override
@@ -149,5 +183,9 @@ public class CANTalonEncoder implements CustomEncoder {
 	@Override
 	public double getRateSafely() {
 		return getRate();
+	}
+
+	public BaseTalon getTalon() {
+		return talon;
 	}
 }

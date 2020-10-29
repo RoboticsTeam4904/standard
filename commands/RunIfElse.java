@@ -1,66 +1,54 @@
 package org.usfirst.frc4904.standard.commands;
 
-
 import java.util.function.BooleanSupplier;
-import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Subsystem;
 
-public class RunIfElse extends Command {
-	protected final Command ifCommand;
-	protected final Command elseCommand;
-	protected Command runningCommand;
+public class RunIfElse extends CommandBase {
+	protected final CommandBase ifCommand;
+	protected final CommandBase elseCommand;
+	protected CommandBase runningCommand;
 	protected final BooleanSupplier[] booleanSuppliers;
 	protected boolean hasRunOnce;
 
-	public RunIfElse(Command ifCommand, Command elseCommand, BooleanSupplier... booleanSuppliers) {
-		this("RunIf[" + ifCommand.getName() + "]Else[" + elseCommand.getName() + "]", ifCommand, elseCommand, booleanSuppliers);
-	}
-
-	protected RunIfElse(String name, Command ifCommand, Command elseCommand, BooleanSupplier... booleanSuppliers) {
-		super(name);
+	public RunIfElse(String name, CommandBase ifCommand, CommandBase elseCommand,
+			BooleanSupplier... booleanSuppliers) {
+		super();
+		setName(name);
 		this.ifCommand = ifCommand;
 		this.elseCommand = elseCommand;
 		this.booleanSuppliers = booleanSuppliers;
 	}
 
-	@Override
-	public boolean doesRequire(Subsystem subsystem) {
-		return ifCommand.doesRequire(subsystem) || elseCommand.doesRequire(subsystem);
+	public RunIfElse(CommandBase ifCommand, CommandBase elseCommand, BooleanSupplier... booleanSuppliers) {
+		this("RunIfElse", ifCommand, elseCommand, booleanSuppliers);
 	}
 
 	@Override
-	protected void initialize() {
+	public void initialize() {
 		for (BooleanSupplier booleanSupplier : booleanSuppliers) {
 			if (!booleanSupplier.getAsBoolean()) {
-				elseCommand.start();
+				elseCommand.schedule();
 				runningCommand = elseCommand;
 				return;
 			}
 		}
-		ifCommand.start();
+		ifCommand.schedule();
 		runningCommand = ifCommand;
 	}
 
 	@Override
-	protected void execute() {}
-
-	@Override
-	protected boolean isFinished() {
-		if (runningCommand.isRunning() && !hasRunOnce) {
+	public boolean isFinished() {
+		if (runningCommand.isScheduled() && !hasRunOnce) {
 			hasRunOnce = true;
 		}
-		return !runningCommand.isRunning() && hasRunOnce;
+		return !runningCommand.isScheduled() && hasRunOnce;
 	}
 
 	@Override
-	protected void end() {
+	public void end(boolean interrupted) {
 		ifCommand.cancel();
 		elseCommand.cancel();
 		hasRunOnce = false;
-	}
-
-	@Override
-	protected void interrupted() {
-		end();
 	}
 }

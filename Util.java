@@ -11,6 +11,7 @@ public class Util {
 	 * for floating point numbers, whose arithmetic operations tend to introduce
 	 * small errors.
 	 *
+
 	 * @param value   The floating point number to be compared
 	 * @param epsilon The maximum magnitude of var such that it can be considered
 	 *                zero
@@ -19,6 +20,7 @@ public class Util {
 	public static boolean isZero(double value, double epsilon) {
 		return Math.abs(value) < epsilon;
 	}
+
 
 	/**
 	 * Returns true if {@code value} is less than {@code epsilon}. This is useful

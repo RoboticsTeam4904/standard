@@ -1,35 +1,26 @@
 package org.usfirst.frc4904.standard.commands;
 
-
 import org.usfirst.frc4904.standard.LogKitten;
-import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 
-public class Cancel extends Command {
-	protected final Command command;
+/**
+ * This class cancels a command
+ */
+public class Cancel extends CommandBase {
+	protected final CommandBase command;
 
-	public Cancel(Command command) {
-		super("Cancel[" + command + "]");
-		setInterruptible(false);
+	public Cancel(CommandBase command) {
+		super();
+		setName("Cancel " + command.getName());
 		this.command = command;
 	}
 
-	@Override
-	protected void initialize() {
+	public void initialize() {
 		LogKitten.v("Initializing " + getName());
 		command.cancel();
 	}
 
-	@Override
-	protected void execute() {}
-
-	@Override
-	protected boolean isFinished() {
+	public boolean isFinished() {
 		return true;
 	}
-
-	@Override
-	protected void end() {}
-
-	@Override
-	protected void interrupted() {}
 }

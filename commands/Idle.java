@@ -1,46 +1,61 @@
 package org.usfirst.frc4904.standard.commands;
 
+import org.usfirst.frc4904.standard.LogKitten;
 
-import java.util.StringJoiner;
-import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Subsystem;
 
-public class Idle extends Command {
-	public Idle() {
-		super("Idle[No Subsystem]");
-		setInterruptible(true);
+/**
+ * Requires subsystems so no other code can interact with them.
+ */
+public class Idle extends CommandBase {
+	boolean verbose;
+
+	public Idle(String name, boolean verbose, Subsystem... subsystems) {
+		super();
+		setName(name);
+		this.verbose = verbose;
+		addRequirements(subsystems);
+	}
+
+	public Idle(boolean verbose, Subsystem... subsystems) {
+		this("Idle", verbose, subsystems);
 	}
 
 	public Idle(Subsystem... subsystems) {
-		super("Idle[" + Idle.joinSubsystemNames(subsystems) + "]");
-		setInterruptible(true);
-		for (Subsystem subsystem : subsystems) {
-			requires(subsystem);
-		}
-	}
-
-	protected static String joinSubsystemNames(Subsystem[] subsystems) {
-		StringJoiner subsystemNames = new StringJoiner("|");
-		for (Subsystem subsystem : subsystems) {
-			subsystemNames.add(subsystem.getName());
-		}
-		return subsystemNames.toString();
+		this("Idle", false, subsystems);
 	}
 
 	@Override
-	protected void initialize() {}
+	public void initialize() {
+		if (verbose) {
+			LogKitten.v("Idle " + getName() + " initialized.");
+		}
+	}
 
 	@Override
-	protected void execute() {}
+	public void execute() {
+		if (verbose) {
+			LogKitten.v("Idle " + getName() + " executed.");
+		}
+	}
 
 	@Override
-	protected boolean isFinished() {
+	public boolean isFinished() {
+		if (verbose) {
+			LogKitten.v("Idle " + getName() + " isFinished?");
+		}
 		return false;
 	}
 
 	@Override
-	protected void end() {}
-
-	@Override
-	protected void interrupted() {}
+	public void end(boolean interrupted) {
+		if (verbose) {
+			if (interrupted) {
+				LogKitten.v("Idle " + getName() + "ended with interrupt.");
+			} else {
+				LogKitten.v("Idle " + getName() + " ended.");
+			}
+		}
+	}
 }
