@@ -84,7 +84,8 @@ public class SolenoidSubsystem extends SubsystemBase {
 	}
 
 	/**
-	 * DoubleSolenoid.Value simplified to three simple states
+	 * DoubleSolenoid.Value simplified to three simple states. Never use the state
+	 * OFF
 	 */
 	public enum SolenoidState {
 		OFF(DoubleSolenoid.Value.kOff), EXTEND(DoubleSolenoid.Value.kForward), RETRACT(DoubleSolenoid.Value.kReverse);
