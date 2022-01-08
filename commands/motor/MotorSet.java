@@ -3,7 +3,7 @@ package org.usfirst.frc4904.standard.commands.motor;
 import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.subsystems.motor.Motor;
 
-import edu.wpi.first.wpilibj.SpeedController;
+import edu.wpi.first.wpilibj.motorcontrol.MotorController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /**
@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
  *
  */
 public class MotorSet extends CommandBase {
-	protected final SpeedController motor;
+	protected final MotorController motor;
 	protected double speed;
 
 	public MotorSet(String name, Motor motor) {
