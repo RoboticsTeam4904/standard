@@ -212,19 +212,4 @@ public abstract class CommandRobotBase extends TimedRobot {
 	 * Function for year-specific code to be run in every robot mode.
 	 */
 	public abstract void alwaysExecute();
-
-	/**
-	 * @return True if the robot is enabled and is in operator control.
-	 */
-	public final boolean isEnabledOperatorControl() {
-		return isEnabled() && isOperatorControl();
-	}
-
-	/**
-	 *
-	 * @return True if the robot is enabled and is in autonomous mode.
-	 */
-	public final boolean isEnabledAutonomous() {
-		return isEnabled() && isAutonomous();
-	}
 }
