@@ -16,7 +16,7 @@ public class PCMPort {
 	 * @param forward The forward port of the piston.
 	 * @param reverse The reverse port of the piston.
 	 */
-	public PCMPort(int pcmID, PneumaticsModuleType pcmType, int forward, int reverse) { // First variable PCM number, second forward, third reverse.
+	public PCMPort(int pcmID, PneumaticsModuleType pcmType, int forward, int reverse) { // First variable PCM number, second PCM type, third forward, fourth reverse.
 		this.pcmID = pcmID;
 		this.pcmType = pcmType;
 		this.forward = forward;
