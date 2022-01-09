@@ -26,7 +26,7 @@ public class MotorVelocitySet extends CommandBase {
 	public MotorVelocitySet(String name, VelocitySensorMotor motor, double velocity, CommandBase fallbackCommand) {
 		super();
 		setName(name);
-		addRequirements(motor);
+		// addRequirements(motor);
 		this.motor = motor;
 		this.fallbackCommand = fallbackCommand;
 		this.setVelocity(velocity);
@@ -92,6 +92,8 @@ public class MotorVelocitySet extends CommandBase {
 
 	@Override
 	public void end(boolean interrupted) {
+		motor.disableMotionController();
+		motor.set(0.0);
 		if (!interrupted) {
 			motor.set(0.0);
 		}

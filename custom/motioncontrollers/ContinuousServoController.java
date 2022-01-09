@@ -1,9 +1,9 @@
 package org.usfirst.frc4904.standard.custom.motioncontrollers;
 
-import edu.wpi.first.wpilibj.PWMSpeedController;
+import edu.wpi.first.wpilibj.motorcontrol.PWMMotorController;
 
-public class ContinuousServoController extends PWMSpeedController {
-    public ContinuousServoController(int channel) {
-        super(channel);
+public class ContinuousServoController extends PWMMotorController {
+    public ContinuousServoController(String name, int channel) {
+        super(name, channel);
     }
 }

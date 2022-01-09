@@ -5,9 +5,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import org.usfirst.frc4904.standard.subsystems.motor.BrakeableMotor;
 
-import edu.wpi.first.wpilibj.SpeedController;
-
-public class CANTalonSRX extends WPI_TalonSRX implements SpeedController, BrakeableMotor {
+public class CANTalonSRX extends WPI_TalonSRX implements BrakeableMotor {
 	protected static final NeutralMode DEFAULT_NEUTRAL_MODE = NeutralMode.Coast;
 
 	public CANTalonSRX(int deviceNumber, NeutralMode mode) {

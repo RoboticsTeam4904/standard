@@ -9,42 +9,49 @@ package org.usfirst.frc4904.standard.subsystems.chassis;
 
 import com.ctre.phoenix.sensors.CANCoder;
 
+import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.commands.chassis.SimpleSplines;
+import org.usfirst.frc4904.standard.custom.CustomPIDSourceType;
 import org.usfirst.frc4904.standard.custom.sensors.IMU;
+import org.usfirst.frc4904.standard.custom.sensors.InvalidSensorException;
+import org.usfirst.frc4904.standard.custom.sensors.PIDSensor;
 import org.usfirst.frc4904.standard.subsystems.chassis.TankDrive;
 import org.usfirst.frc4904.standard.subsystems.motor.Motor;
 
-import edu.wpi.first.wpilibj.geometry.Pose2d;
-import edu.wpi.first.wpilibj.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
-import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
+import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 
-public class SensorDrive implements Subsystem { // Based largely on
-                                                // https://github.com/wpilibsuite/allwpilib/blob/master/wpilibjExamples/src/main/java/edu/wpi/first/wpilibj/examples/ramsetecommand/subsystems/DriveSubsystem.java
+public class SensorDrive implements Subsystem, PIDSensor { // Based largely on
+  // https://github.com/wpilibsuite/allwpilib/blob/master/wpilibjExamples/src/main/java/edu/wpi/first/wpilibj/examples/ramsetecommand/subsystems/DriveSubsystem.java
   private final TankDrive driveBase;
   private final CANCoder leftEncoder;
   private final CANCoder rightEncoder;
-  private final SimpleSplines.AutoConstants autoConstants;
-  private final SimpleSplines.DriveConstants driveConstants;
   private final IMU gyro;
   private final DifferentialDriveOdometry odometry;
+  private CustomPIDSourceType sensorType;
 
   /**
    * Creates a new DriveSubsystem.
    */
-  public SensorDrive(TankDrive driveBase, SimpleSplines.AutoConstants autoConstants, SimpleSplines.DriveConstants driveConstants, CANCoder leftEncoder, CANCoder rightEncoder, IMU gyro) {
+  public SensorDrive(TankDrive driveBase, CANCoder leftEncoder, CANCoder rightEncoder, IMU gyro,
+      CustomPIDSourceType sensorType) {
     this.driveBase = driveBase;
     this.leftEncoder = leftEncoder;
     this.rightEncoder = rightEncoder;
-    this.autoConstants = autoConstants;
-    this.driveConstants = driveConstants;
     this.gyro = gyro;
+    setCustomPIDSourceType(sensorType);
 
     resetEncoders();
     odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()));
     CommandScheduler.getInstance().registerSubsystem(this);
+  }
+
+  public SensorDrive(TankDrive driveBase, CANCoder leftEncoder, CANCoder rightEncoder, IMU gyro) {
+    this(driveBase, leftEncoder, rightEncoder, gyro, CustomPIDSourceType.kDisplacement);
   }
 
   @Override
@@ -52,12 +59,29 @@ public class SensorDrive implements Subsystem { // Based largely on
     odometry.update(Rotation2d.fromDegrees(getHeading()), leftEncoder.getPosition(), rightEncoder.getPosition());
   }
 
-  public SimpleSplines.AutoConstants getAutoConstants(){
-    return autoConstants;
+  @Override
+  public void setCustomPIDSourceType(CustomPIDSourceType sensorType) {
+    this.sensorType = sensorType;
   }
 
-  public SimpleSplines.DriveConstants getDriveConstants(){
-    return driveConstants;
+  @Override
+  public CustomPIDSourceType getCustomPIDSourceType() {
+    return sensorType;
+  }
+
+  @Override
+  public double pidGetSafely() throws InvalidSensorException {
+    return getPose().getRotation().getDegrees();
+  }
+
+  @Override
+  public double pidGet() {
+    try {
+      return pidGetSafely();
+    } catch (Exception e) {
+      LogKitten.ex(e);
+      return 0;
+    }
   }
 
   /**

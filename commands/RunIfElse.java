@@ -18,9 +18,6 @@ public class RunIfElse extends CommandBase {
 		this.ifCommand = ifCommand;
 		this.elseCommand = elseCommand;
 		this.booleanSuppliers = booleanSuppliers;
-
-		addRequirements((Subsystem[]) ifCommand.getRequirements().toArray());
-		addRequirements((Subsystem[]) elseCommand.getRequirements().toArray());
 	}
 
 	public RunIfElse(CommandBase ifCommand, CommandBase elseCommand, BooleanSupplier... booleanSuppliers) {

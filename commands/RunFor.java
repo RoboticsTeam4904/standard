@@ -25,7 +25,6 @@ public class RunFor extends CommandBase {
 		this.duration = duration;
 		this.command = command;
 		firstTick = true;
-		addRequirements((Subsystem[]) this.command.getRequirements().toArray());
 	}
 
 	/**
