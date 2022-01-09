@@ -70,7 +70,6 @@ public class ServoSubsystem extends SubsystemBase {
 	/**
 	 * Get the servo position.
 	 *
-	 * <p>
 	 * Servo positions range from 0.0 to 1.0 corresponding to the range of full left
 	 * to full right.
 	 *
@@ -83,7 +82,6 @@ public class ServoSubsystem extends SubsystemBase {
 	/**
 	 * Get the servo position.
 	 *
-	 * <p>
 	 * Servo positions range from 0.0 to 1.0 corresponding to the range of full left
 	 * to full right. (This method is equivalent to the {@link #get() get()}
 	 * method.)
@@ -106,8 +104,6 @@ public class ServoSubsystem extends SubsystemBase {
 	/**
 	 * Set the servo position.
 	 *
-	 * <p>
-	 * Servo values range from 0.0 to 1.0 corresponding to the range of full left to
 	 * full right.
 	 *
 	 * @param position Position from 0.0 to 1.0.
@@ -125,7 +121,6 @@ public class ServoSubsystem extends SubsystemBase {
 	/**
 	 * Set the servo position.
 	 *
-	 * <p>
 	 * Servo positions range from 0.0 to 1.0 corresponding to the range of full left
 	 * to full right. (This method is equivalent to the {@link #set(double) set()}
 	 * method.)
