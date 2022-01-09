@@ -90,11 +90,16 @@ public class CustomDigitalEncoder extends Encoder implements CustomEncoder {
 	}
 
 	@Override
-	public double pidGetSafely() throws InvalidSensorException {
+	public double pidGet() {
 		if (pidSource == CustomPIDSourceType.kDisplacement) {
 			return getDistance();
 		}
 		return getRate();
+	}
+
+	@Override
+	public double pidGetSafely() {
+		return pidGet();
 	}
 
 	@Override

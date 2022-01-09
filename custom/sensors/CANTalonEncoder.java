@@ -99,7 +99,7 @@ public class CANTalonEncoder implements CustomEncoder {
 
 	@Override
 	public int get() {
-		return talon.getSelectedSensorPosition(PID_IDX);
+		return (int) talon.getSelectedSensorPosition(PID_IDX);
 	}
 
 	@Override
