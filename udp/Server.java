@@ -1,4 +1,4 @@
-package org.usfirst.frc4904.robot.udp;
+package org.usfirst.frc4904.standard.udp;
 
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
