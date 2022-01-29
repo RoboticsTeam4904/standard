@@ -5,9 +5,34 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.util.Map;
 
+import org.msgpack.core.MessagePack;
+import org.msgpack.core.MessagePack.PackerConfig;
+import org.msgpack.core.MessagePack.UnpackerConfig;
+import org.msgpack.core.MessageBufferPacker;
+import org.msgpack.core.MessageFormat;
+import org.msgpack.core.MessagePacker;
+import org.msgpack.core.MessageUnpacker;
+import org.msgpack.value.ArrayValue;
+import org.msgpack.value.ExtensionValue;
+import org.msgpack.value.FloatValue;
+import org.msgpack.value.IntegerValue;
+import org.msgpack.value.TimestampValue;
+import org.msgpack.value.Value;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.math.BigInteger;
+import java.time.Instant;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.*;
+
+interface MessageDecodeListener {
+    Void decode();
+}
 
 public class Server extends Thread {
 
@@ -35,9 +60,14 @@ public class Server extends Thread {
                 System.out.println(
                         "Received: '" + data + "', length: " + data.length() + ", from client: '" + header + "'.");
                 try {
+                    MessageBufferPacker packer = MessagePack.newDefaultBufferPacker();
+                    packer.close();
+                    MessageUnpacker unpacker = MessagePack.newDefaultUnpacker(packer.toByteArray());
+
+                    /*
                     ObjectMapper mapper = new ObjectMapper();
                     Map<String, Object> map = mapper.readValue(data, Map.class);
-
+                    
                     if (expectedString.equals(map.get("value-1"))
                             && Math.abs((Double) map.get("value-2") - (1D / 3D)) < EPSILON
                             && Math.abs((Double) map.get("value-3") - Math.PI) < EPSILON) {
@@ -45,6 +75,7 @@ public class Server extends Thread {
                         running = false;
                         continue;
                     }
+                    */
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

@@ -7,8 +7,54 @@ import java.net.InetAddress;
 import java.util.Arrays;
 import java.util.HashMap;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import org.msgpack.core.MessagePack;
+import org.msgpack.core.MessagePack.PackerConfig;
+import org.msgpack.core.MessagePack.UnpackerConfig;
+import org.msgpack.core.MessageBufferPacker;
+import org.msgpack.core.MessageFormat;
+import org.msgpack.core.MessagePacker;
+import org.msgpack.core.MessageUnpacker;
+import org.msgpack.value.ArrayValue;
+import org.msgpack.value.ExtensionValue;
+import org.msgpack.value.FloatValue;
+import org.msgpack.value.IntegerValue;
+import org.msgpack.value.TimestampValue;
+import org.msgpack.value.Value;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.math.BigInteger;
+import java.time.Instant;
+
+import org.msgpack.core.MessagePack;
+import org.msgpack.core.MessagePack.PackerConfig;
+import org.msgpack.core.MessagePack.UnpackerConfig;
+import org.msgpack.core.MessageBufferPacker;
+import org.msgpack.core.MessageFormat;
+import org.msgpack.core.MessagePacker;
+import org.msgpack.core.MessageUnpacker;
+import org.msgpack.value.ArrayValue;
+import org.msgpack.value.ExtensionValue;
+import org.msgpack.value.FloatValue;
+import org.msgpack.value.IntegerValue;
+import org.msgpack.value.TimestampValue;
+import org.msgpack.value.Value;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.math.BigInteger;
+import java.time.Instant;
+
+//import com.fasterxml.jackson.core.JsonProcessingException;
+//import com.fasterxml.jackson.databind.ObjectMapper;
+
+interface OnMessageRecieveEventListener {
+    Void decode();
+}
 
 public class Client {
     private DatagramSocket socket;
@@ -70,16 +116,20 @@ public class Client {
         return received;
     }
 
-    public String sendGenericEcho(HashMap<String, Object> map) {
+    public String sendGenericEcho(MessageBufferPacker map) {
         String json = "";
         try {
-            ObjectMapper mapper = new ObjectMapper();
-            json = mapper.writeValueAsString(map);
+            System.out.println("tjhing");
+            //ARGV for sending, but for receving, a custom protocol will be necessary
+            //ObjectMapper mapper = new ObjectMapper();
+            //json = mapper.writeValueAsString(map);
             // json = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(map);
             // ^ not compact json
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
+        } catch (IOException) {
+            System.out.println("oh noes, something bad news bears with packing");
+        }//catch (JsonProcessingException e) {
+            //e.printStackTrace();
+        //}
         byte[] convertedMap = json.getBytes();
         System.out.println("Sending Echo: " + "'" + json + "'.");
         DatagramPacket packet = null;
