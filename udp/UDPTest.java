@@ -34,37 +34,40 @@ public class UDPTest {
         }
     }
 
-    public void test() {
-        HashMap<String, Object> testMap = new HashMap<String, Object>();
-        testMap.put("value-1", "test");
-        float val_2 = 1f/3f;
-        testMap.put("value-2", val_2);
-        testMap.put("value-3", Math.PI);
-        System.out.println(client.sendGenericEcho(testMap));
+    public void test() throws IOException{
+        MessageBufferPacker packer = MessagePack.newDefaultBufferPacker();
+        packer
+                .packInt(1)
+                .packString("emacs")
+                .packArrayHeader(2)
+                .packString("vim")
+                .packString("nano");
+        packer.close();
+        System.out.println(client.sendGenericEcho(packer));
         client.close();
     }
 
     public static void main(String[] args) throws IOException
     {
-        MessageBufferPacker packer = MessagePack.newDefaultBufferPacker();
+        //MessageBufferPacker packer = MessagePack.newDefaultBufferPacker();
         
-        packer.packString("test")
+        //packer.packString("test")
                 //.packString("leo");
                 //.packArrayHeader(2)
                 //.packString("xxx-xxxx")
                 //.packString("yyy-yyyy");
                 ;
-        packer.close(); // Never forget to close (or flush) the buffer
+        //packer.close(); // Never forget to close (or flush) the buffer
 
-        byte[] s = "utf-8 strings".getBytes(MessagePack.UTF8);
-        System.out.println(s);
-        packer.packRawStringHeader(s.length);
-        packer.writePayload(s);
-        System.out.println(s + " WT");
+        // byte[] s = "utf-8 strings".getBytes(MessagePack.UTF8);
+        // System.out.println(s);
+        // packer.packRawStringHeader(s.length);
+        // packer.writePayload(s);
+        // System.out.println(s + " WT");
         
-        /*
+        
         UDPTest udpTest = new UDPTest();
         udpTest.setup();
-        udpTest.test();*/
+        udpTest.test();
     }
 }

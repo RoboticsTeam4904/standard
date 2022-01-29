@@ -60,9 +60,16 @@ public class Server extends Thread {
                 System.out.println(
                         "Received: '" + data + "', length: " + data.length() + ", from client: '" + header + "'.");
                 try {
-                    MessageBufferPacker packer = MessagePack.newDefaultBufferPacker();
-                    packer.close();
-                    MessageUnpacker unpacker = MessagePack.newDefaultUnpacker(packer.toByteArray());
+                    MessageUnpacker unpacker = MessagePack.newDefaultUnpacker(data.getBytes("UTF-8"));
+                    int thing1 = unpacker.unpackInt();             // 1
+                    String thing2 = unpacker.unpackString();     // "leo"
+                    int numberOfStuff = unpacker.unpackArrayHeader();  // 2
+                    String[] phones = new String[numberOfStuff];
+                    for (int i = 0; i < numberOfStuff; ++i) {
+                        phones[i] = unpacker.unpackString();   // phones = {"xxx-xxxx", "yyy-yyyy"}
+                    }
+                    unpacker.close();
+                    System.out.println(String.format("id:%d, name:%s, phone:[%s]", thing1, thing2));
 
                     /*
                     ObjectMapper mapper = new ObjectMapper();

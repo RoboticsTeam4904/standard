@@ -1,5 +1,7 @@
 package org.usfirst.frc4904.standard.udp;
 
+import java.nio.charset.StandardCharsets;
+
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -24,28 +26,6 @@ import org.msgpack.value.Value;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
-import java.math.BigInteger;
-import java.time.Instant;
-
-import org.msgpack.core.MessagePack;
-import org.msgpack.core.MessagePack.PackerConfig;
-import org.msgpack.core.MessagePack.UnpackerConfig;
-import org.msgpack.core.MessageBufferPacker;
-import org.msgpack.core.MessageFormat;
-import org.msgpack.core.MessagePacker;
-import org.msgpack.core.MessageUnpacker;
-import org.msgpack.value.ArrayValue;
-import org.msgpack.value.ExtensionValue;
-import org.msgpack.value.FloatValue;
-import org.msgpack.value.IntegerValue;
-import org.msgpack.value.TimestampValue;
-import org.msgpack.value.Value;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.math.BigInteger;
 import java.time.Instant;
 
@@ -117,21 +97,23 @@ public class Client {
     }
 
     public String sendGenericEcho(MessageBufferPacker map) {
-        String json = "";
-        try {
-            System.out.println("tjhing");
+        byte[] convertedMap;
+        convertedMap = map.toByteArray();
+
+        //try {
             //ARGV for sending, but for receving, a custom protocol will be necessary
             //ObjectMapper mapper = new ObjectMapper();
             //json = mapper.writeValueAsString(map);
+
             // json = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(map);
             // ^ not compact json
-        } catch (IOException) {
-            System.out.println("oh noes, something bad news bears with packing");
-        }//catch (JsonProcessingException e) {
+        //} catch (IOException) {
+            //System.out.println("oh noes, something bad news bears with packing");
+        //}//catch (JsonProcessingException e) {
             //e.printStackTrace();
         //}
-        byte[] convertedMap = json.getBytes();
-        System.out.println("Sending Echo: " + "'" + json + "'.");
+        //byte[] convertedMap = messageString.getBytes();
+        System.out.println("Sending Echo: " + "'" + new String(convertedMap, StandardCharsets.US_ASCII) + "'.");
         DatagramPacket packet = null;
         try {
             byte[] tempArr = new byte[convertedMap.length + 8];
