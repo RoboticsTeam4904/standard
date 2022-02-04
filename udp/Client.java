@@ -105,24 +105,24 @@ public class Client {
 
         MessageUnpacker unpacker = MessagePack.newDefaultUnpacker(convertedMap);
 
-                try {
-                    //unpacker.unp
-                    int thingy = unpacker.unpackInt();
-                    System.out.println(thingy);
-                    String thing1 = unpacker.unpackString();             // 1
-                    System.out.println(thing1 + "but meacs");
-                    int numberOfStuff = unpacker.unpackArrayHeader();  // 2
-                    String[] terminalTextEditors = new String[numberOfStuff];
+                // try {
+                //     //unpacker.unp
+                //     int thingy = unpacker.unpackInt();
+                //     System.out.println(thingy);
+                //     String thing1 = unpacker.unpackString();             // 1
+                //     System.out.println(thing1 + "but meacs");
+                //     int numberOfStuff = unpacker.unpackArrayHeader();  // 2
+                //     String[] terminalTextEditors = new String[numberOfStuff];
                     
-                    for (int i = 0; i < numberOfStuff; ++i) {
-                        terminalTextEditors[i] = unpacker.unpackString();   // terminalTextEditors = {"vim", "nano"}
-                    }
-                    unpacker.close();
-                    System.out.println(String.format("thingy:%d thing1:%s thing2:%s", thingy, thing1, terminalTextEditors[1]));
+                //     for (int i = 0; i < numberOfStuff; ++i) {
+                //         terminalTextEditors[i] = unpacker.unpackString();   // terminalTextEditors = {"vim", "nano"}
+                //     }
+                //     unpacker.close();
+                //     System.out.println(String.format("thingy:%d thing1:%s thing2:%s", thingy, thing1, terminalTextEditors[1]));
 
-                } catch (IOException e) {
-                    System.out.println("unfortunate");
-                }
+                // } catch (IOException e) {
+                //     System.out.println("unfortunate");
+                // }
                     
 
         System.out.println("Sending Echo: " + "'" + new String(convertedMap, StandardCharsets.US_ASCII) + "'.");

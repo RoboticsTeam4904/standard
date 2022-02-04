@@ -4,6 +4,8 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.util.Map;
+import java.util.Arrays;
+
 
 import org.msgpack.core.MessagePack;
 import org.msgpack.core.MessagePack.PackerConfig;
@@ -54,19 +56,17 @@ public class Server extends Thread {
             try {
                 DatagramPacket packet = new DatagramPacket(buf, buf.length);
                 socket.receive(packet);
-                String received = new String(packet.getData());
-                String data = received.substring(8, packet.getLength());
-                String header = received.substring(0, 8);
+                byte[] received = packet.getData();
+                byte[] data = Arrays.copyOfRange(received, 8, packet.getLength());
+                String header = new String(Arrays.copyOfRange(received, 0, 8));
                 System.out.println(
-                        "Received: '" + data + "', length: " + data.length() + ", from client: '" + header + "'.");
+                        "Received: '" + data + "', length: " + data.length + ", from client: '" + header + "'.");
                 try {
-                    MessageUnpacker unpacker = MessagePack.newDefaultUnpacker(data.getBytes());
+                    MessageUnpacker unpacker = MessagePack.newDefaultUnpacker(data);
                     //unpacker.unp
                     int thingy = unpacker.unpackInt();
                     System.out.println(thingy);
                     String thing1 = unpacker.unpackString();             // 1
-                    System.out.println(thing1);
-                    String thing2 = unpacker.unpackString();     // "emacs"
                     System.out.println(thing1);
                     int numberOfStuff = unpacker.unpackArrayHeader();  // 2
                     String[] terminalTextEditors = new String[numberOfStuff];
@@ -75,7 +75,7 @@ public class Server extends Thread {
                     }
                     unpacker.close();
                     
-                    System.out.println(String.format("thingy:%d thing1:%d, thing2:%s",thingy, thing1, thing2));
+                    System.out.println(String.format("thingy:%d thing1:%s",thingy, thing1));
                     if (terminalTextEditors[0] ==  "vim") {
                         System.out.println("It's a SUCCESS!");
                         running = false;
@@ -105,7 +105,7 @@ public class Server extends Thread {
                     tempArr[index] = byt;
                     index++;
                 }
-                for (byte byt : data.getBytes("UTF-8")) {
+                for (byte byt : data) {
                     tempArr[index] = byt;
                     index++;
                 }
