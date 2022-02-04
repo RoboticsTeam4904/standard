@@ -9,6 +9,9 @@ import java.net.InetAddress;
 import java.util.Arrays;
 import java.util.HashMap;
 
+import java.io.IOException;
+
+
 import org.msgpack.core.MessagePack;
 import org.msgpack.core.MessagePack.PackerConfig;
 import org.msgpack.core.MessagePack.UnpackerConfig;
@@ -100,19 +103,28 @@ public class Client {
         byte[] convertedMap;
         convertedMap = map.toByteArray();
 
-        //try {
-            //ARGV for sending, but for receving, a custom protocol will be necessary
-            //ObjectMapper mapper = new ObjectMapper();
-            //json = mapper.writeValueAsString(map);
+        MessageUnpacker unpacker = MessagePack.newDefaultUnpacker(convertedMap);
 
-            // json = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(map);
-            // ^ not compact json
-        //} catch (IOException) {
-            //System.out.println("oh noes, something bad news bears with packing");
-        //}//catch (JsonProcessingException e) {
-            //e.printStackTrace();
-        //}
-        //byte[] convertedMap = messageString.getBytes();
+                try {
+                    //unpacker.unp
+                    int thingy = unpacker.unpackInt();
+                    System.out.println(thingy);
+                    String thing1 = unpacker.unpackString();             // 1
+                    System.out.println(thing1 + "but meacs");
+                    int numberOfStuff = unpacker.unpackArrayHeader();  // 2
+                    String[] terminalTextEditors = new String[numberOfStuff];
+                    
+                    for (int i = 0; i < numberOfStuff; ++i) {
+                        terminalTextEditors[i] = unpacker.unpackString();   // terminalTextEditors = {"vim", "nano"}
+                    }
+                    unpacker.close();
+                    System.out.println(String.format("thingy:%d thing1:%s thing2:%s", thingy, thing1, terminalTextEditors[1]));
+
+                } catch (IOException e) {
+                    System.out.println("unfortunate");
+                }
+                    
+
         System.out.println("Sending Echo: " + "'" + new String(convertedMap, StandardCharsets.US_ASCII) + "'.");
         DatagramPacket packet = null;
         try {
@@ -127,6 +139,7 @@ public class Client {
                 index++;
             }
             buf = tempArr;
+            System.out.println(buf);
             packet = new DatagramPacket(buf, buf.length, address, socketNum);
             socket.send(packet);
             packet = new DatagramPacket(buf, buf.length);
@@ -138,7 +151,9 @@ public class Client {
         String received = new String(packet.getData());
         String data = received.substring(8, packet.getLength());
         String header = received.substring(0, 8);
+        System.out.println("sand");
         received = ("Received back: '" + data + "', length: " + data.length() + ", from server: '" + header + "'.");
+        System.out.println("which");
         return received;
     }
 

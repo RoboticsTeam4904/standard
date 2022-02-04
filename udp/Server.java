@@ -60,17 +60,27 @@ public class Server extends Thread {
                 System.out.println(
                         "Received: '" + data + "', length: " + data.length() + ", from client: '" + header + "'.");
                 try {
-                    MessageUnpacker unpacker = MessagePack.newDefaultUnpacker(data.getBytes("UTF-8"));
-                    int thing1 = unpacker.unpackInt();             // 1
-                    String thing2 = unpacker.unpackString();     // "leo"
+                    MessageUnpacker unpacker = MessagePack.newDefaultUnpacker(data.getBytes());
+                    //unpacker.unp
+                    int thingy = unpacker.unpackInt();
+                    System.out.println(thingy);
+                    String thing1 = unpacker.unpackString();             // 1
+                    System.out.println(thing1);
+                    String thing2 = unpacker.unpackString();     // "emacs"
+                    System.out.println(thing1);
                     int numberOfStuff = unpacker.unpackArrayHeader();  // 2
-                    String[] phones = new String[numberOfStuff];
+                    String[] terminalTextEditors = new String[numberOfStuff];
                     for (int i = 0; i < numberOfStuff; ++i) {
-                        phones[i] = unpacker.unpackString();   // phones = {"xxx-xxxx", "yyy-yyyy"}
+                        terminalTextEditors[i] = unpacker.unpackString();   // terminalTextEditors = {"vim", "nano"}
                     }
                     unpacker.close();
-                    System.out.println(String.format("id:%d, name:%s, phone:[%s]", thing1, thing2));
-
+                    
+                    System.out.println(String.format("thingy:%d thing1:%d, thing2:%s",thingy, thing1, thing2));
+                    if (terminalTextEditors[0] ==  "vim") {
+                        System.out.println("It's a SUCCESS!");
+                        running = false;
+                        continue;
+                    }
                     /*
                     ObjectMapper mapper = new ObjectMapper();
                     Map<String, Object> map = mapper.readValue(data, Map.class);

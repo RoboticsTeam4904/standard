@@ -49,15 +49,15 @@ public class UDPTest {
 
     public static void main(String[] args) throws IOException
     {
-        //MessageBufferPacker packer = MessagePack.newDefaultBufferPacker();
+        // MessageBufferPacker packer = MessagePack.newDefaultBufferPacker();
         
-        //packer.packString("test")
-                //.packString("leo");
-                //.packArrayHeader(2)
-                //.packString("xxx-xxxx")
-                //.packString("yyy-yyyy");
-                ;
-        //packer.close(); // Never forget to close (or flush) the buffer
+        // packer.packString("test")
+        //         .packString("leo")
+        //         .packArrayHeader(2)
+        //         .packString("xxx-xxxx")
+        //         .packString("yyy-yyyy");
+                
+        // packer.close(); // Never forget to close (or flush) the buffer
 
         // byte[] s = "utf-8 strings".getBytes(MessagePack.UTF8);
         // System.out.println(s);
