@@ -103,28 +103,6 @@ public class Client {
         byte[] convertedMap;
         convertedMap = map.toByteArray();
 
-        MessageUnpacker unpacker = MessagePack.newDefaultUnpacker(convertedMap);
-
-                // try {
-                //     //unpacker.unp
-                //     int thingy = unpacker.unpackInt();
-                //     System.out.println(thingy);
-                //     String thing1 = unpacker.unpackString();             // 1
-                //     System.out.println(thing1 + "but meacs");
-                //     int numberOfStuff = unpacker.unpackArrayHeader();  // 2
-                //     String[] terminalTextEditors = new String[numberOfStuff];
-                    
-                //     for (int i = 0; i < numberOfStuff; ++i) {
-                //         terminalTextEditors[i] = unpacker.unpackString();   // terminalTextEditors = {"vim", "nano"}
-                //     }
-                //     unpacker.close();
-                //     System.out.println(String.format("thingy:%d thing1:%s thing2:%s", thingy, thing1, terminalTextEditors[1]));
-
-                // } catch (IOException e) {
-                //     System.out.println("unfortunate");
-                // }
-                    
-
         System.out.println("Sending Echo: " + "'" + new String(convertedMap, StandardCharsets.US_ASCII) + "'.");
         DatagramPacket packet = null;
         try {
@@ -151,9 +129,7 @@ public class Client {
         String received = new String(packet.getData());
         String data = received.substring(8, packet.getLength());
         String header = received.substring(0, 8);
-        System.out.println("sand");
         received = ("Received back: '" + data + "', length: " + data.length() + ", from server: '" + header + "'.");
-        System.out.println("which");
         return received;
     }
 

@@ -64,10 +64,8 @@ public class Server extends Thread {
                 try {
                     MessageUnpacker unpacker = MessagePack.newDefaultUnpacker(data);
                     //unpacker.unp
-                    int thingy = unpacker.unpackInt();
-                    System.out.println(thingy);
-                    String thing1 = unpacker.unpackString();             // 1
-                    System.out.println(thing1);
+                    int firstInteger = unpacker.unpackInt();
+                    String firstString = unpacker.unpackString();             // 1
                     int numberOfStuff = unpacker.unpackArrayHeader();  // 2
                     String[] terminalTextEditors = new String[numberOfStuff];
                     for (int i = 0; i < numberOfStuff; ++i) {
@@ -75,24 +73,12 @@ public class Server extends Thread {
                     }
                     unpacker.close();
                     
-                    System.out.println(String.format("thingy:%d thing1:%s",thingy, thing1));
+                    System.out.println(String.format("Integer:%d String:%s ArrayElementOne: %s ArrayElementTwo: %s",firstInteger, firstString, terminalTextEditors[0], terminalTextEditors[1]));
                     if (terminalTextEditors[0] ==  "vim") {
                         System.out.println("It's a SUCCESS!");
                         running = false;
                         continue;
                     }
-                    /*
-                    ObjectMapper mapper = new ObjectMapper();
-                    Map<String, Object> map = mapper.readValue(data, Map.class);
-                    
-                    if (expectedString.equals(map.get("value-1"))
-                            && Math.abs((Double) map.get("value-2") - (1D / 3D)) < EPSILON
-                            && Math.abs((Double) map.get("value-3") - Math.PI) < EPSILON) {
-                        System.out.println("It's a SUCCESS!");
-                        running = false;
-                        continue;
-                    }
-                    */
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
