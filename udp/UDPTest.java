@@ -43,29 +43,12 @@ public class UDPTest {
                 .packString("vim")
                 .packString("nano");
         packer.close();
-        System.out.println(client.sendGenericEcho(packer));
+        client.sendGenericEcho(packer);
         client.close();
     }
 
     public static void main(String[] args) throws IOException
-    {
-        // MessageBufferPacker packer = MessagePack.newDefaultBufferPacker();
-        
-        // packer.packString("test")
-        //         .packString("leo")
-        //         .packArrayHeader(2)
-        //         .packString("xxx-xxxx")
-        //         .packString("yyy-yyyy");
-                
-        // packer.close(); // Never forget to close (or flush) the buffer
-
-        // byte[] s = "utf-8 strings".getBytes(MessagePack.UTF8);
-        // System.out.println(s);
-        // packer.packRawStringHeader(s.length);
-        // packer.writePayload(s);
-        // System.out.println(s + " WT");
-        
-        
+    {      
         UDPTest udpTest = new UDPTest();
         udpTest.setup();
         udpTest.test();

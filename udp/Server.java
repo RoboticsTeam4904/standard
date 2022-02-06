@@ -43,8 +43,7 @@ public class Server extends Thread {
     protected byte[] buf = new byte[256];
     protected String expectedString = "test";
     protected String serverHeader = "##SERVER";
-    private final Double EPSILON = 0.0001;
-
+    
     public Server(int socketNum) throws IOException {
         socket = new DatagramSocket(socketNum);
     }
@@ -73,7 +72,7 @@ public class Server extends Thread {
                     }
                     unpacker.close();
                     
-                    System.out.println(String.format("Integer:%d String:%s ArrayElementOne: %s ArrayElementTwo: %s",firstInteger, firstString, terminalTextEditors[0], terminalTextEditors[1]));
+                    System.out.println(String.format("Integer: %d String: %s ArrayElementOne: %s ArrayElementTwo: %s",firstInteger, firstString, terminalTextEditors[0], terminalTextEditors[1]));
                     if (terminalTextEditors[0] ==  "vim") {
                         System.out.println("It's a SUCCESS!");
                         running = false;

@@ -8,6 +8,7 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.util.Arrays;
 import java.util.HashMap;
+//import org.apache.commons.lang3.ArrayUtils;
 
 import java.io.IOException;
 
@@ -34,10 +35,6 @@ import java.time.Instant;
 
 //import com.fasterxml.jackson.core.JsonProcessingException;
 //import com.fasterxml.jackson.databind.ObjectMapper;
-
-interface OnMessageRecieveEventListener {
-    Void decode();
-}
 
 public class Client {
     private DatagramSocket socket;
@@ -69,7 +66,7 @@ public class Client {
         }
     }
 
-    public String sendEcho(String msg) {
+    public void sendEcho(String msg) {
         System.out.println("Sending Echo: " + "'" + msg + "'.");
         DatagramPacket packet = null;
         try {
@@ -92,14 +89,9 @@ public class Client {
             System.out.println("Echo failed");
             e.printStackTrace();
         }
-        String received = new String(packet.getData());
-        String data = received.substring(8, packet.getLength());
-        String header = received.substring(0, 8);
-        received = ("Received back: '" + data + "', length: " + data.length() + ", from server: '" + header + "'.");
-        return received;
     }
 
-    public String sendGenericEcho(MessageBufferPacker map) {
+    public void sendGenericEcho(MessageBufferPacker map) {
         byte[] convertedMap;
         convertedMap = map.toByteArray();
 
@@ -126,11 +118,6 @@ public class Client {
             System.out.println("Echo failed");
             e.printStackTrace();
         }
-        String received = new String(packet.getData());
-        String data = received.substring(8, packet.getLength());
-        String header = received.substring(0, 8);
-        received = ("Received back: '" + data + "', length: " + data.length() + ", from server: '" + header + "'.");
-        return received;
     }
 
     public String receiveData() {
