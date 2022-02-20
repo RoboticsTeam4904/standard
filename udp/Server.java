@@ -3,8 +3,9 @@ package org.usfirst.frc4904.standard.udp;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.util.Map;
 import java.util.Arrays;
+import java.nio.charset.StandardCharsets;
+
 
 
 import org.msgpack.core.MessagePack;
@@ -32,21 +33,26 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.*;
 
-interface MessageDecodeListener {
-    Void decode();
-}
+/*
+Messagepack generelization plan:
 
-public class Server extends Thread {
+Take in hashmap, put keys and stuff in a string header and deserialize accordingly on the other side. Serialize in by type. Or just use generics lmao. 
+*/
+
+abstract public class Server extends Thread {
 
     protected DatagramSocket socket = null;
     protected boolean running;
     protected byte[] buf = new byte[256];
     protected String expectedString = "test";
     protected String serverHeader = "##SERVER";
+    protected Boolean debug = true;
     
     public Server(int socketNum) throws IOException {
         socket = new DatagramSocket(socketNum);
     }
+    
+    protected abstract void decode(byte[] message) throws IOException;
 
     public void run() {
         System.out.println("Server running.");
@@ -60,27 +66,28 @@ public class Server extends Thread {
                 String header = new String(Arrays.copyOfRange(received, 0, 8));
                 System.out.println(
                         "Received: '" + data + "', length: " + data.length + ", from client: '" + header + "'.");
-                try {
-                    MessageUnpacker unpacker = MessagePack.newDefaultUnpacker(data);
-                    //unpacker.unp
-                    int firstInteger = unpacker.unpackInt();
-                    String firstString = unpacker.unpackString();             // 1
-                    int numberOfStuff = unpacker.unpackArrayHeader();  // 2
-                    String[] terminalTextEditors = new String[numberOfStuff];
-                    for (int i = 0; i < numberOfStuff; ++i) {
-                        terminalTextEditors[i] = unpacker.unpackString();   // terminalTextEditors = {"vim", "nano"}
-                    }
-                    unpacker.close();
+                decode(data);
+                // try {
+                //     // MessageUnpacker unpacker = MessagePack.newDefaultUnpacker(data);
+                //     // //unpacker.unp
+                //     // int firstInteger = unpacker.unpackInt();
+                //     // String firstString = unpacker.unpackString();             // 1
+                //     // int numberOfStuff = unpacker.unpackArrayHeader();  // 2
+                //     // String[] terminalTextEditors = new String[numberOfStuff];
+                //     // for (int i = 0; i < numberOfStuff; ++i) {
+                //     //     terminalTextEditors[i] = unpacker.unpackString();   // terminalTextEditors = {"vim", "nano"}
+                //     // }
+                //     // unpacker.close();
                     
-                    System.out.println(String.format("Integer: %d String: %s ArrayElementOne: %s ArrayElementTwo: %s",firstInteger, firstString, terminalTextEditors[0], terminalTextEditors[1]));
-                    if (terminalTextEditors[0] ==  "vim") {
-                        System.out.println("It's a SUCCESS!");
-                        running = false;
-                        continue;
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                //     // System.out.println(String.format("Integer: %d String: %s ArrayElementOne: %s ArrayElementTwo: %s",firstInteger, firstString, terminalTextEditors[0], terminalTextEditors[1]));
+                //     // if (terminalTextEditors[0] ==  "vim") {
+                //     //     System.out.println("It's a SUCCESS!");
+                //     //     running = false;
+                //     //     continue;
+                //     // }
+                // } catch (IOException e) {
+                //     debug ? e.printStackTrace() : System.out.println(String.format("Decoder failed on de-serialization of packet date: %s", new String(data, StandardCharsets.UTF_16BE)));
+                // }
 
                 InetAddress address = packet.getAddress();
                 int port = packet.getPort();

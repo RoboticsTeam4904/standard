@@ -1,4 +1,4 @@
-package org.usfirst.frc4904.standard.udp;
+package org.usfirst.frc4904.standard.udp.tests;
 
 
 //TODO fix imports
@@ -15,6 +15,8 @@ import org.msgpack.value.FloatValue;
 import org.msgpack.value.IntegerValue;
 import org.msgpack.value.TimestampValue;
 import org.msgpack.value.Value;
+import org.usfirst.frc4904.standard.udp.Client;
+import org.usfirst.frc4904.standard.udp.Server;
 
 import java.io.*;
 import java.util.HashMap;
@@ -26,7 +28,7 @@ public class UDPTest {
     public void setup() {
         System.out.println("Setting up the test on socket #" + socketNum + ".");
         try {
-            new Server(socketNum).start();
+            new TestUDPServer(socketNum).start();
             client = new Client("CLIENT##", socketNum);
         } catch (IOException ex) {
             System.out.println("ERR: IOException during setup. This error is from creating the Server.");
