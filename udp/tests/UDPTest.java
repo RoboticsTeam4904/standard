@@ -17,18 +17,21 @@ import org.msgpack.value.TimestampValue;
 import org.msgpack.value.Value;
 import org.usfirst.frc4904.standard.udp.Client;
 import org.usfirst.frc4904.standard.udp.Server;
+import java.util.concurrent.TimeUnit;
 
 import java.io.*;
 import java.util.HashMap;
 
 public class UDPTest {
     Client client;
+    TestUDPServer server;
     private int socketNum = 3375;
 
     public void setup() {
         System.out.println("Setting up the test on socket #" + socketNum + ".");
         try {
-            new TestUDPServer(socketNum).start();
+            server = new TestUDPServer(socketNum);
+            server.start();
             client = new Client("CLIENT##", socketNum);
         } catch (IOException ex) {
             System.out.println("ERR: IOException during setup. This error is from creating the Server.");
@@ -36,7 +39,7 @@ public class UDPTest {
         }
     }
 
-    public void test() throws IOException{
+    public void encode() throws IOException {
         MessageBufferPacker packer = MessagePack.newDefaultBufferPacker();
         packer
                 .packInt(1)
@@ -53,6 +56,7 @@ public class UDPTest {
     {      
         UDPTest udpTest = new UDPTest();
         udpTest.setup();
-        udpTest.test();
+        udpTest.encode();
+        System.out.println(udpTest.server.testThreadGlobal); // This is a little bit sketchy since UDP is technically async
     }
 }

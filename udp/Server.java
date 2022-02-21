@@ -67,28 +67,7 @@ abstract public class Server extends Thread {
                 System.out.println(
                         "Received: '" + data + "', length: " + data.length + ", from client: '" + header + "'.");
                 decode(data);
-                // try {
-                //     // MessageUnpacker unpacker = MessagePack.newDefaultUnpacker(data);
-                //     // //unpacker.unp
-                //     // int firstInteger = unpacker.unpackInt();
-                //     // String firstString = unpacker.unpackString();             // 1
-                //     // int numberOfStuff = unpacker.unpackArrayHeader();  // 2
-                //     // String[] terminalTextEditors = new String[numberOfStuff];
-                //     // for (int i = 0; i < numberOfStuff; ++i) {
-                //     //     terminalTextEditors[i] = unpacker.unpackString();   // terminalTextEditors = {"vim", "nano"}
-                //     // }
-                //     // unpacker.close();
-                    
-                //     // System.out.println(String.format("Integer: %d String: %s ArrayElementOne: %s ArrayElementTwo: %s",firstInteger, firstString, terminalTextEditors[0], terminalTextEditors[1]));
-                //     // if (terminalTextEditors[0] ==  "vim") {
-                //     //     System.out.println("It's a SUCCESS!");
-                //     //     running = false;
-                //     //     continue;
-                //     // }
-                // } catch (IOException e) {
-                //     debug ? e.printStackTrace() : System.out.println(String.format("Decoder failed on de-serialization of packet date: %s", new String(data, StandardCharsets.UTF_16BE)));
-                // }
-
+                
                 InetAddress address = packet.getAddress();
                 int port = packet.getPort();
                 byte[] tempArr = new byte[buf.length];
