@@ -4,9 +4,10 @@ import org.usfirst.frc4904.standard.custom.ChassisController;
 import org.usfirst.frc4904.standard.subsystems.chassis.Chassis;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 
 public class ChassisConstant extends CommandBase implements ChassisController {
-    protected final ChassisMove move;
+    protected final ParallelRaceGroup move;
     protected final double x;
     protected final double y;
     protected double turn;
@@ -22,8 +23,7 @@ public class ChassisConstant extends CommandBase implements ChassisController {
      * @param timeout
      */
     public ChassisConstant(String name, Chassis chassis, double x, double y, double turn, double timeout) {
-        move = new ChassisMove(chassis, this);
-        move.withTimeout(timeout);
+        move = new ChassisMove(chassis, this).withTimeout(timeout);
         this.timeout = timeout;
         this.x = x;
         this.y = y;
