@@ -32,7 +32,6 @@ public class TestUDPServer extends Server {
 
     protected void decode(byte[] data) throws IOException{
         MessageUnpacker unpacker = MessagePack.newDefaultUnpacker(data);
-        //unpacker.unp
         int firstInteger = unpacker.unpackInt();
         String firstString = unpacker.unpackString();             // 1
         int numberOfStuff = unpacker.unpackArrayHeader();  // 2
