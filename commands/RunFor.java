@@ -23,7 +23,7 @@ public class RunFor extends CommandBase {
 		super();
 		setName(name);
 		this.duration = duration;
-		this.command = command;
+		this.command = command.withTimeout(duration);
 		firstTick = true;
 	}
 
@@ -41,13 +41,13 @@ public class RunFor extends CommandBase {
 	}
 
 	public boolean isTimedOut() {
-		return System.currentTimeMillis() - startMillis > duration;
+		return System.currentTimeMillis() - startMillis > duration * 1000;
 	}
 
 	@Override
 	public void initialize() {
-		command.withTimeout(duration);
 		startMillis = System.currentTimeMillis();
+		command.schedule();
 	}
 
 	@Override
