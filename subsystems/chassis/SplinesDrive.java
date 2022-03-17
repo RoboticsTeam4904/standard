@@ -8,6 +8,7 @@
 package org.usfirst.frc4904.standard.subsystems.chassis;
 
 import com.ctre.phoenix.sensors.CANCoder;
+import org.usfirst.frc4904.standard.custom.sensors.CANTalonEncoder;
 
 import org.usfirst.frc4904.standard.commands.chassis.SimpleSplines;
 import org.usfirst.frc4904.standard.custom.sensors.IMU;
@@ -24,7 +25,7 @@ public class SplinesDrive extends SensorDrive {
   /**
    * Creates a new DriveSubsystem.
    */
-  public SplinesDrive(TankDrive driveBase, SimpleSplines.AutoConstants autoConstants, SimpleSplines.DriveConstants driveConstants, CANCoder leftEncoder, CANCoder rightEncoder, IMU gyro) {
+  public SplinesDrive(TankDrive driveBase, SimpleSplines.AutoConstants autoConstants, SimpleSplines.DriveConstants driveConstants, CANTalonEncoder leftEncoder, CANTalonEncoder rightEncoder, IMU gyro) {
     super(driveBase,leftEncoder, rightEncoder, gyro);
     this.autoConstants = autoConstants;
     this.driveConstants = driveConstants;

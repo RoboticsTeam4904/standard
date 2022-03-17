@@ -20,6 +20,10 @@ public class MotorBrake extends CommandBase {
 		}
 	}
 
+	public MotorBrake(BrakeableMotor... motors) {
+		this("MotorBreak", motors);
+	}
+	
 	public void execute() {
 		for (BrakeableMotor motor : motors) {
 			motor.neutralOutput();

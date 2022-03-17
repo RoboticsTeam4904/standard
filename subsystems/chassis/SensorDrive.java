@@ -17,6 +17,7 @@ import org.usfirst.frc4904.standard.custom.sensors.InvalidSensorException;
 import org.usfirst.frc4904.standard.custom.sensors.PIDSensor;
 import org.usfirst.frc4904.standard.subsystems.chassis.TankDrive;
 import org.usfirst.frc4904.standard.subsystems.motor.Motor;
+import org.usfirst.frc4904.standard.custom.sensors.CANTalonEncoder;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -28,8 +29,8 @@ import edu.wpi.first.wpilibj2.command.Subsystem;
 public class SensorDrive implements Subsystem, PIDSensor { // Based largely on
   // https://github.com/wpilibsuite/allwpilib/blob/master/wpilibjExamples/src/main/java/edu/wpi/first/wpilibj/examples/ramsetecommand/subsystems/DriveSubsystem.java
   private final TankDrive driveBase;
-  private final CANCoder leftEncoder;
-  private final CANCoder rightEncoder;
+  private final CANTalonEncoder leftEncoder;
+  private final CANTalonEncoder rightEncoder;
   private final IMU gyro;
   private final DifferentialDriveOdometry odometry;
   private CustomPIDSourceType sensorType;
@@ -37,7 +38,7 @@ public class SensorDrive implements Subsystem, PIDSensor { // Based largely on
   /**
    * Creates a new DriveSubsystem.
    */
-  public SensorDrive(TankDrive driveBase, CANCoder leftEncoder, CANCoder rightEncoder, IMU gyro,
+  public SensorDrive(TankDrive driveBase, CANTalonEncoder leftEncoder, CANTalonEncoder rightEncoder, IMU gyro,
       CustomPIDSourceType sensorType) {
     this.driveBase = driveBase;
     this.leftEncoder = leftEncoder;
@@ -50,13 +51,13 @@ public class SensorDrive implements Subsystem, PIDSensor { // Based largely on
     CommandScheduler.getInstance().registerSubsystem(this);
   }
 
-  public SensorDrive(TankDrive driveBase, CANCoder leftEncoder, CANCoder rightEncoder, IMU gyro) {
+  public SensorDrive(TankDrive driveBase, CANTalonEncoder leftEncoder, CANTalonEncoder rightEncoder, IMU gyro) {
     this(driveBase, leftEncoder, rightEncoder, gyro, CustomPIDSourceType.kDisplacement);
   }
 
   @Override
   public void periodic() {
-    odometry.update(Rotation2d.fromDegrees(getHeading()), leftEncoder.getPosition(), rightEncoder.getPosition());
+    odometry.update(Rotation2d.fromDegrees(getHeading()), leftEncoder.getDistance(), rightEncoder.getDistance());
   }
 
   @Override
@@ -99,7 +100,7 @@ public class SensorDrive implements Subsystem, PIDSensor { // Based largely on
    * @return The current wheel speeds.
    */
   public DifferentialDriveWheelSpeeds getWheelSpeeds() {
-    return new DifferentialDriveWheelSpeeds(leftEncoder.getVelocity(), rightEncoder.getVelocity());
+    return new DifferentialDriveWheelSpeeds(leftEncoder.getRate(), rightEncoder.getRate());
   }
 
   /**
@@ -135,8 +136,8 @@ public class SensorDrive implements Subsystem, PIDSensor { // Based largely on
    * Resets the drive encoders to currently read a position of 0.
    */
   public void resetEncoders() {
-    leftEncoder.setPosition(0);
-    rightEncoder.setPosition(0);
+    leftEncoder.reset();
+    rightEncoder.reset();
   }
 
   /**
