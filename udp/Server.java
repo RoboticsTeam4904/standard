@@ -80,8 +80,8 @@ abstract public class Server extends Thread {
                     tempArr[index] = byt;
                     index++;
                 }
-                packet = new DatagramPacket(tempArr, tempArr.length, address, port);
-                socket.send(packet);
+                // packet = new DatagramPacket(tempArr, tempArr.length, address, port);
+                // socket.send(packet);
                 buf = new byte[256];
             } catch (IOException e) {
                 e.printStackTrace();

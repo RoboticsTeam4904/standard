@@ -43,24 +43,12 @@ public class Client {
 
     private byte[] buf;
 
-    public Client(String header, String hostname, int sourcePort, int socketNum) {
+    public Client(String hostname, int sourcePort, int socketNum) {
         try {
             address = InetAddress.getByName(hostname);
             socket = new DatagramSocket(sourcePort);
 
             this.socketNum = socketNum;
-            this.header = header.getBytes("UTF-8");
-            if (this.header.length > 8) {
-                this.header = Arrays.copyOfRange(this.header, 0, 8);
-            } else if (this.header.length < 8) {
-                byte[] tempArr = new byte[8];
-                for (int index = 0; index < this.header.length; index++) {
-                    tempArr[index] = this.header[index];
-                }
-                for (int index = this.header.length; index < 8; index++) {
-                    tempArr[index] = "#".getBytes("UTF-8")[0];
-                }
-            }
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -70,21 +58,11 @@ public class Client {
         System.out.println("Sending Echo: " + "'" + msg + "'.");
         DatagramPacket packet = null;
         try {
-            byte[] tempArr = new byte[msg.length() + 8];
-            int index = 0;
-            for (byte byt : header) {
-                tempArr[index] = byt;
-                index++;
-            }
-            for (byte byt : msg.getBytes("UTF-8")) {
-                tempArr[index] = byt;
-                index++;
-            }
-            buf = tempArr;
+            byte[] buf = msg.getBytes("UTF-8");
             packet = new DatagramPacket(buf, buf.length, address, socketNum);
             socket.send(packet);
-            packet = new DatagramPacket(buf, buf.length);
-            socket.receive(packet);
+            // packet = new DatagramPacket(buf, buf.length);
+            // socket.receive(packet);
         } catch (IOException e) {
             System.out.println("Echo failed");
             e.printStackTrace();
@@ -98,17 +76,7 @@ public class Client {
         System.out.println("Sending Echo: " + "'" + new String(convertedMap, StandardCharsets.US_ASCII) + "'.");
         DatagramPacket packet = null;
         try {
-            byte[] tempArr = new byte[convertedMap.length + 8];
-            int index = 0;
-            for (byte byt : header) {
-                tempArr[index] = byt;
-                index++;
-            }
-            for (byte byt : convertedMap) {
-                tempArr[index] = byt;
-                index++;
-            }
-            buf = tempArr;
+            byte[] buf = convertedMap;
             System.out.println(buf);
             packet = new DatagramPacket(buf, buf.length, address, socketNum);
             socket.send(packet);

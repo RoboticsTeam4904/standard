@@ -26,14 +26,15 @@ public class UDPTest {
     Client client;
     TestUDPServer server;
     private int sourcePort = 3375;
+    private int receivePort = 8765;
     private int destinationPort = 4321;
 
     public void setup() {
-        System.out.println("Setting up the test on socket #" + sourcePort + ".");
+        System.out.println("Setting up the test on socket #" + receivePort + ".");
         try {
-            server = new TestUDPServer(sourcePort, "NUS12738-12-aksramks-MacBook-Pro.local");
+            server = new TestUDPServer(receivePort, "NUS12738-12-aksramks-MacBook-Pro.local");
             server.start();
-        client = new Client("", "NUS12738-12-aksramks-MacBook-Pro.local", 8765, destinationPort);
+        client = new Client("NUS12738-12-aksramks-MacBook-Pro.local", sourcePort, destinationPort);
         } catch (IOException ex) {
             System.out.println("ERR: IOException during setup. This error is from creating the Server.");
             ex.printStackTrace();
@@ -43,14 +44,32 @@ public class UDPTest {
     public void encode() throws IOException {
         MessageBufferPacker packer = MessagePack.newDefaultBufferPacker();
         packer
-            .packDouble(0.0)
-            .packDouble(1.0)
+            .packArrayHeader(2)
+
+            .packArrayHeader(3)
+
+            .packArrayHeader(2)
+
+            
             .packDouble(2.0)
-            .packDouble(3.0)
-            .packDouble(4.0)
-            .packDouble(5.0)
-            .packDouble(6.0)
-            .packDouble(7.0);
+            .packArrayHeader(2)
+            .packDouble(1.0)
+
+            .packDouble(1.0)
+
+            .packArrayHeader(2)
+
+            
+            .packDouble(2.0)
+            .packArrayHeader(2)
+            .packDouble(1.0)
+
+            .packDouble(1.0)
+            
+            .packDouble(0.0)
+            .packDouble(0.0);
+
+
         packer.close();
         client.sendGenericEcho(packer);
         client.close();
