@@ -43,7 +43,7 @@ public class Client {
 
     private byte[] buf;
 
-    public Client(String header, int socketNum) {
+    public Client(String header, String hostname, int socketNum) {
         try {
             socket = new DatagramSocket();
             address = InetAddress.getByName("localhost");
