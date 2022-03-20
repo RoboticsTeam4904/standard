@@ -26,8 +26,8 @@ import java.util.HashMap;
 
 public class TestUDPServer extends Server {
     String testThreadGlobal;
-    TestUDPServer(int SocketNum) throws IOException{
-        super(SocketNum);
+    TestUDPServer(int SocketNum, String hostname) throws IOException{
+        super(SocketNum, hostname);
     }
 
     protected void decode(byte[] data) throws IOException{

@@ -43,10 +43,11 @@ public class Client {
 
     private byte[] buf;
 
-    public Client(String header, String hostname, int socketNum) {
+    public Client(String header, String hostname, int sourcePort, int socketNum) {
         try {
-            socket = new DatagramSocket();
             address = InetAddress.getByName(hostname);
+            socket = new DatagramSocket(sourcePort);
+
             this.socketNum = socketNum;
             this.header = header.getBytes("UTF-8");
             if (this.header.length > 8) {

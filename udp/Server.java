@@ -48,7 +48,7 @@ abstract public class Server extends Thread {
     protected String serverHeader = "##SERVER";
     protected Boolean debug = true;
     
-    public Server(int socketNum) throws IOException {
+    public Server(int socketNum, String hostname) throws IOException {
         socket = new DatagramSocket(socketNum);
     }
     
