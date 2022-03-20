@@ -47,7 +47,7 @@ abstract public class Server extends Thread {
     protected String expectedString = "test";
     protected String serverHeader = "##SERVER";
     protected Boolean debug = true;
-    
+    // TODO we shouldn't need a hostname here but I don't want to deal with it
     public Server(int socketNum, String hostname) throws IOException {
         socket = new DatagramSocket(socketNum);
     }
