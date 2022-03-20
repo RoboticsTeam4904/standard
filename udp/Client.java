@@ -46,7 +46,7 @@ public class Client {
     public Client(String header, String hostname, int socketNum) {
         try {
             socket = new DatagramSocket();
-            address = InetAddress.getByName("localhost");
+            address = InetAddress.getByName(hostname);
             this.socketNum = socketNum;
             this.header = header.getBytes("UTF-8");
             if (this.header.length > 8) {

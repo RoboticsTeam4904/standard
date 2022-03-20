@@ -32,7 +32,7 @@ public class UDPTest {
         try {
             server = new TestUDPServer(socketNum);
             server.start();
-            client = new Client("CLIENT##", socketNum);
+            client = new Client("CLIENT##", "localhost", socketNum);
         } catch (IOException ex) {
             System.out.println("ERR: IOException during setup. This error is from creating the Server.");
             ex.printStackTrace();
