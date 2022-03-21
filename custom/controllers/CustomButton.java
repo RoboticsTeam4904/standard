@@ -18,7 +18,7 @@ public class CustomButton extends JoystickButton {
 	}
 
 	/**
-	 * Returns true the first time the bottom is pressed and the function is
+	 * Returns true the first time the button is pressed and the function is
 	 * called.
 	 *
 	 * @return whether the button was pressed since the last call to this function
