@@ -39,7 +39,7 @@ public class SensorDrive implements Subsystem, PIDSensor { // Based largely on
    * Creates a new DriveSubsystem.
    */
   public SensorDrive(TankDrive driveBase, CANTalonEncoder leftEncoder, CANTalonEncoder rightEncoder, IMU gyro,
-      CustomPIDSourceType sensorType) {
+      CustomPIDSourceType sensorType, Pose2d initialPose) {
     this.driveBase = driveBase;
     this.leftEncoder = leftEncoder;
     this.rightEncoder = rightEncoder;
@@ -47,12 +47,12 @@ public class SensorDrive implements Subsystem, PIDSensor { // Based largely on
     setCustomPIDSourceType(sensorType);
 
     resetEncoders();
-    odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()));
+    odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()), initialPose);
     CommandScheduler.getInstance().registerSubsystem(this);
   }
 
-  public SensorDrive(TankDrive driveBase, CANTalonEncoder leftEncoder, CANTalonEncoder rightEncoder, IMU gyro) {
-    this(driveBase, leftEncoder, rightEncoder, gyro, CustomPIDSourceType.kDisplacement);
+  public SensorDrive(TankDrive driveBase, CANTalonEncoder leftEncoder, CANTalonEncoder rightEncoder, IMU gyro, Pose2d initialPose) {
+    this(driveBase, leftEncoder, rightEncoder, gyro, CustomPIDSourceType.kDisplacement, initialPose);
   }
 
   @Override
