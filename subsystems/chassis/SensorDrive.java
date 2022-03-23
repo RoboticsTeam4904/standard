@@ -34,6 +34,7 @@ public class SensorDrive implements Subsystem, PIDSensor { // Based largely on
   private final IMU gyro;
   private final DifferentialDriveOdometry odometry;
   private CustomPIDSourceType sensorType;
+  private boolean doAThing = true;
 
   /**
    * Creates a new DriveSubsystem.
@@ -57,7 +58,9 @@ public class SensorDrive implements Subsystem, PIDSensor { // Based largely on
 
   @Override
   public void periodic() {
-    odometry.update(Rotation2d.fromDegrees(getHeading()), leftEncoder.getDistance(), rightEncoder.getDistance());
+    if (doAThing) {
+    odometry.update(Rotation2d.fromDegrees(getHeading()), leftEncoder.getDistance(), rightEncoder.getDistance());}
+    doAThing = !doAThing;
   }
 
   @Override

@@ -25,6 +25,7 @@ import org.msgpack.value.FloatValue;
 import org.msgpack.value.IntegerValue;
 import org.msgpack.value.TimestampValue;
 import org.msgpack.value.Value;
+import org.usfirst.frc4904.standard.LogKitten;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -73,17 +74,14 @@ public class Client {
         byte[] convertedMap;
         convertedMap = map.toByteArray();
 
-        System.out.println("Sending Echo: " + "'" + new String(convertedMap, StandardCharsets.US_ASCII) + "'.");
         DatagramPacket packet = null;
         try {
             byte[] buf = convertedMap;
             System.out.println(buf);
             packet = new DatagramPacket(buf, buf.length, address, socketNum);
             socket.send(packet);
-            packet = new DatagramPacket(buf, buf.length);
-            socket.receive(packet);
         } catch (IOException e) {
-            System.out.println("Echo failed");
+            LogKitten.wtf("Echo failed!!" + e.getMessage());
             e.printStackTrace();
         }
     }
