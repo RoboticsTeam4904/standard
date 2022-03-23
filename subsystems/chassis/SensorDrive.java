@@ -32,6 +32,7 @@ public class SensorDrive implements Subsystem, PIDSensor { // Based largely on
   private final CANTalonEncoder leftEncoder;
   private final CANTalonEncoder rightEncoder;
   private final IMU gyro;
+  private boolean refresh = true;
   private final DifferentialDriveOdometry odometry;
   private CustomPIDSourceType sensorType;
 

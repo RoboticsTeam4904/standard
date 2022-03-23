@@ -46,7 +46,12 @@ class RunnableSendOperator implements Runnable {
     }
 
     public void run() {
-        this.socket.send(this.packet);
+        try {
+            this.socket.send(this.packet);
+        } catch (IOException e) {
+            System.out.println("Echo failed");
+            e.printStackTrace();
+        }
     }
 }
 
@@ -96,16 +101,12 @@ public class Client {
 
         System.out.println("Sending Echo: " + "'" + new String(convertedMap, StandardCharsets.US_ASCII) + "'.");
         DatagramPacket packet = null;
-        try {
-            byte[] buf = convertedMap;
-            System.out.println(buf);
-            packet = new DatagramPacket(buf, buf.length, address, socketNum);
-            this.nonBlockingSendAtHome(socket, packet);
-        } catch (IOException e) {
-            System.out.println("Echo failed");
-            e.printStackTrace();
-        }
+        byte[] buf = convertedMap;
+        System.out.println(buf);
+        packet = new DatagramPacket(buf, buf.length, address, socketNum);
+        this.nonBlockingSendAtHome(socket, packet);
     }
+    
 
     public String receiveData() {
         DatagramPacket packet = new DatagramPacket(new byte[256], 256);
