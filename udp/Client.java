@@ -36,25 +36,6 @@ import java.time.Instant;
 //import com.fasterxml.jackson.core.JsonProcessingException;
 //import com.fasterxml.jackson.databind.ObjectMapper;
 
-class RunnableSendOperator implements Runnable {
-    private DatagramSocket socket;
-    private DatagramPacket packet;
-    
-    public RunnableSendOperator(DatagramSocket socket, DatagramPacket packet) {
-        this.socket = socket;
-        this.packet = packet;
-    }
-
-    public void run() {
-        try {
-            this.socket.send(this.packet);
-        } catch (IOException e) {
-            System.out.println("Echo failed");
-            e.printStackTrace();
-        }
-    }
-}
-
 public class Client {
     private DatagramSocket socket;
     private InetAddress address;
@@ -74,20 +55,13 @@ public class Client {
         }
     }
 
-    public void nonBlockingSendAtHome(DatagramSocket socket, DatagramPacket packet) {
-        RunnableSendOperator runnable = new RunnableSendOperator(socket, packet);
-        Thread t = new Thread(runnable);
-
-        t.start();
-    }
-
     public void sendEcho(String msg) {
         //System.out.println("Sending Echo: " + "'" + msg + "'.");
         DatagramPacket packet = null;
         try {
             byte[] buf = msg.getBytes("UTF-8");
             packet = new DatagramPacket(buf, buf.length, address, socketNum);
-            this.nonBlockingSendAtHome(socket, packet);
+            socket.send(packet);
             // packet = new DatagramPacket(buf, buf.length);
             // socket.receive(packet);
         } catch (IOException e) {
@@ -95,16 +69,22 @@ public class Client {
             e.printStackTrace();
         }
     }
+
     public void sendGenericEcho(MessageBufferPacker map) {
         byte[] convertedMap;
         convertedMap = map.toByteArray();
 
         System.out.println("Sending Echo: " + "'" + new String(convertedMap, StandardCharsets.US_ASCII) + "'.");
         DatagramPacket packet = null;
-        byte[] buf = convertedMap;
-        System.out.println(buf);
-        packet = new DatagramPacket(buf, buf.length, address, socketNum);
-        this.nonBlockingSendAtHome(socket, packet);
+        try {
+            byte[] buf = convertedMap;
+            System.out.println(buf);
+            packet = new DatagramPacket(buf, buf.length, address, socketNum);
+            socket.send(packet);
+        } catch (IOException e) {
+            System.out.println("Echo failed");
+            e.printStackTrace();
+        }
     }
     
 
