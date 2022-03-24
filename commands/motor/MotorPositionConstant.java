@@ -63,6 +63,7 @@ public class MotorPositionConstant extends CommandBase {
 	@Override
 	public void initialize() {
 		try {
+			motor.reset();
 			motor.enableMotionController();
 			motor.setPositionSafely(position);
 		} catch (InvalidSensorException e) {
