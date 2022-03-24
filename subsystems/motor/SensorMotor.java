@@ -120,7 +120,7 @@ public abstract class SensorMotor extends Motor implements DoubleConsumer {
 		motionController.enable();
 		double speed = motionController.getSafely();
 		LogKitten.v(getName() + " set to position " + position + " at speed " + speed);
-		super.set(speed);
+		super.set(speed); // TODO remove and test I don't know why this is here.
 	}
 
 	/**
