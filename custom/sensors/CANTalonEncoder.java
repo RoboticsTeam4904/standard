@@ -123,6 +123,13 @@ public class CANTalonEncoder implements CustomEncoder {
 		return Util.isZero(getRate());
 	}
 
+	public int getRevLimitSwitchClosed() {
+		return talon.isRevLimitSwitchClosed();
+	}
+	public int getFwdLimitSwitchClosed() {
+		return talon.isFwdLimitSwitchClosed();
+	}
+	
 	@Override
 	public double getRate() {
 		if (reverseDirection) {
