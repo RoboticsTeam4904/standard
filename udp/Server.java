@@ -21,6 +21,7 @@ import org.msgpack.value.FloatValue;
 import org.msgpack.value.IntegerValue;
 import org.msgpack.value.TimestampValue;
 import org.msgpack.value.Value;
+import org.usfirst.frc4904.standard.LogKitten;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -62,10 +63,11 @@ abstract public class Server extends Thread {
                 DatagramPacket packet = new DatagramPacket(buf, buf.length);
                 socket.receive(packet);
                 byte[] received = packet.getData();
+                LogKitten.wtf(received);
                 byte[] data = Arrays.copyOfRange(received, 8, packet.getLength());
                 String header = new String(Arrays.copyOfRange(received, 0, 8));
-                System.out.println(
-                        "Received: '" + data + "', length: " + data.length + ", from client: '" + header + "'.");
+                // System.out.println(
+                //         "Received: '" + data + "', length: " + data.length + ", from client: '" + header + "'.");
                 decode(data);
                 
                 InetAddress address = packet.getAddress();
