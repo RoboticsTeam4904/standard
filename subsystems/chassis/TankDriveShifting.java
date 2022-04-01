@@ -1,5 +1,6 @@
 package org.usfirst.frc4904.standard.subsystems.chassis;
 
+import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.subsystems.motor.Motor;
 
 /**
@@ -136,6 +137,7 @@ public class TankDriveShifting extends TankDrive implements ShiftingChassis {
 	 */
 	@Override
 	public SolenoidShifters getShifter() {
+		LogKitten.wtf("Got the Shifter:" + String.valueOf(shifter));
 		return shifter;
 	}
 }
