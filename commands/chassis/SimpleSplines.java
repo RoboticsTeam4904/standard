@@ -23,21 +23,32 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
 public class SimpleSplines extends SequentialCommandGroup {
   public SimpleSplines(SplinesDrive robotDrive, Pose2d init_pos, List<Translation2d> inter_points, Pose2d final_pos, double maxVoltage, Command nextCommand){
-    super(new RamseteCommand(
-        TrajectoryGenerator.generateTrajectory(init_pos, inter_points, final_pos, new TrajectoryConfig(robotDrive.getAutoConstants().kMaxSpeedMetersPerSecond,
-        robotDrive.getAutoConstants().kMaxAccelerationMetersPerSecondSquared)
-            .setKinematics(robotDrive.getDriveConstants().kDriveKinematics)
-            .addConstraint(new DifferentialDriveVoltageConstraint(
-              new SimpleMotorFeedforward(robotDrive.getDriveConstants().ksVolts, 
-              robotDrive.getDriveConstants().kvVoltSecondsPerMeter, 
-              robotDrive.getDriveConstants().kaVoltSecondsSquaredPerMeter), 
+    super(
+      new RamseteCommand(
+        TrajectoryGenerator.generateTrajectory(init_pos, inter_points, final_pos,
+          new TrajectoryConfig(
+            robotDrive.getAutoConstants().kMaxSpeedMetersPerSecond,
+            robotDrive.getAutoConstants().kMaxAccelerationMetersPerSecondSquared
+          ).setKinematics(robotDrive.getDriveConstants().kDriveKinematics
+          ).addConstraint(
+            new DifferentialDriveVoltageConstraint(
+              new SimpleMotorFeedforward(
+                robotDrive.getDriveConstants().ksVolts, 
+                robotDrive.getDriveConstants().kvVoltSecondsPerMeter, 
+                robotDrive.getDriveConstants().kaVoltSecondsSquaredPerMeter
+              ), 
               robotDrive.getDriveConstants().kDriveKinematics, 
-              maxVoltage))),
+              maxVoltage
+            )
+          )
+        ),
         robotDrive::getPose,
         new RamseteController(robotDrive.getAutoConstants().kRamseteB, robotDrive.getAutoConstants().kRamseteZeta),
-        new SimpleMotorFeedforward(robotDrive.getDriveConstants().ksVolts,
-        robotDrive.getDriveConstants().kvVoltSecondsPerMeter,
-        robotDrive.getDriveConstants().kaVoltSecondsSquaredPerMeter),
+        new SimpleMotorFeedforward(
+          robotDrive.getDriveConstants().ksVolts,
+          robotDrive.getDriveConstants().kvVoltSecondsPerMeter,
+          robotDrive.getDriveConstants().kaVoltSecondsSquaredPerMeter
+        ),
         robotDrive.getDriveConstants().kDriveKinematics,
         robotDrive::getWheelSpeeds,
         new PIDController(robotDrive.getDriveConstants().kPDriveVel, 0, 0),
