@@ -1,6 +1,9 @@
 package org.usfirst.frc4904.standard.commands;
 
 import edu.wpi.first.wpilibj2.command.Subsystem;
+
+import org.usfirst.frc4904.standard.LogKitten;
+
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class RunFor extends CommandBase {
@@ -54,8 +57,11 @@ public class RunFor extends CommandBase {
 	public boolean isFinished() {
 		if (firstTick) {
 			firstTick = false;
+			LogKitten.wtf("        runfor first tick check  " + isTimedOut() + "   " + !command.isScheduled());
 			return isTimedOut();
 		}
+		LogKitten.wtf("        runfor end check  " + isTimedOut() + "   " + !command.isScheduled());
+		if (isTimedOut() || !command.isScheduled()) LogKitten.wtf("runfor endinggg");
 		return isTimedOut() || !command.isScheduled();
 	}
 
