@@ -44,6 +44,7 @@ public class SimpleSplines extends SequentialCommandGroup {
         new PIDController(robotDrive.getDriveConstants().kPDriveVel, 0, 0),
         // RamseteCommand passes volts to the callback
         robotDrive::tankDriveVolts, robotDrive), nextCommand);
+        robotDrive.resetOdometry(init_pos);
   } 
 
   public SimpleSplines(SplinesDrive robotDrive, Pose2d init_pos, List<Translation2d> inter_points, Pose2d final_pos, double maxVoltage){
