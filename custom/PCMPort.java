@@ -26,7 +26,6 @@ public class PCMPort {
 	}
 
 	public DoubleSolenoid buildDoubleSolenoid() {
-		LogKitten.wtf("built the Double Solenoid");
 		return new DoubleSolenoid(pcmID, pcmType, forward, reverse);
 	}
 }
