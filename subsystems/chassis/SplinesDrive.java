@@ -16,6 +16,7 @@ import org.usfirst.frc4904.standard.commands.chassis.SimpleSplines;
 import org.usfirst.frc4904.standard.custom.sensors.IMU;
 import org.usfirst.frc4904.standard.subsystems.chassis.TankDrive;
 import org.usfirst.frc4904.standard.subsystems.motor.Motor;
+import org.usfirst.frc4904.standard.custom.sensors.NavX;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -28,7 +29,7 @@ public class SplinesDrive extends SensorDrive {
   /**
    * Creates a new DriveSubsystem.
    */
-  public SplinesDrive(TankDrive driveBase, SimpleSplines.AutoConstants autoConstants, SimpleSplines.DriveConstants driveConstants, CANTalonEncoder leftEncoder, CANTalonEncoder rightEncoder, IMU gyro, Pose2d initialPose) {
+  public SplinesDrive(TankDrive driveBase, SimpleSplines.AutoConstants autoConstants, SimpleSplines.DriveConstants driveConstants, CANTalonEncoder leftEncoder, CANTalonEncoder rightEncoder, NavX gyro, Pose2d initialPose) {
     super(driveBase,leftEncoder, rightEncoder, gyro, initialPose);
     this.autoConstants = autoConstants;
     this.driveConstants = driveConstants;

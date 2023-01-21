@@ -9,15 +9,16 @@ package org.usfirst.frc4904.standard.subsystems.chassis;
 
 import com.ctre.phoenix.sensors.CANCoder;
 
+import org.usfirst.frc4904.robot.RobotMap;
 import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.commands.chassis.SimpleSplines;
 import org.usfirst.frc4904.standard.custom.CustomPIDSourceType;
-import org.usfirst.frc4904.standard.custom.sensors.IMU;
 import org.usfirst.frc4904.standard.custom.sensors.InvalidSensorException;
 import org.usfirst.frc4904.standard.custom.sensors.PIDSensor;
 import org.usfirst.frc4904.standard.subsystems.chassis.TankDrive;
 import org.usfirst.frc4904.standard.subsystems.motor.Motor;
 import org.usfirst.frc4904.standard.custom.sensors.CANTalonEncoder;
+import org.usfirst.frc4904.standard.custom.sensors.NavX;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -31,7 +32,7 @@ public class SensorDrive implements Subsystem, PIDSensor { // Based largely on
   private final TankDrive driveBase;
   private final CANTalonEncoder leftEncoder;
   private final CANTalonEncoder rightEncoder;
-  private final IMU gyro;
+  private final NavX gyro;
   private boolean refresh = true;
   private final DifferentialDriveOdometry odometry;
   private CustomPIDSourceType sensorType;
@@ -39,7 +40,7 @@ public class SensorDrive implements Subsystem, PIDSensor { // Based largely on
   /**
    * Creates a new DriveSubsystem.
    */
-  public SensorDrive(TankDrive driveBase, CANTalonEncoder leftEncoder, CANTalonEncoder rightEncoder, IMU gyro,
+  public SensorDrive(TankDrive driveBase, CANTalonEncoder leftEncoder, CANTalonEncoder rightEncoder, NavX gyro,
       CustomPIDSourceType sensorType, Pose2d initialPose) {
     this.driveBase = driveBase;
     this.leftEncoder = leftEncoder;
@@ -48,17 +49,17 @@ public class SensorDrive implements Subsystem, PIDSensor { // Based largely on
     setCustomPIDSourceType(sensorType);
 
     resetEncoders();
-    odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()), initialPose);
+    odometry = new DifferentialDriveOdometry(gyro.getRotation2d(), initialPose);
     CommandScheduler.getInstance().registerSubsystem(this);
   }
 
-  public SensorDrive(TankDrive driveBase, CANTalonEncoder leftEncoder, CANTalonEncoder rightEncoder, IMU gyro, Pose2d initialPose) {
+  public SensorDrive(TankDrive driveBase, CANTalonEncoder leftEncoder, CANTalonEncoder rightEncoder, NavX gyro, Pose2d initialPose) {
     this(driveBase, leftEncoder, rightEncoder, gyro, CustomPIDSourceType.kDisplacement, initialPose);
   }
 
   @Override
   public void periodic() {
-    odometry.update(Rotation2d.fromDegrees(getHeading()), leftEncoder.getDistance(), rightEncoder.getDistance());
+    odometry.update(gyro.getRotation2d(), leftEncoder.getDistance(), rightEncoder.getDistance());
   }
 
   @Override
@@ -111,7 +112,7 @@ public class SensorDrive implements Subsystem, PIDSensor { // Based largely on
    */
   public void resetOdometry(Pose2d pose) {
     resetEncoders();
-    odometry.resetPosition(pose, Rotation2d.fromDegrees(getHeading()));
+    odometry.resetPosition(pose, gyro.getRotation2d());
   }
 
   /**
