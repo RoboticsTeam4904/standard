@@ -111,8 +111,8 @@ public class SensorDrive implements Subsystem, PIDSensor { // Based largely on
    * @param pose The pose to which to set the odometry.
    */
   public void resetOdometry(Pose2d pose) {
+    odometry.resetPosition(gyro.getRotation2d(),leftEncoder.getDistance(), rightEncoder.getDistance(), pose);
     resetEncoders();
-    odometry.resetPosition(pose, gyro.getRotation2d());
   }
 
   /**
