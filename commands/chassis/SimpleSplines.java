@@ -15,6 +15,7 @@ import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
+import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.math.trajectory.constraint.DifferentialDriveVoltageConstraint;
@@ -56,9 +57,34 @@ public class SimpleSplines extends SequentialCommandGroup {
         new PIDController(robotDrive.getDriveConstants().kPDriveVel, 0, 0),
         new PIDController(robotDrive.getDriveConstants().kPDriveVel, 0, 0),
         // RamseteCommand passes volts to the callback
-        robotDrive::tankDriveVolts, robotDrive),
-        nextCommand);
-        robotDrive.resetOdometry(init_pos);
+        robotDrive::tankDriveVolts,
+        robotDrive
+      ),
+      nextCommand
+    );
+    robotDrive.resetOdometry(init_pos);
+
+    Trajectory trajectory = TrajectoryGenerator.generateTrajectory(
+      init_pos,
+      inter_points,
+      final_pos,
+      new TrajectoryConfig(
+        robotDrive.getAutoConstants().kMaxSpeedMetersPerSecond,
+        robotDrive.getAutoConstants().kMaxAccelerationMetersPerSecondSquared
+      )
+        .setKinematics(robotDrive.getDriveConstants().kDriveKinematics)
+        .addConstraint(
+          new DifferentialDriveVoltageConstraint(
+            new SimpleMotorFeedforward(
+              robotDrive.getDriveConstants().ksVolts, 
+              robotDrive.getDriveConstants().kvVoltSecondsPerMeter, 
+              robotDrive.getDriveConstants().kaVoltSecondsSquaredPerMeter
+            ), 
+            robotDrive.getDriveConstants().kDriveKinematics, 
+            maxVoltage
+          )
+        )
+    );
   } 
 
   public SimpleSplines(SplinesDrive robotDrive, Pose2d init_pos, List<Translation2d> inter_points, Pose2d final_pos, double maxVoltage){
