@@ -18,7 +18,10 @@ import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
+import edu.wpi.first.math.trajectory.Trajectory.State;
 import edu.wpi.first.math.trajectory.constraint.DifferentialDriveVoltageConstraint;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
@@ -85,6 +88,27 @@ public class SimpleSplines extends SequentialCommandGroup {
           )
         )
     );
+    // Log the trajectory https://docs.wpilib.org/en/stable/docs/software/dashboards/glass/field2d-widget.html
+    Field2d m_field = new Field2d();
+    SmartDashboard.putData(m_field);
+    m_field.getObject("traj").setTrajectory(trajectory);
+
+    // // also log them individually for comparison
+    // trajectory.getStates().forEach(mmm -> {
+    //   SmartDashboard.putNumber("Intended Trajectory elapsed_time", mmm.timeSeconds);
+    //   SmartDashboard.putNumber("Intended Trajectory velocity", mmm.velocityMetersPerSecond);
+    //   SmartDashboard.putNumber("Intended Trajectory poseX", mmm.poseMeters.getX());
+    //   SmartDashboard.putNumber("Intended Trajectory poseY", mmm.poseMeters.getY());
+    // });
+
+    // actually, resample the trajectory to 20ms intervals to match the timed logging 
+    for (double elapsed=0; elapsed<trajectory.getTotalTimeSeconds(); elapsed += 0.02) {
+      var mmm = trajectory.sample(elapsed);
+      SmartDashboard.putNumber("Intended Trajectory elapsed_time", mmm.timeSeconds);
+      SmartDashboard.putNumber("Intended Trajectory velocity", mmm.velocityMetersPerSecond);
+      SmartDashboard.putNumber("Intended Trajectory poseX", mmm.poseMeters.getX());
+      SmartDashboard.putNumber("Intended Trajectory poseY", mmm.poseMeters.getY());
+    }
   } 
 
   public SimpleSplines(SplinesDrive robotDrive, Pose2d init_pos, List<Translation2d> inter_points, Pose2d final_pos, double maxVoltage){
