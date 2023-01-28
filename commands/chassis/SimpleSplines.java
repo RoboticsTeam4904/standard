@@ -2,9 +2,15 @@
 
 package org.usfirst.frc4904.standard.commands.chassis;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.usfirst.frc4904.robot.RobotMap;
+import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.subsystems.chassis.SplinesDrive;
 
 import edu.wpi.first.wpilibj2.command.Command;
@@ -101,13 +107,33 @@ public class SimpleSplines extends SequentialCommandGroup {
     //   SmartDashboard.putNumber("Intended Trajectory poseY", mmm.poseMeters.getY());
     // });
 
-    // actually, resample the trajectory to 20ms intervals to match the timed logging 
+    // actually, resample the trajectory to 20ms intervals to match the timed logging
+    ArrayList<HashMap> trajectoryData = new ArrayList<HashMap>();
     for (double elapsed=0; elapsed<trajectory.getTotalTimeSeconds(); elapsed += 0.02) {
       var mmm = trajectory.sample(elapsed);
+      HashMap<String, Double> sampleData = new HashMap<String, Double>();
+      sampleData.put("Intended Trajectory elapsed_time", mmm.timeSeconds);
+      sampleData.put("Intended Trajectory velocity", mmm.velocityMetersPerSecond);
+      sampleData.put("Intended Trajectory poseX", mmm.poseMeters.getX());
+      sampleData.put("Intended Trajectory poseY", mmm.poseMeters.getY());
+      sampleData.put("curvature", mmm.curvatureRadPerMeter);
+      trajectoryData.add(sampleData);
       SmartDashboard.putNumber("Intended Trajectory elapsed_time", mmm.timeSeconds);
       SmartDashboard.putNumber("Intended Trajectory velocity", mmm.velocityMetersPerSecond);
       SmartDashboard.putNumber("Intended Trajectory poseX", mmm.poseMeters.getX());
       SmartDashboard.putNumber("Intended Trajectory poseY", mmm.poseMeters.getY());
+      SmartDashboard.putNumber("curvature", mmm.curvatureRadPerMeter);
+    }
+    LogKitten.v("trajectoryData: " + trajectoryData);
+    try {
+      File file = new File("/home/lvuser/trajectoryData.json");
+      file.createNewFile();
+      FileWriter writer = new FileWriter(file);
+      writer.write(trajectoryData.toString());
+      writer.flush();
+      writer.close();
+    } catch (IOException e) {
+      e.printStackTrace();
     }
   } 
 
