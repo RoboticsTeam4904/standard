@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 
 import org.usfirst.frc4904.robot.RobotMap;
 import org.usfirst.frc4904.robot.commands.RamseteCommandDebug;
+import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.subsystems.chassis.SplinesDrive;
 
 import edu.wpi.first.wpilibj2.command.Command;
@@ -122,16 +123,15 @@ public class SimpleSplines extends SequentialCommandGroup {
       SmartDashboard.putNumber("Intended Trajectory curvature", mmm.curvatureRadPerMeter);
       TrajectoryData.add(new ArrayList<Double>(Arrays.asList(mmm.timeSeconds, mmm.velocityMetersPerSecond, mmm.curvatureRadPerMeter, mmm.poseMeters.getX(), mmm.poseMeters.getY())));
     }
+    //write trajectory data to a json file
     try {
-      FileWriter writer = new FileWriter("/home/lvuser/trajectory.csv");
-      for (ArrayList<Double> row : TrajectoryData) {
-        writer.write(String.join(",", row.stream().map(Object::toString).collect(Collectors.toList())));
-        writer.write("\n");
-      }
-      writer.close();
+      FileWriter myWriter = new FileWriter("trajectoryData.json");
+      myWriter.write(TrajectoryData.stream().map(Object::toString).collect(Collectors.joining(", ", "[", "]")));
+      myWriter.close();
     } catch (IOException e) {
-      e.printStackTrace();
-    }
+      LogKitten.ex(e);
+  }
+    
   } 
 
   public SimpleSplines(SplinesDrive robotDrive, Pose2d init_pos, List<Translation2d> inter_points, Pose2d final_pos, double maxVoltage){
