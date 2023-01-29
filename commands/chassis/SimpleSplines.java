@@ -2,7 +2,10 @@
 
 package org.usfirst.frc4904.standard.commands.chassis;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.usfirst.frc4904.robot.RobotMap;
 import org.usfirst.frc4904.standard.subsystems.chassis.SplinesDrive;
@@ -24,16 +27,20 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+
+import java.io.FileWriter;
+import java.io.IOException;
 import java.lang.Math;
 
 public class SimpleSplines extends SequentialCommandGroup {
   public SimpleSplines(SplinesDrive robotDrive, Pose2d init_pos, List<Translation2d> inter_points, Pose2d final_pos, double maxVoltage, Command nextCommand){
+    
     super(
       new RamseteCommand(
         TrajectoryGenerator.generateTrajectory(
           init_pos,
           inter_points,
-          final_pos,
+          new Pose2d(final_pos.getX()+init_pos.getX(), final_pos.getY()+init_pos.getY(), final_pos.getRotation()),
           new TrajectoryConfig(
             robotDrive.getAutoConstants().kMaxSpeedMetersPerSecond,
             robotDrive.getAutoConstants().kMaxAccelerationMetersPerSecondSquared
@@ -103,17 +110,24 @@ public class SimpleSplines extends SequentialCommandGroup {
     // });
 
     // actually, resample the trajectory to 20ms intervals to match the timed logging 
+    ArrayList<ArrayList> TrajectoryData = new ArrayList<ArrayList>(); 
     for (double elapsed=0; elapsed<trajectory.getTotalTimeSeconds(); elapsed += 0.02) {
       var mmm = trajectory.sample(elapsed);
       SmartDashboard.putNumber("Intended Trajectory elapsed_time", mmm.timeSeconds);
       SmartDashboard.putNumber("Intended Trajectory velocity", mmm.velocityMetersPerSecond);
       SmartDashboard.putNumber("Intended Trajectory poseX", mmm.poseMeters.getX());
       SmartDashboard.putNumber("Intended Trajectory poseY", mmm.poseMeters.getY());
-      SmartDashboard.putNumber("Actual velocity left", robotDrive.getWheelSpeeds().leftMetersPerSecond); //doesnt work for turns
-      SmartDashboard.putNumber("Actual velocity right", robotDrive.getWheelSpeeds().rightMetersPerSecond);
-      SmartDashboard.putNumber("Actual poseX", robotDrive.getPose().getTranslation().getX());
-      SmartDashboard.putNumber("Actual poseY", robotDrive.getPose().getTranslation().getY());
-      SmartDashboard.putNumber("Pose Diff", Math.abs(robotDrive.getPose().getTranslation().getY() - mmm.poseMeters.getY())+Math.abs(robotDrive.getPose().getTranslation().getX() - mmm.poseMeters.getX()));
+      TrajectoryData.add(new ArrayList<Double>(Arrays.asList(mmm.timeSeconds, mmm.velocityMetersPerSecond, mmm.poseMeters.getX(), mmm.poseMeters.getY())));
+    }
+    try {
+      FileWriter writer = new FileWriter("/home/lvuser/trajectory.csv");
+      for (ArrayList<Double> row : TrajectoryData) {
+        writer.write(String.join(",", row.stream().map(Object::toString).collect(Collectors.toList())));
+        writer.write("\n");
+      }
+      writer.close();
+    } catch (IOException e) {
+      e.printStackTrace();
     }
   } 
 
