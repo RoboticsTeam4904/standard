@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.usfirst.frc4904.robot.RobotMap;
+import org.usfirst.frc4904.robot.commands.RamseteCommandDebug;
 import org.usfirst.frc4904.standard.subsystems.chassis.SplinesDrive;
 
 import edu.wpi.first.wpilibj2.command.Command;
@@ -28,6 +29,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
+
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.Math;
@@ -36,7 +38,7 @@ public class SimpleSplines extends SequentialCommandGroup {
   public SimpleSplines(SplinesDrive robotDrive, Pose2d init_pos, List<Translation2d> inter_points, Pose2d final_pos, double maxVoltage, Command nextCommand){
     
     super(
-      new RamseteCommand(
+      new RamseteCommandDebug(
         TrajectoryGenerator.generateTrajectory(
           init_pos,
           inter_points,
@@ -100,7 +102,7 @@ public class SimpleSplines extends SequentialCommandGroup {
     Field2d m_field = new Field2d();
     SmartDashboard.putData(m_field);
     m_field.getObject("traj").setTrajectory(trajectory);
-
+    
     // // also log them individually for comparison
     // trajectory.getStates().forEach(mmm -> {
     //   SmartDashboard.putNumber("Intended Trajectory elapsed_time", mmm.timeSeconds);
@@ -117,7 +119,8 @@ public class SimpleSplines extends SequentialCommandGroup {
       SmartDashboard.putNumber("Intended Trajectory velocity", mmm.velocityMetersPerSecond);
       SmartDashboard.putNumber("Intended Trajectory poseX", mmm.poseMeters.getX());
       SmartDashboard.putNumber("Intended Trajectory poseY", mmm.poseMeters.getY());
-      TrajectoryData.add(new ArrayList<Double>(Arrays.asList(mmm.timeSeconds, mmm.velocityMetersPerSecond, mmm.poseMeters.getX(), mmm.poseMeters.getY())));
+      SmartDashboard.putNumber("Intended Trajectory curvature", mmm.curvatureRadPerMeter);
+      TrajectoryData.add(new ArrayList<Double>(Arrays.asList(mmm.timeSeconds, mmm.velocityMetersPerSecond, mmm.curvatureRadPerMeter, mmm.poseMeters.getX(), mmm.poseMeters.getY())));
     }
     try {
       FileWriter writer = new FileWriter("/home/lvuser/trajectory.csv");
