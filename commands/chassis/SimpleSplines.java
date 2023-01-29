@@ -24,6 +24,7 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import java.lang.Math;
 
 public class SimpleSplines extends SequentialCommandGroup {
   public SimpleSplines(SplinesDrive robotDrive, Pose2d init_pos, List<Translation2d> inter_points, Pose2d final_pos, double maxVoltage, Command nextCommand){
@@ -108,6 +109,11 @@ public class SimpleSplines extends SequentialCommandGroup {
       SmartDashboard.putNumber("Intended Trajectory velocity", mmm.velocityMetersPerSecond);
       SmartDashboard.putNumber("Intended Trajectory poseX", mmm.poseMeters.getX());
       SmartDashboard.putNumber("Intended Trajectory poseY", mmm.poseMeters.getY());
+      SmartDashboard.putNumber("Actual velocity left", robotDrive.getWheelSpeeds().leftMetersPerSecond); //doesnt work for turns
+      SmartDashboard.putNumber("Actual velocity right", robotDrive.getWheelSpeeds().rightMetersPerSecond);
+      SmartDashboard.putNumber("Actual poseX", robotDrive.getPose().getTranslation().getX());
+      SmartDashboard.putNumber("Actual poseY", robotDrive.getPose().getTranslation().getY());
+      SmartDashboard.putNumber("Pose Diff", Math.abs(robotDrive.getPose().getTranslation().getY() - mmm.poseMeters.getY())+Math.abs(robotDrive.getPose().getTranslation().getX() - mmm.poseMeters.getX()));
     }
   } 
 
