@@ -120,8 +120,9 @@ public class SensorDrive implements Subsystem, PIDSensor { // Based largely on
    *
    * @param leftVolts  the commanded left output
    * @param rightVolts the commanded right output
+   * @throws Exception
    */
-  public void tankDriveVolts(double leftVolts, double rightVolts) {
+  public void tankDriveVolts(double leftVolts, double rightVolts) /*throws InvalidSensorException*/ {
     Motor[] motors = driveBase.getMotors();
     if (motors.length == 2) {
       driveBase.getMotors()[0].setVoltage(leftVolts);
@@ -131,7 +132,9 @@ public class SensorDrive implements Subsystem, PIDSensor { // Based largely on
       driveBase.getMotors()[1].setVoltage(leftVolts);
       driveBase.getMotors()[2].setVoltage(rightVolts);
       driveBase.getMotors()[3].setVoltage(rightVolts);
-    }
+    } //else {
+    //   throw new InvalidSensorException("Invalid number of motors in drivebase");
+    // }
   }
 
   /**
