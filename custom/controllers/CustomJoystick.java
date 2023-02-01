@@ -71,7 +71,7 @@ public class CustomJoystick extends Joystick implements Controller {
 	 * @return
 	 */
 	public boolean connected() {
-		return DriverStation.getInstance().getStickButtonCount(port) > 0;
+		return DriverStation.getStickButtonCount(port) > 0;
 	}
 
 	/**
