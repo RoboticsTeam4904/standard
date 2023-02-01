@@ -145,7 +145,8 @@ public class LogKitten {
 	 * @param errorString
 	 */
 	private static void reportErrorToDriverStation(String details, String errorMessage, KittenLevel logLevel) {
-		HAL.sendError(true, logLevel.getSeverity(), false, errorMessage, details, "", false);
+		// HAL.sendError(true, logLevel.getSeverity(), false, errorMessage, details, "", false);
+		// TODO: this is now broken. commenting out causes silent failure. how do you fix it
 	}
 
 	public static synchronized void logMessage(Object message, KittenLevel level, boolean override) {
