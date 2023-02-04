@@ -49,7 +49,7 @@ public class SensorDrive implements Subsystem, PIDSensor { // Based largely on
     setCustomPIDSourceType(sensorType);
 
     resetEncoders();
-    odometry = new DifferentialDriveOdometry(gyro.getRotation2d(), initialPose);
+    odometry = new DifferentialDriveOdometry(gyro.getRotation2d(), leftEncoder.getDistance(), rightEncoder.getDistance(), initialPose);
     CommandScheduler.getInstance().registerSubsystem(this);
   }
 
@@ -112,7 +112,7 @@ public class SensorDrive implements Subsystem, PIDSensor { // Based largely on
    */
   public void resetOdometry(Pose2d pose) {
     resetEncoders();
-    odometry.resetPosition(pose, gyro.getRotation2d());
+    odometry.resetPosition(gyro.getRotation2d(), leftEncoder.getDistance(), rightEncoder.getDistance(), pose);
   }
 
   /**
