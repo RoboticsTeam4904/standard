@@ -11,10 +11,13 @@ import com.ctre.phoenix.motorcontrol.IMotorController;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 /**
+ * DEPRECATED: use MotorSubsystem
+ * 
  * A class that wraps around a variable number of MotorController objects to
  * give them Subsystem functionality. Can also modify their speed with a
  * SpeedModifier for things like scaling or brownout protection.
  */
+@Deprecated
 public class Motor extends SubsystemBase implements MotorController {
 	protected final MotorController[] motors;
 	protected final SpeedModifier speedModifier;

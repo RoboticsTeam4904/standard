@@ -1,6 +1,5 @@
 package org.usfirst.frc4904.standard.subsystems.motor;
 
-import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.custom.motioncontrollers.MotionController;
 import org.usfirst.frc4904.standard.subsystems.motor.speedmodifiers.IdentityModifier;
 import org.usfirst.frc4904.standard.subsystems.motor.speedmodifiers.SpeedModifier;
