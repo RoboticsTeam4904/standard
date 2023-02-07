@@ -4,11 +4,12 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import org.usfirst.frc4904.standard.subsystems.motor.BrakeableMotor;
-
-import edu.wpi.first.wpilibj.motorcontrol.MotorController;
+import org.usfirst.frc4904.standard.subsystems.motor.MotorController;
 
 public class CANTalonFX extends WPI_TalonFX implements MotorController, BrakeableMotor {
 	protected static final NeutralMode DEFAULT_NEUTRAL_MODE = NeutralMode.Coast;
+
+	// TODO: implement setVoltage with native APIs
 
 	public CANTalonFX(int deviceNumber, NeutralMode mode) {
 		super(deviceNumber);
