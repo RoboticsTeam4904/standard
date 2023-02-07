@@ -150,10 +150,17 @@ public class MotorSubsystem extends SubsystemBase {
 	 *
 	 * @param voltage The voltage to set. Future calls to get() will return the
 	 *                ratio of this voltage to the current battery voltage.
+     * 
+	 * NOTE FROM BASE CLASS: This function *must* be called regularly in order
+	 * for voltage compensation to work properly - unlike the ordinary set
+	 * function, it is not "set it and forget it."
 	 */
     public void setVoltage(double voltage) {
 		LogKitten.v("Motor " + getName() + " @ " + voltage + "v");
         prevPower = voltage / RobotController.getBatteryVoltage();  // TODO: use something with less latency than RobotController.getBatteryVoltage(); cite @zbuster05 
+        for (var motor : motors) {
+            motor.setVoltage(voltage);
+        }
     }
     
 
@@ -163,14 +170,14 @@ public class MotorSubsystem extends SubsystemBase {
     /**
      * Disable motor using the underlying .disable(); command version of .disable().
      * 
-     * @return Command to be scheduled or triggered, eg. button1.onTrue(motor.c_idle())
+     * @return Command to be scheduled or triggered, eg. button1.onTrue(motor.c_disable())
      */
     public Command c_disable() { return this.run(() -> this.disable()); }
 
     /**
      * Stop motor using the underlying .stopMotor(); command version of .stopMotor().
      * 
-     * @return Command to be scheduled or triggered, eg. button1.onTrue(motor.c_idle())
+     * @return Command to be scheduled or triggered, eg. button1.onTrue(motor.c_stopMotor())
      */
     public Command c_stopMotor() { return this.run(() -> this.stopMotor()); }
 
@@ -186,7 +193,7 @@ public class MotorSubsystem extends SubsystemBase {
      * 
      * @param power The power to set, in the range [-1, 1].
      * 
-     * @return Command to be scheduled or triggered, eg. button1.onTrue(motor.c_idle())
+     * @return Command to be scheduled or triggered, eg. button1.onTrue(motor.c_setPower())
      */
     public Command c_setPower(double power) { return this.runOnce(() -> this.setPower(power)); }
 
@@ -195,20 +202,23 @@ public class MotorSubsystem extends SubsystemBase {
      * 
      * @param power The power to set, in the range [-1, 1].
      * 
-     * @return Command to be scheduled or triggered, eg. button1.onTrue(motor.c_idle())
+     * @return Command to be scheduled or triggered, eg. button1.onTrue(motor.c_setPowerHold())
      */
     public Command c_setPowerHold(double power) { return this.run(() -> this.setPower(power)); }
     
     /**
-     * Set motor voltage. Command version of setVoltagePower(). In case .get()
-     * is later called, estimates and remembers the power by dividing by battery
-     * voltage.
+     * Repeatedly set motor voltage. Command version of setVoltagePower().
+     * Estimates and remembers the power by dividing by battery voltage in case
+     * .get() is later called.
+     *
+     * c_setVoltage (a runOnce version) is not provided as wpilib
+     * MotorController recommends always repeatedly setting voltage.
      *
      * @param voltage The voltage to set.
      *
-     * @return Command to be scheduled or triggered, eg. button1.onTrue(motor.c_idle())
+     * @return Command to be scheduled or triggered, eg. button1.onTrue(motor.c_setVoltageHold())
      */
-    public Command c_setVoltage(double voltage) { return this.runOnce(() -> this.setVoltage(voltage)); }
+    public Command c_setVoltageHold(double voltage) { return this.run(() -> this.setVoltage(voltage)); }
 
     /// ERRORS
 	protected class UnsynchronizedMotorControllerRuntimeException extends RuntimeException {
