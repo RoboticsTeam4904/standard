@@ -7,21 +7,16 @@
 
 package org.usfirst.frc4904.standard.subsystems.chassis;
 
-import com.ctre.phoenix.sensors.CANCoder;
 
-import org.usfirst.frc4904.robot.RobotMap;
 import org.usfirst.frc4904.standard.LogKitten;
-import org.usfirst.frc4904.standard.commands.chassis.SimpleSplines;
 import org.usfirst.frc4904.standard.custom.CustomPIDSourceType;
 import org.usfirst.frc4904.standard.custom.sensors.InvalidSensorException;
 import org.usfirst.frc4904.standard.custom.sensors.PIDSensor;
-import org.usfirst.frc4904.standard.subsystems.chassis.TankDrive;
 import org.usfirst.frc4904.standard.subsystems.motor.Motor;
 import org.usfirst.frc4904.standard.custom.sensors.CANTalonEncoder;
 import org.usfirst.frc4904.standard.custom.sensors.NavX;
 
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -33,7 +28,6 @@ public class SensorDrive implements Subsystem, PIDSensor { // Based largely on
   private final CANTalonEncoder leftEncoder;
   private final CANTalonEncoder rightEncoder;
   private final NavX gyro;
-  private boolean refresh = true;
   private final DifferentialDriveOdometry odometry;
   private CustomPIDSourceType sensorType;
 

@@ -1,7 +1,5 @@
 package org.usfirst.frc4904.standard.custom;
 
-import org.usfirst.frc4904.standard.LogKitten;
-
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 

@@ -5,7 +5,6 @@ import org.usfirst.frc4904.standard.Util;
 import org.usfirst.frc4904.standard.custom.motioncontrollers.MotionController;
 import org.usfirst.frc4904.standard.custom.sensors.IMU;
 import org.usfirst.frc4904.standard.custom.sensors.InvalidSensorException;
-import org.usfirst.frc4904.standard.custom.CustomPIDSourceType;
 
 public class MCChassisController implements ChassisController {
 	protected ChassisController controller;

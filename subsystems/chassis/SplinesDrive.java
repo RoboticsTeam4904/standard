@@ -7,20 +7,13 @@
 
 package org.usfirst.frc4904.standard.subsystems.chassis;
 
-import javax.naming.InitialContext;
 
-import com.ctre.phoenix.sensors.CANCoder;
 import org.usfirst.frc4904.standard.custom.sensors.CANTalonEncoder;
 
 import org.usfirst.frc4904.standard.commands.chassis.SimpleSplines;
-import org.usfirst.frc4904.standard.custom.sensors.IMU;
-import org.usfirst.frc4904.standard.subsystems.chassis.TankDrive;
-import org.usfirst.frc4904.standard.subsystems.motor.Motor;
 import org.usfirst.frc4904.standard.custom.sensors.NavX;
 
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.Subsystem;
 
 public class SplinesDrive extends SensorDrive {
   private final SimpleSplines.AutoConstants autoConstants;

@@ -2,7 +2,6 @@
 
 package org.usfirst.frc4904.standard.custom.sensors;
 
-import org.usfirst.frc4904.robot.Robot;
 import org.usfirst.frc4904.standard.Util;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.VelocityMeasPeriod;

@@ -2,7 +2,6 @@ package org.usfirst.frc4904.standard.custom.motioncontrollers;
 
 import java.util.function.DoubleConsumer;
 
-import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.custom.sensors.InvalidSensorException;
 import org.usfirst.frc4904.standard.custom.sensors.PIDSensor;
 

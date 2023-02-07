@@ -1,14 +1,13 @@
 package org.usfirst.frc4904.standard.humaninput;
 
 import org.usfirst.frc4904.standard.custom.ChassisController;
-import org.usfirst.frc4904.standard.custom.Nameable;
 
 /**
  * Driver specific version of HumanInterface. Also designed to be passed around
  * to control the chassis.
  *
  */
-public abstract class Driver extends HumanInput implements Nameable, ChassisController {
+public abstract class Driver extends HumanInput implements ChassisController {
 	public Driver(String name) {
 		super(name);
 	}
