@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
  * 
  * TODO: should probably extend or be replaced with https://github.wpilib.org/allwpilib/docs/release/java/edu/wpi/first/wpilibj2/command/button/CommandJoystick.html
  */
-public class CustomCommandJoystick extends Joystick implements Controller {
+public class CustomCommandJoystick extends Joystick {
 	public static final int X_AXIS = 0;
 	public static final int Y_AXIS = 1;
 	public static final int SLIDER_AXIS = 3;
@@ -80,7 +80,6 @@ public class CustomCommandJoystick extends Joystick implements Controller {
 	/**
 	 * Returns the value of the given axis.
 	 */
-	@Override
 	public double getAxis(int axis) {
 		if (Math.abs(super.getRawAxis(axis)) < deadzone) {
 			return 0.0;
