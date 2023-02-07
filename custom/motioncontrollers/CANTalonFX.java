@@ -3,10 +3,9 @@ package org.usfirst.frc4904.standard.custom.motioncontrollers;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
-import org.usfirst.frc4904.standard.subsystems.motor.BrakeableMotor;
-import org.usfirst.frc4904.standard.subsystems.motor.MotorController;
+import org.usfirst.frc4904.standard.subsystems.motor.BrakeableMotorController;
 
-public class CANTalonFX extends WPI_TalonFX implements MotorController, BrakeableMotor {
+public class CANTalonFX extends WPI_TalonFX implements BrakeableMotorController {
 	protected static final NeutralMode DEFAULT_NEUTRAL_MODE = NeutralMode.Coast;
 
 	// TODO: implement setVoltage with native APIs
