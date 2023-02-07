@@ -5,8 +5,11 @@ import org.usfirst.frc4904.standard.subsystems.motor.Motor;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /**
+ * DEPRECATED: use MotorSubsystem.c_setPowerHold()
+ * 
  * Runs a motor at a constant speed until interrupted.
  */
+@Deprecated
 public class MotorConstant extends CommandBase {
 	protected final double motorSpeed;
 	protected final Motor motor;

@@ -5,9 +5,11 @@ import org.usfirst.frc4904.standard.subsystems.motor.Motor;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /**
+ * DEPRECATED: use MotorSubsystem.c_idle()
+ * 
  * Idles the motor (sets speed to 0).
- *
  */
+@Deprecated
 public class MotorIdle extends CommandBase {
 	protected final Motor motor;
 
