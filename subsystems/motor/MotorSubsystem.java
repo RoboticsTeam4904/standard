@@ -12,8 +12,9 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
  * Wraps MotorControllers to represent as a subsystem. Should be used as the
  * atomic, primary motor class for subsystem compositions.
  *
- * Does not include inversion logic, instead, AbstractMotors/MotorControllers
- * should be inverted if needed before constructing this class. 
+ * Does not include inversion logic, instead, MotorControllers should be
+ * inverted before constructing this class. Please use 4904custom
+ * MotorControllers rather than wpilibj2 MotorControllers.
  *
  * Replaces Motor.java in pre-2023 standard, except without CTRE voltage comp by
  * default and without inversion logic. 
