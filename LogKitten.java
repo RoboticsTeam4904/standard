@@ -9,8 +9,7 @@ import java.io.StringWriter;
 import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import edu.wpi.first.hal.HAL;
-import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.hal.HAL;	// DONT REMOVE, see TODO below
 
 public class LogKitten {
 	private static BufferedOutputStream fileOutput;

@@ -2,7 +2,7 @@
 
 package org.usfirst.frc4904.standard.subsystems.chassis;
 
-import org.usfirst.frc4904.standard.subsystems.motor.Motor;
+import org.usfirst.frc4904.standard.subsystems.motor.MotorSubsystem;
 
 /**
  * Tank drive chassis. Has two sets of wheels, left and right. Can only turn
@@ -22,8 +22,8 @@ public class TankDrive extends Chassis {
 	 * @param turnCorrection Amount by which to correct turning to make up for dead
 	 *                       CIM or unbalanced weight. In the range -1 to 1.
 	 */
-	public TankDrive(String name, Double turnCorrection, Motor leftWheelA, Motor leftWheelB, Motor rightWheelA,
-			Motor rightWheelB) {
+	public TankDrive(String name, Double turnCorrection, MotorSubsystem leftWheelA, MotorSubsystem leftWheelB, MotorSubsystem rightWheelA,
+			MotorSubsystem rightWheelB) {
 		super(name, leftWheelA, leftWheelB, rightWheelA, rightWheelB);
 		this.turnCorrection = turnCorrection;
 	}
@@ -37,7 +37,7 @@ public class TankDrive extends Chassis {
 	 * @param turnCorrection Amount by which to correct turning to make up for dead
 	 *                       CIM or unbalanced weight. In the range -1 to 1.
 	 */
-	public TankDrive(Double turnCorrection, Motor leftWheelA, Motor leftWheelB, Motor rightWheelA, Motor rightWheelB) {
+	public TankDrive(Double turnCorrection, MotorSubsystem leftWheelA, MotorSubsystem leftWheelB, MotorSubsystem rightWheelA, MotorSubsystem rightWheelB) {
 		this("TankDrive", turnCorrection, leftWheelA, leftWheelB, rightWheelA, rightWheelB);
 	}
 
@@ -48,7 +48,7 @@ public class TankDrive extends Chassis {
 	 * @param rightWheelA
 	 * @param rightWheelB
 	 */
-	public TankDrive(String name, Double turnCorrection, Motor leftWheel, Motor rightWheel) {
+	public TankDrive(String name, Double turnCorrection, MotorSubsystem leftWheel, MotorSubsystem rightWheel) {
 		super(name, leftWheel, rightWheel);
 		this.turnCorrection = turnCorrection;
 	}
@@ -60,7 +60,7 @@ public class TankDrive extends Chassis {
 	 * @param rightWheelA
 	 * @param rightWheelB
 	 */
-	public TankDrive(Double turnCorrection, Motor leftWheel, Motor rightWheel) {
+	public TankDrive(Double turnCorrection, MotorSubsystem leftWheel, MotorSubsystem rightWheel) {
 		this("TankDrive", turnCorrection, leftWheel, rightWheel);
 	}
 
@@ -72,7 +72,7 @@ public class TankDrive extends Chassis {
 	 * @param rightWheelA
 	 * @param rightWheelB
 	 */
-	public TankDrive(String name, Motor leftWheelA, Motor leftWheelB, Motor rightWheelA, Motor rightWheelB) {
+	public TankDrive(String name, MotorSubsystem leftWheelA, MotorSubsystem leftWheelB, MotorSubsystem rightWheelA, MotorSubsystem rightWheelB) {
 		super(name, leftWheelA, leftWheelB, rightWheelA, rightWheelB);
 		this.turnCorrection = 0.0;
 	}
@@ -84,7 +84,7 @@ public class TankDrive extends Chassis {
 	 * @param rightWheelA
 	 * @param rightWheelB
 	 */
-	public TankDrive(Motor leftWheelA, Motor leftWheelB, Motor rightWheelA, Motor rightWheelB) {
+	public TankDrive(MotorSubsystem leftWheelA, MotorSubsystem leftWheelB, MotorSubsystem rightWheelA, MotorSubsystem rightWheelB) {
 		this("TankDrive", leftWheelA, leftWheelB, rightWheelA, rightWheelB);
 	}
 
@@ -94,7 +94,7 @@ public class TankDrive extends Chassis {
 	 * @param leftWheel
 	 * @param rightWheel
 	 */
-	public TankDrive(String name, Motor leftWheel, Motor rightWheel) {
+	public TankDrive(String name, MotorSubsystem leftWheel, MotorSubsystem rightWheel) {
 		super(name, leftWheel, rightWheel);
 		this.turnCorrection = 0.0;
 	}
@@ -104,7 +104,7 @@ public class TankDrive extends Chassis {
 	 * @param leftWheel
 	 * @param rightWheel
 	 */
-	public TankDrive(Motor leftWheel, Motor rightWheel) {
+	public TankDrive(MotorSubsystem leftWheel, MotorSubsystem rightWheel) {
 		this("TankDrive", leftWheel, rightWheel);
 	}
 

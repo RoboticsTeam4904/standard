@@ -9,6 +9,7 @@ import org.usfirst.frc4904.standard.subsystems.motor.speedmodifiers.IdentityModi
 import org.usfirst.frc4904.standard.subsystems.motor.speedmodifiers.SpeedModifier;
 import edu.wpi.first.wpilibj.motorcontrol.MotorController;
 
+@Deprecated
 public abstract class SensorMotor extends Motor implements DoubleConsumer {
 	protected final MotionController motionController;
 

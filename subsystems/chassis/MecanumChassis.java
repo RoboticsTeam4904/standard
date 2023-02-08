@@ -1,6 +1,6 @@
 package org.usfirst.frc4904.standard.subsystems.chassis;
 
-import org.usfirst.frc4904.standard.subsystems.motor.Motor;
+import org.usfirst.frc4904.standard.subsystems.motor.MotorSubsystem;
 
 /**
  * Mecanum Chassis. Has one wheel for each corner. Can move in all directions.
@@ -16,8 +16,8 @@ public class MecanumChassis extends Chassis {
 	 * @param backLeftWheel
 	 * @param backRightWheel
 	 */
-	public MecanumChassis(String name, Motor frontLeftWheel, Motor frontRightWheel, Motor backLeftWheel,
-			Motor backRightWheel) {
+	public MecanumChassis(String name, MotorSubsystem frontLeftWheel, MotorSubsystem frontRightWheel, MotorSubsystem backLeftWheel,
+			MotorSubsystem backRightWheel) {
 		super(name, frontLeftWheel, frontRightWheel, backLeftWheel, backRightWheel);
 	}
 
@@ -29,7 +29,7 @@ public class MecanumChassis extends Chassis {
 	 * @param backLeftWheel
 	 * @param backRightWheel
 	 */
-	public MecanumChassis(Motor frontLeftWheel, Motor frontRightWheel, Motor backLeftWheel, Motor backRightWheel) {
+	public MecanumChassis(MotorSubsystem frontLeftWheel, MotorSubsystem frontRightWheel, MotorSubsystem backLeftWheel, MotorSubsystem backRightWheel) {
 		this("Mecanum Chassis", frontLeftWheel, frontRightWheel, backLeftWheel, backRightWheel);
 	}
 

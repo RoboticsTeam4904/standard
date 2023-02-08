@@ -12,7 +12,7 @@ import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.custom.CustomPIDSourceType;
 import org.usfirst.frc4904.standard.custom.sensors.InvalidSensorException;
 import org.usfirst.frc4904.standard.custom.sensors.PIDSensor;
-import org.usfirst.frc4904.standard.subsystems.motor.Motor;
+import org.usfirst.frc4904.standard.subsystems.motor.MotorSubsystem;
 import org.usfirst.frc4904.standard.custom.sensors.CANTalonEncoder;
 import org.usfirst.frc4904.standard.custom.sensors.NavX;
 
@@ -116,7 +116,7 @@ public class SensorDrive implements Subsystem, PIDSensor { // Based largely on
    * @param rightVolts the commanded right output
    */
   public void tankDriveVolts(double leftVolts, double rightVolts) {
-    Motor[] motors = driveBase.getMotors();
+    MotorSubsystem[] motors = driveBase.getMotors();
     if (motors.length == 2) {
       driveBase.getMotors()[0].setVoltage(leftVolts);
       driveBase.getMotors()[1].setVoltage(rightVolts);

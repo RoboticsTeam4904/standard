@@ -1,6 +1,6 @@
 package org.usfirst.frc4904.standard.subsystems.chassis;
 
-import org.usfirst.frc4904.standard.subsystems.motor.Motor;
+import org.usfirst.frc4904.standard.subsystems.motor.MotorSubsystem;
 
 /**
  * A tank drive chassis with the shifting system. This effectively adds a
@@ -22,8 +22,8 @@ public class TankDriveShifting extends TankDrive implements ShiftingChassis {
 	 * @param shifter
 	 */
 
-	public TankDriveShifting(String name, Double turnCorrection, Motor leftWheelA, Motor leftWheelB, Motor rightWheelA,
-			Motor rightWheelB, SolenoidShifters shifter) {
+	public TankDriveShifting(String name, Double turnCorrection, MotorSubsystem leftWheelA, MotorSubsystem leftWheelB, MotorSubsystem rightWheelA,
+			MotorSubsystem rightWheelB, SolenoidShifters shifter) {
 		super(name, turnCorrection, leftWheelA, leftWheelB, rightWheelA, rightWheelB);
 		this.shifter = shifter;
 	}
@@ -39,8 +39,8 @@ public class TankDriveShifting extends TankDrive implements ShiftingChassis {
 	 * @param shifter
 	 */
 
-	public TankDriveShifting(Double turnCorrection, Motor leftWheelA, Motor leftWheelB, Motor rightWheelA,
-			Motor rightWheelB, SolenoidShifters shifter) {
+	public TankDriveShifting(Double turnCorrection, MotorSubsystem leftWheelA, MotorSubsystem leftWheelB, MotorSubsystem rightWheelA,
+			MotorSubsystem rightWheelB, SolenoidShifters shifter) {
 		this("Tank Drive Shifting", turnCorrection, leftWheelA, leftWheelB, rightWheelA, rightWheelB, shifter);
 	}
 
@@ -56,7 +56,7 @@ public class TankDriveShifting extends TankDrive implements ShiftingChassis {
 	 * @param shifter
 	 */
 
-	public TankDriveShifting(String name, Double turnCorrection, Motor leftWheel, Motor rightWheel,
+	public TankDriveShifting(String name, Double turnCorrection, MotorSubsystem leftWheel, MotorSubsystem rightWheel,
 			SolenoidShifters shifter) {
 		super(name, turnCorrection, leftWheel, rightWheel);
 		this.shifter = shifter;
@@ -73,7 +73,7 @@ public class TankDriveShifting extends TankDrive implements ShiftingChassis {
 	 * @param shifter
 	 */
 
-	public TankDriveShifting(Double turnCorrection, Motor leftWheel, Motor rightWheel, SolenoidShifters shifter) {
+	public TankDriveShifting(Double turnCorrection, MotorSubsystem leftWheel, MotorSubsystem rightWheel, SolenoidShifters shifter) {
 		this("Tank Drive Shifting", turnCorrection, leftWheel, rightWheel, shifter);
 	}
 
@@ -87,7 +87,7 @@ public class TankDriveShifting extends TankDrive implements ShiftingChassis {
 	 * @param rightWheelB
 	 * @param shifter
 	 */
-	public TankDriveShifting(String name, Motor leftWheelA, Motor leftWheelB, Motor rightWheelA, Motor rightWheelB,
+	public TankDriveShifting(String name, MotorSubsystem leftWheelA, MotorSubsystem leftWheelB, MotorSubsystem rightWheelA, MotorSubsystem rightWheelB,
 			SolenoidShifters shifter) {
 		super(name, leftWheelA, leftWheelB, rightWheelA, rightWheelB);
 		this.shifter = shifter;
@@ -102,7 +102,7 @@ public class TankDriveShifting extends TankDrive implements ShiftingChassis {
 	 * @param rightWheelB
 	 * @param shifter
 	 */
-	public TankDriveShifting(Motor leftWheelA, Motor leftWheelB, Motor rightWheelA, Motor rightWheelB,
+	public TankDriveShifting(MotorSubsystem leftWheelA, MotorSubsystem leftWheelB, MotorSubsystem rightWheelA, MotorSubsystem rightWheelB,
 			SolenoidShifters shifter) {
 		this("Tank Drive Shifting", leftWheelA, leftWheelB, rightWheelA, rightWheelB, shifter);
 	}
@@ -115,7 +115,7 @@ public class TankDriveShifting extends TankDrive implements ShiftingChassis {
 	 * @param rightWheel
 	 * @param shifter
 	 */
-	public TankDriveShifting(String name, Motor leftWheel, Motor rightWheel, SolenoidShifters shifter) {
+	public TankDriveShifting(String name, MotorSubsystem leftWheel, MotorSubsystem rightWheel, SolenoidShifters shifter) {
 		super(name, leftWheel, rightWheel);
 		this.shifter = shifter;
 	}
@@ -127,7 +127,7 @@ public class TankDriveShifting extends TankDrive implements ShiftingChassis {
 	 * @param rightWheel
 	 * @param shifter
 	 */
-	public TankDriveShifting(Motor leftWheel, Motor rightWheel, SolenoidShifters shifter) {
+	public TankDriveShifting(MotorSubsystem leftWheel, MotorSubsystem rightWheel, SolenoidShifters shifter) {
 		this("Tank Drive Shifting", leftWheel, rightWheel, shifter);
 	}
 

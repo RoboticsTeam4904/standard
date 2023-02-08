@@ -1,6 +1,7 @@
 package org.usfirst.frc4904.standard.subsystems.chassis;
 
-import org.usfirst.frc4904.standard.subsystems.motor.Motor;
+import org.usfirst.frc4904.standard.subsystems.motor.MotorSubsystem;
+
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 /**
@@ -11,7 +12,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public abstract class Chassis extends SubsystemBase {
 	protected double[] motorSpeeds;
-	protected Motor[] motors;
+	protected MotorSubsystem[] motors;
 
 	/**
 	 *
@@ -19,7 +20,7 @@ public abstract class Chassis extends SubsystemBase {
 	 * @param motors all the motors that are part of this Chassis. Pass from front
 	 *               to back, left to right
 	 */
-	public Chassis(String name, Motor... motors) {
+	public Chassis(String name, MotorSubsystem... motors) {
 		this.motors = motors;
 		motorSpeeds = new double[motors.length];
 		setName(name);
@@ -30,7 +31,7 @@ public abstract class Chassis extends SubsystemBase {
 	 * @param motors all the motors that are part of this Chassis. Pass from front
 	 *               to back, left to right
 	 */
-	public Chassis(Motor... motors) {
+	public Chassis(MotorSubsystem... motors) {
 		this("Chassis", motors);
 	}
 
@@ -40,7 +41,7 @@ public abstract class Chassis extends SubsystemBase {
 	 *
 	 * @return all motors in the order passed to the constructor
 	 */
-	public Motor[] getMotors() {
+	public MotorSubsystem[] getMotors() {
 		return motors;
 	}
 
