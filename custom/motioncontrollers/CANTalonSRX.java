@@ -2,6 +2,7 @@
 
 package org.usfirst.frc4904.standard.custom.motioncontrollers;
 
+import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
@@ -11,13 +12,10 @@ public class CANTalonSRX extends WPI_TalonSRX implements BrakeableMotorControlle
 
 	// TODO: implement setVoltage with native APIs
 
-	public CANTalonSRX(int deviceNumber, NeutralMode mode) {
+	public CANTalonSRX(int deviceNumber, NeutralMode neutralMode, InvertType inverted) {
 		super(deviceNumber);
-		setNeutralMode(mode);
-	}
-
-	public CANTalonSRX(int deviceNumber) {
-		this(deviceNumber, DEFAULT_NEUTRAL_MODE);
+		setNeutralMode(neutralMode);
+		setInverted(inverted);
 	}
 
 	public void setCoastMode() {
