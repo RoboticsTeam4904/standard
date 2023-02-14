@@ -7,9 +7,15 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.usfirst.frc4904.robot.RobotMap;
+
+import org.usfirst.frc4904.robot.commands.RamseteCommandDebug;
+
 import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.subsystems.chassis.SplinesDrive;
 
@@ -31,14 +37,20 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
+
+import java.io.FileWriter;
+import java.io.IOException;
+import java.lang.Math;
+
 public class SimpleSplines extends SequentialCommandGroup {
   public SimpleSplines(SplinesDrive robotDrive, Pose2d init_pos, List<Translation2d> inter_points, Pose2d final_pos, double maxVoltage, Command nextCommand){
+    
     super(
-      new RamseteCommand(
+      new RamseteCommandDebug(
         TrajectoryGenerator.generateTrajectory(
           init_pos,
           inter_points,
-          final_pos,
+          new Pose2d(final_pos.getX()+init_pos.getX(), final_pos.getY()+init_pos.getY(), final_pos.getRotation()),
           new TrajectoryConfig(
             robotDrive.getAutoConstants().kMaxSpeedMetersPerSecond,
             robotDrive.getAutoConstants().kMaxAccelerationMetersPerSecondSquared
@@ -98,7 +110,7 @@ public class SimpleSplines extends SequentialCommandGroup {
     Field2d m_field = new Field2d();
     SmartDashboard.putData(m_field);
     m_field.getObject("traj").setTrajectory(trajectory);
-
+    
     // // also log them individually for comparison
     // trajectory.getStates().forEach(mmm -> {
     //   SmartDashboard.putNumber("Intended Trajectory elapsed_time", mmm.timeSeconds);
@@ -109,6 +121,7 @@ public class SimpleSplines extends SequentialCommandGroup {
 
     // actually, resample the trajectory to 20ms intervals to match the timed logging
     ArrayList<HashMap> trajectoryData = new ArrayList<HashMap>();
+
     for (double elapsed=0; elapsed<trajectory.getTotalTimeSeconds(); elapsed += 0.02) {
       var mmm = trajectory.sample(elapsed);
       HashMap<String, Double> sampleData = new HashMap<String, Double>();
@@ -134,7 +147,9 @@ public class SimpleSplines extends SequentialCommandGroup {
       writer.close();
     } catch (IOException e) {
       e.printStackTrace();
-    }
+
+
+    
   } 
 
   public SimpleSplines(SplinesDrive robotDrive, Pose2d init_pos, List<Translation2d> inter_points, Pose2d final_pos, double maxVoltage){
