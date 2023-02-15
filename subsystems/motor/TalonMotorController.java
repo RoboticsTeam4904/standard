@@ -1,6 +1,7 @@
 package org.usfirst.frc4904.standard.subsystems.motor;
 
 import com.ctre.phoenix.motorcontrol.IMotorController;
+import com.ctre.phoenix.motorcontrol.IMotorControllerEnhanced;
 
 /**
  * A base class for CANTalonFX and CANTalonSRX that extends 4904 MotorController
@@ -9,7 +10,7 @@ import com.ctre.phoenix.motorcontrol.IMotorController;
  * May be converted to a general interface for motor controllers in the future,
  * given that SparkMaxes can also do brake mode, follow mode, etc. 
  */
-public interface TalonMotorController extends BrakeableMotorController {
+public interface TalonMotorController extends BrakeableMotorController, IMotorControllerEnhanced {
     //TODO: add all the things
 
 	// TODO: implement setVoltage with native APIs? or just use voltageComp?

@@ -9,6 +9,8 @@ public class TalonMotorSubsystem extends BrakeableMotorSubsystem {
   public final TalonMotorController leadMotor;
   public final TalonMotorController[] followMotors;
 
+  // TODO: limit switches
+
   /**
    * Motor Subsystem for a group of Talon motor controllers (Falcons, 775s).
    * Uses Talon-specific APIs like follow mode and motionProfile control mode to
@@ -84,7 +86,6 @@ public class TalonMotorSubsystem extends BrakeableMotorSubsystem {
   }
 
   // no need to override setPower because the base class just uses set
-
-  // TODO: does setting brake mode on leader set it on follower? if so, then override setBrakeModeOnNeutral, setCoastModeOnNeutral, and neutralOutput
+  // don't override setBrakeOnNeutral, setCoastOnNeutral, neutralOutput because we indeed want to set it individually on each motor. Otherwise, the followers might try to follow a disabled/neutral motor which might cause unexpected behavior.
 }
 
