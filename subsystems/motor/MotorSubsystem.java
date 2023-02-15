@@ -118,9 +118,10 @@ public class MotorSubsystem extends SubsystemBase {
 	 *
 	 * @return The most recently set power between -1.0 and 1.0.
 	 */
-	public double get() {
-		return prevPower;
-	}
+	// TODO: do we even need .get()? if not, also remove prevPower and the edge casing in setVoltage?
+	// public double get() {
+	// 	return prevPower;
+	// }
 
 	/**
 	 * Set the motor power. Passes through SpeedModifier.
@@ -220,7 +221,7 @@ public class MotorSubsystem extends SubsystemBase {
      */
     public Command c_setVoltageHold(double voltage) { return this.run(() -> this.setVoltage(voltage)); }
 
-    /// ERRORS
+    /// ERRORS (copied from 2022 standard Motor.java, not clear what the use is)
 	protected class UnsynchronizedMotorControllerRuntimeException extends RuntimeException {
 		private static final long serialVersionUID = 8688590919561059584L;
 
