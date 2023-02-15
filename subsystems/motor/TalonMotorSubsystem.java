@@ -2,6 +2,7 @@ package org.usfirst.frc4904.standard.subsystems.motor;
 
 import java.util.stream.Stream;
 
+import org.usfirst.frc4904.standard.subsystems.motor.speedmodifiers.IdentityModifier;
 import org.usfirst.frc4904.standard.subsystems.motor.speedmodifiers.SpeedModifier;
 
 public class TalonMotorSubsystem extends BrakeableMotorSubsystem {
@@ -21,13 +22,28 @@ public class TalonMotorSubsystem extends BrakeableMotorSubsystem {
    * @param followMotors
    */
   public TalonMotorSubsystem(String name, SpeedModifier speedModifier, TalonMotorController leadMotor, TalonMotorController... followMotors) {
-		super(name, speedModifier, Stream.concat(Stream.of(leadMotor), Stream.of(followMotors)).toArray(TalonMotorController[]::new));  // java has no spread operator, so you have to concat. best way i could find is to do it in a stream
+		super(name, speedModifier, Stream.concat(Stream.of(leadMotor), Stream.of(followMotors)).toArray(TalonMotorController[]::new));  // java has no spread operator, so you have to concat. best way i could find is to do it in a stream. please make this not bad if you know how 
 
     this.leadMotor = leadMotor;
     this.followMotors = followMotors;
 
     setFollowMode();
 	}
+  /**
+   * Motor Subsystem for a group of Talon motor controllers (Falcons, 775s).
+   * Uses Talon-specific APIs like follow mode and motionProfile control mode to
+   * offload work from the RoboRIO.
+   *
+   * You probably want to set inverted mode on the TalonMotorController using
+   * FollowLeader or OpposeLeader
+   * @param name
+   * @param leadMotor
+   * @param followMotors
+   */
+  public TalonMotorSubsystem(String name, TalonMotorController leadMotor, TalonMotorController... followMotors) {
+		this(name, new IdentityModifier(), leadMotor, followMotors);
+	}
+
   /**
    * Make all follow motors follow the lead motor.
    */

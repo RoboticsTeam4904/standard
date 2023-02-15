@@ -1,5 +1,7 @@
 package org.usfirst.frc4904.standard.subsystems.motor;
 
+import com.ctre.phoenix.motorcontrol.IMotorController;
+
 /**
  * A base class for CANTalonFX and CANTalonSRX that extends 4904 MotorController
  * but separates Talons from eg. SparkMaxes.
@@ -20,5 +22,5 @@ public interface TalonMotorController extends BrakeableMotorController {
      *
      * @param leader    the motor to follow
      */
-    public TalonMotorController follow(TalonMotorController leader);    // return self to allow builder pattern
+    public void follow(IMotorController leader);    // are we able to return self to allow builder pattern? prob have to change the method name, else polymorphism breaks bc name collision with the one in base that takes IMotorController 
 }
