@@ -4,7 +4,6 @@ import org.usfirst.frc4904.standard.subsystems.motor.speedmodifiers.IdentityModi
 import org.usfirst.frc4904.standard.subsystems.motor.speedmodifiers.SpeedModifier;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 
 public class BrakeableMotorSubsystem extends MotorSubsystem {
     // TODO: should this take general MotorControllers and just brake the ones that implement BrakeableMotorController
@@ -26,7 +25,7 @@ public class BrakeableMotorSubsystem extends MotorSubsystem {
 	public BrakeableMotorSubsystem(String name, SpeedModifier speedModifier, BrakeableMotorController... motors) {
 		super(name, speedModifier, motors);
         this.motors = motors;
-        setDefaultCommand(Commands.runOnce(() -> this.neutralOutput()));
+        setDefaultCommand(this.runOnce(() -> this.neutralOutput()));
     }
 
 	/**
