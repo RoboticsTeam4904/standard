@@ -4,7 +4,6 @@ import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.subsystems.motor.speedmodifiers.IdentityModifier;
 import org.usfirst.frc4904.standard.subsystems.motor.speedmodifiers.SpeedModifier;
 
-import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -23,7 +22,6 @@ public class MotorSubsystem<MC extends MotorController> extends SubsystemBase {
     protected final MC[] motors;
 	protected final SpeedModifier speedModifier;    // NOTE: maybe change to be called PowerModifier
 	protected final String name;
-	protected double prevPower;
 
 	/**
 	 * A class that wraps around a variable number of MotorController objects to
@@ -43,7 +41,6 @@ public class MotorSubsystem<MC extends MotorController> extends SubsystemBase {
 		this.name = name;
 		this.speedModifier = speedModifier;
 		this.motors = motors;
-		prevPower = 0;
 		for (MotorController motor : motors) {
 			motor.set(0);
 		}
@@ -112,16 +109,7 @@ public class MotorSubsystem<MC extends MotorController> extends SubsystemBase {
 		}
 	}
 
-	/**
-	 * Get the most recently set power. If the mostly called set was a
-	 * setVoltage, return the estimated power. 
-	 *
-	 * @return The most recently set power between -1.0 and 1.0.
-	 */
-	// TODO: do we even need .get()? if not, also remove prevPower and the edge casing in setVoltage?
-	// public double get() {
-	// 	return prevPower;
-	// }
+	// if you implement a .get() to get the power, make sure you update it in setVoltage() too (eg. with voltage/RobotController.getBatteryVoltage())
 
 	/**
 	 * Set the motor power. Passes through SpeedModifier.
@@ -131,7 +119,6 @@ public class MotorSubsystem<MC extends MotorController> extends SubsystemBase {
 	public void set(double power) {
 		LogKitten.v("Motor " + getName() + " @ " + power);
 		double newPower = speedModifier.modify(power);
-		prevPower = newPower;
 		for (MotorController motor : motors) {
 			motor.set(newPower);
 		}
@@ -158,7 +145,6 @@ public class MotorSubsystem<MC extends MotorController> extends SubsystemBase {
 	 */
     public void setVoltage(double voltage) {
 		LogKitten.v("Motor " + getName() + " @ " + voltage + "v");
-        prevPower = voltage / RobotController.getBatteryVoltage();  // TODO: use something with less latency than RobotController.getBatteryVoltage(); cite @zbuster05 
         for (var motor : motors) {
             motor.setVoltage(voltage);
         }
