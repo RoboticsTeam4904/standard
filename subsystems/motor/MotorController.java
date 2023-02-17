@@ -8,7 +8,6 @@ package org.usfirst.frc4904.standard.subsystems.motor;
  * - to force custom implementation of setVoltage (WPILib's uses RobotController.getBatteryVoltage() which is slow, cite @zbuster05)
  */
 public interface MotorController extends edu.wpi.first.wpilibj.motorcontrol.MotorController {
-	
 	/**
 	 * Implementations should implement this using a better voltage reading than
 	 * RobotController.getBatteryVoltage(), preferably a native interface.
