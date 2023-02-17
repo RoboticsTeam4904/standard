@@ -13,12 +13,12 @@ public class CANTalonFX extends WPI_TalonFX implements TalonMotorController {
 	 * Represents a Falcon motor in code. You probably want NeutralMode.Brake,
 	 * InvertType.FollowMaster.
 	 *
-	 * @param deviceNumber              Usually the CAN ID of the device, 
-	 * 									declared in RobotMap
+	 * @param deviceNumber              Usually the CAN ID of the device,
+	 *                                  declared in RobotMap
 	 * @param inverted                  InvertMode of the motor. If this will be
 	 *                                  part of a motor group, consider using
-	 *                                  FolloMaster or OpposeMaster, so that you
-	 *                                  can invert the entire motor group by
+	 *                                  FollowMaster or OpposeMaster, so that
+	 *                                  you can invert the entire motor group by
 	 *                                  inverting the lead motor. Use None or
 	 *                                  InvertMotorOutput for the lead motor.
 	 */
