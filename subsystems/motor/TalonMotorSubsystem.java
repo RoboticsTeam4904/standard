@@ -10,15 +10,36 @@ import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.RemoteLimitSwitchSource;
 
+/**
+ * A group of Talon motors (either TalonFX or TalonSRX) with the modern motor controller features. 
+ * 
+ * Provided constructors:
+ * - (name, speedmodifier=identity, neutralMode, deadband=0.01, limitswitches=false, voltageCompensation, leadMotor, followMotors)
+ * - (name, SpeedModifier, neutralMode, neutralDeadbandPercent, respectLeadMotorLimitSwitches, voltageCompensation, leadMotor, followMotors)
+ * 
+ * Features included:
+ * - Neutral mode
+ * - Neutral deadband percent
+ * - Hardwired, normally open limit switches 
+ * - Voltage compensation
+ * - Follow mode
+ * 
+ * Gotchas:
+ * - Brake mode on a TalonSRX running a brushed motor (eg. 775) will probably do nothing
+ * - When voltage has a physical meaning (eg. from a Ramsete controller), use voltageCompensation=0
+ * - .neutralOutput() clears follow mode, as do other control modes (eg. MotionMagic, MotionProfiled). For example, I believe the trigger of a limit switch causes follow motors to enter brake mode and thus exit follow mode.
+ * - Minimum neutral deadband is 0.001 (according to the docs, https://v5.docs.ctr-electronics.com/en/latest/ch13_MC.html#neutral-deadband) 
+ * - Configure normallyClosed limit switches manually on the underlying motorControllers. We usually use normallyOpen limit switches, so you probably don't need to do this.
+ */
 public class TalonMotorSubsystem extends BrakeableMotorSubsystem<TalonMotorController> {
   private final int configTimeoutMs = 50;  // milliseconds until the Talon gives up trying to configure
   public final TalonMotorController leadMotor;
   public final TalonMotorController[] followMotors;
 
-	// TODO: voltage ramping (closed and open)
-
-  // TODO: limit switches
-  // TODO: add voltage/slew limit to drivetrain motors because we don't want the pid to actively try to stop the motor (negative power) when the driver just lets go of the controls.
+  // TODO: stator current limits? also makes brake mode stronger? https://www.chiefdelphi.com/t/programming-current-limiting-for-talonfx-java/371860
+  // TODO: peak nominal outputs
+  // TODO: add voltage/slew limit to drivetrain motors because we don't want the pid to actively try to stop the motor (negative power) when the driver just lets go of the controls. diff ones for closed and open
+  // TODO: control speed near soft limits, so that you can't go full throttle near the soft limit? impl as a speed modifier??
 
   /**
    * Motor Subsystem for a group of Talon motor controllers (Falcons, 775s).
@@ -27,30 +48,33 @@ public class TalonMotorSubsystem extends BrakeableMotorSubsystem<TalonMotorContr
    *
    * You probably want to set inverted mode on the TalonMotorController using
    * FollowLeader or OpposeLeader
-   * 
+   *
    * @param name
    * @param speedModifier             
 	 * @param neutralMode               Whether the motor should brake or coast
 	 *                                  when the the output is near zero, or
 	 *                                  .disable() or .stopMotor() are called.
-	 * @param neutralDeadbandPercent    Percent output range around zero to enable
+	 * @param neutralDeadbandPercent    Power output range around zero to enable
 	 *                                  neutralOutput (brake/coast mode) instead.
-	 *                                  For more info, see
+	 *                                  Can be in the range [0.001, 0.25], CTRE
+	 *                                  default is 0.04. For more info, see
 	 *                                  https://v5.docs.ctr-electronics.com/en/latest/ch13_MC.html#neutral-deadband
    * @param respectLeadMotorLimitSwitches Whether to enable the forward and
    *                                      reverse limit switches wired to the
    *                                      lead motor. This is the easiest way to
    *                                      use forward and reverse normally open
-   *                                      limit switches (or just forward and
+   *                                      limit switches (or just forward or
    *                                      just reverse, as not plugging a limit
    *                                      switch in is equivalent to a normally
    *                                      open switch being unpressed). NOTE
    *                                      This configuration is relatively
    *                                      limited, consider configuring limit
    *                                      switches manually on the
-   *                                      TalonMotorController for advanced
+   *                                      MotorController for advanced
    *                                      configuration (eg. normally closed
-   *                                      switches).
+   *                                      switches). NOTE passing false will not
+   *                                      disable limit switches; just unplug
+   *                                      them instead. 
    * @param voltageCompensation       0 to disable, 10 is a good default. Set
    *                                  the voltage corresponding to power=1.0
    *                                  This way, setting a power will lead to
@@ -79,10 +103,12 @@ public class TalonMotorSubsystem extends BrakeableMotorSubsystem<TalonMotorContr
        */
       leadMotor.configForwardLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen, configTimeoutMs);
       leadMotor.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen, configTimeoutMs);
+      leadMotor.overrideLimitSwitchesEnable(true);
 
       for (var motor : followMotors) {
         motor.configForwardLimitSwitchSource(RemoteLimitSwitchSource.RemoteTalon, LimitSwitchNormal.NormallyOpen, leadMotor.getDeviceID(), configTimeoutMs);
         motor.configReverseLimitSwitchSource(RemoteLimitSwitchSource.RemoteTalon, LimitSwitchNormal.NormallyOpen, leadMotor.getDeviceID(), configTimeoutMs);
+        motor.overrideLimitSwitchesEnable(true);
       }
     }
 
@@ -93,6 +119,8 @@ public class TalonMotorSubsystem extends BrakeableMotorSubsystem<TalonMotorContr
       if (voltageCompensation > 0) {
         motor.configVoltageCompSaturation(voltageCompensation, configTimeoutMs);
         motor.enableVoltageCompensation(true);
+      } else {
+        motor.enableVoltageCompensation(false);
       }
     }
     setFollowMode();
@@ -116,24 +144,19 @@ public class TalonMotorSubsystem extends BrakeableMotorSubsystem<TalonMotorContr
 	 * @param neutralMode               Whether the motor should brake or coast
 	 *                                  when the the output is near zero, or
 	 *                                  .disable() or .stopMotor() are called.
-	 * @param neutralDeadbandPercent    Percent output range around zero to enable
-	 *                                  neutralOutput (brake/coast mode) instead.
-	 *                                  For more info, see
-	 *                                  https://v5.docs.ctr-electronics.com/en/latest/ch13_MC.html#neutral-deadband
    * @param voltageCompensation       0 to disable, 10 is a good default. Set
    *                                  the voltage corresponding to power=1.0
    *                                  This way, setting a power will lead to
    *                                  consistent output even when other
    *                                  components are running. Basically nerf all
    *                                  motors so that they have a consistent
-   *                                  output. when the battery is low.
+   *                                  output when the battery is low.
    * @param leadMotor
    * @param followMotors
    */
-  public TalonMotorSubsystem(String name, NeutralMode neutralMode, double neutralDeadbandPercent,
-                             double voltageCompensation,
+  public TalonMotorSubsystem(String name, NeutralMode neutralMode, double voltageCompensation,
                              TalonMotorController leadMotor, TalonMotorController... followMotors) {
-		this(name, new IdentityModifier(), neutralMode, neutralDeadbandPercent, false, voltageCompensation, leadMotor, followMotors);
+		this(name, new IdentityModifier(), neutralMode, 0.001, false, voltageCompensation, leadMotor, followMotors);
 	}
 
   /**
@@ -152,13 +175,6 @@ public class TalonMotorSubsystem extends BrakeableMotorSubsystem<TalonMotorContr
     setFollowMode();  // make sure all motors are following the lead as we expect. Possible OPTIMIZATION: store we set the output type to something else on the follow motors (eg. Neutral), and only re-set follow mode if we did. 
     leadMotor.set(power);
   }
-
-  // @Override
-  // public double get() {
-  //   return prevPower;
-  //   // if we actually need this, we'll need to store prevPower and add an edge case in setVoltage and update it in set()
-  //   // or maybe just get the leadMotorController.get()?
-  // }
 
   @Override
   /**
