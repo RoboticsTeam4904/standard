@@ -52,8 +52,8 @@ public abstract class MotionController implements Subsystem {
 	 *
 	 * @param sensor The sensor associated with the output you are trying to control
 	 */
-	public MotionController(PIDSensor sensor) {
-		this(sensor, null);
+	public MotionController() {
+		this(null);
 	}
 
 	@Override
@@ -99,7 +99,7 @@ public abstract class MotionController implements Subsystem {
 	 */
 	public final void reset() {
 		resetErrorToZero();
-		setpoint = sensor.pidGet();
+		//setpoint = sensor.pidGet();
 		justReset = true;
 	}
 
@@ -108,7 +108,7 @@ public abstract class MotionController implements Subsystem {
 	 */
 	public final void resetSafely() throws InvalidSensorException {
 		resetErrorToZero();
-		setpoint = sensor.pidGetSafely();
+		//setpoint = sensor.pidGetSafely();
 		justReset = true;
 	}
 
@@ -150,7 +150,7 @@ public abstract class MotionController implements Subsystem {
 	 * @warning this does not indicate sensor errors
 	 */
 	public double getSensorValue() {
-		return sensor.pidGet();
+		return 0; //return sensor.pidGet();
 	}
 
 	/**
@@ -159,7 +159,7 @@ public abstract class MotionController implements Subsystem {
 	 * @return the current value of the sensor
 	 */
 	public double getInputSafely() throws InvalidSensorException {
-		return sensor.pidGetSafely();
+		return 0; //sensor.pidGetSafely();
 	}
 
 	/**
@@ -276,7 +276,7 @@ public abstract class MotionController implements Subsystem {
 			return;
 		}
 		enable = false;
-		setpoint = sensor.pidGet();
+		setpoint = 0; //sensor.pidGet();
 	}
 
 	/**

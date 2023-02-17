@@ -1,4 +1,4 @@
-package org.usfirst.frc4904.standard.subsystems.motor;
+package org.usfirst.frc4904.standard.custom.motorcontrollers;
 
 import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
