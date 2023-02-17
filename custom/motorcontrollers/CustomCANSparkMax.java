@@ -1,10 +1,8 @@
-package org.usfirst.frc4904.standard.custom.motioncontrollers;
+package org.usfirst.frc4904.standard.custom.motorcontrollers;
 
 import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import org.usfirst.frc4904.standard.subsystems.motor.BrakeableMotorController;
 
 public class CustomCANSparkMax extends CANSparkMax implements BrakeableMotorController {
     protected static final NeutralMode DEFAULT_NEUTRAL_MODE = NeutralMode.Coast;
@@ -16,13 +14,14 @@ public class CustomCANSparkMax extends CANSparkMax implements BrakeableMotorCont
         setInverted(inverted);
     }
 
-    public void setBrakeMode() {
+    public BrakeableMotorController setBrakeOnNeutral() {
         setIdleMode(IdleMode.kBrake);
-
+        return this;
     }
 
-	public void setCoastMode() {
+	public BrakeableMotorController setCoastOnNeutral() {
         setIdleMode(IdleMode.kCoast);
+        return this;
     }
 
     @Override

@@ -1,5 +1,6 @@
 package org.usfirst.frc4904.standard.subsystems.motor;
 
+import org.usfirst.frc4904.standard.custom.motorcontrollers.BrakeableMotorController;
 import org.usfirst.frc4904.standard.subsystems.motor.speedmodifiers.IdentityModifier;
 import org.usfirst.frc4904.standard.subsystems.motor.speedmodifiers.SpeedModifier;
 

@@ -2,6 +2,7 @@ package org.usfirst.frc4904.standard.subsystems.motor;
 
 import java.util.stream.Stream;
 
+import org.usfirst.frc4904.standard.custom.motorcontrollers.TalonMotorController;
 import org.usfirst.frc4904.standard.subsystems.motor.speedmodifiers.IdentityModifier;
 import org.usfirst.frc4904.standard.subsystems.motor.speedmodifiers.SpeedModifier;
 
