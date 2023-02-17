@@ -1,5 +1,3 @@
-// THIS FILE IS TESTED post wpilibj2
-
 package org.usfirst.frc4904.standard.custom.controllers;
 
 import edu.wpi.first.wpilibj.DriverStation;

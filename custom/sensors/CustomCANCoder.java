@@ -1,5 +1,3 @@
-// THIS FILE IS TESTED post wpilibj2
-
 package org.usfirst.frc4904.standard.custom.sensors;
 
 import com.ctre.phoenix.sensors.CANCoder;
@@ -8,41 +6,25 @@ import com.ctre.phoenix.sensors.SensorTimeBase;
 
 import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.Util;
-import org.usfirst.frc4904.standard.custom.CustomPIDSourceType;
 
 public class CustomCANCoder extends CANCoder implements CustomEncoder {
-    protected static final CustomPIDSourceType DEFAULT_SOURCE_TYPE = CustomPIDSourceType.kDisplacement;
     protected static final boolean DEFAULT_REVERSE_DIRECTION = false;
-    protected CustomPIDSourceType sensorType;
     protected double distancePerPulse;
     protected boolean reverseDirection;
     protected CANCoderConfiguration config;
 
-    public CustomCANCoder(int deviceNum, double distancePerPulse, CustomPIDSourceType sensorType,
+    public CustomCANCoder(int deviceNum, double distancePerPulse,
             boolean reverseDirection) {
         super(deviceNum);
         config = new CANCoderConfiguration();
         super.configAllSettings(config);
         setDistancePerPulse(distancePerPulse);
-        setCustomPIDSourceType(sensorType);
         setReverseDirection(reverseDirection);
         reset();
     }
 
-    public CustomCANCoder(int deviceNum, double distancePerPulse, CustomPIDSourceType sensorType) {
-        this(deviceNum, distancePerPulse, sensorType, DEFAULT_REVERSE_DIRECTION);
-    }
-
     public CustomCANCoder(int deviceNum, double distancePerPulse) {
-        this(deviceNum, distancePerPulse, DEFAULT_SOURCE_TYPE);
-    }
-
-    public CustomPIDSourceType getCustomPIDSourceType() {
-        return sensorType;
-    }
-
-    public void setCustomPIDSourceType(CustomPIDSourceType sensorType) {
-        this.sensorType = sensorType;
+        this(deviceNum, distancePerPulse, DEFAULT_REVERSE_DIRECTION);
     }
 
     public void setDistancePerPulse(double pulse, SensorTimeBase collectionPeriod) {
@@ -52,24 +34,6 @@ public class CustomCANCoder extends CANCoder implements CustomEncoder {
 
     public void setDistancePerPulse(double pulse) {
         setDistancePerPulse(pulse, SensorTimeBase.PerSecond);
-    }
-
-    @Override
-    public double pidGet() {
-        try {
-            return pidGetSafely();
-        } catch (Exception e) {
-            LogKitten.ex(e);
-            return 0;
-        }
-    }
-
-    @Override
-    public double pidGetSafely() throws InvalidSensorException {
-        if (getCustomPIDSourceType() == CustomPIDSourceType.kDisplacement) {
-            return getDistance();
-        }
-        return getRate();
     }
 
     @Override
@@ -86,24 +50,6 @@ public class CustomCANCoder extends CANCoder implements CustomEncoder {
     public double getRateSafely() throws InvalidSensorException {
         return getVelocity();
 
-    }
-
-    @Override
-    public int get() {
-        try {
-            return getSafely();
-        } catch (Exception e) {
-            LogKitten.ex(e);
-            return 0;
-        }
-    }
-
-    @Override
-    public int getSafely() throws InvalidSensorException {
-        if (getCustomPIDSourceType() == CustomPIDSourceType.kDisplacement) {
-            return (int) getDistance();
-        }
-        return (int) getRate();
     }
 
     @Override

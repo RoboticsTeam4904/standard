@@ -1,8 +1,5 @@
-// THIS FILE IS TESTED post wpilibj2
-
+// WAS PID SOURCE
 package org.usfirst.frc4904.standard.custom.sensors;
-
-import org.usfirst.frc4904.standard.custom.CustomPIDSourceType;
 
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.I2C;
@@ -13,10 +10,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * Local NavX interface.
  *
  */
-public class NavX extends AHRS implements IMU, PIDSensor {
-	
-    private CustomPIDSourceType pidSource;
-    protected float lastYaw;
+public class NavX extends AHRS implements IMU {
+	protected float lastYaw;
     protected float lastPitch;
     protected float lastRoll;
     protected double lastYawRate;
@@ -40,15 +35,6 @@ public class NavX extends AHRS implements IMU, PIDSensor {
         lastPitch = 0.0f;
         lastRoll = 0.0f;
         getYawCalls = 0;
-    }
-
-    @Override
-    public double pidGet() {
-        if (getCustomPIDSourceType() == CustomPIDSourceType.kRate) {
-            return getRate();
-        } else {
-            return getYaw();
-        }
     }
 
     @Override
@@ -123,24 +109,5 @@ public class NavX extends AHRS implements IMU, PIDSensor {
         super.zeroYaw();
         lastYaw = 0;
     }
-
-    @Override
-    public double pidGetSafely() throws InvalidSensorException {
-        if (getCustomPIDSourceType() == CustomPIDSourceType.kRate) {
-            return getRate();
-        } else {
-            return getYaw();
-        }
-    }
-
-    @Override
-    public void setCustomPIDSourceType(CustomPIDSourceType sourceType) {
-        this.pidSource = sourceType;
-    }
-
-	@Override
-	public CustomPIDSourceType getCustomPIDSourceType() {
-		return this.pidSource;
-	}
 }
 

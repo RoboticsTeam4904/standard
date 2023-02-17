@@ -1,6 +1,6 @@
 // THIS FILE IS TESTED post wpilibj2
 
-package org.usfirst.frc4904.standard.custom.motioncontrollers;
+package org.usfirst.frc4904.standard.custom.motorcontrollers;
 
 import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.NeutralMode;

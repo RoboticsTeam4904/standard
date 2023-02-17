@@ -7,11 +7,6 @@
 
 package org.usfirst.frc4904.standard.subsystems.chassis;
 
-
-import org.usfirst.frc4904.standard.LogKitten;
-import org.usfirst.frc4904.standard.custom.CustomPIDSourceType;
-import org.usfirst.frc4904.standard.custom.sensors.InvalidSensorException;
-import org.usfirst.frc4904.standard.custom.sensors.PIDSensor;
 import org.usfirst.frc4904.standard.subsystems.motor.MotorSubsystem;
 import org.usfirst.frc4904.standard.custom.sensors.CANTalonEncoder;
 import org.usfirst.frc4904.standard.custom.sensors.NavX;
@@ -22,63 +17,31 @@ import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 
-public class SensorDrive implements Subsystem, PIDSensor { // Based largely on
+public class SensorDrive implements Subsystem { // Based largely on
   // https://github.com/wpilibsuite/allwpilib/blob/master/wpilibjExamples/src/main/java/edu/wpi/first/wpilibj/examples/ramsetecommand/subsystems/DriveSubsystem.java
   private final TankDrive driveBase;
   private final CANTalonEncoder leftEncoder;
   private final CANTalonEncoder rightEncoder;
   private final NavX gyro;
   private final DifferentialDriveOdometry odometry;
-  private CustomPIDSourceType sensorType;
 
   /**
    * Creates a new DriveSubsystem.
    */
-  public SensorDrive(TankDrive driveBase, CANTalonEncoder leftEncoder, CANTalonEncoder rightEncoder, NavX gyro,
-      CustomPIDSourceType sensorType, Pose2d initialPose) {
+  public SensorDrive(TankDrive driveBase, CANTalonEncoder leftEncoder, CANTalonEncoder rightEncoder, NavX gyro, Pose2d initialPose) {
     this.driveBase = driveBase;
     this.leftEncoder = leftEncoder;
     this.rightEncoder = rightEncoder;
     this.gyro = gyro;
-    setCustomPIDSourceType(sensorType);
 
     resetEncoders();
     odometry = new DifferentialDriveOdometry(gyro.getRotation2d(), leftEncoder.getDistance(), rightEncoder.getDistance(), initialPose);
     CommandScheduler.getInstance().registerSubsystem(this);
   }
 
-  public SensorDrive(TankDrive driveBase, CANTalonEncoder leftEncoder, CANTalonEncoder rightEncoder, NavX gyro, Pose2d initialPose) {
-    this(driveBase, leftEncoder, rightEncoder, gyro, CustomPIDSourceType.kDisplacement, initialPose);
-  }
-
   @Override
   public void periodic() {
     odometry.update(gyro.getRotation2d(), leftEncoder.getDistance(), rightEncoder.getDistance());
-  }
-
-  @Override
-  public void setCustomPIDSourceType(CustomPIDSourceType sensorType) {
-    this.sensorType = sensorType;
-  }
-
-  @Override
-  public CustomPIDSourceType getCustomPIDSourceType() {
-    return sensorType;
-  }
-
-  @Override
-  public double pidGetSafely() throws InvalidSensorException {
-    return getPose().getRotation().getDegrees();
-  }
-
-  @Override
-  public double pidGet() {
-    try {
-      return pidGetSafely();
-    } catch (Exception e) {
-      LogKitten.ex(e);
-      return 0;
-    }
   }
 
   /**

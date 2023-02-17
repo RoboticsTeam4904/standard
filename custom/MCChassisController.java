@@ -20,7 +20,6 @@ public class MCChassisController implements ChassisController {
 		this.maxDegreesPerSecond = maxDegreesPerSecond;
 		this.imu = imu;
 		this.imu.reset();
-		this.imu.setCustomPIDSourceType(CustomPIDSourceType.kDisplacement);
 		this.motionController = motionController;
 		motionController.setInputRange(-180.0f, 180.0f);
 		motionController.setOutputRange(-1.0f, 1.0f);

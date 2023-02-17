@@ -3,7 +3,6 @@ package org.usfirst.frc4904.standard.custom.motioncontrollers;
 import java.util.function.DoubleConsumer;
 
 import org.usfirst.frc4904.standard.custom.sensors.InvalidSensorException;
-import org.usfirst.frc4904.standard.custom.sensors.PIDSensor;
 
 import edu.wpi.first.hal.util.BoundaryException;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -16,7 +15,6 @@ import edu.wpi.first.wpilibj2.command.Subsystem;
  */
 public abstract class MotionController implements Subsystem {
 	protected DoubleConsumer output;
-	protected final PIDSensor sensor;
 	protected double setpoint;
 	protected double absoluteTolerance;
 	protected boolean continuous;
@@ -31,8 +29,7 @@ public abstract class MotionController implements Subsystem {
 	private volatile boolean justReset;
 	private final Object lock = new Object();
 
-	public MotionController(PIDSensor sensor, DoubleConsumer output) {
-		this.sensor = sensor;
+	public MotionController(DoubleConsumer output) {
 		setOutput(output);
 		enable = false;
 		overridden = false;

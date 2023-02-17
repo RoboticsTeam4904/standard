@@ -1,15 +1,13 @@
 package org.usfirst.frc4904.standard.custom.sensors;
-
+// WAS PID SOURCE
 import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.Util;
-import org.usfirst.frc4904.standard.custom.CustomPIDSourceType;
 
 /**
  * Encoder over CAN Implements CustomEncoder generic encoder class
  *
  */
 public class CANEncoder extends CANSensor implements CustomEncoder {
-	private CustomPIDSourceType pidSource;
 	private double distancePerPulse;
 	private boolean reverseDirection;
 	/**
@@ -24,7 +22,6 @@ public class CANEncoder extends CANSensor implements CustomEncoder {
 		this.reverseDirection = reverseDirection;
 		this.distancePerPulse = distancePerPulse;
 		this.offset = 0.0;
-		setCustomPIDSourceType(CustomPIDSourceType.kDisplacement);
 	}
 
 	public CANEncoder(String name, int id, boolean reverseDirection) {
@@ -78,26 +75,6 @@ public class CANEncoder extends CANSensor implements CustomEncoder {
 	@Override
 	public void setReverseDirection(boolean reverseDirection) {
 		this.reverseDirection = reverseDirection;
-	}
-
-	@Override
-	public double pidGetSafely() throws InvalidSensorException {
-		if (pidSource == CustomPIDSourceType.kDisplacement) {
-			return getDistance();
-		}
-		return getRate();
-	}
-
-	/**
-	 * Returns the raw number of ticks
-	 */
-	@Override
-	public int getSafely() throws InvalidSensorException {
-		if (reverseDirection) {
-			return super.readSensor()[0] * -1;
-		} else {
-			return super.readSensor()[0];
-		}
 	}
 
 	/**
@@ -157,27 +134,7 @@ public class CANEncoder extends CANSensor implements CustomEncoder {
 	public void resetViaOffset() {
 		resetViaOffset(0.0);
 	}
-
-	@Override
-	public double pidGet() {
-		try {
-			return pidGetSafely();
-		} catch (Exception e) {
-			LogKitten.ex(e);
-			return 0;
-		}
-	}
-
-	@Override
-	public int get() {
-		try {
-			return getSafely();
-		} catch (Exception e) {
-			LogKitten.ex(e);
-			return 0;
-		}
-	}
-
+	
 	@Override
 	public double getDistance() {
 		try {
@@ -216,15 +173,5 @@ public class CANEncoder extends CANSensor implements CustomEncoder {
 			LogKitten.ex(e);
 			return 0;
 		}
-	}
-
-	@Override
-	public void setCustomPIDSourceType(CustomPIDSourceType pidSource) {
-		this.pidSource = pidSource;
-	}
-
-	@Override
-	public CustomPIDSourceType getCustomPIDSourceType() {
-		return pidSource;
 	}
 }
