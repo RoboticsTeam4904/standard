@@ -19,8 +19,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
  * Replaces Motor.java in pre-2023 standard, except without CTRE voltage comp by
  * default and without inversion logic. 
  */
-public class MotorSubsystem extends SubsystemBase {
-    protected final MotorController[] motors;
+public class MotorSubsystem<MC extends MotorController> extends SubsystemBase {
+    protected final MC[] motors;
 	protected final SpeedModifier speedModifier;    // NOTE: maybe change to be called PowerModifier
 	protected final String name;
 	protected double prevPower;
@@ -37,7 +37,7 @@ public class MotorSubsystem extends SubsystemBase {
 	 * @param motors        The MotorControllers in this subsystem. Can be a single
 	 *                      MotorController or multiple MotorControllers.
 	 */
-	public MotorSubsystem(String name, SpeedModifier speedModifier, MotorController... motors) {
+	public MotorSubsystem(String name, SpeedModifier speedModifier, MC... motors) {
 		super();
 		setName(name);
 		this.name = name;
@@ -59,7 +59,7 @@ public class MotorSubsystem extends SubsystemBase {
 	 * @param motors     The MotorControllers in this subsystem. Can be a single
 	 *                   MotorController or multiple MotorControllers.
 	 */
-	public MotorSubsystem(String name, MotorController... motors) {
+	public MotorSubsystem(String name, MC... motors) {
 		this(name, new IdentityModifier(), motors);
 	}
 
@@ -74,7 +74,7 @@ public class MotorSubsystem extends SubsystemBase {
 	 * @param motors        The MotorControllers in this subsystem. Can be a single
 	 *                      MotorController or multiple MotorControllers.
 	 */
-    public MotorSubsystem(SpeedModifier speedModifier, MotorController... motors) {
+    public MotorSubsystem(SpeedModifier speedModifier, MC... motors) {
         this("Motor", speedModifier, motors);
     }
 
@@ -86,7 +86,7 @@ public class MotorSubsystem extends SubsystemBase {
 	 * @param motors The MotorControllers in this subsystem. Can be a single
 	 *               MotorController or multiple MotorControllers.
 	 */
-	public MotorSubsystem(MotorController... motors) {
+	public MotorSubsystem(MC... motors) {
 		this("Motor", motors);
 	}
 
@@ -118,9 +118,10 @@ public class MotorSubsystem extends SubsystemBase {
 	 *
 	 * @return The most recently set power between -1.0 and 1.0.
 	 */
-	public double get() {
-		return prevPower;
-	}
+	// TODO: do we even need .get()? if not, also remove prevPower and the edge casing in setVoltage?
+	// public double get() {
+	// 	return prevPower;
+	// }
 
 	/**
 	 * Set the motor power. Passes through SpeedModifier.
@@ -220,22 +221,22 @@ public class MotorSubsystem extends SubsystemBase {
      */
     public Command c_setVoltageHold(double voltage) { return this.run(() -> this.setVoltage(voltage)); }
 
-    /// ERRORS
-	protected class UnsynchronizedMotorControllerRuntimeException extends RuntimeException {
-		private static final long serialVersionUID = 8688590919561059584L;
+    // /// ERRORS (copied from 2022 standard Motor.java, not clear what the use is)
+	// protected class UnsynchronizedMotorControllerRuntimeException extends RuntimeException {
+	// 	private static final long serialVersionUID = 8688590919561059584L;
 
-		public UnsynchronizedMotorControllerRuntimeException() {
-			super(getName() + "'s MotorControllers report different speeds");
-		}
-	}
+	// 	public UnsynchronizedMotorControllerRuntimeException() {
+	// 		super(getName() + "'s MotorControllers report different speeds");
+	// 	}
+	// }
 
-	@Deprecated
-	protected class StrangeCANMotorControllerModeRuntimeException extends RuntimeException {
-		private static final long serialVersionUID = -539917227288371271L;
+	// @Deprecated
+	// protected class StrangeCANMotorControllerModeRuntimeException extends RuntimeException {
+	// 	private static final long serialVersionUID = -539917227288371271L;
 
-		public StrangeCANMotorControllerModeRuntimeException() {
-			super("One of " + getName()
-					+ "'s MotorControllers is a CANMotorController with a non-zero mode. This might mess up it's .get(), so Motor cannot verify safety.");
-		}
-	}
+	// 	public StrangeCANMotorControllerModeRuntimeException() {
+	// 		super("One of " + getName()
+	// 				+ "'s MotorControllers is a CANMotorController with a non-zero mode. This might mess up it's .get(), so Motor cannot verify safety.");
+	// 	}
+	// }
 }

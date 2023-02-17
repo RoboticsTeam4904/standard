@@ -6,7 +6,7 @@
 /*----------------------------------------------------------------------------*/
 
 package org.usfirst.frc4904.standard.subsystems.chassis;
-
+// WAS PID SOURCE
 import org.usfirst.frc4904.standard.subsystems.motor.MotorSubsystem;
 import org.usfirst.frc4904.standard.custom.sensors.CANTalonEncoder;
 import org.usfirst.frc4904.standard.custom.sensors.NavX;
@@ -72,24 +72,24 @@ public class SensorDrive implements Subsystem { // Based largely on
     odometry.resetPosition(gyro.getRotation2d(), leftEncoder.getDistance(), rightEncoder.getDistance(), pose);
   }
 
-  /**
-   * Controls the left and right sides of the drive directly with voltages.
-   *
-   * @param leftVolts  the commanded left output
-   * @param rightVolts the commanded right output
-   */
-  public void tankDriveVolts(double leftVolts, double rightVolts) {
-    MotorSubsystem[] motors = driveBase.getMotors();
-    if (motors.length == 2) {
-      driveBase.getMotors()[0].setVoltage(leftVolts);
-      driveBase.getMotors()[1].setVoltage(rightVolts);
-    } else {
-      driveBase.getMotors()[0].setVoltage(leftVolts);
-      driveBase.getMotors()[1].setVoltage(leftVolts);
-      driveBase.getMotors()[2].setVoltage(rightVolts);
-      driveBase.getMotors()[3].setVoltage(rightVolts);
-    }
-  }
+  // /**
+  //  * Controls the left and right sides of the drive directly with voltages.
+  //  *
+  //  * @param leftVolts  the commanded left output
+  //  * @param rightVolts the commanded right output
+  //  */
+  // public void tankDriveVolts(double leftVolts, double rightVolts) {
+  //   MotorSubsystem[] motors = driveBase.getMotors();
+  //   if (motors.length == 2) {
+  //     driveBase.getMotors()[0].setVoltage(leftVolts);
+  //     driveBase.getMotors()[1].setVoltage(rightVolts);
+  //   } else {
+  //     driveBase.getMotors()[0].setVoltage(leftVolts);
+  //     driveBase.getMotors()[1].setVoltage(leftVolts);
+  //     driveBase.getMotors()[2].setVoltage(rightVolts);
+  //     driveBase.getMotors()[3].setVoltage(rightVolts);
+  //   }
+  // }
 
   /**
    * Resets the drive encoders to currently read a position of 0.

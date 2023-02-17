@@ -5,9 +5,9 @@ import org.usfirst.frc4904.standard.subsystems.motor.speedmodifiers.SpeedModifie
 
 import edu.wpi.first.wpilibj2.command.Command;
 
-public class BrakeableMotorSubsystem extends MotorSubsystem {
+
+public class BrakeableMotorSubsystem<BMC extends BrakeableMotorController> extends MotorSubsystem<BMC> {    // generic to allow inherited class (eg. TalonMotorSubsystem) to directly use TalonMotorController APIs on super.motors (not possible if this.motors here was BrakeableMotorController)
     // TODO: should this take general MotorControllers and just brake the ones that implement BrakeableMotorController
-    protected final BrakeableMotorController[] motors;
 
     /**
      * A class that wraps around a variable number of BrakeableMotorController
@@ -22,11 +22,10 @@ public class BrakeableMotorSubsystem extends MotorSubsystem {
      * @param motors        The MotorControllers in this subsystem. Can be a single
      *                      MotorController or multiple MotorControllers.
      */
-	public BrakeableMotorSubsystem(String name, SpeedModifier speedModifier, BrakeableMotorController... motors) {
+	public BrakeableMotorSubsystem(String name, SpeedModifier speedModifier, BMC... motors) {
 		super(name, speedModifier, motors);
-        this.motors = motors;
-        for (var motor : this.motors) motor.setBrakeMode();
-	}
+        setDefaultCommand(this.runOnce(() -> this.neutralOutput()));
+    }
 
 	/**
 	 * A class that wraps around a variable number of BrakeableMotorController
@@ -38,7 +37,7 @@ public class BrakeableMotorSubsystem extends MotorSubsystem {
 	 * @param motors     The MotorControllers in this subsystem. Can be a single
 	 *                   MotorController or multiple MotorControllers.
 	 */
-	public BrakeableMotorSubsystem(String name, BrakeableMotorController... motors) {
+	public BrakeableMotorSubsystem(String name, BMC... motors) {
 		this(name, new IdentityModifier(), motors);
 	}
 
@@ -54,7 +53,7 @@ public class BrakeableMotorSubsystem extends MotorSubsystem {
 	 * @param motors        The MotorControllers in this subsystem. Can be a single
 	 *                      MotorController or multiple MotorControllers.
 	 */
-    public BrakeableMotorSubsystem(SpeedModifier speedModifier, BrakeableMotorController... motors) {
+    public BrakeableMotorSubsystem(SpeedModifier speedModifier, BMC... motors) {
         this("Motor", speedModifier, motors);
     }
 
@@ -67,24 +66,20 @@ public class BrakeableMotorSubsystem extends MotorSubsystem {
 	 * @param motors The MotorControllers in this subsystem. Can be a single
 	 *               MotorController or multiple MotorControllers.
 	 */
-	public BrakeableMotorSubsystem(BrakeableMotorController... motors) {
+	public BrakeableMotorSubsystem(BMC... motors) {
 		this("Motor", motors);
 	} 
     
     /**
      * Sets the neutral output mode to brake. Motor will continue to run, but
      * future calls to neutralOutput() will cause motor to brake.
-     *
-     * Uses the underlying .neutralOutput() method.
      */
-    public void setBrakeModeOnNeutral() { for (var motor : motors) motor.setBrakeMode(); }
+    public void setBrakeOnNeutral() { for (var motor : motors) motor.setBrakeOnNeutral(); }
     /**
      * Sets the neutral output mode to coast. Motor will continue to run, but
      * future calls to neutralOutput() will cause motor to coast.
-     *
-     * Uses the underlying .neutralOutput() method.
      */
-    public void setCoastModeOnNeutral() { for (var motor : motors) motor.setCoastMode(); }
+    public void setCoastOnNeutral() { for (var motor : motors) motor.setCoastOnNeutral(); }
 
     /**
      * Sets the output mode to neutral, which is either break or coast (default
@@ -99,7 +94,7 @@ public class BrakeableMotorSubsystem extends MotorSubsystem {
      * Enables brake mode on and brakes each motor.
      */
     public void brake() {
-        setBrakeModeOnNeutral();
+        setBrakeOnNeutral();
         neutralOutput();
     }
     
@@ -107,7 +102,7 @@ public class BrakeableMotorSubsystem extends MotorSubsystem {
      * Enables coast mode on and coasts each motor.
      */
     public void coast() {
-        setCoastModeOnNeutral();
+        setCoastOnNeutral();
         neutralOutput();
     }
     
