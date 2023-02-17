@@ -15,45 +15,17 @@ public class CANTalonFX extends WPI_TalonFX implements TalonMotorController {
 	 *
 	 * @param deviceNumber              Usually the CAN ID of the device, 
 	 * 									declared in RobotMap
-	 * @param neutralMode               Whether the motor should brake or coast
-	 *                                  when the the output is near zero, or
-	 *                                  .disable() or .stopMotor() are called.
 	 * @param inverted                  InvertMode of the motor. If this will be
 	 *                                  part of a motor group, consider using
 	 *                                  FolloMaster or OpposeMaster, so that you
 	 *                                  can invert the entire motor group by
 	 *                                  inverting the lead motor. Use None or
 	 *                                  InvertMotorOutput for the lead motor.
-	 * @param neutralDeadbandPercent    Percent output range around zero to
-	 *                                  enable neutralOutput (brake/coast mode)
-	 *                                  instead. For more info, see
-	 *                                  https://v5.docs.ctr-electronics.com/en/latest/ch13_MC.html#neutral-deadband
 	 */
-	public CANTalonFX(int deviceNumber, NeutralMode neutralMode, InvertType inverted, double neutralDeadbandPercent) {
+	public CANTalonFX(int deviceNumber, InvertType inverted) {
 		super(deviceNumber);
 		configFactoryDefault();	// use default settings to prevent unexpected behavior, reccommended in examples
-		configNeutralDeadband(neutralDeadbandPercent);
-		setNeutralMode(neutralMode);
 		setInverted(inverted);
-	}
-	/**
-	 * Represents a Falcon motor in code. You probably want NeutralMode.Brake,
-	 * InvertType.FollowMaster.
-	 *
-	 * @param deviceNumber              Usually the CAN ID of the device, 
-	 * 									declared in RobotMap
-	 * @param neutralMode               Whether the motor should brake or coast
-	 *                                  when the the output is near zero, or
-	 *                                  .disable() or .stopMotor() are called.
-	 * @param inverted                  InvertMode of the motor. If this will be
-	 *                                  part of a motor group, consider using
-	 *                                  FolloMaster or OpposeMaster, so that you
-	 *                                  can invert the entire motor group by
-	 *                                  inverting the lead motor. Use None or
-	 *                                  InvertMotorOutput for the lead motor.
-	 */
-	public CANTalonFX(int deviceNumber, NeutralMode neutralMode, InvertType inverted) {
-		this(deviceNumber, neutralMode, inverted, DEFAULT_NEUTRAL_DEADBAND);
 	}
 
 	/**
