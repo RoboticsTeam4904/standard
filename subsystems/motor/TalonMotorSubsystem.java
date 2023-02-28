@@ -1,15 +1,22 @@
 package org.usfirst.frc4904.standard.subsystems.motor;
 
+import java.util.function.DoubleSupplier;
 import java.util.stream.Stream;
 
+import org.usfirst.frc4904.robot.RobotMap.PID;
 import org.usfirst.frc4904.standard.custom.motorcontrollers.TalonMotorController;
 import org.usfirst.frc4904.standard.subsystems.motor.speedmodifiers.IdentityModifier;
 import org.usfirst.frc4904.standard.subsystems.motor.speedmodifiers.SpeedModifier;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
 import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.RemoteLimitSwitchSource;
+import com.ctre.phoenix.motorcontrol.RemoteSensorSource;
+
+import edu.wpi.first.wpilibj2.command.Command;
 
 /**
  * A group of Talon motors (either TalonFX or TalonSRX) with the modern motor controller features. 
@@ -34,11 +41,13 @@ import com.ctre.phoenix.motorcontrol.RemoteLimitSwitchSource;
  */
 public class TalonMotorSubsystem extends BrakeableMotorSubsystem<TalonMotorController> {
   private final int configTimeoutMs = 50;  // milliseconds until the Talon gives up trying to configure
+  private final int pid_idx = 0; // TODO: add support for auxillary pid
+  private final int follow_motors_remote_filter_id = 0; // which filter (0 or 1) will be used to configure reading from the integrated encoder on the lead motor
   public final TalonMotorController leadMotor;
   public final TalonMotorController[] followMotors;
 
   // TODO: stator current limits? also makes brake mode stronger? https://www.chiefdelphi.com/t/programming-current-limiting-for-talonfx-java/371860
-  // TODO: peak nominal outputs
+  // TODO: peak/nominal outputs
   // TODO: add voltage/slew limit to drivetrain motors because we don't want the pid to actively try to stop the motor (negative power) when the driver just lets go of the controls. diff ones for closed and open
   // TODO: control speed near soft limits, so that you can't go full throttle near the soft limit? impl as a speed modifier??
 
@@ -113,6 +122,14 @@ public class TalonMotorSubsystem extends BrakeableMotorSubsystem<TalonMotorContr
       }
     }
 
+    // feedback sensor configuration (for PID)
+    leadMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, pid_idx, configTimeoutMs);
+    // for (var fm : followMotors) { // don't think this is needed because we are using follow mode. only needed for aux output
+    //   fm.configRemoteFeedbackFilter(leadMotor.getDeviceID(), RemoteSensorSource.TalonFX_SelectedSensor /* enum internals has TalonFX = TalonSRX as of 2023 */, follow_motors_remote_filter_id, configTimeoutMs);
+    //   fm.configSelectedFeedbackSensor(follow_motors_remote_filter_id == 0 ? FeedbackDevice.RemoteSensor0 : FeedbackDevice.RemoteSensor1 /* enum internals has TalonFX_SelectedSensor = TalonSRX_SelectedSensor as of 2023 */, pid_idx, configTimeoutMs);
+    //   // TODO: change sensor polarity? https://github.com/CrossTheRoadElec/Phoenix-Examples-Languages/blob/master/Java%20Talon%20FX%20(Falcon%20500)/VelocityClosedLoop_AuxStraightIntegratedSensor/src/main/java/frc/robot/Robot.java#L306
+    // }
+
     // other configuration (neutral mode, neutral deadband, voltagecomp)
     for (var motor : motors) {
       motor.setNeutralMode(neutralMode);
@@ -168,6 +185,35 @@ public class TalonMotorSubsystem extends BrakeableMotorSubsystem<TalonMotorContr
       motor.follow(leadMotor);
     }
   }
+
+  // TODO the following methods are not thought out or documented
+  /**
+   * The F value provided here will be overwritten if provided to subsystem.leadMotor.set; note that if you do that, it will bypass the subystem requirements check
+   * 
+   * See docstrings on the methods used in the implementation for physical units
+   */
+  public void configPIDF(double p, double i, double d, double f) {
+    leadMotor.config_kP(pid_idx, p, configTimeoutMs);
+    leadMotor.config_kI(pid_idx, i, configTimeoutMs);
+    leadMotor.config_kD(pid_idx, d, configTimeoutMs);
+    leadMotor.config_kF(pid_idx, f, configTimeoutMs);
+    leadMotor.configClosedLoopPeriod(pid_idx, 10, configTimeoutMs); // fast enough for 100Hz per second
+    // TODO: integral zone and closedLoopPeakOUtput? 
+    // other things in the example: motionmagic config and statusframeperiod (for updating sensor status to the aux motor?)
+  }
+  /**
+   * 
+   * @param setpointSupplier  a function that returns a double, units = encoder ticks per 100ms
+   * 
+   * @return
+   */
+  public Command c_setVelocityControl(DoubleSupplier setpointSupplier) {
+    return this.run(() -> leadMotor.set(ControlMode.Velocity, setpointSupplier.getAsDouble()));
+  }
+  // public void zeroSensors() {
+  //   // leadMotor.getSensorCollection // ?? doesn't exist; but it's in the CTRE falcon example
+  //   // also should we zero the sensors on the follow motors just in case they're being used?
+  // }
   
   // don't override disable() or stop() because we *should* indeed use the base implementation of disabling/stopping each motor controller individually. Otherwise the following motors will try to follow a disabled motor, which may cause unexpected behavior (although realistically, it likely just gets set to zero and neutrallized by the deadband).
 
