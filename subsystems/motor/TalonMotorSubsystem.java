@@ -3,7 +3,6 @@ package org.usfirst.frc4904.standard.subsystems.motor;
 import java.util.function.DoubleSupplier;
 import java.util.stream.Stream;
 
-import org.usfirst.frc4904.robot.RobotMap.PID;
 import org.usfirst.frc4904.standard.custom.motorcontrollers.TalonMotorController;
 import org.usfirst.frc4904.standard.subsystems.motor.speedmodifiers.IdentityModifier;
 import org.usfirst.frc4904.standard.subsystems.motor.speedmodifiers.SpeedModifier;
@@ -14,7 +13,6 @@ import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
 import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.RemoteLimitSwitchSource;
-import com.ctre.phoenix.motorcontrol.RemoteSensorSource;
 
 import edu.wpi.first.wpilibj2.command.Command;
 
@@ -42,7 +40,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 public class TalonMotorSubsystem extends BrakeableMotorSubsystem<TalonMotorController> {
   private final int configTimeoutMs = 50;  // milliseconds until the Talon gives up trying to configure
   private final int pid_idx = 0; // TODO: add support for auxillary pid
-  private final int follow_motors_remote_filter_id = 0; // which filter (0 or 1) will be used to configure reading from the integrated encoder on the lead motor
+  private final int follow_motors_remote_filter_id = 0; // DONOT REMOVE, USED IN COMMENTED CODE BELOW; which filter (0 or 1) will be used to configure reading from the integrated encoder on the lead motor
   public final TalonMotorController leadMotor;
   public final TalonMotorController[] followMotors;
 

@@ -7,11 +7,12 @@ import com.revrobotics.CANSparkMax;
 public class CustomCANSparkMax extends CANSparkMax implements BrakeableMotorController {
     protected static final NeutralMode DEFAULT_NEUTRAL_MODE = NeutralMode.Coast;
 	protected static final InvertType  DEFAULT_INVERT_TYPE  = InvertType.FollowMaster;
+    protected Double saturation_voltage = null;   // remember the configured saturation voltage to conform to the talon api of having separate config() and enable() methods; error if we try to enable without configuring it.
     
-    public CustomCANSparkMax(int deviceNumber, MotorType motorType, IdleMode neutralMode, boolean inverted) {
+    public CustomCANSparkMax(int deviceNumber, MotorType motorType, IdleMode neutralMode) {
         super(deviceNumber, motorType);
         setIdleMode(neutralMode);
-        setInverted(inverted);
+        super.restoreFactoryDefaults();
     }
 
     public BrakeableMotorController setBrakeOnNeutral() {
