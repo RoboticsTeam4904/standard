@@ -3,6 +3,8 @@ package org.usfirst.frc4904.standard.subsystems.motor;
 import java.util.function.DoubleSupplier;
 import java.util.stream.Stream;
 
+import org.usfirst.frc4904.standard.custom.CustomCAN;
+import org.usfirst.frc4904.standard.custom.motorcontrollers.CustomCANSparkMax;
 import org.usfirst.frc4904.standard.custom.motorcontrollers.TalonMotorController;
 import org.usfirst.frc4904.standard.subsystems.motor.speedmodifiers.IdentityModifier;
 import org.usfirst.frc4904.standard.subsystems.motor.speedmodifiers.SpeedModifier;
@@ -13,11 +15,17 @@ import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
 import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.RemoteLimitSwitchSource;
+import com.revrobotics.REVLibError;
+import com.revrobotics.SparkMaxLimitSwitch;
+import com.revrobotics.SparkMaxPIDController;
+import com.revrobotics.CANSparkMax.ControlType;
+import com.revrobotics.CANSparkMax.IdleMode;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.Command;
 
 /**
- * A group of Talon motors (either TalonFX or TalonSRX) with the modern motor controller features. 
+ * A group of SparkMax motor controllers the modern motor controller features. 
  * 
  * Provided constructors:
  * - (name, speedmodifier=identity, neutralMode, deadband=0.01, limitswitches=false, voltageCompensation, leadMotor, followMotors)
@@ -31,19 +39,18 @@ import edu.wpi.first.wpilibj2.command.Command;
  * - Follow mode
  * 
  * Gotchas:
- * - Brake mode on a TalonSRX running a brushed motor (eg. 775) will probably do nothing
+ * - Brake mode on a brushed motor will do nothing.
  * - When voltage has a physical meaning (eg. from a Ramsete controller), use voltageCompensation=0
- * - .neutralOutput() clears follow mode, as do other control modes (eg. MotionMagic, MotionProfiled). For example, I believe the trigger of a limit switch causes follow motors to enter brake mode and thus exit follow mode.
- * - Minimum neutral deadband is 0.001 (according to the docs, https://v5.docs.ctr-electronics.com/en/latest/ch13_MC.html#neutral-deadband) 
  * - Configure normallyClosed limit switches manually on the underlying motorControllers. We usually use normallyOpen limit switches, so you probably don't need to do this.
+ * - Specifying respectLeadMotorLimitSwitches=false will not disable the limit switches if they were previously enabled. This is to allow you to configure limit switches on the underlying motor controllers before passing them in if necessary.
  */
-public class TalonMotorSubsystem extends SmartMotorSubsystem<TalonMotorController> {
+public class SparkMaxMotorSubsystem extends SmartMotorSubsystem<CustomCANSparkMax> {
   private final int configTimeoutMs = 50;  // milliseconds until the Talon gives up trying to configure
   private final int pid_idx = 0; // TODO: add support for auxillary pid
   private final int follow_motors_remote_filter_id = 0; // DONOT REMOVE, USED IN COMMENTED CODE BELOW; which filter (0 or 1) will be used to configure reading from the integrated encoder on the lead motor
-  private boolean pid_configured = false; // flag for command factories to check whether PID was configured
-  public final TalonMotorController leadMotor;
-  public final TalonMotorController[] followMotors;
+  private SparkMaxPIDController controller = null;
+  public final CustomCANSparkMax leadMotor;
+  public final CustomCANSparkMax[] followMotors;
 
   // TODO: stator current limits? also makes brake mode stronger? https://www.chiefdelphi.com/t/programming-current-limiting-for-talonfx-java/371860
   // TODO: peak/nominal outputs
@@ -60,7 +67,7 @@ public class TalonMotorSubsystem extends SmartMotorSubsystem<TalonMotorControlle
    *
    * @param name
    * @param speedModifier             
-	 * @param neutralMode               Whether the motor should brake or coast
+	 * @param idleMode                  Whether the motor should brake or coast
 	 *                                  when the the output is near zero, or
 	 *                                  .disable() or .stopMotor() are called.
 	 * @param neutralDeadbandPercent    Power output range around zero to enable
@@ -84,22 +91,20 @@ public class TalonMotorSubsystem extends SmartMotorSubsystem<TalonMotorControlle
    *                                      switches). NOTE passing false will not
    *                                      disable limit switches; just unplug
    *                                      them instead. 
-   * @param voltageCompensation       0 to disable, 10 is a good default.
-   *                                  Rescales output so that power=1.0
-   *                                  corresponds to
-   *                                  voltage=voltageCompensation. This way,
-   *                                  setting a power will lead to consistent
-   *                                  output even when other components are
-   *                                  running. Basically nerf all motors so that
-   *                                  they have a consistent output. when the
-   *                                  battery is low.
+   * @param voltageCompensation       0 to disable, 10 is a good default. Set
+   *                                  the voltage corresponding to power=1.0
+   *                                  This way, setting a power will lead to
+   *                                  consistent output even when other
+   *                                  components are running. Basically nerf all
+   *                                  motors so that they have a consistent
+   *                                  output. when the battery is low.
    * @param leadMotor
    * @param followMotors
    */
-  public TalonMotorSubsystem(String name, SpeedModifier speedModifier, NeutralMode neutralMode, double neutralDeadbandPercent,
-                             Boolean respectLeadMotorLimitSwitches, double voltageCompensation,
-                             TalonMotorController leadMotor, TalonMotorController... followMotors) {
-		super(name, speedModifier, Stream.concat(Stream.of(leadMotor), Stream.of(followMotors)).toArray(TalonMotorController[]::new));  // java has no spread operator, so you have to concat. best way i could find is to do it in a stream. please make this not bad if you know how 
+  public SparkMaxMotorSubsystem(String name, SpeedModifier speedModifier, IdleMode idleMode, double neutralDeadbandPercent,
+                                Boolean respectLeadMotorLimitSwitches, double voltageCompensation,
+                                CustomCANSparkMax leadMotor, CustomCANSparkMax... followMotors) {
+		super(name, speedModifier, Stream.concat(Stream.of(leadMotor), Stream.of(followMotors)).toArray(CustomCANSparkMax[]::new));  // java has no spread operator, so you have to concat. best way i could find is to do it in a stream. please make this not bad if you know how 
 
     this.leadMotor = leadMotor;
     this.followMotors = followMotors;
@@ -108,33 +113,26 @@ public class TalonMotorSubsystem extends SmartMotorSubsystem<TalonMotorControlle
     if (respectLeadMotorLimitSwitches) {
       // when extending to SparkMAX: you have to sparkmax.getForward/ReverseLimitSwitch.enable() or something. may need custom polling/plugin logic. https://codedocs.revrobotics.com/java/com/revrobotics/cansparkmax#getReverseLimitSwitch(com.revrobotics.SparkMaxLimitSwitch.Type)
 
-      /* notes on limit switches
-       * - FeedbackConnector is a given falcon's own feedback connector (the little white 4-pin plug next to the talonfx bump)
-       * - the LimitSwitchSource enum has both Talon and TalonSRX, but they have the same value internally (as of 2023) so they should be indistinguishable?
-       */
-      leadMotor.configForwardLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen, configTimeoutMs);
-      leadMotor.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen, configTimeoutMs);
-      leadMotor.overrideLimitSwitchesEnable(true);
-
-      for (var motor : followMotors) {
-        motor.configForwardLimitSwitchSource(RemoteLimitSwitchSource.RemoteTalon, LimitSwitchNormal.NormallyOpen, leadMotor.getDeviceID(), configTimeoutMs);
-        motor.configReverseLimitSwitchSource(RemoteLimitSwitchSource.RemoteTalon, LimitSwitchNormal.NormallyOpen, leadMotor.getDeviceID(), configTimeoutMs);
-        motor.overrideLimitSwitchesEnable(true);
-      }
-    }
+      // TODO: spark max limit switches are untested
+      var fwdLimit = leadMotor.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
+      var revLimit = leadMotor.getReverseLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
+      REVLibThrowable.guard(fwdLimit.enableLimitSwitch(true));  // REVLibThrowable.guard will throw a runtime exception if the configuration fails.
+      REVLibThrowable.guard(revLimit.enableLimitSwitch(true));
+      // TODO: do following spark maxes need to be configured to use remote limit switch? or can they just auto-brake w/ a neutral-deadband equivalent? 
+    } // no else { disableLimitSwitches() } here because we don't want to overwrite on false; user may be trying to use their own configuration.
 
     // other configuration (neutral mode, neutral deadband, voltagecomp)
     for (var motor : motors) {
-      motor.setNeutralMode(neutralMode);
-      motor.configNeutralDeadband(neutralDeadbandPercent, configTimeoutMs);
+      motor.setIdleMode(idleMode);
+      //motor.configNeutralDeadband(neutralDeadbandPercent, configTimeoutMs); // TODO: no neutral deadband setting on sparkmax?
       if (voltageCompensation > 0) {
-        motor.configVoltageCompSaturation(voltageCompensation, configTimeoutMs);
-        motor.enableVoltageCompensation(true);
+        motor.enableVoltageCompensation(voltageCompensation);
       } else {
-        motor.enableVoltageCompensation(false);
+        motor.disableVoltageCompensation();
       }
     }
     setFollowMode();
+    // do we need to burnFlash? CD says it can wear out the EEPROM (which has limited write cycles) and also appears to be somewhat buggy. But it otherwise the motor config may get reset in case the motor gets power cycled (eg. during a brownout)?
 	}
   /**
    * Motor Subsystem for a group of Talon motor controllers (Falcons, 775s).
@@ -152,24 +150,22 @@ public class TalonMotorSubsystem extends SmartMotorSubsystem<TalonMotorControlle
    * - can limit switches be enabled/disabled? can you have a sparkmax respect a talon limit switch? https://codedocs.revrobotics.com/java/com/revrobotics/cansparkmax
    *
    * @param name
-	 * @param neutralMode               Whether the motor should brake or coast
+	 * @param idleMode                  Whether the motor should brake or coast
 	 *                                  when the the output is near zero, or
 	 *                                  .disable() or .stopMotor() are called.
-   * @param voltageCompensation       0 to disable, 10 is a good default.
-   *                                  Rescales output so that power=1.0
-   *                                  corresponds to
-   *                                  voltage=voltageCompensation. This way,
-   *                                  setting a power will lead to consistent
-   *                                  output even when other components are
-   *                                  running. Basically nerf all motors so that
-   *                                  they have a consistent output. when the
-   *                                  battery is low.
+   * @param voltageCompensation       0 to disable, 10 is a good default. Set
+   *                                  the voltage corresponding to power=1.0
+   *                                  This way, setting a power will lead to
+   *                                  consistent output even when other
+   *                                  components are running. Basically nerf all
+   *                                  motors so that they have a consistent
+   *                                  output when the battery is low.
    * @param leadMotor
    * @param followMotors
    */
-  public TalonMotorSubsystem(String name, NeutralMode neutralMode, double voltageCompensation,
-                             TalonMotorController leadMotor, TalonMotorController... followMotors) {
-		this(name, new IdentityModifier(), neutralMode, 0.001, false, voltageCompensation, leadMotor, followMotors);
+  public SparkMaxMotorSubsystem(String name, IdleMode idleMode, double voltageCompensation,
+                                CustomCANSparkMax leadMotor, CustomCANSparkMax... followMotors) {
+		this(name, new IdentityModifier(), idleMode, 0.001, false, voltageCompensation, leadMotor, followMotors);
 	}
 
   /**
@@ -188,33 +184,29 @@ public class TalonMotorSubsystem extends SmartMotorSubsystem<TalonMotorControlle
    * See docstrings on the methods used in the implementation for physical units
    */
   public void configPIDF(double p, double i, double d, double f) {
-    // feedback sensor configuration (for PID)
-    leadMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, pid_idx, configTimeoutMs);
-    // for (var fm : followMotors) { // don't think this is needed because we are using follow mode. only needed for aux output
-    //   fm.configRemoteFeedbackFilter(leadMotor.getDeviceID(), RemoteSensorSource.TalonFX_SelectedSensor /* enum internals has TalonFX = TalonSRX as of 2023 */, follow_motors_remote_filter_id, configTimeoutMs);
-    //   fm.configSelectedFeedbackSensor(follow_motors_remote_filter_id == 0 ? FeedbackDevice.RemoteSensor0 : FeedbackDevice.RemoteSensor1 /* enum internals has TalonFX_SelectedSensor = TalonSRX_SelectedSensor as of 2023 */, pid_idx, configTimeoutMs);
-    //   // TODO: change sensor polarity? https://github.com/CrossTheRoadElec/Phoenix-Examples-Languages/blob/master/Java%20Talon%20FX%20(Falcon%20500)/VelocityClosedLoop_AuxStraightIntegratedSensor/src/main/java/frc/robot/Robot.java#L306
-    // }
+    // set sensor
+    var sensor = leadMotor.getEncoder();
+    sensor.setInverted(false);
+    // docs says you need to sparkMax.setFeedbackDevice but that appears to not exist..
+    // is this even needed for brushless? migration docs says it's not: https://docs.revrobotics.com/sparkmax/software-resources/migrating-ctre-to-rev#select-encoder
 
-    // PID constants configuration
-    leadMotor.config_kP(pid_idx, p, configTimeoutMs);
-    leadMotor.config_kI(pid_idx, i, configTimeoutMs);
-    leadMotor.config_kD(pid_idx, d, configTimeoutMs);
-    leadMotor.config_kF(pid_idx, f, configTimeoutMs);
-    leadMotor.configClosedLoopPeriod(pid_idx, 10, configTimeoutMs); // fast enough for 100Hz per second
-    pid_configured = true;
-    // TODO: integral zone and closedLoopPeakOUtput? 
-    // other things in the example: motionmagic config and statusframeperiod (for updating sensor status to the aux motor?)
+    // set pid constants
+    controller = leadMotor.getPIDController();
+    controller.setP(p);
+    controller.setI(i);
+    controller.setD(d);
+    controller.setFF(f);
+    // TODO: integral zone and outputRange? 
   }
   /**
    * 
-   * @param setpointSupplier  a function that returns a double, units = encoder ticks per 100ms
+   * @param setpointSupplier  a function that returns a double, units = RPM
    * 
-   * @return
+   * @return the command to schedule
    */
   public Command c_controlVelocity(DoubleSupplier setpointSupplier) {
-    if (pid_configured == false) throw new IllegalArgumentException(name + " tried to use c_controlVelocity without first configPIDF()-ing.");
-    return this.run(() -> leadMotor.set(ControlMode.Velocity, setpointSupplier.getAsDouble()));
+    if (controller == null) throw new IllegalArgumentException(name + " tried to use c_controlVelocity without first configPIDF()-ing.");
+    return this.run(() -> controller.setReference(setpointSupplier.getAsDouble(), ControlType.kVelocity));
   }
   // public void zeroSensors() {
   //   // leadMotor.getSensorCollection // ?? doesn't exist; but it's in the CTRE falcon example
@@ -247,5 +239,19 @@ public class TalonMotorSubsystem extends SmartMotorSubsystem<TalonMotorControlle
 
   // no need to override setPower because the base class just uses set
   // don't override setBrakeOnNeutral, setCoastOnNeutral, neutralOutput because we indeed want to set it individually on each motor. Otherwise, the followers might try to follow a disabled/neutral motor which might cause unexpected behavior.
+  // TODO: except do we actually yes need to? since it seems to not persist, see the warning about auto-disable here: https://docs.revrobotics.com/sparkmax/operating-modes/control-interfaces
+
+  // ERROR HANDLING
+  static class REVLibThrowable extends IllegalStateException {
+    public REVLibThrowable(REVLibError err) {
+      super(err.toString());
+    }
+    public REVLibThrowable(String msg, REVLibError err) {
+      super(msg + err.toString());
+    }
+    public static void guard(REVLibError err) {
+      if (err != REVLibError.kOk) throw new REVLibThrowable(err);
+    }
+  }
 }
 

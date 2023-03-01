@@ -10,7 +10,7 @@ import com.ctre.phoenix.motorcontrol.IMotorControllerEnhanced;
  * May be converted to a general interface for motor controllers in the future,
  * given that SparkMaxes can also do brake mode, follow mode, etc. 
  */
-public interface TalonMotorController extends BrakeableMotorController, IMotorControllerEnhanced {
+public interface TalonMotorController extends SmartMotorController, IMotorControllerEnhanced {
     //TODO: add all the things
 
 	// TODO: implement setVoltage with native APIs? or just use voltageComp?
