@@ -2,10 +2,12 @@ package org.usfirst.frc4904.standard.subsystems.motor;
 
 import java.util.stream.Stream;
 
+import org.usfirst.frc4904.standard.custom.motorcontrollers.MotorController;
 import org.usfirst.frc4904.standard.custom.motorcontrollers.TalonMotorController;
 import org.usfirst.frc4904.standard.subsystems.motor.speedmodifiers.IdentityModifier;
 import org.usfirst.frc4904.standard.subsystems.motor.speedmodifiers.SpeedModifier;
 
+import com.ctre.phoenix.motorcontrol.IMotorControllerEnhanced;
 import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
 import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
@@ -32,9 +34,10 @@ import com.ctre.phoenix.motorcontrol.RemoteLimitSwitchSource;
  * - Minimum neutral deadband is 0.001 (according to the docs, https://v5.docs.ctr-electronics.com/en/latest/ch13_MC.html#neutral-deadband) 
  * - Configure normallyClosed limit switches manually on the underlying motorControllers. We usually use normallyOpen limit switches, so you probably don't need to do this.
  */
-public class TalonMotorSubsystem extends BrakeableMotorSubsystem<TalonMotorController> {
+// TODO: rename to SmartMotorSubsystem or something
+public class TalonMotorSubsystem<LMC /* lead motor controller */ extends MotorController & IMotorControllerEnhanced> extends BrakeableMotorSubsystem<TalonMotorController> {
   private final int configTimeoutMs = 50;  // milliseconds until the Talon gives up trying to configure
-  public final TalonMotorController leadMotor;
+  public final LMC leadMotor; // generic type parameter LMC because it should be able to be either WPI_TalonSRX or WPI_TalonFX, but we need both the "smart" stuff from IMotorControllerEnhanced and the .set and .setVoltage from 4904::MotorController
   public final TalonMotorController[] followMotors;
 
   // TODO: stator current limits? also makes brake mode stronger? https://www.chiefdelphi.com/t/programming-current-limiting-for-talonfx-java/371860
@@ -88,7 +91,7 @@ public class TalonMotorSubsystem extends BrakeableMotorSubsystem<TalonMotorContr
    */
   public TalonMotorSubsystem(String name, SpeedModifier speedModifier, NeutralMode neutralMode, double neutralDeadbandPercent,
                              Boolean respectLeadMotorLimitSwitches, double voltageCompensation,
-                             TalonMotorController leadMotor, TalonMotorController... followMotors) {
+                             LMC leadMotor, TalonMotorController... followMotors) {
 		super(name, speedModifier, Stream.concat(Stream.of(leadMotor), Stream.of(followMotors)).toArray(TalonMotorController[]::new));  // java has no spread operator, so you have to concat. best way i could find is to do it in a stream. please make this not bad if you know how 
 
     this.leadMotor = leadMotor;
@@ -156,7 +159,7 @@ public class TalonMotorSubsystem extends BrakeableMotorSubsystem<TalonMotorContr
    * @param followMotors
    */
   public TalonMotorSubsystem(String name, NeutralMode neutralMode, double voltageCompensation,
-                             TalonMotorController leadMotor, TalonMotorController... followMotors) {
+                             LMC leadMotor, TalonMotorController... followMotors) {
 		this(name, new IdentityModifier(), neutralMode, 0.001, false, voltageCompensation, leadMotor, followMotors);
 	}
 
