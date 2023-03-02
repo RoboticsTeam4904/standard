@@ -27,7 +27,7 @@ public class WestCoastDrive<SMC extends SmartMotorController> extends SubsystemB
      * @param leftMotorSubsystem        SmartMotorSubsystem for the left wheels. Usually a TalonMotorSubsystem with two talons.
      * @param rightMotorSubsystem       SmartMotorSubsystem for the right wheels. Usually a TalonMotorSubsystem with two talons.
      */
-    WestCoastDrive(double trackWidthMeters, double motorToWheelGearRatio, double wheelDiameterMeters, SmartMotorSubsystem<SMC> leftMotorSubsystem, SmartMotorSubsystem<SMC> rightMotorSubsystem) {
+    public WestCoastDrive(double trackWidthMeters, double motorToWheelGearRatio, double wheelDiameterMeters, SmartMotorSubsystem<SMC> leftMotorSubsystem, SmartMotorSubsystem<SMC> rightMotorSubsystem) {
         leftMotors = leftMotorSubsystem;
         rightMotors = rightMotorSubsystem;
         kinematics = new DifferentialDriveKinematics(trackWidthMeters);  // 2023 robot has track width ~19.5 inches, 5 in wheel diameter
