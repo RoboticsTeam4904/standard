@@ -1,19 +1,16 @@
 package org.usfirst.frc4904.standard.subsystems.chassis;
 
-import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
 import org.usfirst.frc4904.standard.custom.motorcontrollers.SmartMotorController;
 import org.usfirst.frc4904.standard.subsystems.motor.SmartMotorSubsystem;
 
-import edu.wpi.first.math.Pair;
+import edu.wpi.first.math.controller.DifferentialDriveWheelVoltages;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
-import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.drive.DifferentialDrive.WheelSpeeds;
+import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class WestCoastDrive<SMC extends SmartMotorController> extends SubsystemBase {
@@ -39,23 +36,36 @@ public class WestCoastDrive<SMC extends SmartMotorController> extends SubsystemB
     }
     
     /// methods
-    // public void moveCartesian(double xSpeed, double ySpeed, double turnSpeed) {
-    //     if (xSpeed != 0) throw new IllegalArgumentException("West Coast Drive cannot move laterally!");
-    //     movePolar(ySpeed, 0, turnSpeed);
-    // }
 
-    // public void movePolar(double speed, double heading, double turnSpeed) {
-    //     if (heading != 0) throw new IllegalArgumentException("West Coast Drive cannot move at a non-zero heading!");
-    //     kinematics.toWheelSpeeds(ChassisSpeeds);
-    // }
-    // public void setWheelVelocities(WheelSpeeds wheelSpeeds) {
-    //     this.leftMotors.set(wheelSpeeds.left);
-    //     this.rightMotors.c_setVelocity()
-    //     wheelSpeeds.left
-    // }
-    // public void setChassisVelocities(ChassisSpeeds chassisSpeeds) {
-        
-    // }
+    /**
+     * Convention: +x forwards, +y right, +z down
+     * 
+     * @param xSpeed
+     * @param ySpeed
+     * @param turnSpeed
+     */
+    @Deprecated
+    public void moveCartesian(double xSpeed, double ySpeed, double turnSpeed) {
+        if (ySpeed != 0) throw new IllegalArgumentException("West Coast Drive cannot move laterally!");
+        setChassisVelocity(new ChassisSpeeds(xSpeed, ySpeed, turnSpeed));
+    }
+    @Deprecated
+    public void movePolar(double speed, double heading, double turnSpeed) {
+        if (heading != 0) throw new IllegalArgumentException("West Coast Drive cannot move at a non-zero heading!");
+        setChassisVelocity(new ChassisSpeeds(speed, 0, turnSpeed));
+    }
+    public void setWheelVelocities(DifferentialDriveWheelSpeeds wheelSpeeds) {
+        this.leftMotors .setRPM(wheelSpeeds.leftMetersPerSecond  * mps_to_rpm);
+        this.rightMotors.setRPM(wheelSpeeds.rightMetersPerSecond * mps_to_rpm);
+    }
+    public void setChassisVelocity(ChassisSpeeds chassisSpeeds) {
+        final var wheelSpeeds = kinematics.toWheelSpeeds(chassisSpeeds);
+        setWheelVelocities(wheelSpeeds);
+    }
+    public void setWheelVoltages(DifferentialDriveWheelVoltages wheelVoltages) {
+        this.leftMotors.setVoltage(wheelVoltages.left);
+        this.rightMotors.setVoltage(wheelVoltages.right);
+    }
 
     /**
      * A forever command that pulls drive velocities from a function and sends
@@ -68,27 +78,52 @@ public class WestCoastDrive<SMC extends SmartMotorController> extends SubsystemB
      * 
      * @return the command to be scheduled
      */
-    public Command c_controlWheelVelocities(Supplier<WheelSpeeds> leftRightVelocitySupplier) {
-        var command = new ParallelCommandGroup(
-            this.leftMotors .c_controlRPM(() -> leftRightVelocitySupplier.get().left  * mps_to_rpm),
-            this.rightMotors.c_controlRPM(() -> leftRightVelocitySupplier.get().right * mps_to_rpm)
-        );
-        command.addRequirements(this);
-        return command;
+    public Command c_controlWheelVelocities(Supplier<DifferentialDriveWheelSpeeds> leftRightVelocitySupplier) {
+        var cmd = this.run(() -> setWheelVelocities(leftRightVelocitySupplier.get()));    // this.run() runs repeatedly
+        cmd.addRequirements(leftMotors);
+        cmd.addRequirements(rightMotors);
+        return cmd;
     }
     /**
      * A forever command that pulls chassis movement
      * (forward speed and turn * radians/sec) from a * function and
      * sends them to the motor's closed-loop * control.
      */
-    public Command c_controlChassisMovement(Supplier<ChassisSpeeds> chassisSpeedVelocitySupplier) {
-        var cmd = this.run(() -> {
-            final var wheelRPMs = kinematics.toWheelSpeeds(chassisSpeedVelocitySupplier.get());
-            this.leftMotors .setRPM(wheelRPMs.leftMetersPerSecond  * mps_to_rpm);
-            this.rightMotors.setRPM(wheelRPMs.rightMetersPerSecond * mps_to_rpm);
-        });
+    public Command c_controlChassisVelocity(Supplier<ChassisSpeeds> chassisSpeedsSupplier) {
+        var cmd = this.run(() -> setChassisVelocity(chassisSpeedsSupplier.get()));    // this.run() runs repeatedly
         cmd.addRequirements(leftMotors);
         cmd.addRequirements(rightMotors);
         return cmd;
     }
+    /**
+     * A forever command that pulls left and right wheel voltages from a
+     * function.
+     */
+    public Command c_controlWheelVoltages(Supplier<DifferentialDriveWheelVoltages> wheelVoltageSupplier) {
+        var cmd = this.run(() -> setWheelVoltages(wheelVoltageSupplier.get()));    // this.run() runs repeatedly
+        cmd.addRequirements(leftMotors);
+        cmd.addRequirements(rightMotors);
+        return cmd;
+    }
+
+
+    // convienence commands for feature parity with pre-2023 standard
+    /**
+     * moveCartesian with (x, y, turn) for timeout seconds.
+     * 
+     * Replaces ChassisConstant in pre-2023 standard.
+     */
+    @Deprecated
+    public Command c_chassisConstant(double x, double y, double turn, double timeout) {
+        return this.run(() -> moveCartesian(x, y, turn)).withTimeout(timeout);
+    }
+    /**
+     * Enters idle mode on underlying motor controllers.
+     * 
+     * Replaces ChassisIdle in pre-2023 standard.
+     */
+    public Command c_idle() {
+        return Commands.parallel(leftMotors.c_idle(), rightMotors.c_idle());    // TODO do we need to require the chassis subsystem for this? else chassis will read as unrequired, but all of it's subcomponents will be required.
+    }
+    // TODO: write the others. goodfirstissue
 }
