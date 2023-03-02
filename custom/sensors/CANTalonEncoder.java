@@ -10,7 +10,7 @@ import com.ctre.phoenix.motorcontrol.can.BaseTalon;
 import org.usfirst.frc4904.standard.custom.CustomPIDSourceType;
 
 /**
- * Encoder class for the Built-in Encoders on Talon Motor Controllers 
+ * Encoder class for the Built-in Encoders on Talon Motor Controllers
  * Works for both Falcons (CANTalonFX) and SRXs (CANTalonSRX)
  */
 public class CANTalonEncoder implements CustomEncoder {
@@ -123,13 +123,14 @@ public class CANTalonEncoder implements CustomEncoder {
 		return Util.isZero(getRate());
 	}
 
-	public int getRevLimitSwitchClosed() {
-		return talon.isRevLimitSwitchClosed();
+	public boolean isRevLimitSwitchClosed() {
+		return talon.isRevLimitSwitchClosed() == 1;
 	}
-	public int getFwdLimitSwitchClosed() {
-		return talon.isFwdLimitSwitchClosed();
+
+	public boolean isFwdLimitSwitchClosed() {
+		return talon.isFwdLimitSwitchClosed() == 1;
 	}
-	
+
 	@Override
 	public double getRate() {
 		if (reverseDirection) {
