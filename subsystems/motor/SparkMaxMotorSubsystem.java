@@ -3,25 +3,16 @@ package org.usfirst.frc4904.standard.subsystems.motor;
 import java.util.function.DoubleSupplier;
 import java.util.stream.Stream;
 
-import org.usfirst.frc4904.standard.custom.CustomCAN;
 import org.usfirst.frc4904.standard.custom.motorcontrollers.CustomCANSparkMax;
-import org.usfirst.frc4904.standard.custom.motorcontrollers.TalonMotorController;
 import org.usfirst.frc4904.standard.subsystems.motor.speedmodifiers.IdentityModifier;
 import org.usfirst.frc4904.standard.subsystems.motor.speedmodifiers.SpeedModifier;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.FeedbackDevice;
-import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
-import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
-import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix.motorcontrol.RemoteLimitSwitchSource;
 import com.revrobotics.REVLibError;
 import com.revrobotics.SparkMaxLimitSwitch;
 import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.Command;
 
 /**
@@ -45,9 +36,6 @@ import edu.wpi.first.wpilibj2.command.Command;
  * - Specifying respectLeadMotorLimitSwitches=false will not disable the limit switches if they were previously enabled. This is to allow you to configure limit switches on the underlying motor controllers before passing them in if necessary.
  */
 public class SparkMaxMotorSubsystem extends SmartMotorSubsystem<CustomCANSparkMax> {
-  private final int configTimeoutMs = 50;  // milliseconds until the Talon gives up trying to configure
-  private final int pid_idx = 0; // TODO: add support for auxillary pid
-  private final int follow_motors_remote_filter_id = 0; // DONOT REMOVE, USED IN COMMENTED CODE BELOW; which filter (0 or 1) will be used to configure reading from the integrated encoder on the lead motor
   private SparkMaxPIDController controller = null;
   public final CustomCANSparkMax leadMotor;
   public final CustomCANSparkMax[] followMotors;
@@ -177,6 +165,15 @@ public class SparkMaxMotorSubsystem extends SmartMotorSubsystem<CustomCANSparkMa
     }
   }
 
+  /**
+   * Set RPM of the motor, using SparkMAX internal PID. 
+   * 
+   * You must call .configPIDF before using this method
+   */
+  public void setRPM(double rpm) {
+    controller.setReference(rpm, ControlType.kVelocity);
+  }
+
   // TODO the following methods are not thought out or documented
   /**
    * The F value provided here will be overwritten if provided to subsystem.leadMotor.set; note that if you do that, it will bypass the subystem requirements check
@@ -204,14 +201,38 @@ public class SparkMaxMotorSubsystem extends SmartMotorSubsystem<CustomCANSparkMa
    * 
    * @return the command to schedule
    */
-  public Command c_controlVelocity(DoubleSupplier setpointSupplier) {
+  public Command c_controlRPM(DoubleSupplier setpointSupplier) {
     if (controller == null) throw new IllegalArgumentException(name + " tried to use c_controlVelocity without first configPIDF()-ing.");
-    return this.run(() -> controller.setReference(setpointSupplier.getAsDouble(), ControlType.kVelocity));
+    return this.run(() -> setRPM(setpointSupplier.getAsDouble()));
   }
-  // public void zeroSensors() {
-  //   // leadMotor.getSensorCollection // ?? doesn't exist; but it's in the CTRE falcon example
-  //   // also should we zero the sensors on the follow motors just in case they're being used?
-  // }
+
+
+  @Override
+  public Command c_setRPM(double setpoint) {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'c_setVelocity'");
+  }
+  @Override
+  public Command c_holdRPM(double setpoint) {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'c_holdVelocity'");
+  }
+  // TODO: need to zero sensors?
+  @Override
+  public Command c_setPosition(double setpoint) {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'c_setPosition'");
+  }
+  @Override
+  public Command c_controlPosition(DoubleSupplier setpointSupplier) {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'c_controlPosition'");
+  }
+  @Override
+  public Command c_holdPosition(double setpoint) {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'c_holdPosition'");
+  }
   
   // don't override disable() or stop() because we *should* indeed use the base implementation of disabling/stopping each motor controller individually. Otherwise the following motors will try to follow a disabled motor, which may cause unexpected behavior (although realistically, it likely just gets set to zero and neutrallized by the deadband).
 

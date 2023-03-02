@@ -38,6 +38,7 @@ import edu.wpi.first.wpilibj2.command.Command;
  * - Configure normallyClosed limit switches manually on the underlying motorControllers. We usually use normallyOpen limit switches, so you probably don't need to do this.
  */
 public class TalonMotorSubsystem extends SmartMotorSubsystem<TalonMotorController> {
+  private static final int ENCODER_COUNTS_PER_REV = 2048;
   private final int configTimeoutMs = 50;  // milliseconds until the Talon gives up trying to configure
   private final int pid_idx = 0; // TODO: add support for auxillary pid
   private final int follow_motors_remote_filter_id = 0; // DONOT REMOVE, USED IN COMMENTED CODE BELOW; which filter (0 or 1) will be used to configure reading from the integrated encoder on the lead motor
@@ -187,9 +188,12 @@ public class TalonMotorSubsystem extends SmartMotorSubsystem<TalonMotorControlle
    * 
    * See docstrings on the methods used in the implementation for physical units
    */
+  @Override
   public void configPIDF(double p, double i, double d, double f) {
     // feedback sensor configuration (for PID)
     leadMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, pid_idx, configTimeoutMs);
+    // make sure to update the static final ENCODER_COUNTS_PER_REV if you are using different encoders. Better yet, add a feedbackSensor argument to this method
+
     // for (var fm : followMotors) { // don't think this is needed because we are using follow mode. only needed for aux output
     //   fm.configRemoteFeedbackFilter(leadMotor.getDeviceID(), RemoteSensorSource.TalonFX_SelectedSensor /* enum internals has TalonFX = TalonSRX as of 2023 */, follow_motors_remote_filter_id, configTimeoutMs);
     //   fm.configSelectedFeedbackSensor(follow_motors_remote_filter_id == 0 ? FeedbackDevice.RemoteSensor0 : FeedbackDevice.RemoteSensor1 /* enum internals has TalonFX_SelectedSensor = TalonSRX_SelectedSensor as of 2023 */, pid_idx, configTimeoutMs);
@@ -206,16 +210,6 @@ public class TalonMotorSubsystem extends SmartMotorSubsystem<TalonMotorControlle
     // TODO: integral zone and closedLoopPeakOUtput? 
     // other things in the example: motionmagic config and statusframeperiod (for updating sensor status to the aux motor?)
   }
-  /**
-   * 
-   * @param setpointSupplier  a function that returns a double, units = encoder ticks per 100ms
-   * 
-   * @return
-   */
-  public Command c_controlVelocity(DoubleSupplier setpointSupplier) {
-    if (pid_configured == false) throw new IllegalArgumentException(name + " tried to use c_controlVelocity without first configPIDF()-ing.");
-    return this.run(() -> leadMotor.set(ControlMode.Velocity, setpointSupplier.getAsDouble()));
-  }
   // public void zeroSensors() {
   //   // leadMotor.getSensorCollection // ?? doesn't exist; but it's in the CTRE falcon example
   //   // also should we zero the sensors on the follow motors just in case they're being used?
@@ -228,8 +222,16 @@ public class TalonMotorSubsystem extends SmartMotorSubsystem<TalonMotorControlle
     setFollowMode();  // make sure all motors are following the lead as we expect. Possible OPTIMIZATION: store we set the output type to something else on the follow motors (eg. Neutral), and only re-set follow mode if we did. 
     leadMotor.set(power);
   }
+  /**
+   * Consider using .c_controlRPM to stream RPM values to this motor in a command.
+   * 
+   * You must call .configPIDF before using this method.
+   * @param rpm
+   */
+  public void setRPM(double rpm) {
+    leadMotor.set(ControlMode.Velocity, rpm / 60 / 10 * ENCODER_COUNTS_PER_REV);  // velocity units are in encoder counts per 100ms
+  }
 
-  @Override
   /**
    * if using a Ramsete controller, make sure to disable voltage compensation,
    * because voltages have an actual physical meaning from sysid.
@@ -240,9 +242,56 @@ public class TalonMotorSubsystem extends SmartMotorSubsystem<TalonMotorControlle
    * implementation (calling setVoltage on each motor) as that will just run the
    * same voltage->power calculation for each motor.
    */
+  @Override
   public void setVoltage(double voltage) {
     setFollowMode();
     leadMotor.setVoltage(voltage);
+  }
+  /**
+   * You must call .configPIDF before using this method.
+   * 
+   * @param rpm
+   * @return the command to be scheduled.
+   */
+  @Override @Deprecated
+  public Command c_setRPM(double rpm) { return this.runOnce(() -> setRPM(rpm)); }
+  /**
+   * 
+   * @param setpointSupplier  a function that returns a double, rpm
+   * 
+   * @return
+   */
+  @Override
+  public Command c_controlRPM(DoubleSupplier setpointSupplier) {
+    if (pid_configured == false) throw new IllegalArgumentException(name + " tried to use c_controlVelocity without first configPIDF()-ing.");
+    return this.run(() -> setRPM(setpointSupplier.getAsDouble()));
+  }
+  @Override
+  public Command c_holdRPM(double setpoint) {
+    if (pid_configured == false) throw new IllegalArgumentException(name + " tried to use c_controlVelocity without first configPIDF()-ing.");
+    return this.run(() -> setRPM(setpoint));  // TODO: use motionmagic
+  }
+  /**
+   * Command that sets the position setpoint and immedietly ends.
+   */
+  @Override @Deprecated
+  public Command c_setPosition(double setpoint) {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'c_setPosition'");
+  }
+  @Override
+  public Command c_controlPosition(DoubleSupplier setpointSupplier) {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'c_controlPosition'");
+  }
+  /**
+   * Hold the position using smart motion (on-the-fly motion-profile generation).
+   */
+  @Override
+  public Command c_holdPosition(double setpoint) {
+    // TODO: https://github.com/REVrobotics/SPARK-MAX-Examples/tree/master/Java/Smart%20Motion%20Example
+    // TODO: also probably have to implement a method to configure smartmotion cruise velocity
+    throw new UnsupportedOperationException("Unimplemented method 'c_holdPosition'");
   }
 
   // no need to override setPower because the base class just uses set

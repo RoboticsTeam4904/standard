@@ -1,5 +1,7 @@
 package org.usfirst.frc4904.standard.subsystems.motor;
 
+import java.util.function.DoubleSupplier;
+
 import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.custom.motorcontrollers.SmartMotorController;
 import org.usfirst.frc4904.standard.subsystems.motor.speedmodifiers.IdentityModifier;
@@ -172,7 +174,7 @@ public abstract class SmartMotorSubsystem<SMC extends SmartMotorController> exte
         setCoastOnNeutral();
         neutralOutput();
     }
-    
+
     /// COMMANDS
     // TODO: remove the "Replaces *.java in pre-2023 standard" and "eg. button1.onTrue(motor.c_idle())" when they become unnecessary.
 
@@ -213,7 +215,7 @@ public abstract class SmartMotorSubsystem<SMC extends SmartMotorController> exte
      * 
      * @return Command to be scheduled or triggered, eg. button1.onTrue(motor.c_setPowerHold())
      */
-    public Command c_setPowerHold(double power) { return this.run(() -> this.setPower(power)); }
+    public Command c_holdPower(double power) { return this.run(() -> this.setPower(power)); }
     
     /**
      * Repeatedly set motor voltage. Command version of setVoltagePower().
@@ -227,21 +229,35 @@ public abstract class SmartMotorSubsystem<SMC extends SmartMotorController> exte
      *
      * @return Command to be scheduled or triggered, eg. button1.onTrue(motor.c_setVoltageHold())
      */
-    public Command c_setVoltageHold(double voltage) { return this.run(() -> this.setVoltage(voltage)); }
+    public Command c_holdVoltage(double voltage) { return this.run(() -> this.setVoltage(voltage)); }
+
     /**
      * Enables brake mode on and brakes each motor. Command version of brake().
      *
      * @return Command to be scheduled or triggered, eg. button1.onTrue(motor.c_brake())
      */
-    public Command c_brake() {
-        return this.runOnce(() -> this.brake());
-    }
+    public Command c_brake() { return this.runOnce(() -> this.brake()); }
+
     /**
      * Enables coast mode on and coasts each motor. Command version of coast().
      *
      * @return Command to be scheduled or triggered, eg. button1.onTrue(motor.c_coast())
      */
-    public Command c_coast() {
-        return this.runOnce(() -> this.coast());
-    }
+    public Command c_coast() { return this.runOnce(() -> this.coast()); }
+
+    /**
+     * Write PIDF values to hardware, which will be used with the closed loop control commands
+     * 
+     * TODO: replace with ezControl
+     */
+    public abstract void setRPM(double voltage);
+    public abstract void configPIDF(double p, double i, double d, double f);
+    public abstract Command c_controlRPM(DoubleSupplier setpointSupplier);
+    public abstract Command c_holdRPM(double setpoint);
+    public abstract Command c_controlPosition(DoubleSupplier setpointSupplier);
+    public abstract Command c_holdPosition(double setpoint);
+
+    // deprecate the set-and-forget commands, because commands should not end before the motor is in a "stop" state
+    @Deprecated public abstract Command c_setRPM(double setpoint);
+    @Deprecated public abstract Command c_setPosition(double setpoint);
 }
