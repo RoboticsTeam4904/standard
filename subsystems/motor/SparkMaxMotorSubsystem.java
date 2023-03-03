@@ -14,6 +14,7 @@ import com.revrobotics.SparkMaxLimitSwitch;
 import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
+import com.revrobotics.CANSparkMax.SoftLimitDirection;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -87,14 +88,12 @@ public class SparkMaxMotorSubsystem extends SmartMotorSubsystem<CustomCANSparkMa
    *                                      switches). NOTE passing false will not
    *                                      disable limit switches; just unplug
    *                                      them instead. 
-   * @param softwareLimitLowerBound
-   * @param voltageCompensation       0 to disable, 10 is a good default. Set
-   *                                  the voltage corresponding to power=1.0
-   *                                  This way, setting a power will lead to
-   *                                  consistent output even when other
-   *                                  components are running. Basically nerf all
-   *                                  motors so that they have a consistent
-   *                                  output. when the battery is low.
+   * @param voltageCompensation 0 to disable, 10 is a good default. Set the
+   *                            voltage corresponding to power=1.0 This way,
+   *                            setting a power will lead to consistent output
+   *                            even when other components are running.
+   *                            Basically nerf all motors so that they have a
+   *                            consistent output. when the battery is low.
    * @param leadMotor
    * @param followMotors
    */
@@ -193,6 +192,15 @@ public class SparkMaxMotorSubsystem extends SmartMotorSubsystem<CustomCANSparkMa
    */
   public void zeroSensors() {
     encoder.setPosition(0);
+  }
+  /**
+   * Consider also calling zeroSensors to ensure your encoder is in a known state
+   */
+  public void configSoftwareLimits(double fwdRotationBounds, double revRotationBounds) {
+    leadMotor.enableSoftLimit(SoftLimitDirection.kForward, true);
+    leadMotor.enableSoftLimit(SoftLimitDirection.kReverse, true);
+    leadMotor.setSoftLimit(SoftLimitDirection.kForward, (float) fwdRotationBounds);
+    leadMotor.setSoftLimit(SoftLimitDirection.kReverse, (float) revRotationBounds);
   }
   /**
    * The F value provided here will be overwritten if provided to subsystem.leadMotor.set; note that if you do that, it will bypass the subystem requirements check
