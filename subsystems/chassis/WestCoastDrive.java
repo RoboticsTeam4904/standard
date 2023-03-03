@@ -13,9 +13,9 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class WestCoastDrive<SMC extends SmartMotorController> extends SubsystemBase {
-    private final SmartMotorSubsystem<SMC> leftMotors;
-    private final SmartMotorSubsystem<SMC> rightMotors;
+public class WestCoastDrive<MotorControllerType extends SmartMotorController> extends SubsystemBase {
+    private final SmartMotorSubsystem<MotorControllerType> leftMotors;
+    private final SmartMotorSubsystem<MotorControllerType> rightMotors;
     private final DifferentialDriveKinematics kinematics;
     private final double mps_to_rpm;
     /**
@@ -27,7 +27,7 @@ public class WestCoastDrive<SMC extends SmartMotorController> extends SubsystemB
      * @param leftMotorSubsystem        SmartMotorSubsystem for the left wheels. Usually a TalonMotorSubsystem with two talons.
      * @param rightMotorSubsystem       SmartMotorSubsystem for the right wheels. Usually a TalonMotorSubsystem with two talons.
      */
-    public WestCoastDrive(double trackWidthMeters, double motorToWheelGearRatio, double wheelDiameterMeters, SmartMotorSubsystem<SMC> leftMotorSubsystem, SmartMotorSubsystem<SMC> rightMotorSubsystem) {
+    public WestCoastDrive(double trackWidthMeters, double motorToWheelGearRatio, double wheelDiameterMeters, SmartMotorSubsystem<MotorControllerType> leftMotorSubsystem, SmartMotorSubsystem<MotorControllerType> rightMotorSubsystem) {
         leftMotors = leftMotorSubsystem;
         rightMotors = rightMotorSubsystem;
         kinematics = new DifferentialDriveKinematics(trackWidthMeters);  // 2023 robot has track width ~19.5 inches, 5 in wheel diameter
@@ -54,6 +54,7 @@ public class WestCoastDrive<SMC extends SmartMotorController> extends SubsystemB
         if (heading != 0) throw new IllegalArgumentException("West Coast Drive cannot move at a non-zero heading!");
         setChassisVelocity(new ChassisSpeeds(speed, 0, turnSpeed));
     }
+    // TODO: error if PIDF has not been configured in the underlying motorsubsystems
     public void setWheelVelocities(DifferentialDriveWheelSpeeds wheelSpeeds) {
         this.leftMotors .setRPM(wheelSpeeds.leftMetersPerSecond  * mps_to_rpm);
         this.rightMotors.setRPM(wheelSpeeds.rightMetersPerSecond * mps_to_rpm);
