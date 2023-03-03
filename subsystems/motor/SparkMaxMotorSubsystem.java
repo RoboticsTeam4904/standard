@@ -7,13 +7,16 @@ import org.usfirst.frc4904.standard.custom.motorcontrollers.CustomCANSparkMax;
 import org.usfirst.frc4904.standard.subsystems.motor.speedmodifiers.IdentityModifier;
 import org.usfirst.frc4904.standard.subsystems.motor.speedmodifiers.SpeedModifier;
 
+import com.revrobotics.CANSparkMax;
 import com.revrobotics.REVLibError;
+import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxLimitSwitch;
 import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /**
  * A group of SparkMax motor controllers the modern motor controller features. 
@@ -36,7 +39,12 @@ import edu.wpi.first.wpilibj2.command.Command;
  * - Specifying respectLeadMotorLimitSwitches=false will not disable the limit switches if they were previously enabled. This is to allow you to configure limit switches on the underlying motor controllers before passing them in if necessary.
  */
 public class SparkMaxMotorSubsystem extends SmartMotorSubsystem<CustomCANSparkMax> {
+  public static final int DEFAULT_PID_SLOT = 0;  // spark max has 4 slots: [0, 3]; TODO: frecency on mathThing?
+  public static final int DEFAULT_DMP_SLOT = 0;  // spark max has 4 smart-motion (dynamic motion profile) slots, [0, 3]
+  private boolean pid_configured = false; // flags to remember whether pid and dmp were configured, for error checking
+  private boolean dmp_configured = false; // when multiple pid/dmp slots, these will have to become slot-wise 
   private SparkMaxPIDController controller = null;
+  private RelativeEncoder encoder = null;
   public final CustomCANSparkMax leadMotor;
   public final CustomCANSparkMax[] followMotors;
 
@@ -79,6 +87,7 @@ public class SparkMaxMotorSubsystem extends SmartMotorSubsystem<CustomCANSparkMa
    *                                      switches). NOTE passing false will not
    *                                      disable limit switches; just unplug
    *                                      them instead. 
+   * @param softwareLimitLowerBound
    * @param voltageCompensation       0 to disable, 10 is a good default. Set
    *                                  the voltage corresponding to power=1.0
    *                                  This way, setting a power will lead to
@@ -176,24 +185,56 @@ public class SparkMaxMotorSubsystem extends SmartMotorSubsystem<CustomCANSparkMa
 
   // TODO the following methods are not thought out or documented
   /**
+   * Zero the sensors. This should be called once on start up, when the motors
+   * are in a known state. Absolute sensor positioning is used for closed loop
+   * position control. 
+   * 
+   * Call .configPIDF before using this method. TODO all these dependencies suck
+   */
+  public void zeroSensors() {
+    encoder.setPosition(0);
+  }
+  /**
    * The F value provided here will be overwritten if provided to subsystem.leadMotor.set; note that if you do that, it will bypass the subystem requirements check
    * 
    * See docstrings on the methods used in the implementation for physical units
    */
-  public void configPIDF(double p, double i, double d, double f) {
+  public void configPIDF(double p, double i, double d, double f, Integer pid_slot) {
+    if (pid_slot == null) pid_slot = SparkMaxMotorSubsystem.DEFAULT_PID_SLOT;
     // set sensor
-    var sensor = leadMotor.getEncoder();
-    sensor.setInverted(false);
+    encoder = leadMotor.getEncoder();  // use .getAlternateEncoder for external encoder
+    encoder.setInverted(leadMotor.getInverted());
     // docs says you need to sparkMax.setFeedbackDevice but that appears to not exist..
     // is this even needed for brushless? migration docs says it's not: https://docs.revrobotics.com/sparkmax/software-resources/migrating-ctre-to-rev#select-encoder
 
     // set pid constants
-    controller = leadMotor.getPIDController();
-    controller.setP(p);
-    controller.setI(i);
-    controller.setD(d);
-    controller.setFF(f);
+    if (controller == null) controller = leadMotor.getPIDController();  // null check to avoid overwriting controller if it was initialized in .configDMP
+    controller.setP(p, pid_slot);
+    controller.setI(i, pid_slot);
+    controller.setD(d, pid_slot);
+    controller.setFF(f, pid_slot);
+    pid_configured = true;
     // TODO: integral zone and outputRange? 
+  }
+  public void configDMP(double minRPM, double maxRPM, double maxAccl_RPMps, double maxError_encoderTicks, Integer dmp_slot) {
+    if (dmp_slot == null) dmp_slot = SparkMaxMotorSubsystem.DEFAULT_DMP_SLOT;
+
+    if (controller == null) controller = leadMotor.getPIDController();  // null check to avoid overwriting controller if it was initialized in .configPIDF
+    controller.setSmartMotionMaxVelocity(maxRPM, dmp_slot);
+    controller.setSmartMotionMinOutputVelocity(minRPM, dmp_slot);
+    controller.setSmartMotionMaxAccel(maxAccl_RPMps, dmp_slot);
+    controller.setSmartMotionAllowedClosedLoopError(maxAccl_RPMps, dmp_slot);
+    dmp_configured = true;
+  }
+  @Override
+  public void setDynamicMotionProfileTargetRotations(double targetRotations) {
+    // this fn should be called infrequently--only when we start a motion profile
+    if (!dmp_configured || !pid_configured) throw new IllegalCallerException("You must configure PIDF and DMP first!");
+    controller.setReference(targetRotations, CANSparkMax.ControlType.kSmartMotion);
+  }
+  @Override
+  public double getSensorPositionRotations() {
+    return encoder.getVelocity();
   }
   /**
    * 
@@ -202,36 +243,34 @@ public class SparkMaxMotorSubsystem extends SmartMotorSubsystem<CustomCANSparkMa
    * @return the command to schedule
    */
   public Command c_controlRPM(DoubleSupplier setpointSupplier) {
-    if (controller == null) throw new IllegalArgumentException(name + " tried to use c_controlVelocity without first configPIDF()-ing.");
+    if (!pid_configured) throw new IllegalArgumentException(name + " tried to use c_controlRPM without first configPIDF()-ing.");
     return this.run(() -> setRPM(setpointSupplier.getAsDouble()));
   }
-
-
-  @Override
+  @Override @Deprecated
   public Command c_setRPM(double setpoint) {
     // TODO Auto-generated method stub
     throw new UnsupportedOperationException("Unimplemented method 'c_setVelocity'");
   }
   @Override
   public Command c_holdRPM(double setpoint) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'c_holdVelocity'");
+    if (!pid_configured) throw new IllegalArgumentException(name + " tried to use c_holdRPM without first configPIDF()-ing.");
+    return this.run(() -> setRPM(setpoint));
   }
-  // TODO: need to zero sensors?
+  // TODO: these should probably use a diff pid slot from RPM
   @Override
   public Command c_setPosition(double setpoint) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'c_setPosition'");
+    if (!pid_configured) throw new IllegalArgumentException(name + " tried to use c_setPosition without first configPIDF()-ing");
+    return new HardwareDMPUntilArrival(this, setpoint);
   }
   @Override
   public Command c_controlPosition(DoubleSupplier setpointSupplier) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'c_controlPosition'");
+    if (!pid_configured) throw new IllegalArgumentException(name + " tried to use c_controlPosition without first configPIDF()-ing");
+    return this.run(() -> setDynamicMotionProfileTargetRotations(setpointSupplier.getAsDouble()));
   }
   @Override
   public Command c_holdPosition(double setpoint) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'c_holdPosition'");
+    if (!pid_configured) throw new IllegalArgumentException(name + " tried to use c_controlPosition without first configPIDF()-ing");
+    return this.runOnce(() -> setDynamicMotionProfileTargetRotations(setpoint)).andThen(new CommandBase(){} /* noop forever command, blame @zbuster05 */);
   }
   
   // don't override disable() or stop() because we *should* indeed use the base implementation of disabling/stopping each motor controller individually. Otherwise the following motors will try to follow a disabled motor, which may cause unexpected behavior (although realistically, it likely just gets set to zero and neutrallized by the deadband).

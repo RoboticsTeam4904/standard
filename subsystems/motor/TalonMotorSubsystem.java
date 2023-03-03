@@ -40,7 +40,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 public class TalonMotorSubsystem extends SmartMotorSubsystem<TalonMotorController> {
   private static final int ENCODER_COUNTS_PER_REV = 2048;
   private final int configTimeoutMs = 50;  // milliseconds until the Talon gives up trying to configure
-  private final int pid_idx = 0; // TODO: add support for auxillary pid
+  private static final int DEFAULT_PID_SLOT = 0; // TODO: add support for auxillary pid
   private final int follow_motors_remote_filter_id = 0; // DONOT REMOVE, USED IN COMMENTED CODE BELOW; which filter (0 or 1) will be used to configure reading from the integrated encoder on the lead motor
   private boolean pid_configured = false; // flag for command factories to check whether PID was configured
   public final TalonMotorController leadMotor;
@@ -187,11 +187,19 @@ public class TalonMotorSubsystem extends SmartMotorSubsystem<TalonMotorControlle
    * The F value provided here will be overwritten if provided to subsystem.leadMotor.set; note that if you do that, it will bypass the subystem requirements check
    * 
    * See docstrings on the methods used in the implementation for physical units
+   * 
+   * @param p  in units of encoder counts per 100ms
+   * @param i  in units of TODO
+   * @param d  in units of TODO
+   * @param f  in units of percent output, [-1, 1]
+   * @param pid_slot range [0, 3], pass null for default of zero.
    */
   @Override
-  public void configPIDF(double p, double i, double d, double f) {
+  public void configPIDF(double p, double i, double d, double f, Integer pid_slot) {
+    if (pid_slot == null) pid_slot = TalonMotorSubsystem.DEFAULT_PID_SLOT;
+
     // feedback sensor configuration (for PID)
-    leadMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, pid_idx, configTimeoutMs);
+    leadMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, pid_slot, configTimeoutMs);
     // make sure to update the static final ENCODER_COUNTS_PER_REV if you are using different encoders. Better yet, add a feedbackSensor argument to this method
 
     // for (var fm : followMotors) { // don't think this is needed because we are using follow mode. only needed for aux output
@@ -201,11 +209,11 @@ public class TalonMotorSubsystem extends SmartMotorSubsystem<TalonMotorControlle
     // }
 
     // PID constants configuration
-    leadMotor.config_kP(pid_idx, p, configTimeoutMs);
-    leadMotor.config_kI(pid_idx, i, configTimeoutMs);
-    leadMotor.config_kD(pid_idx, d, configTimeoutMs);
-    leadMotor.config_kF(pid_idx, f, configTimeoutMs);
-    leadMotor.configClosedLoopPeriod(pid_idx, 10, configTimeoutMs); // fast enough for 100Hz per second
+    leadMotor.config_kP(pid_slot, p, configTimeoutMs);
+    leadMotor.config_kI(pid_slot, i, configTimeoutMs);
+    leadMotor.config_kD(pid_slot, d, configTimeoutMs);
+    leadMotor.config_kF(pid_slot, f, configTimeoutMs);  // TODO: enable voltage comp, then divide f by the voltage comp voltage to get feedforward in voltage units. https://www.chiefdelphi.com/t/feedforward-for-talonfx-pid/401200/8
+    leadMotor.configClosedLoopPeriod(pid_slot, 10, configTimeoutMs); // fast enough for 100Hz per second
     pid_configured = true;
     // TODO: integral zone and closedLoopPeakOUtput? 
     // other things in the example: motionmagic config and statusframeperiod (for updating sensor status to the aux motor?)
@@ -292,6 +300,27 @@ public class TalonMotorSubsystem extends SmartMotorSubsystem<TalonMotorControlle
     // TODO: https://github.com/REVrobotics/SPARK-MAX-Examples/tree/master/Java/Smart%20Motion%20Example
     // TODO: also probably have to implement a method to configure smartmotion cruise velocity
     throw new UnsupportedOperationException("Unimplemented method 'c_holdPosition'");
+  }
+  @Override
+  public void zeroSensors() {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'zeroSensors'");
+  }
+  @Override
+  public void configDMP(double minRPM, double maxRPM, double maxAccl_RPMps, double maxError_encoderTicks,
+      Integer dmp_slot) {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'configDMP'");
+  }
+  @Override
+  protected void setDynamicMotionProfileTargetRotations(double rotations) {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'setDynamicMotionProfileTargetRotations'");
+  }
+  @Override
+  protected double getSensorPositionRotations() {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'getSensorPositionRotations'");
   }
 
   // no need to override setPower because the base class just uses set

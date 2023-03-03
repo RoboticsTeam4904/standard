@@ -7,15 +7,19 @@ import org.usfirst.frc4904.standard.custom.motorcontrollers.SmartMotorController
 import org.usfirst.frc4904.standard.subsystems.motor.speedmodifiers.IdentityModifier;
 import org.usfirst.frc4904.standard.subsystems.motor.speedmodifiers.SpeedModifier;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 
-public abstract class SmartMotorSubsystem<SMC extends SmartMotorController> extends SubsystemBase {    // generic to allow inherited class (eg. TalonMotorSubsystem) to directly use TalonMotorController APIs on super.motors (not possible if this.motors here was BrakeableMotorController)
-    protected final SMC[] motors;
+public abstract class SmartMotorSubsystem<MotorControllerType extends SmartMotorController> extends SubsystemBase {    // generic to allow inherited class (eg. TalonMotorSubsystem) to directly use TalonMotorController APIs on super.motors (not possible if this.motors here was BrakeableMotorController)
+    public static final int DEFAULT_PID_SLOT = 0;   // default slot for pid constants
+    public static final int DEFAULT_DMP_SLOT = 0;   // default slot for dynamic motion profile (motionmagic or smartmotion) configuration
+
+    protected final MotorControllerType[] motors;
 	protected final SpeedModifier speedModifier;    // NOTE: maybe change to be called PowerModifier
 	protected final String name;
-    // TODO: should this take general MotorControllers and just brake the ones that implement BrakeableMotorController
 
     /**
      * A class that wraps around a variable number of BrakeableMotorController
@@ -30,7 +34,7 @@ public abstract class SmartMotorSubsystem<SMC extends SmartMotorController> exte
      * @param motors        The MotorControllers in this subsystem. Can be a single
      *                      MotorController or multiple MotorControllers.
      */
-	public SmartMotorSubsystem(String name, SpeedModifier speedModifier, SMC... motors) {
+	public SmartMotorSubsystem(String name, SpeedModifier speedModifier, MotorControllerType... motors) {
 		super();
 		setName(name);
 		this.name = name;
@@ -39,8 +43,6 @@ public abstract class SmartMotorSubsystem<SMC extends SmartMotorController> exte
 		for (var motor : motors) {
 			motor.set(0);
 		}
-		setDefaultCommand(this.c_idle());
-
         setDefaultCommand(this.runOnce(() -> this.neutralOutput()));
     }
 
@@ -54,7 +56,7 @@ public abstract class SmartMotorSubsystem<SMC extends SmartMotorController> exte
 	 * @param motors     The MotorControllers in this subsystem. Can be a single
 	 *                   MotorController or multiple MotorControllers.
 	 */
-	public SmartMotorSubsystem(String name, SMC... motors) {
+	public SmartMotorSubsystem(String name, MotorControllerType... motors) {
 		this(name, new IdentityModifier(), motors);
 	}
 
@@ -70,7 +72,7 @@ public abstract class SmartMotorSubsystem<SMC extends SmartMotorController> exte
 	 * @param motors        The MotorControllers in this subsystem. Can be a single
 	 *                      MotorController or multiple MotorControllers.
 	 */
-    public SmartMotorSubsystem(SpeedModifier speedModifier, SMC... motors) {
+    public SmartMotorSubsystem(SpeedModifier speedModifier, MotorControllerType... motors) {
         this("Motor", speedModifier, motors);
     }
 
@@ -83,7 +85,7 @@ public abstract class SmartMotorSubsystem<SMC extends SmartMotorController> exte
 	 * @param motors The MotorControllers in this subsystem. Can be a single
 	 *               MotorController or multiple MotorControllers.
 	 */
-	public SmartMotorSubsystem(SMC... motors) {
+	public SmartMotorSubsystem(MotorControllerType... motors) {
 		this("Motor Subsystem", motors);
 	} 
     
@@ -119,7 +121,7 @@ public abstract class SmartMotorSubsystem<SMC extends SmartMotorController> exte
 	 *
 	 * @param power The power to set. Value should be between -1.0 and 1.0.
      */
-    public void setPower(double power) {
+    public final void setPower(double power) {
         set(power);
     }
 
@@ -162,7 +164,7 @@ public abstract class SmartMotorSubsystem<SMC extends SmartMotorController> exte
     /**
      * Enables brake mode on and brakes each motor.
      */
-    public void brake() {
+    public final void brake() {
         setBrakeOnNeutral();
         neutralOutput();
     }
@@ -170,7 +172,7 @@ public abstract class SmartMotorSubsystem<SMC extends SmartMotorController> exte
     /**
      * Enables coast mode on and coasts each motor.
      */
-    public void coast() {
+    public final void coast() {
         setCoastOnNeutral();
         neutralOutput();
     }
@@ -183,21 +185,21 @@ public abstract class SmartMotorSubsystem<SMC extends SmartMotorController> exte
      * 
      * @return Command to be scheduled or triggered, eg. button1.onTrue(motor.c_disable())
      */
-    public Command c_disable() { return this.run(() -> this.disable()); }
+    public final Command c_disable() { return this.run(() -> this.disable()); }
 
     /**
      * Stop motor using the underlying .stopMotor(); command version of .stopMotor().
      * 
      * @return Command to be scheduled or triggered, eg. button1.onTrue(motor.c_stopMotor())
      */
-    public Command c_stopMotor() { return this.run(() -> this.stopMotor()); }
+    public final Command c_stopMotor() { return this.run(() -> this.stopMotor()); }
 
     /**
      * Set motor power to zero. Replaces MotorIdle.java in pre-2023 standard.
      * 
      * @return Command to be scheduled or triggered, eg. button1.onTrue(motor.c_idle())
      */
-    public Command c_idle() { return this.runOnce(() -> setPower(0)); }
+    public final Command c_idle() { return this.runOnce(() -> setPower(0)); }
     
     /**
      * Set motor power to power. Command version of setPower().
@@ -206,7 +208,7 @@ public abstract class SmartMotorSubsystem<SMC extends SmartMotorController> exte
      * 
      * @return Command to be scheduled or triggered, eg. button1.onTrue(motor.c_setPower())
      */
-    public Command c_setPower(double power) { return this.runOnce(() -> this.setPower(power)); }
+    public final Command c_setPower(double power) { return this.runOnce(() -> this.setPower(power)); }
 
     /**
      * Repeatedly motor power to power until inturrupted. Replaces MotorConstant.java in pre-2023 standard.
@@ -215,7 +217,7 @@ public abstract class SmartMotorSubsystem<SMC extends SmartMotorController> exte
      * 
      * @return Command to be scheduled or triggered, eg. button1.onTrue(motor.c_setPowerHold())
      */
-    public Command c_holdPower(double power) { return this.run(() -> this.setPower(power)); }
+    public final Command c_holdPower(double power) { return this.run(() -> this.setPower(power)); }
     
     /**
      * Repeatedly set motor voltage. Command version of setVoltagePower().
@@ -229,21 +231,21 @@ public abstract class SmartMotorSubsystem<SMC extends SmartMotorController> exte
      *
      * @return Command to be scheduled or triggered, eg. button1.onTrue(motor.c_setVoltageHold())
      */
-    public Command c_holdVoltage(double voltage) { return this.run(() -> this.setVoltage(voltage)); }
+    public final Command c_holdVoltage(double voltage) { return this.run(() -> this.setVoltage(voltage)); }
 
     /**
      * Enables brake mode on and brakes each motor. Command version of brake().
      *
      * @return Command to be scheduled or triggered, eg. button1.onTrue(motor.c_brake())
      */
-    public Command c_brake() { return this.runOnce(() -> this.brake()); }
+    public final Command c_brake() { return this.runOnce(() -> this.brake()); }
 
     /**
      * Enables coast mode on and coasts each motor. Command version of coast().
      *
      * @return Command to be scheduled or triggered, eg. button1.onTrue(motor.c_coast())
      */
-    public Command c_coast() { return this.runOnce(() -> this.coast()); }
+    public final Command c_coast() { return this.runOnce(() -> this.coast()); }
 
     /**
      * Write PIDF values to hardware, which will be used with the closed loop control commands
@@ -251,11 +253,81 @@ public abstract class SmartMotorSubsystem<SMC extends SmartMotorController> exte
      * TODO: replace with ezControl
      */
     public abstract void setRPM(double voltage);
-    public abstract void configPIDF(double p, double i, double d, double f);
+    public abstract void zeroSensors(); // you must zero the sensors before using position closed loop
+    /**
+     * Configure the PIDF constants, and also configure encoder inversion to be
+     * positive when the lead motor is sent a positive power.
+     * 
+     * @param p units = rpm
+     * @param i
+     * @param d
+     * @param f units = voltage
+     * @param pid_slot
+     */
+    public abstract void configPIDF(double p, double i, double d, double f, Integer pid_slot);
+    public abstract void configDMP(double minRPM, double maxRPM, double maxAccl_RPMps, double maxError_encoderTicks, Integer dmp_slot);   // you must configure dynamic motion profiles (motionmagic or smartmotion) before using setPosition 
     public abstract Command c_controlRPM(DoubleSupplier setpointSupplier);
     public abstract Command c_holdRPM(double setpoint);
     public abstract Command c_controlPosition(DoubleSupplier setpointSupplier);
     public abstract Command c_holdPosition(double setpoint);
+
+    /*
+     * Plumbing/unified interface for using dynamic motion profiling features
+     */
+    /**
+     * Should be a thin wrapper around the motor-controller-specific method to
+     * set a dynamicmotionprofile setpoint (motionmagic or smartmotion).
+     *
+     * Make sure to convert units from motor shaft rotations (passed from here)
+     * to whatever the internal method uses.
+     */
+    protected abstract void setDynamicMotionProfileTargetRotations(double rotations);
+    /**
+     * Should be a thin wrapper around the encoder position getter.
+     *
+     * @return the encoder offset from sensor zero, zeroed with .zeroSensors, in
+     *         motor shaft rotations.
+     */
+    protected abstract double getSensorPositionRotations();
+
+    /**
+     * A command that uses dynamic motion profiling (motionmagic/smartmotion) to
+     * PID to a setpoint, while monitoring the progress and ending itself when
+     * we arrive (when we have been within errorRange (rotations) for
+     * holdTimeCondition (ms)).
+     */
+    public class HardwareDMPUntilArrival extends CommandBase {
+        private SmartMotorSubsystem<MotorControllerType> motorSubsys;
+        private double target;
+        private double errorRangeRotations;
+        private double holdTimeCondition;
+        private double recentOffPositionTime = Double.POSITIVE_INFINITY;    // start at infinity so that checks of "now() - recentOffPositionTime > holdTimeConditionMs" never succeed before initalization
+        public HardwareDMPUntilArrival(SmartMotorSubsystem<MotorControllerType> smartMotorSubsystem, double targetPosRotations, double errorRangeRotations, double holdTimeConditionMs) {
+            this.target = targetPosRotations;
+            this.motorSubsys = smartMotorSubsystem;
+            this.errorRangeRotations = errorRangeRotations;
+            this.holdTimeCondition = holdTimeConditionMs;
+            addRequirements(this.motorSubsys);
+        }
+        public HardwareDMPUntilArrival(SmartMotorSubsystem<MotorControllerType> smartMotorSubsystem, double targetPosRotations) {
+            this(smartMotorSubsystem, targetPosRotations, 1/90, 100);
+        }
+
+        @Override
+        public void initialize() {
+            this.motorSubsys.setDynamicMotionProfileTargetRotations(DEFAULT_DMP_SLOT);
+        }
+        @Override
+        public void execute() {
+            if (Math.abs(this.motorSubsys.getSensorPositionRotations() - target) < errorRangeRotations) {
+                recentOffPositionTime = Timer.getFPGATimestamp();
+            }
+        }
+        @Override
+        public boolean isFinished() {
+            return Timer.getFPGATimestamp() - recentOffPositionTime > holdTimeCondition;    // finished = whether (the last time we were off position) was long enough ago
+        }
+    }
 
     // deprecate the set-and-forget commands, because commands should not end before the motor is in a "stop" state
     @Deprecated public abstract Command c_setRPM(double setpoint);
