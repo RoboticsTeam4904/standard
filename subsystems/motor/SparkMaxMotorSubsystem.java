@@ -191,6 +191,7 @@ public class SparkMaxMotorSubsystem extends SmartMotorSubsystem<CustomCANSparkMa
    * Call .configPIDF before using this method. TODO all these dependencies suck
    */
   public void zeroSensors() {
+    encoder = leadMotor.getEncoder();
     encoder.setPosition(0);
   }
   /**
@@ -210,8 +211,6 @@ public class SparkMaxMotorSubsystem extends SmartMotorSubsystem<CustomCANSparkMa
   public void configPIDF(double p, double i, double d, double f, Integer pid_slot) {
     if (pid_slot == null) pid_slot = SparkMaxMotorSubsystem.DEFAULT_PID_SLOT;
     // set sensor
-    encoder = leadMotor.getEncoder();  // use .getAlternateEncoder for external encoder
-    encoder.setInverted(leadMotor.getInverted());
     // docs says you need to sparkMax.setFeedbackDevice but that appears to not exist..
     // is this even needed for brushless? migration docs says it's not: https://docs.revrobotics.com/sparkmax/software-resources/migrating-ctre-to-rev#select-encoder
 

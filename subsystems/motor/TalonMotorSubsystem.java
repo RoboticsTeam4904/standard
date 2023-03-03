@@ -322,6 +322,11 @@ public class TalonMotorSubsystem extends SmartMotorSubsystem<TalonMotorControlle
     // TODO Auto-generated method stub
     throw new UnsupportedOperationException("Unimplemented method 'getSensorPositionRotations'");
   }
+  @Override
+  public void configSoftwareLimits(double fwdBoundRotations, double revBoundRotations) {
+    // TODO Auto-generated method stub
+    
+  }
 
   // no need to override setPower because the base class just uses set
   // don't override setBrakeOnNeutral, setCoastOnNeutral, neutralOutput because we indeed want to set it individually on each motor. Otherwise, the followers might try to follow a disabled/neutral motor which might cause unexpected behavior.
