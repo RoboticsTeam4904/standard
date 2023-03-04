@@ -15,6 +15,7 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.RemoteLimitSwitchSource;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /**
  * A group of Talon motors (either TalonFX or TalonSRX) with the modern motor controller features. 
@@ -38,10 +39,12 @@ import edu.wpi.first.wpilibj2.command.Command;
  * - Configure normallyClosed limit switches manually on the underlying motorControllers. We usually use normallyOpen limit switches, so you probably don't need to do this.
  */
 public class TalonMotorSubsystem extends SmartMotorSubsystem<TalonMotorController> {
-  private static final int ENCODER_COUNTS_PER_REV = 2048;
+  private static final int ENCODER_COUNTS_PER_REV = 4096; // not sure why but 4096 is what makes motion magic work 
+  private static final double RPM_TO_ENCODERCOUNTSPER100MS = ENCODER_COUNTS_PER_REV/60/10;
   private final int configTimeoutMs = 50;  // milliseconds until the Talon gives up trying to configure
   private static final int DEFAULT_PID_SLOT = 0; // TODO: add support for auxillary pid
   private final int follow_motors_remote_filter_id = 0; // DONOT REMOVE, USED IN COMMENTED CODE BELOW; which filter (0 or 1) will be used to configure reading from the integrated encoder on the lead motor
+  private final double voltageComp;
   private boolean pid_configured = false; // flag for command factories to check whether PID was configured
   public final TalonMotorController leadMotor;
   public final TalonMotorController[] followMotors;
@@ -102,6 +105,7 @@ public class TalonMotorSubsystem extends SmartMotorSubsystem<TalonMotorControlle
                              TalonMotorController leadMotor, TalonMotorController... followMotors) {
 		super(name, speedModifier, Stream.concat(Stream.of(leadMotor), Stream.of(followMotors)).toArray(TalonMotorController[]::new));  // java has no spread operator, so you have to concat. best way i could find is to do it in a stream. please make this not bad if you know how 
 
+    this.voltageComp = voltageCompensation;
     this.leadMotor = leadMotor;
     this.followMotors = followMotors;
 
@@ -212,16 +216,28 @@ public class TalonMotorSubsystem extends SmartMotorSubsystem<TalonMotorControlle
     leadMotor.config_kP(pid_slot, p, configTimeoutMs);
     leadMotor.config_kI(pid_slot, i, configTimeoutMs);
     leadMotor.config_kD(pid_slot, d, configTimeoutMs);
-    leadMotor.config_kF(pid_slot, f, configTimeoutMs);  // TODO: enable voltage comp, then divide f by the voltage comp voltage to get feedforward in voltage units. https://www.chiefdelphi.com/t/feedforward-for-talonfx-pid/401200/8
+    leadMotor.config_kF(pid_slot, voltageComp == 0 ? f/voltageComp : f/12, configTimeoutMs);
     leadMotor.configClosedLoopPeriod(pid_slot, 10, configTimeoutMs); // fast enough for 100Hz per second
     pid_configured = true;
     // TODO: integral zone and closedLoopPeakOUtput? 
     // other things in the example: motionmagic config and statusframeperiod (for updating sensor status to the aux motor?)
   }
-  // public void zeroSensors() {
-  //   // leadMotor.getSensorCollection // ?? doesn't exist; but it's in the CTRE falcon example
-  //   // also should we zero the sensors on the follow motors just in case they're being used?
-  // }
+  @Override
+  /**
+   * Assumes that PID and DMP slots correspond (eg. use PID slot 0 for DMP slot 0)
+   */
+  public void configDMP(double minRPM, double maxRPM, double maxAccl_RPMps, double maxError_encoderTicks,
+      Integer dmp_slot) {
+    if (dmp_slot == null) dmp_slot = DEFAULT_DMP_SLOT;
+    // TODO? 
+		// _talon.setStatusFramePeriod(StatusFrameEnhanced.Status_13_Base_PIDF0, 10, Constants.kTimeoutMs);
+		// _talon.setStatusFramePeriod(StatusFrameEnhanced.Status_10_MotionMagic, 10, Constants.kTimeoutMs);
+
+    leadMotor.selectProfileSlot(dmp_slot, dmp_slot);
+    leadMotor.configMotionCruiseVelocity(maxRPM*RPM_TO_ENCODERCOUNTSPER100MS, configTimeoutMs);
+    leadMotor.configMotionAcceleration(maxAccl_RPMps*RPM_TO_ENCODERCOUNTSPER100MS, configTimeoutMs);
+    // TODO: min rpm not used
+  }
   
   // don't override disable() or stop() because we *should* indeed use the base implementation of disabling/stopping each motor controller individually. Otherwise the following motors will try to follow a disabled motor, which may cause unexpected behavior (although realistically, it likely just gets set to zero and neutrallized by the deadband).
 
@@ -277,20 +293,21 @@ public class TalonMotorSubsystem extends SmartMotorSubsystem<TalonMotorControlle
   @Override
   public Command c_holdRPM(double setpoint) {
     if (pid_configured == false) throw new IllegalArgumentException(name + " tried to use c_controlVelocity without first configPIDF()-ing.");
-    return this.run(() -> setRPM(setpoint));  // TODO: use motionmagic
+    return this.runOnce(() -> setRPM(setpoint)).andThen(new CommandBase(){});  // TODO: use motionmagic
   }
   /**
    * Command that sets the position setpoint and immedietly ends.
    */
-  @Override @Deprecated
-  public Command c_setPosition(double setpoint) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'c_setPosition'");
+  public Command c_setPosition(double setpoint, int dmp_slot) {
+    this.leadMotor.selectProfileSlot(dmp_slot, dmp_slot);
+    return this.runOnce(() -> setDynamicMotionProfileTargetRotations(setpoint)).andThen(new CommandBase(){});
   }
   @Override
+  public Command c_setPosition(double setpoint) { return c_setPosition(setpoint, DEFAULT_DMP_SLOT); }
+
+  @Override
   public Command c_controlPosition(DoubleSupplier setpointSupplier) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'c_controlPosition'");
+    return this.run(() -> this.leadMotor.set(ControlMode.Position, setpointSupplier.getAsDouble()));
   }
   /**
    * Hold the position using smart motion (on-the-fly motion-profile generation).
@@ -303,24 +320,16 @@ public class TalonMotorSubsystem extends SmartMotorSubsystem<TalonMotorControlle
   }
   @Override
   public void zeroSensors() {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'zeroSensors'");
-  }
-  @Override
-  public void configDMP(double minRPM, double maxRPM, double maxAccl_RPMps, double maxError_encoderTicks,
-      Integer dmp_slot) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'configDMP'");
+    this.leadMotor.setSelectedSensorPosition(0, DEFAULT_PID_SLOT, configTimeoutMs);
+    // should we zero the sensors on follow motors in case they are being used?
   }
   @Override
   protected void setDynamicMotionProfileTargetRotations(double rotations) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'setDynamicMotionProfileTargetRotations'");
+    this.leadMotor.set(ControlMode.MotionMagic, rotations);
   }
   @Override
   protected double getSensorPositionRotations() {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'getSensorPositionRotations'");
+    return this.leadMotor.getSelectedSensorPosition(DEFAULT_DMP_SLOT) / ENCODER_COUNTS_PER_REV;
   }
   @Override
   public void configSoftwareLimits(double fwdBoundRotations, double revBoundRotations) {

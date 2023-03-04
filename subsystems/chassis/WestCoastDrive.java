@@ -30,7 +30,7 @@ public class WestCoastDrive<MotorControllerType extends SmartMotorController> ex
     public WestCoastDrive(double trackWidthMeters, double motorToWheelGearRatio, double wheelDiameterMeters, SmartMotorSubsystem<MotorControllerType> leftMotorSubsystem, SmartMotorSubsystem<MotorControllerType> rightMotorSubsystem) {
         leftMotors = leftMotorSubsystem;
         rightMotors = rightMotorSubsystem;
-        kinematics = new DifferentialDriveKinematics(trackWidthMeters);  // 2023 robot has track width ~19.5 inches, 5 in wheel diameter
+        kinematics = new DifferentialDriveKinematics(trackWidthMeters);  // 2023 robot has track width ~19.5 inches, 5 in wheel diameter, gear ratio 496/45
         mps_to_rpm = (Math.PI * wheelDiameterMeters) * motorToWheelGearRatio * 60;
         // TODO: add requirements?
     }
