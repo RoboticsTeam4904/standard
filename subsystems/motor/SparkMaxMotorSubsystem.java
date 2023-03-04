@@ -40,7 +40,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
  * - Specifying respectLeadMotorLimitSwitches=false will not disable the limit switches if they were previously enabled. This is to allow you to configure limit switches on the underlying motor controllers before passing them in if necessary.
  */
 public class SparkMaxMotorSubsystem extends SmartMotorSubsystem<CustomCANSparkMax> {
-  public static final int DEFAULT_PID_SLOT = 0;  // spark max has 4 slots: [0, 3]; TODO: frecency on mathThing?
+  public static final int DEFAULT_PID_SLOT = 0;  // spark max has 4 slots: [0, 3];
   public static final int DEFAULT_DMP_SLOT = 0;  // spark max has 4 smart-motion (dynamic motion profile) slots, [0, 3]
   private boolean pid_configured = false; // flags to remember whether pid and dmp were configured, for error checking
   private boolean dmp_configured = false; // when multiple pid/dmp slots, these will have to become slot-wise 
@@ -120,7 +120,8 @@ public class SparkMaxMotorSubsystem extends SmartMotorSubsystem<CustomCANSparkMa
     // other configuration (neutral mode, neutral deadband, voltagecomp)
     for (var motor : motors) {
       motor.setIdleMode(idleMode);
-      //motor.configNeutralDeadband(neutralDeadbandPercent, configTimeoutMs); // TODO: no neutral deadband setting on sparkmax?
+      //motor.configNeutralDeadband(neutralDeadbandPercent, configTimeoutMs); //no neutral deadband setting on sparkmax? 
+      // default deadband should be 5%, might be changeable through the rev hardware client, maybe through code as well, but we dont know how       
       if (voltageCompensation > 0) {
         motor.enableVoltageCompensation(voltageCompensation);
       } else {
@@ -208,7 +209,7 @@ public class SparkMaxMotorSubsystem extends SmartMotorSubsystem<CustomCANSparkMa
    * 
    * See docstrings on the methods used in the implementation for physical units
    */
-  public void configPIDF(double p, double i, double d, double f, Integer pid_slot) {
+  public void configPIDF(double p, double i, double d, double f, double accumulator, double peakOutput, Integer pid_slot) {
     if (pid_slot == null) pid_slot = SparkMaxMotorSubsystem.DEFAULT_PID_SLOT;
     // set sensor
     // docs says you need to sparkMax.setFeedbackDevice but that appears to not exist..
@@ -221,7 +222,10 @@ public class SparkMaxMotorSubsystem extends SmartMotorSubsystem<CustomCANSparkMa
     controller.setD(d, pid_slot);
     controller.setFF(f, pid_slot);
     pid_configured = true;
-    // TODO: integral zone and outputRange? 
+
+    controller.setIMaxAccum(accumulator, pid_slot);
+    controller.setOutputRange(-peakOutput, peakOutput, pid_slot); //TODO: assuming 0-1 range for peakOutput
+
   }
   public void configDMP(double minRPM, double maxRPM, double maxAccl_RPMps, double maxError_encoderTicks, Integer dmp_slot) {
     if (dmp_slot == null) dmp_slot = SparkMaxMotorSubsystem.DEFAULT_DMP_SLOT;
@@ -255,9 +259,9 @@ public class SparkMaxMotorSubsystem extends SmartMotorSubsystem<CustomCANSparkMa
   }
   @Override @Deprecated
   public Command c_setRPM(double setpoint) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'c_setVelocity'");
+    return this.runOnce(() -> setRPM(setpoint));
   }
+  
   @Override
   public Command c_holdRPM(double setpoint) {
     if (!pid_configured) throw new IllegalArgumentException(name + " tried to use c_holdRPM without first configPIDF()-ing.");
