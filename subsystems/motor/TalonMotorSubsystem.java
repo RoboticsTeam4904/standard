@@ -236,7 +236,7 @@ public class TalonMotorSubsystem extends SmartMotorSubsystem<TalonMotorControlle
     leadMotor.selectProfileSlot(dmp_slot, dmp_slot);
     leadMotor.configMotionCruiseVelocity(maxRPM*RPM_TO_ENCODERCOUNTSPER100MS, configTimeoutMs);
     leadMotor.configMotionAcceleration(maxAccl_RPMps*RPM_TO_ENCODERCOUNTSPER100MS, configTimeoutMs);
-    // TODO: min rpm not used
+    // TODO: min rpm not used -- not sure if possible or needed
   }
   
   // don't override disable() or stop() because we *should* indeed use the base implementation of disabling/stopping each motor controller individually. Otherwise the following motors will try to follow a disabled motor, which may cause unexpected behavior (although realistically, it likely just gets set to zero and neutrallized by the deadband).
@@ -293,14 +293,15 @@ public class TalonMotorSubsystem extends SmartMotorSubsystem<TalonMotorControlle
   @Override
   public Command c_holdRPM(double setpoint) {
     if (pid_configured == false) throw new IllegalArgumentException(name + " tried to use c_controlVelocity without first configPIDF()-ing.");
-    return this.runOnce(() -> setRPM(setpoint)).andThen(new CommandBase(){});  // TODO: use motionmagic
-  }
+    return this.runOnce(() -> setRPM(setpoint)).andThen(new CommandBase(){});  
+}
   /**
    * Command that sets the position setpoint and immedietly ends.
    */
   public Command c_setPosition(double setpoint, int dmp_slot) {
     this.leadMotor.selectProfileSlot(dmp_slot, dmp_slot);
-    return this.runOnce(() -> setDynamicMotionProfileTargetRotations(setpoint)).andThen(new CommandBase(){});
+    //return this.runOnce(() -> setDynamicMotionProfileTargetRotations(setpoint)).andThen(new CommandBase(){});
+    return new HardwareDMPUntilArrival(this, setpoint);
   }
   @Override
   public Command c_setPosition(double setpoint) { return c_setPosition(setpoint, DEFAULT_DMP_SLOT); }
@@ -312,12 +313,13 @@ public class TalonMotorSubsystem extends SmartMotorSubsystem<TalonMotorControlle
   /**
    * Hold the position using smart motion (on-the-fly motion-profile generation).
    */
-  @Override
-  public Command c_holdPosition(double setpoint) {
-    // TODO: https://github.com/REVrobotics/SPARK-MAX-Examples/tree/master/Java/Smart%20Motion%20Example
-    // TODO: also probably have to implement a method to configure smartmotion cruise velocity
-    throw new UnsupportedOperationException("Unimplemented method 'c_holdPosition'");
+  public Command c_holdPosition(double setpoint, int dmp_slot) {
+    this.leadMotor.selectProfileSlot(dmp_slot, dmp_slot);
+    return this.runOnce(() -> setDynamicMotionProfileTargetRotations(setpoint)).andThen(new CommandBase(){});
   }
+  public Command c_holdPosition(double setpoint) { return c_holdPosition(setpoint, DEFAULT_DMP_SLOT); }
+   
+
   @Override
   public void zeroSensors() {
     this.leadMotor.setSelectedSensorPosition(0, DEFAULT_PID_SLOT, configTimeoutMs);
@@ -325,16 +327,16 @@ public class TalonMotorSubsystem extends SmartMotorSubsystem<TalonMotorControlle
   }
   @Override
   protected void setDynamicMotionProfileTargetRotations(double rotations) {
-    this.leadMotor.set(ControlMode.MotionMagic, rotations);
+    this.leadMotor.set(ControlMode.MotionMagic, rotations*RPM_TO_ENCODERCOUNTSPER100MS);
   }
   @Override
   protected double getSensorPositionRotations() {
     return this.leadMotor.getSelectedSensorPosition(DEFAULT_DMP_SLOT) / ENCODER_COUNTS_PER_REV;
   }
   @Override
-  public void configSoftwareLimits(double fwdBoundRotations, double revBoundRotations) {
-    // TODO Auto-generated method stub
-    
+  public void configSoftwareLimits(double fwdBoundRotations, double revBoundRotations) { 
+    this.leadMotor.configForwardSoftLimitThreshold((fwdBoundRotations*ENCODER_COUNTS_PER_REV), configTimeoutMs);
+    this.leadMotor.configReverseSoftLimitThreshold((revBoundRotations*ENCODER_COUNTS_PER_REV), configTimeoutMs);
   }
 
   // no need to override setPower because the base class just uses set
