@@ -196,10 +196,12 @@ public class TalonMotorSubsystem extends SmartMotorSubsystem<TalonMotorControlle
    * @param i  in units of TODO
    * @param d  in units of TODO
    * @param f  in units of percent output, [-1, 1]
+   * @param accumulator in units of whatever the intergral is in
+   * @param peakOutput in units of percent output, [-1, 1]
    * @param pid_slot range [0, 3], pass null for default of zero.
    */
   @Override
-  public void configPIDF(double p, double i, double d, double f, Integer pid_slot) {
+  public void configPIDF(double p, double i, double d, double f, double accumulator, double peakOutput, Integer pid_slot) {
     if (pid_slot == null) pid_slot = TalonMotorSubsystem.DEFAULT_PID_SLOT;
 
     // feedback sensor configuration (for PID)
@@ -218,6 +220,10 @@ public class TalonMotorSubsystem extends SmartMotorSubsystem<TalonMotorControlle
     leadMotor.config_kD(pid_slot, d, configTimeoutMs);
     leadMotor.config_kF(pid_slot, voltageComp == 0 ? f/voltageComp : f/12, configTimeoutMs);
     leadMotor.configClosedLoopPeriod(pid_slot, 10, configTimeoutMs); // fast enough for 100Hz per second
+    
+    leadMotor.configMaxIntegralAccumulator(DEFAULT_DMP_SLOT, accumulator, configTimeoutMs);
+    leadMotor.configClosedLoopPeakOutput(DEFAULT_DMP_SLOT, peakOutput, configTimeoutMs);
+
     pid_configured = true;
     // TODO: integral zone and closedLoopPeakOUtput? 
     // other things in the example: motionmagic config and statusframeperiod (for updating sensor status to the aux motor?)
