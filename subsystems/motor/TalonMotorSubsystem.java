@@ -336,7 +336,7 @@ public class TalonMotorSubsystem extends SmartMotorSubsystem<TalonMotorControlle
     this.leadMotor.set(ControlMode.MotionMagic, rotations*RPM_TO_ENCODERCOUNTSPER100MS);
   }
   @Override
-  protected double getSensorPositionRotations() {
+  public double getSensorPositionRotations() {
     return this.leadMotor.getSelectedSensorPosition(DEFAULT_DMP_SLOT) / ENCODER_COUNTS_PER_REV;
   }
   @Override

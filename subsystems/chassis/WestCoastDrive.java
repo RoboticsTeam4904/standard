@@ -136,13 +136,30 @@ public class WestCoastDrive<MotorControllerType extends SmartMotorController> ex
      * Replaces ChassisMinimumDrive in pre-2023 standard.
      */
     public Command c_chassisMinimumDistance(double distance_meters, double speed_mps) {
-        var average_motor_rotations = ((this.leftMotors.getSensorPositionRotations()+this.rightMotors.getSensorPositionRotations())/2);
+        var left_motor_initial = this.leftMotors.getSensorPositionRotations();
+        var right_motor_initial = this.rightMotors.getSensorPositionRotations();
         return this.run(() -> setChassisVelocity(new ChassisSpeeds(speed_mps, 0, 0)))
-            .until(() -> (((this.leftMotors.getSensorPositionRotations()+this.rightMotors.getSensorPositionRotations())/2) - average_motor_rotations > Math.abs(distance_meters * m_to_motorrots) ))
+            .until(() -> (
+                (
+                    (this.leftMotors.getSensorPositionRotations()  -  left_motor_initial)/2
+                  + (this.rightMotors.getSensorPositionRotations() - right_motor_initial)/2
+                ) > Math.abs(distance_meters * m_to_motorrots) ))
+            .andThen(() -> this.c_idle());
+    }
+
+    public Command c_chassisTurn(double angle_degrees, double max_turnspeed) {
+        var left_motor_initial = this.leftMotors.getSensorPositionRotations();
+        var right_motor_initial = this.rightMotors.getSensorPositionRotations();        
+        return this.run(() -> setChassisVelocity(new ChassisSpeeds(0, 0, max_turnspeed*Math.signum(angle_degrees))))
+            .until(() -> (
+                (
+                    Math.abs(this.leftMotors .getSensorPositionRotations()- left_motor_initial)
+                   +Math.abs(this.rightMotors.getSensorPositionRotations()-right_motor_initial)
+                ) > Math.abs(Math.PI * kinematics.trackWidthMeters * angle_degrees / 180 * m_to_motorrots)
+            )) // when we turn, the wheels trace out a circle with trackwidth as a diameter. this checks that the wheels have traveled the right distance aroun the circle for our angle
             .andThen(() -> this.c_idle());
     }
 
 
-
+    }
     // TODO: write the others. goodfirstissue
-}
