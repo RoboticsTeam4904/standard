@@ -264,7 +264,7 @@ public abstract class SmartMotorSubsystem<MotorControllerType extends SmartMotor
      * @param f units = voltage
      * @param pid_slot
      */
-    public abstract void configPIDF(double p, double i, double d, double f, Integer pid_slot);
+    public abstract void configPIDF(double p, double i, double d, double f, double accumulator, double peakOutput, Integer pid_slot);
     public abstract void configDMP(double minRPM, double maxRPM, double maxAccl_RPMps, double maxError_encoderTicks, Integer dmp_slot);   // you must configure dynamic motion profiles (motionmagic or smartmotion) before using setPosition 
     public abstract void configSoftwareLimits(double fwdBoundRotations, double revBoundRotations);
     public abstract Command c_controlRPM(DoubleSupplier setpointSupplier);
