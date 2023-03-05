@@ -289,7 +289,7 @@ public abstract class SmartMotorSubsystem<MotorControllerType extends SmartMotor
      * @return the encoder offset from sensor zero, zeroed with .zeroSensors, in
      *         motor shaft rotations.
      */
-    protected abstract double getSensorPositionRotations();
+    public abstract double getSensorPositionRotations();
 
     /**
      * A command that uses dynamic motion profiling (motionmagic/smartmotion) to

@@ -18,6 +18,8 @@ public class WestCoastDrive<MotorControllerType extends SmartMotorController> ex
     private final SmartMotorSubsystem<MotorControllerType> rightMotors;
     private final DifferentialDriveKinematics kinematics;
     private final double mps_to_rpm;
+    private final double m_to_motorrots;
+
     /**
      * Represents a west coast drive chassis as a subsystem
      * 
@@ -30,8 +32,9 @@ public class WestCoastDrive<MotorControllerType extends SmartMotorController> ex
     public WestCoastDrive(double trackWidthMeters, double motorToWheelGearRatio, double wheelDiameterMeters, SmartMotorSubsystem<MotorControllerType> leftMotorSubsystem, SmartMotorSubsystem<MotorControllerType> rightMotorSubsystem) {
         leftMotors = leftMotorSubsystem;
         rightMotors = rightMotorSubsystem;
-        kinematics = new DifferentialDriveKinematics(trackWidthMeters);  // 2023 robot has track width ~19.5 inches, 5 in wheel diameter, gear ratio 496/45
+        kinematics = new DifferentialDriveKinematics(trackWidthMeters);  // 2023 robot has track width ~19.5 inches, 5 in wheel diameter
         mps_to_rpm = (Math.PI * wheelDiameterMeters) * motorToWheelGearRatio * 60;
+        m_to_motorrots = 1/wheelDiameterMeters*motorToWheelGearRatio;
         // TODO: add requirements?
     }
     
@@ -126,5 +129,20 @@ public class WestCoastDrive<MotorControllerType extends SmartMotorController> ex
     public Command c_idle() {
         return Commands.parallel(leftMotors.c_idle(), rightMotors.c_idle());    // TODO do we need to require the chassis subsystem for this? else chassis will read as unrequired, but all of it's subcomponents will be required.
     }
+
+    /**
+     * moveCartesian with (x, y, turn) for timeout seconds.
+     * 
+     * Replaces ChassisMinimumDrive in pre-2023 standard.
+     */
+    public Command c_chassisMinimumDistance(double distance_meters, double speed_mps) {
+        var average_motor_rotations = ((this.leftMotors.getSensorPositionRotations()+this.rightMotors.getSensorPositionRotations())/2);
+        return this.run(() -> setChassisVelocity(new ChassisSpeeds(speed_mps, 0, 0)))
+            .until(() -> (((this.leftMotors.getSensorPositionRotations()+this.rightMotors.getSensorPositionRotations())/2) - average_motor_rotations > Math.abs(distance_meters * m_to_motorrots) ))
+            .andThen(() -> this.c_idle());
+    }
+
+
+
     // TODO: write the others. goodfirstissue
 }
