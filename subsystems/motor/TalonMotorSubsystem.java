@@ -39,7 +39,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
  * - Configure normallyClosed limit switches manually on the underlying motorControllers. We usually use normallyOpen limit switches, so you probably don't need to do this.
  */
 public class TalonMotorSubsystem extends SmartMotorSubsystem<TalonMotorController> {
-  private static final int ENCODER_COUNTS_PER_REV = 4096; // not sure why but 4096 is what makes motion magic work 
+  private static final int ENCODER_COUNTS_PER_REV = 2048;
   private static final double RPM_TO_ENCODERCOUNTSPER100MS = ENCODER_COUNTS_PER_REV/60/10;
   private final int configTimeoutMs = 50;  // milliseconds until the Talon gives up trying to configure
   private static final int DEFAULT_PID_SLOT = 0; // TODO: add support for auxillary pid
@@ -201,18 +201,14 @@ public class TalonMotorSubsystem extends SmartMotorSubsystem<TalonMotorControlle
    * @param pid_slot range [0, 3], pass null for default of zero.
    */
   @Override
-  public void configPIDF(double p, double i, double d, double f, double accumulator, double peakOutput, Integer pid_slot) {
+  public void configPIDF(double p, double i, double d, double f, double max_integral_accumulation, double peakOutput, Integer pid_slot) {
     if (pid_slot == null) pid_slot = TalonMotorSubsystem.DEFAULT_PID_SLOT;
 
     // feedback sensor configuration (for PID)
     leadMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, pid_slot, configTimeoutMs);
     // make sure to update the static final ENCODER_COUNTS_PER_REV if you are using different encoders. Better yet, add a feedbackSensor argument to this method
 
-    // for (var fm : followMotors) { // don't think this is needed because we are using follow mode. only needed for aux output
-    //   fm.configRemoteFeedbackFilter(leadMotor.getDeviceID(), RemoteSensorSource.TalonFX_SelectedSensor /* enum internals has TalonFX = TalonSRX as of 2023 */, follow_motors_remote_filter_id, configTimeoutMs);
-    //   fm.configSelectedFeedbackSensor(follow_motors_remote_filter_id == 0 ? FeedbackDevice.RemoteSensor0 : FeedbackDevice.RemoteSensor1 /* enum internals has TalonFX_SelectedSensor = TalonSRX_SelectedSensor as of 2023 */, pid_idx, configTimeoutMs);
-    //   // TODO: change sensor polarity? https://github.com/CrossTheRoadElec/Phoenix-Examples-Languages/blob/master/Java%20Talon%20FX%20(Falcon%20500)/VelocityClosedLoop_AuxStraightIntegratedSensor/src/main/java/frc/robot/Robot.java#L306
-    // }
+    // should follow motors do their own PID? no, right? 
 
     // PID constants configuration
     leadMotor.config_kP(pid_slot, p, configTimeoutMs);
@@ -221,18 +217,17 @@ public class TalonMotorSubsystem extends SmartMotorSubsystem<TalonMotorControlle
     leadMotor.config_kF(pid_slot, voltageComp == 0 ? f/voltageComp : f/12, configTimeoutMs);
     leadMotor.configClosedLoopPeriod(pid_slot, 10, configTimeoutMs); // fast enough for 100Hz per second
     
-    leadMotor.configMaxIntegralAccumulator(DEFAULT_DMP_SLOT, accumulator, configTimeoutMs);
+    leadMotor.configMaxIntegralAccumulator(DEFAULT_DMP_SLOT, max_integral_accumulation, configTimeoutMs);
     leadMotor.configClosedLoopPeakOutput(DEFAULT_DMP_SLOT, peakOutput, configTimeoutMs);
 
     pid_configured = true;
-    // TODO: integral zone and closedLoopPeakOUtput? 
     // other things in the example: motionmagic config and statusframeperiod (for updating sensor status to the aux motor?)
   }
   @Override
   /**
    * Assumes that PID and DMP slots correspond (eg. use PID slot 0 for DMP slot 0)
    */
-  public void configDMP(double minRPM, double maxRPM, double maxAccl_RPMps, double maxError_encoderTicks,
+  public void configDMP(double minRPM, double cruiseRPM, double accl_RPMps, double maxError_encoderTicks,
       Integer dmp_slot) {
     if (dmp_slot == null) dmp_slot = DEFAULT_DMP_SLOT;
     // TODO? 
@@ -240,8 +235,8 @@ public class TalonMotorSubsystem extends SmartMotorSubsystem<TalonMotorControlle
 		// _talon.setStatusFramePeriod(StatusFrameEnhanced.Status_10_MotionMagic, 10, Constants.kTimeoutMs);
 
     leadMotor.selectProfileSlot(dmp_slot, dmp_slot);
-    leadMotor.configMotionCruiseVelocity(maxRPM*RPM_TO_ENCODERCOUNTSPER100MS, configTimeoutMs);
-    leadMotor.configMotionAcceleration(maxAccl_RPMps*RPM_TO_ENCODERCOUNTSPER100MS, configTimeoutMs);
+    leadMotor.configMotionCruiseVelocity(cruiseRPM*RPM_TO_ENCODERCOUNTSPER100MS, configTimeoutMs);
+    leadMotor.configMotionAcceleration(accl_RPMps*RPM_TO_ENCODERCOUNTSPER100MS, configTimeoutMs);
     // TODO: min rpm not used -- not sure if possible or needed
   }
   
@@ -341,8 +336,13 @@ public class TalonMotorSubsystem extends SmartMotorSubsystem<TalonMotorControlle
   }
   @Override
   public void configSoftwareLimits(double fwdBoundRotations, double revBoundRotations) { 
+    // this.leadMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, DEFAULT_PID_SLOT, configTimeoutMs);  // select which sensor to use for soft limits
+    // this.leadMotor.setSensorPhase(true);
     this.leadMotor.configForwardSoftLimitThreshold((fwdBoundRotations*ENCODER_COUNTS_PER_REV), configTimeoutMs);
     this.leadMotor.configReverseSoftLimitThreshold((revBoundRotations*ENCODER_COUNTS_PER_REV), configTimeoutMs);
+    this.leadMotor.configForwardSoftLimitEnable(true, configTimeoutMs);
+    this.leadMotor.configReverseSoftLimitEnable(true, configTimeoutMs);
+    this.leadMotor.overrideSoftLimitsEnable(true);
   }
 
   // no need to override setPower because the base class just uses set
