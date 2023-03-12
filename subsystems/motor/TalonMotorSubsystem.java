@@ -14,6 +14,7 @@ import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.RemoteLimitSwitchSource;
 
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
@@ -269,8 +270,12 @@ public class TalonMotorSubsystem extends SmartMotorSubsystem<TalonMotorControlle
    */
   @Override
   public void setVoltage(double voltage) {
-    setFollowMode();
-    leadMotor.setVoltage(voltage);
+    setFollowMode();  // TODO: is doing this every time too slow?
+    if (voltageComp > 0) {
+      leadMotor.setPower(voltage / Math.min(RobotController.getBatteryVoltage(), voltageComp));
+    } else {
+      leadMotor.setVoltage(voltage);  // CTRE internal code just divides by RobotController.getBatteryVoltage
+    }
   }
   /**
    * You must call .configPIDF before using this method.
