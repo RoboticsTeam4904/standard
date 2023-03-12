@@ -6,6 +6,7 @@ import org.usfirst.frc4904.standard.custom.motioncontrollers.MotionController;
 import org.usfirst.frc4904.standard.custom.sensors.IMU;
 import org.usfirst.frc4904.standard.custom.sensors.InvalidSensorException;
 
+@Deprecated
 public class MCChassisController implements ChassisController {
 	protected ChassisController controller;
 	protected double maxDegreesPerSecond;

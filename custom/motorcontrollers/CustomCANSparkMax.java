@@ -4,6 +4,8 @@ import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.revrobotics.CANSparkMax;
 
+import edu.wpi.first.wpilibj.drive.RobotDriveBase.MotorType;
+
 public class CustomCANSparkMax extends CANSparkMax implements BrakeableMotorController {
     protected static final NeutralMode DEFAULT_NEUTRAL_MODE = NeutralMode.Coast;
 	protected static final InvertType  DEFAULT_INVERT_TYPE  = InvertType.FollowMaster;

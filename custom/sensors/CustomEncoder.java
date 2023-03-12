@@ -9,13 +9,6 @@ package org.usfirst.frc4904.standard.custom.sensors;
  */
 public interface CustomEncoder extends NativeDerivativeSensor {
 	/**
-	 * Gets current count
-	 *
-	 * @warning does not indicate sensor errors
-	 */
-	int get();
-
-	/**
 	 * Gets current distance
 	 *
 	 * @warning does not indicate sensor errors
