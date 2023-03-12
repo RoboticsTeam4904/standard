@@ -28,14 +28,14 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class WestCoastDrive<MotorControllerType extends SmartMotorController> extends SubsystemBase {
-    private final SmartMotorSubsystem<MotorControllerType> leftMotors;
-    private final SmartMotorSubsystem<MotorControllerType> rightMotors;
-    private final PIDConstants pidConsts;
-    private final DifferentialDriveKinematics kinematics;
-    private final DifferentialDriveOdometry odometry;   // OPTIM this can be replaced with a kalman filter?
-    private final NavX gyro;    // OPTIM this can be replaced by something more general
-    private final double mps_to_rpm;
-    private final double m_to_motorrots;
+    protected final SmartMotorSubsystem<MotorControllerType> leftMotors;
+    protected final SmartMotorSubsystem<MotorControllerType> rightMotors;
+    protected final PIDConstants pidConsts;
+    protected final DifferentialDriveKinematics kinematics;
+    protected final DifferentialDriveOdometry odometry;   // OPTIM this can be replaced with a kalman filter?
+    protected final NavX gyro;    // OPTIM this can be replaced by something more general
+    protected final double mps_to_rpm;
+    protected final double m_to_motorrots;
 
     /**
      * Represents a west coast drive chassis as a subsystem
@@ -70,7 +70,7 @@ public class WestCoastDrive<MotorControllerType extends SmartMotorController> ex
     public double  getLeftDistance() { return  leftMotors.getSensorPositionRotations()/m_to_motorrots; }
     public double getRightDistance() { return rightMotors.getSensorPositionRotations()/m_to_motorrots; }
     private void zeroEncoders() { leftMotors.zeroSensors(); rightMotors.zeroSensors(); }
-    private void resetPoseMeters(Pose2d metersPose) {
+    protected void resetPoseMeters(Pose2d metersPose) {
         zeroEncoders();
         // doesn't matter what the encoders start at, odometry will use delta of odometry.update() from odometry.reset()
         odometry.resetPosition(gyro.getRotation2d(), getLeftDistance(), getRightDistance(), metersPose);
@@ -117,8 +117,11 @@ public class WestCoastDrive<MotorControllerType extends SmartMotorController> ex
         setWheelVelocities(wheelSpeeds);
     }
     public void setWheelVoltages(DifferentialDriveWheelVoltages wheelVoltages) {
-        this.leftMotors.setVoltage(wheelVoltages.left);
-        this.rightMotors.setVoltage(wheelVoltages.right);
+        this.setWheelVoltages(wheelVoltages.left, wheelVoltages.right);
+    }
+    public void setWheelVoltages(double leftV, double rightV) {
+        this.leftMotors.setVoltage(leftV);
+        this.rightMotors.setVoltage(rightV);
     }
 
 
@@ -191,7 +194,7 @@ public class WestCoastDrive<MotorControllerType extends SmartMotorController> ex
             this
         );
         return autoBuilder.fullAuto(pathGroup);
-    }
+    } 
     /**
      * A forever command that pulls drive velocities from a function and sends
      * them to the motor's closed-loop control.
