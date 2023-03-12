@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj2.command.Subsystem;
  * certain input.
  *
  */
+@Deprecated
 public abstract class MotionController implements Subsystem {
 	protected DoubleConsumer output;
 	protected double setpoint;
