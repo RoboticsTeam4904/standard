@@ -1,14 +1,28 @@
 package org.usfirst.frc4904.standard.subsystems.chassis;
 
+import java.util.HashMap;
+import java.util.List;
 import java.util.function.Supplier;
 
 import org.usfirst.frc4904.standard.custom.motorcontrollers.SmartMotorController;
+import org.usfirst.frc4904.standard.custom.sensors.NavX;
 import org.usfirst.frc4904.standard.subsystems.motor.SmartMotorSubsystem;
 
+import com.pathplanner.lib.PathConstraints;
+import com.pathplanner.lib.PathPlanner;
+import com.pathplanner.lib.PathPlannerTrajectory;
+import com.pathplanner.lib.auto.PIDConstants;
+import com.pathplanner.lib.auto.RamseteAutoBuilder;
+
 import edu.wpi.first.math.controller.DifferentialDriveWheelVoltages;
+import edu.wpi.first.math.controller.RamseteController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
+import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
+import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -16,7 +30,10 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class WestCoastDrive<MotorControllerType extends SmartMotorController> extends SubsystemBase {
     private final SmartMotorSubsystem<MotorControllerType> leftMotors;
     private final SmartMotorSubsystem<MotorControllerType> rightMotors;
+    private final PIDConstants pidConsts;
     private final DifferentialDriveKinematics kinematics;
+    private final DifferentialDriveOdometry odometry;   // OPTIM this can be replaced with a kalman filter?
+    private final NavX gyro;    // OPTIM this can be replaced by something more general
     private final double mps_to_rpm;
     private final double m_to_motorrots;
 
@@ -29,16 +46,50 @@ public class WestCoastDrive<MotorControllerType extends SmartMotorController> ex
      * @param leftMotorSubsystem        SmartMotorSubsystem for the left wheels. Usually a TalonMotorSubsystem with two talons.
      * @param rightMotorSubsystem       SmartMotorSubsystem for the right wheels. Usually a TalonMotorSubsystem with two talons.
      */
-    public WestCoastDrive(double trackWidthMeters, double motorToWheelGearRatio, double wheelDiameterMeters, SmartMotorSubsystem<MotorControllerType> leftMotorSubsystem, SmartMotorSubsystem<MotorControllerType> rightMotorSubsystem) {
+    public WestCoastDrive(
+        double trackWidthMeters, double motorToWheelGearRatio, double wheelDiameterMeters,
+        double drive_kP, double drive_kI, double drive_kD,
+        NavX navx, SmartMotorSubsystem<MotorControllerType> leftMotorSubsystem, SmartMotorSubsystem<MotorControllerType> rightMotorSubsystem) {
         leftMotors = leftMotorSubsystem;
         rightMotors = rightMotorSubsystem;
-        kinematics = new DifferentialDriveKinematics(trackWidthMeters);  // 2023 robot has track width ~19.5 inches, 5 in wheel diameter
+        gyro = navx;
         mps_to_rpm = (Math.PI * wheelDiameterMeters) * motorToWheelGearRatio * 60;
         m_to_motorrots = 1/wheelDiameterMeters*motorToWheelGearRatio;
+        pidConsts = new PIDConstants(drive_kP, drive_kI, drive_kD);
+        kinematics = new DifferentialDriveKinematics(trackWidthMeters);  // 2023 robot has track width ~19.5 inches, 5 in wheel diameter
+        odometry = new DifferentialDriveOdometry(gyro.getRotation2d(), getLeftDistance(), getRightDistance());
+
+        // OPTIM should probably allow specification of f, max_accumulation, and peakOutput in constructor
+         leftMotors.configPIDF(drive_kP, drive_kI, drive_kD, 0, 100, 1, null);
+        rightMotors.configPIDF(drive_kP, drive_kI, drive_kD, 0, 100, 1, null);
+        zeroEncoders();
         // TODO: add requirements?
     }
+
+    // odometry methods
+    public double  getLeftDistance() { return  leftMotors.getSensorPositionRotations()/m_to_motorrots; }
+    public double getRightDistance() { return rightMotors.getSensorPositionRotations()/m_to_motorrots; }
+    private void zeroEncoders() { leftMotors.zeroSensors(); rightMotors.zeroSensors(); }
+    private void resetPoseMeters(Pose2d metersPose) {
+        zeroEncoders();
+        // doesn't matter what the encoders start at, odometry will use delta of odometry.update() from odometry.reset()
+        odometry.resetPosition(gyro.getRotation2d(), getLeftDistance(), getRightDistance(), metersPose);
+    }
+    public DifferentialDriveWheelSpeeds getWheelSpeeds() {
+        return new DifferentialDriveWheelSpeeds(
+             leftMotors.getSensorVelocityRPM()/m_to_motorrots/60,
+            rightMotors.getSensorVelocityRPM()/m_to_motorrots/60
+        );
+    }
+    public Pose2d getPoseMeters() {
+        return odometry.getPoseMeters();
+    }
+    @Override
+    public void periodic() {
+        odometry.update(gyro.getRotation2d(), getLeftDistance(), getRightDistance());
+    }
     
-    /// methods
+    /// drive methods
 
     /**
      * Convention: +x forwards, +y right, +z down
@@ -57,7 +108,6 @@ public class WestCoastDrive<MotorControllerType extends SmartMotorController> ex
         if (heading != 0) throw new IllegalArgumentException("West Coast Drive cannot move at a non-zero heading!");
         setChassisVelocity(new ChassisSpeeds(speed, 0, turnSpeed));
     }
-    // TODO: error if PIDF has not been configured in the underlying motorsubsystems
     public void setWheelVelocities(DifferentialDriveWheelSpeeds wheelSpeeds) {
         this.leftMotors .setRPM(wheelSpeeds.leftMetersPerSecond  * mps_to_rpm);
         this.rightMotors.setRPM(wheelSpeeds.rightMetersPerSecond * mps_to_rpm);
@@ -71,6 +121,77 @@ public class WestCoastDrive<MotorControllerType extends SmartMotorController> ex
         this.rightMotors.setVoltage(wheelVoltages.right);
     }
 
+
+    /// command factories
+    @Deprecated
+    public Command c_simpleWPILibSpline(Trajectory trajectory) {
+        // TODO: blocked by code not being pushed from driver station
+        throw new UnsupportedOperationException("need to implement ramsete controller");
+    }
+    
+    /**
+     * Load a PathPlanner .path file, generate it with maxVel and maxAccl, and
+     * run the commands specified by eventMap at the stopping points.
+     * 
+     * Usage example:
+     * <pre>
+     * // in RobotMap
+     * 
+     * public static HashMap<String, Command> eventMap;
+     * public static IntakeSubsytem intakeSubsystem;
+     * public static WestCoastDrive drivetrain;
+     * public static Command autoCommand;
+     * // ...
+     * RobotMap.eventMap = Map.ofEntries(
+     *   entry("logEvent", Commands.runOnce(() -> LogKitten.wtf("auton log event hit!"))),
+     *   entry("extendIntake", RobotMap.Component.intakeSubsystem.c_extend())
+     * );
+     * RobotMap.autoCommand = RobotMap.Component.drivetrain.c_buildPathPlannerAuto(0, 0, 0, 2, 0.1, "center_auton", 6, 3, eventMap);
+     * // call the auto factory during startup because it can take a second to generate the trajectory.
+     * // make sure to replace 0s with constants from drivetrain characterization!
+     * 
+     * // in autonomousInitialize
+     * RobotMap.autoCommand.schedule();
+     * </pre>
+     *
+     * @param ffks           Motor feedforward static gain. From sysid. If unknown,
+     *                       0 is an okay default.
+     * @param ffkv           Motor feedforward velocity gain. From sysid. If
+     *                       unknown, 0 is an okay default.
+     * @param ffka           Motor feedforward acceleration gain. 0 is usually okay.
+     * @param ramsete_b      Ramsete controller b value. 2 is a good default.
+     * @param ramsete_zeta   Ramsete controller zeta value. 0.1 is a good default.
+     *                       Reduce this value if the drivetrain speed is
+     *                       oscillating (speeds up and slows down, moves jerkily,
+     *                       sounds like a train).
+     * @param autonGroupName The name of the pathplanner path. NAME => search for
+     *                       src/main/deploy/pathplanner/NAME.path
+     * @param maxVel         Max velocity constraint used in path generation.
+     * @param maxAccl        Max acceleration constraint used in path generation.
+     * @param eventMap       HashMap containing commands for each "event" in the
+     *                       path. PathPlanner will run the commands at those event
+     *                       markers.
+     * @return the command to schedule
+     */
+    public Command c_buildPathPlannerAuto(
+        double ffks, double ffkv, double ffka,
+        double ramsete_b, double ramsete_zeta,
+        String autonGroupName, double maxVel, double maxAccl, HashMap<String, Command> eventMap) {
+        List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup(autonGroupName, new PathConstraints(maxVel, maxAccl));
+        RamseteAutoBuilder autoBuilder = new RamseteAutoBuilder(
+            () -> this.getPoseMeters(),
+            (pose) -> this.resetPoseMeters(pose), 
+            new RamseteController(ramsete_b, ramsete_zeta),
+            kinematics,
+            new SimpleMotorFeedforward(ffks, ffkv, ffka),
+            () -> this.getWheelSpeeds(),
+            pidConsts,
+            (leftVolts, rightVolts) -> this.setWheelVoltages(new DifferentialDriveWheelVoltages(leftVolts, rightVolts)),
+            eventMap,
+            this
+        );
+        return autoBuilder.fullAuto(pathGroup);
+    }
     /**
      * A forever command that pulls drive velocities from a function and sends
      * them to the motor's closed-loop control.
@@ -159,7 +280,4 @@ public class WestCoastDrive<MotorControllerType extends SmartMotorController> ex
             )) // when we turn, the wheels trace out a circle with trackwidth as a diameter. this checks that the wheels have traveled the right distance aroun the circle for our angle
             .andThen(() -> this.c_idle());
     }
-
-
-    }
-    // TODO: write the others. goodfirstissue
+}

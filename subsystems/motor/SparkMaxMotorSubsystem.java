@@ -245,6 +245,10 @@ public class SparkMaxMotorSubsystem extends SmartMotorSubsystem<CustomCANSparkMa
   }
   @Override
   public double getSensorPositionRotations() {
+    return encoder.getPosition();
+  }
+  @Override
+  public double getSensorVelocityRPM() {
     return encoder.getVelocity();
   }
   /**

@@ -334,6 +334,9 @@ public class TalonMotorSubsystem extends SmartMotorSubsystem<TalonMotorControlle
   public double getSensorPositionRotations() {
     return this.leadMotor.getSelectedSensorPosition(DEFAULT_DMP_SLOT) / ENCODER_COUNTS_PER_REV;
   }
+  public double getSensorVelocityRPM() {
+    return this.leadMotor.getSelectedSensorVelocity(DEFAULT_DMP_SLOT) / ENCODER_COUNTS_PER_REV * 10 * 60;
+  }
   @Override
   public void configSoftwareLimits(double fwdBoundRotations, double revBoundRotations) { 
     // this.leadMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, DEFAULT_PID_SLOT, configTimeoutMs);  // select which sensor to use for soft limits
