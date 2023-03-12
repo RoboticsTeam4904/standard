@@ -14,7 +14,9 @@ import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.RemoteLimitSwitchSource;
 
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /**
  * A group of Talon motors (either TalonFX or TalonSRX) with the modern motor controller features. 
@@ -37,10 +39,14 @@ import edu.wpi.first.wpilibj2.command.Command;
  * - Minimum neutral deadband is 0.001 (according to the docs, https://v5.docs.ctr-electronics.com/en/latest/ch13_MC.html#neutral-deadband) 
  * - Configure normallyClosed limit switches manually on the underlying motorControllers. We usually use normallyOpen limit switches, so you probably don't need to do this.
  */
-public class TalonMotorSubsystem extends BrakeableMotorSubsystem<TalonMotorController> {
+public class TalonMotorSubsystem extends SmartMotorSubsystem<TalonMotorController> {
+  private static final int ENCODER_COUNTS_PER_REV = 2048;
+  private static final double RPM_TO_ENCODERCOUNTSPER100MS = ENCODER_COUNTS_PER_REV/60/10;
   private final int configTimeoutMs = 50;  // milliseconds until the Talon gives up trying to configure
-  private final int pid_idx = 0; // TODO: add support for auxillary pid
+  private static final int DEFAULT_PID_SLOT = 0; // TODO: add support for auxillary pid
   private final int follow_motors_remote_filter_id = 0; // DONOT REMOVE, USED IN COMMENTED CODE BELOW; which filter (0 or 1) will be used to configure reading from the integrated encoder on the lead motor
+  private final double voltageComp;
+  private boolean pid_configured = false; // flag for command factories to check whether PID was configured
   public final TalonMotorController leadMotor;
   public final TalonMotorController[] followMotors;
 
@@ -83,13 +89,15 @@ public class TalonMotorSubsystem extends BrakeableMotorSubsystem<TalonMotorContr
    *                                      switches). NOTE passing false will not
    *                                      disable limit switches; just unplug
    *                                      them instead. 
-   * @param voltageCompensation       0 to disable, 10 is a good default. Set
-   *                                  the voltage corresponding to power=1.0
-   *                                  This way, setting a power will lead to
-   *                                  consistent output even when other
-   *                                  components are running. Basically nerf all
-   *                                  motors so that they have a consistent
-   *                                  output. when the battery is low.
+   * @param voltageCompensation       0 to disable, 10 is a good default.
+   *                                  Rescales output so that power=1.0
+   *                                  corresponds to
+   *                                  voltage=voltageCompensation. This way,
+   *                                  setting a power will lead to consistent
+   *                                  output even when other components are
+   *                                  running. Basically nerf all motors so that
+   *                                  they have a consistent output. when the
+   *                                  battery is low.
    * @param leadMotor
    * @param followMotors
    */
@@ -98,6 +106,7 @@ public class TalonMotorSubsystem extends BrakeableMotorSubsystem<TalonMotorContr
                              TalonMotorController leadMotor, TalonMotorController... followMotors) {
 		super(name, speedModifier, Stream.concat(Stream.of(leadMotor), Stream.of(followMotors)).toArray(TalonMotorController[]::new));  // java has no spread operator, so you have to concat. best way i could find is to do it in a stream. please make this not bad if you know how 
 
+    this.voltageComp = voltageCompensation;
     this.leadMotor = leadMotor;
     this.followMotors = followMotors;
 
@@ -119,14 +128,6 @@ public class TalonMotorSubsystem extends BrakeableMotorSubsystem<TalonMotorContr
         motor.overrideLimitSwitchesEnable(true);
       }
     }
-
-    // feedback sensor configuration (for PID)
-    leadMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, pid_idx, configTimeoutMs);
-    // for (var fm : followMotors) { // don't think this is needed because we are using follow mode. only needed for aux output
-    //   fm.configRemoteFeedbackFilter(leadMotor.getDeviceID(), RemoteSensorSource.TalonFX_SelectedSensor /* enum internals has TalonFX = TalonSRX as of 2023 */, follow_motors_remote_filter_id, configTimeoutMs);
-    //   fm.configSelectedFeedbackSensor(follow_motors_remote_filter_id == 0 ? FeedbackDevice.RemoteSensor0 : FeedbackDevice.RemoteSensor1 /* enum internals has TalonFX_SelectedSensor = TalonSRX_SelectedSensor as of 2023 */, pid_idx, configTimeoutMs);
-    //   // TODO: change sensor polarity? https://github.com/CrossTheRoadElec/Phoenix-Examples-Languages/blob/master/Java%20Talon%20FX%20(Falcon%20500)/VelocityClosedLoop_AuxStraightIntegratedSensor/src/main/java/frc/robot/Robot.java#L306
-    // }
 
     // other configuration (neutral mode, neutral deadband, voltagecomp)
     for (var motor : motors) {
@@ -160,13 +161,15 @@ public class TalonMotorSubsystem extends BrakeableMotorSubsystem<TalonMotorContr
 	 * @param neutralMode               Whether the motor should brake or coast
 	 *                                  when the the output is near zero, or
 	 *                                  .disable() or .stopMotor() are called.
-   * @param voltageCompensation       0 to disable, 10 is a good default. Set
-   *                                  the voltage corresponding to power=1.0
-   *                                  This way, setting a power will lead to
-   *                                  consistent output even when other
-   *                                  components are running. Basically nerf all
-   *                                  motors so that they have a consistent
-   *                                  output when the battery is low.
+   * @param voltageCompensation       0 to disable, 10 is a good default.
+   *                                  Rescales output so that power=1.0
+   *                                  corresponds to
+   *                                  voltage=voltageCompensation. This way,
+   *                                  setting a power will lead to consistent
+   *                                  output even when other components are
+   *                                  running. Basically nerf all motors so that
+   *                                  they have a consistent output. when the
+   *                                  battery is low.
    * @param leadMotor
    * @param followMotors
    */
@@ -189,29 +192,54 @@ public class TalonMotorSubsystem extends BrakeableMotorSubsystem<TalonMotorContr
    * The F value provided here will be overwritten if provided to subsystem.leadMotor.set; note that if you do that, it will bypass the subystem requirements check
    * 
    * See docstrings on the methods used in the implementation for physical units
+   * 
+   * @param p  in units of encoder counts per 100ms
+   * @param i  in units of TODO
+   * @param d  in units of TODO
+   * @param f  in units of percent output, [-1, 1]
+   * @param accumulator in units of whatever the intergral is in
+   * @param peakOutput in units of percent output, [-1, 1]
+   * @param pid_slot range [0, 3], pass null for default of zero.
    */
-  public void configPIDF(double p, double i, double d, double f) {
-    leadMotor.config_kP(pid_idx, p, configTimeoutMs);
-    leadMotor.config_kI(pid_idx, i, configTimeoutMs);
-    leadMotor.config_kD(pid_idx, d, configTimeoutMs);
-    leadMotor.config_kF(pid_idx, f, configTimeoutMs);
-    leadMotor.configClosedLoopPeriod(pid_idx, 10, configTimeoutMs); // fast enough for 100Hz per second
-    // TODO: integral zone and closedLoopPeakOUtput? 
+  @Override
+  public void configPIDF(double p, double i, double d, double f, double max_integral_accumulation, double peakOutput, Integer pid_slot) {
+    if (pid_slot == null) pid_slot = TalonMotorSubsystem.DEFAULT_PID_SLOT;
+
+    // feedback sensor configuration (for PID)
+    leadMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, pid_slot, configTimeoutMs);
+    // make sure to update the static final ENCODER_COUNTS_PER_REV if you are using different encoders. Better yet, add a feedbackSensor argument to this method
+
+    // should follow motors do their own PID? no, right? 
+
+    // PID constants configuration
+    leadMotor.config_kP(pid_slot, p, configTimeoutMs);
+    leadMotor.config_kI(pid_slot, i, configTimeoutMs);
+    leadMotor.config_kD(pid_slot, d, configTimeoutMs);
+    leadMotor.config_kF(pid_slot, voltageComp == 0 ? f/voltageComp : f/12, configTimeoutMs);
+    leadMotor.configClosedLoopPeriod(pid_slot, 10, configTimeoutMs); // fast enough for 100Hz per second
+    
+    leadMotor.configMaxIntegralAccumulator(DEFAULT_DMP_SLOT, max_integral_accumulation, configTimeoutMs);
+    leadMotor.configClosedLoopPeakOutput(DEFAULT_DMP_SLOT, peakOutput, configTimeoutMs);
+
+    pid_configured = true;
     // other things in the example: motionmagic config and statusframeperiod (for updating sensor status to the aux motor?)
   }
+  @Override
   /**
-   * 
-   * @param setpointSupplier  a function that returns a double, units = encoder ticks per 100ms
-   * 
-   * @return
+   * Assumes that PID and DMP slots correspond (eg. use PID slot 0 for DMP slot 0)
    */
-  public Command c_setVelocityControl(DoubleSupplier setpointSupplier) {
-    return this.run(() -> leadMotor.set(ControlMode.Velocity, setpointSupplier.getAsDouble()));
+  public void configDMP(double minRPM, double cruiseRPM, double accl_RPMps, double maxError_encoderTicks,
+      Integer dmp_slot) {
+    if (dmp_slot == null) dmp_slot = DEFAULT_DMP_SLOT;
+    // TODO? 
+		// _talon.setStatusFramePeriod(StatusFrameEnhanced.Status_13_Base_PIDF0, 10, Constants.kTimeoutMs);
+		// _talon.setStatusFramePeriod(StatusFrameEnhanced.Status_10_MotionMagic, 10, Constants.kTimeoutMs);
+
+    leadMotor.selectProfileSlot(dmp_slot, dmp_slot);
+    leadMotor.configMotionCruiseVelocity(cruiseRPM*RPM_TO_ENCODERCOUNTSPER100MS, configTimeoutMs);
+    leadMotor.configMotionAcceleration(accl_RPMps*RPM_TO_ENCODERCOUNTSPER100MS, configTimeoutMs);
+    // TODO: min rpm not used -- not sure if possible or needed
   }
-  // public void zeroSensors() {
-  //   // leadMotor.getSensorCollection // ?? doesn't exist; but it's in the CTRE falcon example
-  //   // also should we zero the sensors on the follow motors just in case they're being used?
-  // }
   
   // don't override disable() or stop() because we *should* indeed use the base implementation of disabling/stopping each motor controller individually. Otherwise the following motors will try to follow a disabled motor, which may cause unexpected behavior (although realistically, it likely just gets set to zero and neutrallized by the deadband).
 
@@ -220,8 +248,16 @@ public class TalonMotorSubsystem extends BrakeableMotorSubsystem<TalonMotorContr
     setFollowMode();  // make sure all motors are following the lead as we expect. Possible OPTIMIZATION: store we set the output type to something else on the follow motors (eg. Neutral), and only re-set follow mode if we did. 
     leadMotor.set(power);
   }
+  /**
+   * Consider using .c_controlRPM to stream RPM values to this motor in a command.
+   * 
+   * You must call .configPIDF before using this method.
+   * @param rpm
+   */
+  public void setRPM(double rpm) {
+    leadMotor.set(ControlMode.Velocity, rpm / 60 / 10 * ENCODER_COUNTS_PER_REV);  // velocity units are in encoder counts per 100ms
+  }
 
-  @Override
   /**
    * if using a Ramsete controller, make sure to disable voltage compensation,
    * because voltages have an actual physical meaning from sysid.
@@ -232,9 +268,89 @@ public class TalonMotorSubsystem extends BrakeableMotorSubsystem<TalonMotorContr
    * implementation (calling setVoltage on each motor) as that will just run the
    * same voltage->power calculation for each motor.
    */
+  @Override
   public void setVoltage(double voltage) {
-    setFollowMode();
-    leadMotor.setVoltage(voltage);
+    setFollowMode();  // TODO: is doing this every time too slow?
+    if (voltageComp > 0) {
+      leadMotor.setPower(voltage / Math.min(RobotController.getBatteryVoltage(), voltageComp));
+    } else {
+      leadMotor.setVoltage(voltage);  // CTRE internal code just divides by RobotController.getBatteryVoltage
+    }
+  }
+  /**
+   * You must call .configPIDF before using this method.
+   * 
+   * @param rpm
+   * @return the command to be scheduled.
+   */
+  @Override @Deprecated
+  public Command c_setRPM(double rpm) { return this.runOnce(() -> setRPM(rpm)); }
+  /**
+   * 
+   * @param setpointSupplier  a function that returns a double, rpm
+   * 
+   * @return
+   */
+  @Override
+  public Command c_controlRPM(DoubleSupplier setpointSupplier) {
+    if (pid_configured == false) throw new IllegalArgumentException(name + " tried to use c_controlVelocity without first configPIDF()-ing.");
+    return this.run(() -> setRPM(setpointSupplier.getAsDouble()));
+  }
+  @Override
+  public Command c_holdRPM(double setpoint) {
+    if (pid_configured == false) throw new IllegalArgumentException(name + " tried to use c_controlVelocity without first configPIDF()-ing.");
+    return this.runOnce(() -> setRPM(setpoint)).andThen(new CommandBase(){});  
+}
+  /**
+   * Command that sets the position setpoint and immedietly ends.
+   */
+  public Command c_setPosition(double setpoint, int dmp_slot) {
+    this.leadMotor.selectProfileSlot(dmp_slot, dmp_slot);
+    //return this.runOnce(() -> setDynamicMotionProfileTargetRotations(setpoint)).andThen(new CommandBase(){});
+    return new HardwareDMPUntilArrival(this, setpoint);
+  }
+  @Override
+  public Command c_setPosition(double setpoint) { return c_setPosition(setpoint, DEFAULT_DMP_SLOT); }
+
+  @Override
+  public Command c_controlPosition(DoubleSupplier setpointSupplier) {
+    return this.run(() -> this.leadMotor.set(ControlMode.Position, setpointSupplier.getAsDouble()));
+  }
+  /**
+   * Hold the position using smart motion (on-the-fly motion-profile generation).
+   */
+  public Command c_holdPosition(double setpoint, int dmp_slot) {
+    this.leadMotor.selectProfileSlot(dmp_slot, dmp_slot);
+    return this.runOnce(() -> setDynamicMotionProfileTargetRotations(setpoint)).andThen(new CommandBase(){});
+  }
+  public Command c_holdPosition(double setpoint) { return c_holdPosition(setpoint, DEFAULT_DMP_SLOT); }
+   
+
+  @Override
+  public void zeroSensors() {
+    this.leadMotor.setSelectedSensorPosition(0, DEFAULT_PID_SLOT, configTimeoutMs);
+    // should we zero the sensors on follow motors in case they are being used?
+  }
+  @Override
+  protected void setDynamicMotionProfileTargetRotations(double rotations) {
+    this.leadMotor.set(ControlMode.MotionMagic, rotations*RPM_TO_ENCODERCOUNTSPER100MS);
+  }
+  @Override
+  public double getSensorPositionRotations() {
+    return this.leadMotor.getSelectedSensorPosition(DEFAULT_DMP_SLOT) / ENCODER_COUNTS_PER_REV;
+  }
+  public double getSensorVelocityRPM() {
+    return this.leadMotor.getSelectedSensorVelocity(DEFAULT_DMP_SLOT) / ENCODER_COUNTS_PER_REV * 10 * 60;
+  }
+  @Override
+  public void configSoftwareLimits(double fwdBoundRotations, double revBoundRotations) { 
+    // this.leadMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, DEFAULT_PID_SLOT, configTimeoutMs);  // select which sensor to use for soft limits
+    // this.leadMotor.setSensorPhase(true);
+    this.leadMotor.configForwardSoftLimitThreshold((fwdBoundRotations*ENCODER_COUNTS_PER_REV), configTimeoutMs);
+    this.leadMotor.configReverseSoftLimitThreshold((revBoundRotations*ENCODER_COUNTS_PER_REV), configTimeoutMs);
+    this.leadMotor.configForwardSoftLimitEnable(true, configTimeoutMs);
+    this.leadMotor.configReverseSoftLimitEnable(true, configTimeoutMs);
+    this.leadMotor.overrideSoftLimitsEnable(true);
   }
 
   // no need to override setPower because the base class just uses set

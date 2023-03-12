@@ -28,6 +28,12 @@ public class CANTalonFX extends WPI_TalonFX implements TalonMotorController {
 		setInverted(inverted);
 	}
 
+    /**
+     * Alias for .set() on power
+     * @param power
+     */
+    public void setPower(double power) { set(power); }
+
 	/**
 	 * Setting to enable brake mode on neutral (when .neutralOutput(),
 	 * .disable(), or .stopMotor() is called, or when output percent is within
