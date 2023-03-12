@@ -13,7 +13,7 @@ public interface CustomEncoder extends NativeDerivativeSensor {
 	 *
 	 * @warning does not indicate sensor errors
 	 */
-	int get();
+	// int get();
 
 	/**
 	 * Gets current distance

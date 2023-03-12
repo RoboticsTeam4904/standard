@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
  * having multiple attempts to set a motor simultaneously.
  *
  */
+@Deprecated
 public class MotorSet extends CommandBase {
 	protected final MotorController motor;
 	protected double speed;
