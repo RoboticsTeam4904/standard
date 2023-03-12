@@ -174,9 +174,9 @@ public class WestCoastDrive<MotorControllerType extends SmartMotorController> ex
      * @return the command to schedule
      */
     public Command c_buildPathPlannerAuto(
-        double ffks, double ffkv, double ffka,
-        double ramsete_b, double ramsete_zeta,
-        String autonGroupName, double maxVel, double maxAccl, Map<String, Command> eventMap) {
+            double ffks, double ffkv, double ffka,
+            double ramsete_b, double ramsete_zeta,
+            String autonGroupName, double maxVel, double maxAccl, Map<String, Command> eventMap) {
         List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup(autonGroupName, new PathConstraints(maxVel, maxAccl));
         RamseteAutoBuilder autoBuilder = new RamseteAutoBuilder(
             () -> this.getPoseMeters(),
