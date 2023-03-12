@@ -8,6 +8,7 @@ import org.usfirst.frc4904.standard.custom.motorcontrollers.SmartMotorController
 import org.usfirst.frc4904.standard.custom.sensors.NavX;
 import org.usfirst.frc4904.standard.subsystems.motor.SmartMotorSubsystem;
 
+import com.kauailabs.navx.frc.AHRS;
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
@@ -27,13 +28,13 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class WestCoastDrive<MotorControllerType extends SmartMotorController> extends SubsystemBase {
-    protected final SmartMotorSubsystem<MotorControllerType> leftMotors;
-    protected final SmartMotorSubsystem<MotorControllerType> rightMotors;
+public class WestCoastDrive<MotorSubsystem extends SmartMotorSubsystem> extends SubsystemBase {
+    public final MotorSubsystem leftMotors;
+    public final MotorSubsystem rightMotors;
     protected final PIDConstants pidConsts;
     protected final DifferentialDriveKinematics kinematics;
     protected final DifferentialDriveOdometry odometry;   // OPTIM this can be replaced with a kalman filter?
-    protected final NavX gyro;    // OPTIM this can be replaced by something more general
+    protected final AHRS gyro;    // OPTIM this can be replaced by something more general
     protected final double mps_to_rpm;
     protected final double m_to_motorrots;
 
@@ -49,7 +50,7 @@ public class WestCoastDrive<MotorControllerType extends SmartMotorController> ex
     public WestCoastDrive(
         double trackWidthMeters, double motorToWheelGearRatio, double wheelDiameterMeters,
         double drive_kP, double drive_kI, double drive_kD,
-        NavX navx, SmartMotorSubsystem<MotorControllerType> leftMotorSubsystem, SmartMotorSubsystem<MotorControllerType> rightMotorSubsystem) {
+        AHRS navx, MotorSubsystem leftMotorSubsystem, MotorSubsystem rightMotorSubsystem) {
         leftMotors = leftMotorSubsystem;
         rightMotors = rightMotorSubsystem;
         gyro = navx;
