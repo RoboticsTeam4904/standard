@@ -1,7 +1,7 @@
 package org.usfirst.frc4904.standard.subsystems.chassis;
 
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Supplier;
 
 import org.usfirst.frc4904.standard.custom.motorcontrollers.SmartMotorController;
@@ -176,7 +176,7 @@ public class WestCoastDrive<MotorControllerType extends SmartMotorController> ex
     public Command c_buildPathPlannerAuto(
         double ffks, double ffkv, double ffka,
         double ramsete_b, double ramsete_zeta,
-        String autonGroupName, double maxVel, double maxAccl, HashMap<String, Command> eventMap) {
+        String autonGroupName, double maxVel, double maxAccl, Map<String, Command> eventMap) {
         List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup(autonGroupName, new PathConstraints(maxVel, maxAccl));
         RamseteAutoBuilder autoBuilder = new RamseteAutoBuilder(
             () -> this.getPoseMeters(),
