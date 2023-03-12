@@ -28,8 +28,8 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class WestCoastDrive<MotorControllerType extends SmartMotorController> extends SubsystemBase {
-    protected final SmartMotorSubsystem<MotorControllerType> leftMotors;
-    protected final SmartMotorSubsystem<MotorControllerType> rightMotors;
+    public final SmartMotorSubsystem<MotorControllerType> leftMotors;
+    public final SmartMotorSubsystem<MotorControllerType> rightMotors;
     protected final PIDConstants pidConsts;
     protected final DifferentialDriveKinematics kinematics;
     protected final DifferentialDriveOdometry odometry;   // OPTIM this can be replaced with a kalman filter?
