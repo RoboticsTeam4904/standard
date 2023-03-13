@@ -4,9 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
-import org.usfirst.frc4904.standard.custom.motorcontrollers.SmartMotorController;
-import org.usfirst.frc4904.standard.custom.sensors.NavX;
-import org.usfirst.frc4904.standard.subsystems.motor.SmartMotorSubsystem;
+import org.usfirst.frc4904.standard.subsystems.motor.TalonMotorSubsystem;
 
 import com.kauailabs.navx.frc.AHRS;
 import com.pathplanner.lib.PathConstraints;
@@ -28,9 +26,9 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class WestCoastDrive<MotorSubsystem extends SmartMotorSubsystem> extends SubsystemBase {
-    public final MotorSubsystem leftMotors;
-    public final MotorSubsystem rightMotors;
+public class WestCoastDrive extends SubsystemBase {
+    public final TalonMotorSubsystem leftMotors;
+    public final TalonMotorSubsystem rightMotors;
     protected final PIDConstants pidConsts;
     protected final DifferentialDriveKinematics kinematics;
     protected final DifferentialDriveOdometry odometry;   // OPTIM this can be replaced with a kalman filter?
@@ -50,7 +48,7 @@ public class WestCoastDrive<MotorSubsystem extends SmartMotorSubsystem> extends 
     public WestCoastDrive(
         double trackWidthMeters, double motorToWheelGearRatio, double wheelDiameterMeters,
         double drive_kP, double drive_kI, double drive_kD,
-        AHRS navx, MotorSubsystem leftMotorSubsystem, MotorSubsystem rightMotorSubsystem) {
+        AHRS navx, TalonMotorSubsystem leftMotorSubsystem, TalonMotorSubsystem rightMotorSubsystem) {
         leftMotors = leftMotorSubsystem;
         rightMotors = rightMotorSubsystem;
         gyro = navx;
@@ -64,7 +62,6 @@ public class WestCoastDrive<MotorSubsystem extends SmartMotorSubsystem> extends 
          leftMotors.configPIDF(drive_kP, drive_kI, drive_kD, 0, 100, 1, null);
         rightMotors.configPIDF(drive_kP, drive_kI, drive_kD, 0, 100, 1, null);
         zeroEncoders();
-        // TODO: add requirements?
     }
 
     // odometry methods
