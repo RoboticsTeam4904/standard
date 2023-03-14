@@ -1,6 +1,5 @@
 package org.usfirst.frc4904.standard.custom.motorcontrollers;
 
-import com.ctre.phoenix.motorcontrol.IMotorController;
 import com.ctre.phoenix.motorcontrol.IMotorControllerEnhanced;
 
 /**

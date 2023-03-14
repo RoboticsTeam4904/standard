@@ -4,13 +4,8 @@ import java.util.function.DoubleConsumer;
 import java.util.function.DoubleFunction;
 import java.util.function.DoubleSupplier;
 
-import javax.naming.InitialContext;
-
 import org.opencv.core.Mat.Tuple2;
 
-import com.ctre.phoenix.motorcontrol.FeedbackDevice;
-
-import edu.wpi.first.math.Pair;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Subsystem;
