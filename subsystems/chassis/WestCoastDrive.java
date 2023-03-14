@@ -126,7 +126,7 @@ public class WestCoastDrive extends SubsystemBase {
     /// command factories
     @Deprecated
     public Command c_simpleWPILibSpline(Trajectory trajectory) {
-        // TODO: blocked by code not being pushed from driver station
+        // TODO: doesn't work. see implementation in Chassis2023
         throw new UnsupportedOperationException("need to implement ramsete controller");
     }
     
@@ -174,6 +174,7 @@ public class WestCoastDrive extends SubsystemBase {
      *                       markers.
      * @return the command to schedule
      */
+    @Deprecated // don't use this, it doesn't really work
     public Command c_buildPathPlannerAuto(
             double ffks, double ffkv, double ffka,
             double ramsete_b, double ramsete_zeta,
