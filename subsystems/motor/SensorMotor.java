@@ -62,7 +62,6 @@ public abstract class SensorMotor extends Motor implements DoubleConsumer {
 		super.set(speed);
 	}
 
-<<<<<<< HEAD
 
 	/**
 	 * Set the position of a sensor motor
@@ -89,6 +88,4 @@ public abstract class SensorMotor extends Motor implements DoubleConsumer {
 		LogKitten.v(getName() + " set to position " + position + " at speed " + speed);
 		super.set(speed);
 	}
-=======
->>>>>>> 551ef8ec66812e47f7c21939cf67d04cbb98579d
 }
