@@ -63,30 +63,4 @@ public abstract class SensorMotor extends Motor implements DoubleConsumer {
 		super.set(speed);
 	}
 
-
-	/**
-	 * Set the position of a sensor motor
-	 *
-	 * @param position
-	 * @throws InvalidSensorException
-	 */
-	public void setPositionSafely(double position) throws InvalidSensorException {
-		motionController.setSetpoint(position);
-		double speed = motionController.getSafely();
-		LogKitten.v(getName() + " set to position " + position + " at speed " + speed);
-		super.set(speed); // TODO remove and test I don't know why this is here.
-	}
-
-	/**
-	 * Set the position of a sensor motor
-	 *
-	 * @param position
-	 * @warning this does not indicate sensor failure
-	 */
-	public void setPosition(double position) {
-		motionController.setSetpoint(position);
-		double speed = motionController.getSafely();
-		LogKitten.v(getName() + " set to position " + position + " at speed " + speed);
-		super.set(speed);
-	}
 }
