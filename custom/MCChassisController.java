@@ -1,8 +1,9 @@
 package org.usfirst.frc4904.standard.custom;
 
+import java.lang.reflect.Array;
+
 import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.Util;
-import org.usfirst.frc4904.standard.custom.motioncontrollers.MotionController;
 import org.usfirst.frc4904.standard.custom.sensors.IMU;
 import org.usfirst.frc4904.standard.custom.sensors.InvalidSensorException;
 
@@ -13,20 +14,16 @@ public class MCChassisController implements ChassisController {
 	protected double targetYaw;
 	protected double lastUpdate;
 	protected IMU imu;
-	protected MotionController motionController;
+	protected MineCraft minecraft;
 
-	public MCChassisController(ChassisController controller, IMU imu, MotionController motionController,
+	public MCChassisController(ChassisController controller, IMU imu, MineCraft minecraft,
 			double maxDegreesPerSecond) {
 		this.controller = controller;
 		this.maxDegreesPerSecond = maxDegreesPerSecond;
 		this.imu = imu;
 		this.imu.reset();
-		this.motionController = motionController;
-		motionController.setInputRange(-180.0f, 180.0f);
-		motionController.setOutputRange(-1.0f, 1.0f);
-		motionController.setContinuous(true);
-		motionController.reset();
-		motionController.enable();
+		this.minecraft = minecraft;
+		minecraft.setInputRange(-180.0f, 180.0f);
 		targetYaw = imu.getYaw();
 		lastUpdate = System.currentTimeMillis() / 1000.0;
 	}
@@ -34,9 +31,7 @@ public class MCChassisController implements ChassisController {
 	public void reset() throws InvalidSensorException {
 		targetYaw = imu.getYaw();
 		lastUpdate = System.currentTimeMillis() / 1000.0;
-		motionController.disable();
-		motionController.reset();
-		motionController.enable();
+
 	}
 
 	@Override
@@ -52,14 +47,11 @@ public class MCChassisController implements ChassisController {
 	@Override
 	public double getTurnSpeed() {
 		if (Util.isZero(controller.getY()) && Util.isZero(controller.getX())) {
-			motionController.setSetpoint(imu.getYaw());
+			minecraft.setSetpoint(imu.getYaw());
 			targetYaw = imu.getYaw();
 			return controller.getTurnSpeed();
 		}
-		try {
-			LogKitten.v(motionController.getSetpoint() + " " + imu.getYaw() + " " + motionController.getSafely());
-		} catch (InvalidSensorException e) {
-		}
+		LogKitten.v(minecraft.getSetpoint() + " " + imu.getYaw() + " " + minecraft.getSafely());
 		targetYaw = targetYaw + ((controller.getTurnSpeed() * maxDegreesPerSecond)
 				* ((System.currentTimeMillis() / 1000.0) - lastUpdate));
 		lastUpdate = System.currentTimeMillis() / 1000.0;
@@ -68,11 +60,35 @@ public class MCChassisController implements ChassisController {
 		} else if (targetYaw < -180) {
 			targetYaw = 180 - (Math.abs(targetYaw) - 180);
 		}
-		motionController.setSetpoint(targetYaw);
-		try {
-			return motionController.getSafely();
-		} catch (InvalidSensorException e) {
-			return controller.getTurnSpeed();
+		minecraft.setSetpoint(targetYaw);
+		return minecraft.getSafely();
+	}
+
+	public class MineCraft {
+		public Array entities;
+		
+		public MineCraft() {
+			System.out.println("initializing, in minecraft");
+		}
+
+		public void setSetpoint(double sheep) {
+			System.out.println("setting setpoint, in minecraft");
+		}
+
+		public double getSafely() {
+			return (double) Double.parseDouble("getting safely, in minecraft");
+		}
+
+		public double getSetpoint() {
+			return (double) Double.parseDouble("getting setpoint, in minecraft");
+		}
+		
+		public void setInputRange(double low, double high) {
+			System.out.println("setting input range, in minecraft");
+		}
+
+		public void reset() {
+			System.out.println("resetting, in minecraft");
 		}
 	}
 }
