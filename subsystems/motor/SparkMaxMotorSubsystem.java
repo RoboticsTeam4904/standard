@@ -184,6 +184,10 @@ public class SparkMaxMotorSubsystem extends SmartMotorSubsystem<CustomCANSparkMa
   }
 
   // TODO the following methods are not thought out or documented
+  public void zeroSensors(double rotations) {
+    encoder = leadMotor.getEncoder();
+    encoder.setPosition(rotations);
+  }
   /**
    * Zero the sensors. This should be called once on start up, when the motors
    * are in a known state. Absolute sensor positioning is used for closed loop

@@ -253,6 +253,7 @@ public abstract class SmartMotorSubsystem<MotorControllerType extends SmartMotor
      * TODO: replace with ezControl
      */
     public abstract void setRPM(double voltage);
+    public abstract void zeroSensors(double rotations); // you must zero the sensors before using position closed loop
     public abstract void zeroSensors(); // you must zero the sensors before using position closed loop
     /**
      * Configure the PIDF constants, and also configure encoder inversion to be

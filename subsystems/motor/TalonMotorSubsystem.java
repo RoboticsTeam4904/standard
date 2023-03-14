@@ -327,9 +327,13 @@ public class TalonMotorSubsystem extends SmartMotorSubsystem<TalonMotorControlle
    
 
   @Override
-  public void zeroSensors() {
-    this.leadMotor.setSelectedSensorPosition(0, DEFAULT_PID_SLOT, configTimeoutMs);
+  public void zeroSensors(double rotations) {
+    this.leadMotor.setSelectedSensorPosition(rotations * ENCODER_COUNTS_PER_REV, DEFAULT_PID_SLOT, configTimeoutMs);
     // should we zero the sensors on follow motors in case they are being used?
+  }
+  @Override
+  public void zeroSensors() {
+    zeroSensors(0);
   }
   @Override
   protected void setDynamicMotionProfileTargetRotations(double rotations) {
