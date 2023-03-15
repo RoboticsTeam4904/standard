@@ -13,6 +13,7 @@ import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.auto.PIDConstants;
 import com.pathplanner.lib.auto.RamseteAutoBuilder;
 
+import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.controller.DifferentialDriveWheelVoltages;
 import edu.wpi.first.math.controller.RamseteController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
@@ -22,6 +23,7 @@ import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -222,8 +224,7 @@ public class WestCoastDrive extends SubsystemBase {
     }
     // TODO sketchy as hell
     public Command c_controlChassisVoltage(Supplier<ChassisSpeeds> chassisPowerSupplier) {
-        new ChassisSpeeds();
-        var cmd = this.run(() -> setChassisVelocity(chassisPowerSupplier.get()));    // this.run() runs repeatedly
+        var cmd = this.run(() -> setChassisVoltage(chassisPowerSupplier.get()));    // this.run() runs repeatedly
         cmd.addRequirements(leftMotors);
         cmd.addRequirements(rightMotors);
         return cmd;
@@ -236,6 +237,17 @@ public class WestCoastDrive extends SubsystemBase {
      */
     public Command c_controlChassisVelocity(Supplier<ChassisSpeeds> chassisSpeedsSupplier) {
         var cmd = this.run(() -> setChassisVelocity(chassisSpeedsSupplier.get()));    // this.run() runs repeatedly
+        cmd.addRequirements(leftMotors);
+        cmd.addRequirements(rightMotors);
+        return cmd;
+    }
+    /**
+     * A forever command that pulls left and right wheel voltages from a
+     * function.
+     */
+    public Command c_controlWheelPower(Supplier<Pair<Double, Double>> wheelVoltageSupplier) {
+        Pair<Double, Double> powers = wheelVoltageSupplier.get();
+        var cmd = this.run(() -> c_controlChassisVoltage(() -> new ChassisSpeeds(powers.getFirst()/RobotController.getBatteryVoltage(), 0, powers.getSecond())));    // this.run() runs repeatedly
         cmd.addRequirements(leftMotors);
         cmd.addRequirements(rightMotors);
         return cmd;
