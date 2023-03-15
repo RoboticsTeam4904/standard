@@ -119,7 +119,7 @@ public class WestCoastDrive extends SubsystemBase {
     }
 
     public void setChassisVoltage(ChassisSpeeds sketchyVoltages) {
-        final double SKETCHY_CORRECTION = 1;
+        final double SKETCHY_CORRECTION = 1;    // TODO: tune? @zbuster05
         final var wheelVoltages = kinematics.toWheelSpeeds(sketchyVoltages);
         // we do a little trolling
         setWheelVoltages(wheelVoltages.leftMetersPerSecond * SKETCHY_CORRECTION, wheelVoltages.rightMetersPerSecond * SKETCHY_CORRECTION);
@@ -223,8 +223,8 @@ public class WestCoastDrive extends SubsystemBase {
         return cmd;
     }
     // TODO sketchy as hell
-    public Command c_controlChassisVoltage(Supplier<ChassisSpeeds> chassisPowerSupplier) {
-        var cmd = this.run(() -> setChassisVoltage(chassisPowerSupplier.get()));    // this.run() runs repeatedly
+    public Command c_controlChassisWithVoltage(Supplier<ChassisSpeeds> chassisSpeedVoltsSupplier) {
+        var cmd = this.run(() -> setChassisVoltage(chassisSpeedVoltsSupplier.get()));    // this.run() runs repeatedly
         cmd.addRequirements(leftMotors);
         cmd.addRequirements(rightMotors);
         return cmd;
@@ -245,9 +245,9 @@ public class WestCoastDrive extends SubsystemBase {
      * A forever command that pulls left and right wheel voltages from a
      * function.
      */
-    public Command c_controlWheelPower(Supplier<Pair<Double, Double>> wheelVoltageSupplier) {
-        Pair<Double, Double> powers = wheelVoltageSupplier.get();
-        var cmd = this.run(() -> c_controlChassisVoltage(() -> new ChassisSpeeds(powers.getFirst()/RobotController.getBatteryVoltage(), 0, powers.getSecond())));    // this.run() runs repeatedly
+    public Command c_controlChassisSpeedAndTurn(Supplier<Pair<Double, Double>> chasssisSpeedAndTurnSupplier) {
+        Pair<Double, Double> speedAndTurn = chasssisSpeedAndTurnSupplier.get();
+        var cmd = this.run(() -> c_controlChassisWithVoltage(() -> new ChassisSpeeds(speedAndTurn.getFirst()*RobotController.getBatteryVoltage(), 0, speedAndTurn.getSecond())));    // this.run() runs repeatedly
         cmd.addRequirements(leftMotors);
         cmd.addRequirements(rightMotors);
         return cmd;
