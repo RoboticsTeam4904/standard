@@ -106,6 +106,7 @@ public class WestCoastDrive extends SubsystemBase {
         if (heading != 0) throw new IllegalArgumentException("West Coast Drive cannot move at a non-zero heading!");
         setChassisVelocity(new ChassisSpeeds(speed, 0, turnSpeed));
     }
+
     public void setWheelVelocities(DifferentialDriveWheelSpeeds wheelSpeeds) {
         this.leftMotors .setRPM(wheelSpeeds.leftMetersPerSecond  * mps_to_rpm);
         this.rightMotors.setRPM(wheelSpeeds.rightMetersPerSecond * mps_to_rpm);
@@ -114,6 +115,14 @@ public class WestCoastDrive extends SubsystemBase {
         final var wheelSpeeds = kinematics.toWheelSpeeds(chassisSpeeds);
         setWheelVelocities(wheelSpeeds);
     }
+
+    public void setChassisVoltage(ChassisSpeeds sketchyVoltages) {
+        final double SKETCHY_CORRECTION = 1;
+        final var wheelVoltages = kinematics.toWheelSpeeds(sketchyVoltages);
+        // we do a little trolling
+        setWheelVoltages(wheelVoltages.leftMetersPerSecond * SKETCHY_CORRECTION, wheelVoltages.rightMetersPerSecond * SKETCHY_CORRECTION);
+    }
+
     public void setWheelVoltages(DifferentialDriveWheelVoltages wheelVoltages) {
         this.setWheelVoltages(wheelVoltages.left, wheelVoltages.right);
     }
@@ -211,6 +220,15 @@ public class WestCoastDrive extends SubsystemBase {
         cmd.addRequirements(rightMotors);
         return cmd;
     }
+    // TODO sketchy as hell
+    public Command c_controlChassisVoltage(Supplier<ChassisSpeeds> chassisPowerSupplier) {
+        new ChassisSpeeds();
+        var cmd = this.run(() -> setChassisVelocity(chassisPowerSupplier.get()));    // this.run() runs repeatedly
+        cmd.addRequirements(leftMotors);
+        cmd.addRequirements(rightMotors);
+        return cmd;
+    }
+
     /**
      * A forever command that pulls chassis movement
      * (forward speed and turn * radians/sec) from a * function and
