@@ -1,6 +1,6 @@
 package org.usfirst.frc4904.standard.commands.motor;
 
-import org.usfirst.frc4904.standard.LogKitten;
+// import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.subsystems.motor.Motor;
 
 import edu.wpi.first.wpilibj.motorcontrol.MotorController;
@@ -23,12 +23,12 @@ public class MotorSet extends CommandBase {
 		addRequirements(motor);
 		this.motor = motor;
 		speed = 0;
-		LogKitten.d("MotorSet created for " + motor.getName());
+		// LogKitten.d("MotorSet created for " + motor.getName());
 	}
 
 	@Override
 	public void initialize() {
-		LogKitten.d("MotorSet initialized");
+		// LogKitten.d("MotorSet initialized");
 	}
 
 	/**
@@ -36,22 +36,22 @@ public class MotorSet extends CommandBase {
 	 */
 	public void set(double speed) {
 		this.speed = speed;
-		LogKitten.d("MotorSet writePipe set to " + speed);
+		// LogKitten.d("MotorSet writePipe set to " + speed);
 	}
 
 	@Override
 	public void execute() {
 		motor.set(speed);
-		LogKitten.d("MotorSet executing with speed " + speed);
+		// LogKitten.d("MotorSet executing with speed " + speed);
 	}
 
 	@Override
 	public void end(boolean interrupted) {
 		if (!interrupted) {
 			motor.set(0);
-			LogKitten.d("MotorSet ended (motor speed set to 0)");
+			// LogKitten.d("MotorSet ended (motor speed set to 0)");
 		} else {
-			LogKitten.d("MotorSet interrupted (motor speed undefined)");
+			// LogKitten.d("MotorSet interrupted (motor speed undefined)");
 		}
 	}
 

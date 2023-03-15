@@ -2,7 +2,7 @@ package org.usfirst.frc4904.standard.custom;
 
 import java.lang.reflect.Array;
 
-import org.usfirst.frc4904.standard.LogKitten;
+// import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.Util;
 import org.usfirst.frc4904.standard.custom.sensors.IMU;
 import org.usfirst.frc4904.standard.custom.sensors.InvalidSensorException;
@@ -51,7 +51,7 @@ public class MCChassisController implements ChassisController {
 			targetYaw = imu.getYaw();
 			return controller.getTurnSpeed();
 		}
-		LogKitten.v(minecraft.getSetpoint() + " " + imu.getYaw() + " " + minecraft.getSafely());
+		// LogKitten.v(minecraft.getSetpoint() + " " + imu.getYaw() + " " + minecraft.getSafely());
 		targetYaw = targetYaw + ((controller.getTurnSpeed() * maxDegreesPerSecond)
 				* ((System.currentTimeMillis() / 1000.0) - lastUpdate));
 		lastUpdate = System.currentTimeMillis() / 1000.0;

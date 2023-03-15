@@ -1,6 +1,6 @@
 package org.usfirst.frc4904.standard.commands.motor;
 
-import org.usfirst.frc4904.standard.LogKitten;
+// import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.subsystems.motor.Motor;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
@@ -24,7 +24,7 @@ public class MotorIdle extends CommandBase {
 		setName(name);
 		addRequirements(motor);
 		this.motor = motor;
-		LogKitten.d("MotorIdle created");
+		// LogKitten.d("MotorIdle created");
 	}
 
 	/**
@@ -39,13 +39,13 @@ public class MotorIdle extends CommandBase {
 	@Override
 	public void initialize() {
 		motor.set(0);
-		LogKitten.d("MotorIdle initialized");
+		// LogKitten.d("MotorIdle initialized");
 	}
 
 	@Override
 	public void execute() {
 		motor.set(0);
-		LogKitten.d("MotorIdle executing");
+		// LogKitten.d("MotorIdle executing");
 	}
 
 	@Override
@@ -56,7 +56,8 @@ public class MotorIdle extends CommandBase {
 	@Override
 	public void end(boolean interrupted) {
 		if (interrupted) {
-			LogKitten.d("MotorIdle interrupted");
+			System.out.println("MotorIdle interrupted");
+			// LogKitten.d("MotorIdle interrupted");
 		}
 	}
 }

@@ -1,6 +1,6 @@
 package org.usfirst.frc4904.standard.commands;
 
-import org.usfirst.frc4904.standard.LogKitten;
+// import org.usfirst.frc4904.standard.LogKitten;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Subsystem;
@@ -29,21 +29,21 @@ public class Idle extends CommandBase {
 	@Override
 	public void initialize() {
 		if (verbose) {
-			LogKitten.v("Idle " + getName() + " initialized.");
+			// LogKitten.v("Idle " + getName() + " initialized.");
 		}
 	}
 
 	@Override
 	public void execute() {
 		if (verbose) {
-			LogKitten.v("Idle " + getName() + " executed.");
+			// LogKitten.v("Idle " + getName() + " executed.");
 		}
 	}
 
 	@Override
 	public boolean isFinished() {
 		if (verbose) {
-			LogKitten.v("Idle " + getName() + " isFinished?");
+			// LogKitten.v("Idle " + getName() + " isFinished?");
 		}
 		return false;
 	}
@@ -52,9 +52,9 @@ public class Idle extends CommandBase {
 	public void end(boolean interrupted) {
 		if (verbose) {
 			if (interrupted) {
-				LogKitten.v("Idle " + getName() + "ended with interrupt.");
+				// LogKitten.v("Idle " + getName() + "ended with interrupt.");
 			} else {
-				LogKitten.v("Idle " + getName() + " ended.");
+				// LogKitten.v("Idle " + getName() + " ended.");
 			}
 		}
 	}

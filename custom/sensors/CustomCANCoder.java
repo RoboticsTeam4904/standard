@@ -4,7 +4,7 @@ import com.ctre.phoenix.sensors.CANCoder;
 import com.ctre.phoenix.sensors.CANCoderConfiguration;
 import com.ctre.phoenix.sensors.SensorTimeBase;
 
-import org.usfirst.frc4904.standard.LogKitten;
+// import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.Util;
 
 public class CustomCANCoder extends CANCoder implements CustomEncoder {
@@ -41,7 +41,8 @@ public class CustomCANCoder extends CANCoder implements CustomEncoder {
         try {
             return getRateSafely();
         } catch (Exception e) {
-            LogKitten.ex(e);
+            e.printStackTrace();
+            // LogKitten.ex(e);
             return 0;
         }
     }
@@ -57,7 +58,8 @@ public class CustomCANCoder extends CANCoder implements CustomEncoder {
         try {
             return getDistanceSafely();
         } catch (Exception e) {
-            LogKitten.ex(e);
+            e.printStackTrace();
+            // LogKitten.ex(e);
             return 0;
         }
     }
@@ -72,7 +74,8 @@ public class CustomCANCoder extends CANCoder implements CustomEncoder {
         try {
             return getDirectionSafely();
         } catch (Exception e) {
-            LogKitten.ex(e);
+            e.printStackTrace();
+            // LogKitten.ex(e);
             return false;
         }
     }
@@ -87,7 +90,8 @@ public class CustomCANCoder extends CANCoder implements CustomEncoder {
         try {
             return getStoppedSafely();
         } catch (Exception e) {
-            LogKitten.ex(e);
+            e.printStackTrace();
+            // LogKitten.ex(e);
             return false;
         }
     }

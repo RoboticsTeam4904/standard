@@ -1,6 +1,6 @@
 package org.usfirst.frc4904.standard.custom.sensors;
 
-import org.usfirst.frc4904.standard.LogKitten;
+// import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.Util;
 
 /**
@@ -68,7 +68,8 @@ public class EncoderPair implements CustomEncoder {
 		try {
 			return getDistanceSafely();
 		} catch (InvalidSensorException e) {
-			LogKitten.ex(e);
+			e.printStackTrace();
+			// LogKitten.ex(e);
 			return 0;
 		}
 	}
@@ -103,7 +104,8 @@ public class EncoderPair implements CustomEncoder {
 		try {
 			return getRateSafely();
 		} catch (InvalidSensorException e) {
-			LogKitten.ex(e);
+			e.printStackTrace();
+			// LogKitten.ex(e);
 			return 0;
 		}
 	}
@@ -156,7 +158,8 @@ public class EncoderPair implements CustomEncoder {
 		try {
 			return getDifferenceSafely();
 		} catch (InvalidSensorException e) {
-			LogKitten.ex(e);
+			e.printStackTrace();
+			// LogKitten.ex(e);
 			return 0.0; // TODO: is this a reasonable default
 		}
 	}
@@ -170,7 +173,8 @@ public class EncoderPair implements CustomEncoder {
 		try {
 			return getRateDifferenceSafely();
 		} catch (InvalidSensorException e) {
-			LogKitten.ex(e);
+			e.printStackTrace();
+			// LogKitten.ex(e);
 			return 0.0; // TODO: is this a reasonable default
 		}
 	}
@@ -183,7 +187,8 @@ public class EncoderPair implements CustomEncoder {
 		try {
 			return isInSyncSafely();
 		} catch (InvalidSensorException e) {
-			LogKitten.ex(e);
+			e.printStackTrace();
+			// LogKitten.ex(e);
 			return false; // If a sensor is broken, it is not in sync.
 		}
 	}

@@ -2,7 +2,6 @@ package org.usfirst.frc4904.standard.subsystems.motor;
 
 import java.util.function.DoubleConsumer;
 
-import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.custom.MCChassisController;
 import org.usfirst.frc4904.standard.custom.sensors.InvalidSensorException;
 import org.usfirst.frc4904.standard.subsystems.motor.speedmodifiers.IdentityModifier;
@@ -72,7 +71,7 @@ public abstract class SensorMotor extends Motor implements DoubleConsumer {
 	public void setPositionSafely(double position) throws InvalidSensorException {
 		minecraft.setSetpoint(position);
 		double speed = minecraft.getSafely();
-		LogKitten.v(getName() + " set to position " + position + " at speed " + speed);
+		// LogKitten.v(getName() + " set to position " + position + " at speed " + speed);
 		super.set(speed); // TODO remove and test I don't know why this is here.
 	}
 
@@ -85,7 +84,7 @@ public abstract class SensorMotor extends Motor implements DoubleConsumer {
 	public void setPosition(double position) {
 		minecraft.setSetpoint(position);
 		double speed = minecraft.getSafely();
-		LogKitten.v(getName() + " set to position " + position + " at speed " + speed);
+		// LogKitten.v(getName() + " set to position " + position + " at speed " + speed);
 		super.set(speed);
 	}
 }

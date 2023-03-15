@@ -1,6 +1,6 @@
 package org.usfirst.frc4904.standard.subsystems.motor.speedmodifiers;
 
-import org.usfirst.frc4904.standard.LogKitten;
+// import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.Util;
 import org.usfirst.frc4904.standard.custom.sensors.InvalidSensorException;
 import org.usfirst.frc4904.standard.custom.sensors.PDP;
@@ -92,7 +92,7 @@ public class AccelerationCap implements SpeedModifier {
 		// After doing updates, check for low battery voltage first
 		double currentVoltage = newVoltage;
 		if (currentVoltage < hardStopVoltage) { // If we are below hardStopVoltage, stop motors
-			LogKitten.w("Low voltage, AccelerationCap stopping motors");
+			// LogKitten.w("Low voltage, AccelerationCap stopping motors");
 			return 0;
 		}
 		if (Math.abs(inputSpeed) < Math.abs(currentSpeed) && Math.signum(inputSpeed) == Math.signum(currentSpeed)) {
@@ -113,10 +113,10 @@ public class AccelerationCap implements SpeedModifier {
 		// Even if we are still above the hard stop voltage, try to avoid going below
 		// next tick
 		if (currentVoltage < hardStopVoltage + (lastVoltage - voltage) * AccelerationCap.TICKS_PER_PDP_DATA / 2.0) {
-			LogKitten.w("Preventative capping to "
-					+ (currentSpeed
-							- AccelerationCap.ANTI_BROWNOUT_BACKOFF_PER_SECOND * Math.signum(currentSpeed) * deltaTime)
-					+ " from " + inputSpeed);
+			// LogKitten.w("Preventative capping to "
+			// 		+ (currentSpeed
+			// 				- AccelerationCap.ANTI_BROWNOUT_BACKOFF_PER_SECOND * Math.signum(currentSpeed) * deltaTime)
+			// 		+ " from " + inputSpeed);
 			return currentSpeed
 					- AccelerationCap.ANTI_BROWNOUT_BACKOFF_PER_SECOND * Math.signum(currentSpeed) * deltaTime;
 		}
@@ -135,7 +135,7 @@ public class AccelerationCap implements SpeedModifier {
 	@Override
 	public double modify(double inputSpeed) {
 		currentSpeed = calculate(inputSpeed);
-		LogKitten.d("AccelerationCap outputed: " + currentSpeed);
+		// LogKitten.d("AccelerationCap outputed: " + currentSpeed);
 		return currentSpeed;
 	}
 }
