@@ -50,10 +50,10 @@ public class SparkMaxMotorSubsystem extends SmartMotorSubsystem<CustomCANSparkMa
   public final CustomCANSparkMax leadMotor;
   public final CustomCANSparkMax[] followMotors;
 
-  // TODO: stator current limits? also makes brake mode stronger? https://www.chiefdelphi.com/t/programming-current-limiting-for-talonfx-java/371860
-  // TODO: peak/nominal outputs
-  // TODO: add voltage/slew limit to drivetrain motors because we don't want the pid to actively try to stop the motor (negative power) when the driver just lets go of the controls. diff ones for closed and open
-  // TODO: control speed near soft limits, so that you can't go full throttle near the soft limit? impl as a speed modifier??
+  // TO DO: stator current limits? also makes brake mode stronger? https://www.chiefdelphi.com/t/programming-current-limiting-for-talonfx-java/371860
+  // TO DO: peak/nominal outputs
+  // TO DO: add voltage/slew limit to drivetrain motors because we don't want the pid to actively try to stop the motor (negative power) when the driver just lets go of the controls. diff ones for closed and open
+  // TO DO: control speed near soft limits, so that you can't go full throttle near the soft limit? impl as a speed modifier??
 
   /**
    * Motor Subsystem for a group of Talon motor controllers (Falcons, 775s).
@@ -110,12 +110,12 @@ public class SparkMaxMotorSubsystem extends SmartMotorSubsystem<CustomCANSparkMa
     if (respectLeadMotorLimitSwitches) {
       // when extending to SparkMAX: you have to sparkmax.getForward/ReverseLimitSwitch.enable() or something. may need custom polling/plugin logic. https://codedocs.revrobotics.com/java/com/revrobotics/cansparkmax#getReverseLimitSwitch(com.revrobotics.SparkMaxLimitSwitch.Type)
 
-      // TODO: spark max limit switches are untested
+      // TO DO: spark max limit switches are untested
       var fwdLimit = leadMotor.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
       var revLimit = leadMotor.getReverseLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
       REVLibThrowable.guard(fwdLimit.enableLimitSwitch(true));  // REVLibThrowable.guard will throw a runtime exception if the configuration fails.
       REVLibThrowable.guard(revLimit.enableLimitSwitch(true));
-      // TODO: do following spark maxes need to be configured to use remote limit switch? or can they just auto-brake w/ a neutral-deadband equivalent? 
+      // TO DO: do following spark maxes need to be configured to use remote limit switch? or can they just auto-brake w/ a neutral-deadband equivalent? 
     } // no else { disableLimitSwitches() } here because we don't want to overwrite on false; user may be trying to use their own configuration.
 
     // other configuration (neutral mode, neutral deadband, voltagecomp)
@@ -187,7 +187,7 @@ public class SparkMaxMotorSubsystem extends SmartMotorSubsystem<CustomCANSparkMa
     controller.setReference(rpm, ControlType.kVelocity, DEFAULT_PID_SLOT, feedforwardVolts);
   }
 
-  // TODO the following methods are not thought out or documented
+  // TO DO the following methods are not thought out or documented
   public void zeroSensors(double rotations) {
     encoder = leadMotor.getEncoder();
     encoder.setPosition(rotations);
@@ -197,7 +197,7 @@ public class SparkMaxMotorSubsystem extends SmartMotorSubsystem<CustomCANSparkMa
    * are in a known state. Absolute sensor positioning is used for closed loop
    * position control. 
    * 
-   * Call .configPIDF before using this method. TODO all these dependencies suck
+   * Call .configPIDF before using this method. TO DO all these dependencies suck
    */
   public void zeroSensors() {
     encoder = leadMotor.getEncoder();
@@ -232,7 +232,7 @@ public class SparkMaxMotorSubsystem extends SmartMotorSubsystem<CustomCANSparkMa
     pid_configured = true;
 
     controller.setIMaxAccum(accumulator, pid_slot);
-    controller.setOutputRange(-peakOutput, peakOutput, pid_slot); //TODO: assuming 0-1 range for peakOutput
+    controller.setOutputRange(-peakOutput, peakOutput, pid_slot);
 
   }
   public void configDMP(double minRPM, double maxRPM, double maxAccl_RPMps, double maxError_encoderTicks, Integer dmp_slot) {
@@ -283,7 +283,7 @@ public class SparkMaxMotorSubsystem extends SmartMotorSubsystem<CustomCANSparkMa
     if (!pid_configured) throw new IllegalArgumentException(name + " tried to use c_holdRPM without first configPIDF()-ing.");
     return this.run(() -> setRPM(setpoint));
   }
-  // TODO: these should probably use a diff pid slot from RPM
+  // TO DO: these should probably use a diff pid slot from RPM
   @Override
   public Command c_setPosition(double setpoint) {
     if (!pid_configured) throw new IllegalArgumentException(name + " tried to use c_setPosition without first configPIDF()-ing");
@@ -335,7 +335,7 @@ public class SparkMaxMotorSubsystem extends SmartMotorSubsystem<CustomCANSparkMa
 
   // no need to override setPower because the base class just uses set
   // don't override setBrakeOnNeutral, setCoastOnNeutral, neutralOutput because we indeed want to set it individually on each motor. Otherwise, the followers might try to follow a disabled/neutral motor which might cause unexpected behavior.
-  // TODO: except do we actually yes need to? since it seems to not persist, see the warning about auto-disable here: https://docs.revrobotics.com/sparkmax/operating-modes/control-interfaces
+  // TO DO: except do we actually yes need to? since it seems to not persist, see the warning about auto-disable here: https://docs.revrobotics.com/sparkmax/operating-modes/control-interfaces
 
   // ERROR HANDLING
   static class REVLibThrowable extends IllegalStateException {

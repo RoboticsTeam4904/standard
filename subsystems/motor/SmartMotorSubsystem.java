@@ -176,7 +176,7 @@ public abstract class SmartMotorSubsystem<MotorControllerType extends SmartMotor
     }
 
     /// COMMANDS
-    // TODO: remove the "Replaces *.java in pre-2023 standard" and "eg. button1.onTrue(motor.c_idle())" when they become unnecessary.
+    // TO DO: remove the "Replaces *.java in pre-2023 standard" and "eg. button1.onTrue(motor.c_idle())" when they become unnecessary.
 
     /**
      * Disable motor using the underlying .disable(); command version of .disable().
@@ -248,7 +248,7 @@ public abstract class SmartMotorSubsystem<MotorControllerType extends SmartMotor
     /**
      * Write PIDF values to hardware, which will be used with the closed loop control commands
      * 
-     * TODO: replace with ezControl
+     * TO DO: replace with ezControl
      */
     public abstract void setRPM(double voltage);
     public abstract void setRPM(double voltage, double feedforwardVolts);

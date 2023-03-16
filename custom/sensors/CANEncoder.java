@@ -1,6 +1,6 @@
 package org.usfirst.frc4904.standard.custom.sensors;
 // WAS PID SOURCE
-// TODO FIND BETTER LOG KITTEN REPLACEMENT
+// TO DO FIND BETTER LOG KITTEN REPLACEMENT
 // import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.Util;
 

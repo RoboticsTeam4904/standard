@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /**
  * Command to set the state of a SolenoidSubsystem
- * TODO: rewrite using inline commands on SolenoidSubsystem
+ * TO DO: rewrite using inline commands on SolenoidSubsystem
  */
 
 public class SolenoidSet extends CommandBase {

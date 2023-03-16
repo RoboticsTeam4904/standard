@@ -44,17 +44,17 @@ public class TalonMotorSubsystem extends SmartMotorSubsystem<TalonMotorControlle
   private static final int ENCODER_COUNTS_PER_REV = 2048;
   private static final double RPM_TO_ENCODERCOUNTSPER100MS = ENCODER_COUNTS_PER_REV/60/10;
   private final int configTimeoutMs = 5;  // milliseconds until the Talon gives up trying to configure
-  private static final int DEFAULT_PID_SLOT = 0; // TODO: add support for auxillary pid
+  private static final int DEFAULT_PID_SLOT = 0; // TO DO: add support for auxillary pid
   private final int follow_motors_remote_filter_id = 0; // DONOT REMOVE, USED IN COMMENTED CODE BELOW; which filter (0 or 1) will be used to configure reading from the integrated encoder on the lead motor
   private final double voltageComp;
   private boolean pid_configured = false; // flag for command factories to check whether PID was configured
   public final TalonMotorController leadMotor;
   public final TalonMotorController[] followMotors;
 
-  // TODO: stator current limits? also makes brake mode stronger? https://www.chiefdelphi.com/t/programming-current-limiting-for-talonfx-java/371860
-  // TODO: peak/nominal outputs
-  // TODO: add voltage/slew limit to drivetrain motors because we don't want the pid to actively try to stop the motor (negative power) when the driver just lets go of the controls. diff ones for closed and open
-  // TODO: control speed near soft limits, so that you can't go full throttle near the soft limit? impl as a speed modifier??
+  // TO DO: stator current limits? also makes brake mode stronger? https://www.chiefdelphi.com/t/programming-current-limiting-for-talonfx-java/371860
+  // TO DO: peak/nominal outputs
+  // TO DO: add voltage/slew limit to drivetrain motors because we don't want the pid to actively try to stop the motor (negative power) when the driver just lets go of the controls. diff ones for closed and open
+  // TO DO: control speed near soft limits, so that you can't go full throttle near the soft limit? impl as a speed modifier??
 
   /**
    * Motor Subsystem for a group of Talon motor controllers (Falcons, 775s).
@@ -191,15 +191,15 @@ public class TalonMotorSubsystem extends SmartMotorSubsystem<TalonMotorControlle
   //   }
   // }
 
-  // TODO the following methods are not thought out or documented
+  // TO DO the following methods are not thought out or documented
   /**
    * The F value provided here will be overwritten if provided to subsystem.leadMotor.set; note that if you do that, it will bypass the subystem requirements check
    * 
    * See docstrings on the methods used in the implementation for physical units
    * 
    * @param p  in units of encoder counts per 100ms
-   * @param i  in units of TODO
-   * @param d  in units of TODO
+   * @param i  in units of TO DO
+   * @param d  in units of TO DO
    * @param f  in units of percent output, [-1, 1]
    * @param accumulator in units of whatever the intergral is in
    * @param peakOutput in units of percent output, [-1, 1]
@@ -231,14 +231,14 @@ public class TalonMotorSubsystem extends SmartMotorSubsystem<TalonMotorControlle
   public void configDMP(double minRPM, double cruiseRPM, double accl_RPMps, double maxError_encoderTicks,
       Integer dmp_slot) {
     if (dmp_slot == null) dmp_slot = DEFAULT_DMP_SLOT;
-    // TODO? 
+    // TO DO? 
 		// _talon.setStatusFramePeriod(StatusFrameEnhanced.Status_13_Base_PIDF0, 10, Constants.kTimeoutMs);
 		// _talon.setStatusFramePeriod(StatusFrameEnhanced.Status_10_MotionMagic, 10, Constants.kTimeoutMs);
 
     leadMotor.selectProfileSlot(dmp_slot, dmp_slot);
     leadMotor.configMotionCruiseVelocity(cruiseRPM*RPM_TO_ENCODERCOUNTSPER100MS, configTimeoutMs);
     leadMotor.configMotionAcceleration(accl_RPMps*RPM_TO_ENCODERCOUNTSPER100MS, configTimeoutMs);
-    // TODO: min rpm not used -- not sure if possible or needed
+    // TO DO: min rpm not used -- not sure if possible or needed
   }
   
   // don't override disable() or stop() because we *should* indeed use the base implementation of disabling/stopping each motor controller individually. Otherwise the following motors will try to follow a disabled motor, which may cause unexpected behavior (although realistically, it likely just gets set to zero and neutrallized by the deadband).

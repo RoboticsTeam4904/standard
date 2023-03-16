@@ -3,7 +3,7 @@ package org.usfirst.frc4904.standard.custom.sensors;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
-// TODO untested
+// TO DO untested
 
 /** 
  * Digital limit switch that provides the same Trigger interface as HID

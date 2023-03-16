@@ -8,7 +8,7 @@ import org.usfirst.frc4904.standard.subsystems.SolenoidSubsystem.SolenoidState;
 /**
  * Command to set the state of a SolenoidSubsystem to
  * RETRACT(DoubleSolenoid.Value.kReverse)
- * TODO: rewrite using inline commands on SolenoidSubsystem
+ * TO DO: rewrite using inline commands on SolenoidSubsystem
  */
 @Deprecated
 public class SolenoidRetract extends SolenoidSet {

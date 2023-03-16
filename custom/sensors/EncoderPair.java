@@ -160,7 +160,7 @@ public class EncoderPair implements CustomEncoder {
 		} catch (InvalidSensorException e) {
 			e.printStackTrace();
 			// LogKitten.ex(e);
-			return 0.0; // TODO: is this a reasonable default
+			return 0.0; // TO DO: is this a reasonable default
 		}
 	}
 
@@ -175,7 +175,7 @@ public class EncoderPair implements CustomEncoder {
 		} catch (InvalidSensorException e) {
 			e.printStackTrace();
 			// LogKitten.ex(e);
-			return 0.0; // TODO: is this a reasonable default
+			return 0.0; // TO DO: is this a reasonable default
 		}
 	}
 

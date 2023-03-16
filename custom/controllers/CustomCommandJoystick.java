@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
  * trigger interface. This allows us to use a joystick as a controller. This
  * contains 12 buttons to reflect the joysticks we are typically using.
  * 
- * TODO: should probably extend or be replaced with https://github.wpilib.org/allwpilib/docs/release/java/edu/wpi/first/wpilibj2/command/button/CommandJoystick.html
+ * TO DO: should probably extend or be replaced with https://github.wpilib.org/allwpilib/docs/release/java/edu/wpi/first/wpilibj2/command/button/CommandJoystick.html
  */
 public class CustomCommandJoystick extends Joystick {
 	public static final int X_AXIS = 0;

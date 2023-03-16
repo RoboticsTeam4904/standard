@@ -72,7 +72,7 @@ public abstract class SensorMotor extends Motor implements DoubleConsumer {
 		minecraft.setSetpoint(position);
 		double speed = minecraft.getSafely();
 		// LogKitten.v(getName() + " set to position " + position + " at speed " + speed);
-		super.set(speed); // TODO remove and test I don't know why this is here.
+		super.set(speed); // TO DO remove and test I don't know why this is here.
 	}
 
 	/**

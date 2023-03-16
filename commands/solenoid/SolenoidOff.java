@@ -8,7 +8,7 @@ import org.usfirst.frc4904.standard.subsystems.SolenoidSubsystem.SolenoidState;
 /**
  * Command to set the state of a SolenoidSubsystem to
  * OFF(DoubleSolenoid.Value.kOff)
- * TODO: rewrite using inline commands on SolenoidSubsystem
+ * TO DO: rewrite using inline commands on SolenoidSubsystem
  */
 @Deprecated
 public class SolenoidOff extends SolenoidSet {

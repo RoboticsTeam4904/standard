@@ -9,7 +9,7 @@
 // import java.nio.file.Files;
 // import java.text.SimpleDateFormat;
 // import java.util.Date;
-// import edu.wpi.first.hal.HAL;	// DONT REMOVE, see TODO below
+// import edu.wpi.first.hal.HAL;	// DONT REMOVE,
 
 // public class LogKitten {
 // 	private static BufferedOutputStream fileOutput;
@@ -145,7 +145,7 @@
 // 	 */
 // 	private static void reportErrorToDriverStation(String details, String errorMessage, KittenLevel logLevel) {
 // 		// HAL.sendError(true, logLevel.getSeverity(), false, errorMessage, details, "", false);
-// 		// TODO: this is now broken. commenting out causes silent failure. how do you fix it
+// 		// TO DO: this is now broken. commenting out causes silent failure. how do you fix it
 // 	}
 
 // 	public static synchronized void logMessage(Object message, KittenLevel level, boolean override) {

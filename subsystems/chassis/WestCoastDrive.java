@@ -120,6 +120,7 @@ public class WestCoastDrive extends SubsystemBase {
     public void testFeedForward(double speed) {
         var ff = this.feedforward.calculate(speed);
         // this.setWheelVoltages(new DifferentialDriveWheelVoltages(ff, ff));
+        // TODO COMP: why does this do one side forward, one side backwards? should be inverted correctly??
         this.leftMotors.setVoltage(ff);
         this.rightMotors.setVoltage(ff);
     }
@@ -133,13 +134,6 @@ public class WestCoastDrive extends SubsystemBase {
         setWheelVelocities(wheelSpeeds);
     }
 
-    public void setChassisVoltage(ChassisSpeeds sketchyVoltages) {
-        final double SKETCHY_CORRECTION = 1;    // TODO: tune? @zbuster05
-        final var wheelVoltages = kinematics.toWheelSpeeds(sketchyVoltages);
-        // we do a little trolling
-        setWheelVoltages(wheelVoltages.leftMetersPerSecond * SKETCHY_CORRECTION, wheelVoltages.rightMetersPerSecond * SKETCHY_CORRECTION);
-    }
-
     public void setWheelVoltages(DifferentialDriveWheelVoltages wheelVoltages) {
         this.setWheelVoltages(wheelVoltages.left, wheelVoltages.right);
     }
@@ -150,11 +144,6 @@ public class WestCoastDrive extends SubsystemBase {
 
 
     /// command factories
-    @Deprecated
-    public Command c_simpleWPILibSpline(Trajectory trajectory) {
-        // TODO: doesn't work. see implementation in Chassis2023
-        throw new UnsupportedOperationException("need to implement ramsete controller");
-    }
     
     /**
      * Load a PathPlanner .path file, generate it with maxVel and maxAccl, and
@@ -237,16 +226,6 @@ public class WestCoastDrive extends SubsystemBase {
         cmd.addRequirements(rightMotors);
         return cmd;
     }
-    // TODO sketchy as hell
-    public Command c_controlChassisWithVoltage(Supplier<ChassisSpeeds> chassisSpeedVoltsSupplier) {
-        var cmd = this.run(() -> {
-            var volts = chassisSpeedVoltsSupplier.get();
-            setChassisVoltage(volts);
-        });    // this.run() runs repeatedly
-        cmd.addRequirements(leftMotors);
-        cmd.addRequirements(rightMotors);
-        return cmd;
-    }
 
     /**
      * A forever command that pulls chassis movement
@@ -257,17 +236,6 @@ public class WestCoastDrive extends SubsystemBase {
         var cmd = this.run(() -> setChassisVelocity(chassisSpeedsSupplier.get()));    // this.run() runs repeatedly
         cmd.addRequirements(leftMotors);
         cmd.addRequirements(rightMotors);
-        return cmd;
-    }
-    /**
-     * A forever command that pulls left and right wheel voltages from a
-     * function.
-     */
-    public Command c_controlChassisSpeedAndTurn(Supplier<Pair<Double, Double>> chasssisSpeedAndTurnSupplier) {
-        var cmd = c_controlChassisWithVoltage(() -> {
-            Pair<Double, Double> speedAndTurn = chasssisSpeedAndTurnSupplier.get();
-            return new ChassisSpeeds(speedAndTurn.getFirst()*RobotController.getBatteryVoltage(), 0, speedAndTurn.getSecond());
-        });
         return cmd;
     }
     /**
@@ -298,7 +266,7 @@ public class WestCoastDrive extends SubsystemBase {
      * Replaces ChassisIdle in pre-2023 standard.
      */
     public Command c_idle() {
-        return Commands.parallel(leftMotors.c_idle(), rightMotors.c_idle());    // TODO do we need to require the chassis subsystem for this? else chassis will read as unrequired, but all of it's subcomponents will be required.
+        return Commands.parallel(leftMotors.c_idle(), rightMotors.c_idle());
     }
 
     /**
