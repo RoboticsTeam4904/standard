@@ -42,7 +42,6 @@ public abstract class SmartMotorSubsystem<MotorControllerType extends SmartMotor
 		for (var motor : motors) {
 			motor.set(0);
 		}
-        // setDefaultCommand(this.runOnce(() -> this.neutralOutput()));
     }
 
 	/**
