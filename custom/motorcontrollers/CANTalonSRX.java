@@ -59,4 +59,15 @@ public class CANTalonSRX extends WPI_TalonSRX implements TalonMotorController {
 		setNeutralMode(NeutralMode.Coast);
 		return this;
 	}
+
+	@Override
+	public boolean isFwdLimitSwitchPressed() throws IllegalAccessException {
+		// OPTIM: this should probably support normally closed limit switches too... right now only supports normally open
+		return getSensorCollection().isFwdLimitSwitchClosed();
+	}
+	@Override
+	public boolean isRevLimitSwitchPressed() throws IllegalAccessException {
+		// OPTIM: this should probably support normally closed limit switches too... right now only supports normally open
+		return getSensorCollection().isRevLimitSwitchClosed();
+	}
 }

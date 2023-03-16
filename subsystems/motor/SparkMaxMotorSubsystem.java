@@ -15,6 +15,7 @@ import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMax.SoftLimitDirection;
+import com.revrobotics.SparkMaxPIDController.ArbFFUnits;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -182,8 +183,15 @@ public class SparkMaxMotorSubsystem extends SmartMotorSubsystem<CustomCANSparkMa
   public void setRPM(double rpm) {
     controller.setReference(rpm, ControlType.kVelocity);
   }
+  public void setRPM(double rpm, double feedforwardVolts) {
+    controller.setReference(rpm, ControlType.kVelocity, DEFAULT_PID_SLOT, feedforwardVolts);
+  }
 
   // TODO the following methods are not thought out or documented
+  public void zeroSensors(double rotations) {
+    encoder = leadMotor.getEncoder();
+    encoder.setPosition(rotations);
+  }
   /**
    * Zero the sensors. This should be called once on start up, when the motors
    * are in a known state. Absolute sensor positioning is used for closed loop
@@ -261,6 +269,10 @@ public class SparkMaxMotorSubsystem extends SmartMotorSubsystem<CustomCANSparkMa
     if (!pid_configured) throw new IllegalArgumentException(name + " tried to use c_controlRPM without first configPIDF()-ing.");
     return this.run(() -> setRPM(setpointSupplier.getAsDouble()));
   }
+  public Command c_controlRPM(DoubleSupplier setpointSupplier, DoubleSupplier feedforwardSupplierVolts) {
+    if (!pid_configured) throw new IllegalArgumentException(name + " tried to use c_controlRPM without first configPIDF()-ing.");
+    return this.run(() -> setRPM(setpointSupplier.getAsDouble(), feedforwardSupplierVolts.getAsDouble()));
+  }
   @Override @Deprecated
   public Command c_setRPM(double setpoint) {
     return this.runOnce(() -> setRPM(setpoint));
@@ -280,7 +292,16 @@ public class SparkMaxMotorSubsystem extends SmartMotorSubsystem<CustomCANSparkMa
   @Override
   public Command c_controlPosition(DoubleSupplier setpointSupplier) {
     if (!pid_configured) throw new IllegalArgumentException(name + " tried to use c_controlPosition without first configPIDF()-ing");
-    return this.run(() -> setDynamicMotionProfileTargetRotations(setpointSupplier.getAsDouble()));
+    return this.run(() -> controller.setReference(setpointSupplier.getAsDouble(), ControlType.kPosition));
+  }
+  @Override
+  public Command c_controlPosition(DoubleSupplier setpointSupplier, DoubleSupplier feedforwardSupplierVolts) {
+    if (!pid_configured) throw new IllegalArgumentException(name + " tried to use c_controlPosition without first configPIDF()-ing");
+    return this.run(() -> controller.setReference(
+      setpointSupplier.getAsDouble(), ControlType.kPosition,
+      DEFAULT_PID_SLOT,
+      feedforwardSupplierVolts.getAsDouble()
+    ));
   }
   @Override
   public Command c_holdPosition(double setpoint) {

@@ -2,7 +2,6 @@ package org.usfirst.frc4904.standard.subsystems.motor;
 
 import java.util.function.DoubleSupplier;
 
-import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.custom.motorcontrollers.SmartMotorController;
 import org.usfirst.frc4904.standard.subsystems.motor.speedmodifiers.IdentityModifier;
 import org.usfirst.frc4904.standard.subsystems.motor.speedmodifiers.SpeedModifier;
@@ -111,7 +110,7 @@ public abstract class SmartMotorSubsystem<MotorControllerType extends SmartMotor
 	 * @param power The power to set. Value should be between -1.0 and 1.0.
 	 */
 	public void set(double power) {
-		LogKitten.v("Motor " + getName() + " @ " + power);
+		// LogKitten.v("Motor " + getName() + " @ " + power);
 		double newPower = speedModifier.modify(power);
 		for (var motor : motors) motor.set(newPower);
 	}
@@ -136,7 +135,7 @@ public abstract class SmartMotorSubsystem<MotorControllerType extends SmartMotor
 	 * function, it is not "set it and forget it."
 	 */
     public void setVoltage(double voltage) {
-		LogKitten.v("Motor " + getName() + " @ " + voltage + "v");
+		// LogKitten.v("Motor " + getName() + " @ " + voltage + "v");
         for (var motor : motors) {
             motor.setVoltage(voltage);
         }
@@ -253,6 +252,8 @@ public abstract class SmartMotorSubsystem<MotorControllerType extends SmartMotor
      * TODO: replace with ezControl
      */
     public abstract void setRPM(double voltage);
+    public abstract void setRPM(double voltage, double feedforwardVolts);
+    public abstract void zeroSensors(double rotations); // you must zero the sensors before using position closed loop
     public abstract void zeroSensors(); // you must zero the sensors before using position closed loop
     /**
      * Configure the PIDF constants, and also configure encoder inversion to be
@@ -267,8 +268,10 @@ public abstract class SmartMotorSubsystem<MotorControllerType extends SmartMotor
     public abstract void configPIDF(double p, double i, double d, double f, double max_accumulation, double peakOutput, Integer pid_slot);
     public abstract void configDMP(double minRPM, double maxRPM, double maxAccl_RPMps, double maxError_encoderTicks, Integer dmp_slot);   // you must configure dynamic motion profiles (motionmagic or smartmotion) before using setPosition 
     public abstract void configSoftwareLimits(double fwdBoundRotations, double revBoundRotations);
+    public abstract Command c_controlRPM(DoubleSupplier setpointSupplier, DoubleSupplier feedforwardSupplierVolts);
     public abstract Command c_controlRPM(DoubleSupplier setpointSupplier);
     public abstract Command c_holdRPM(double setpoint);
+    public abstract Command c_controlPosition(DoubleSupplier setpointSupplier, DoubleSupplier feedforwardSupplierVolts);
     public abstract Command c_controlPosition(DoubleSupplier setpointSupplier);
     public abstract Command c_holdPosition(double setpoint);
 

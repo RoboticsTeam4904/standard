@@ -1,6 +1,6 @@
 package org.usfirst.frc4904.standard.commands;
 
-import org.usfirst.frc4904.standard.LogKitten;
+// import org.usfirst.frc4904.standard.LogKitten;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /**
@@ -16,7 +16,7 @@ public class Cancel extends CommandBase {
 	}
 
 	public void initialize() {
-		LogKitten.v("Initializing " + getName());
+		// LogKitten.v("Initializing " + getName());
 		command.cancel();
 	}
 

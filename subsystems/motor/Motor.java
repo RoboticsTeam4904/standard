@@ -1,6 +1,5 @@
 package org.usfirst.frc4904.standard.subsystems.motor;
 
-import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.commands.motor.MotorIdle;
 import org.usfirst.frc4904.standard.subsystems.motor.speedmodifiers.IdentityModifier;
 import org.usfirst.frc4904.standard.subsystems.motor.speedmodifiers.SpeedModifier;
@@ -207,8 +206,7 @@ public class Motor extends SubsystemBase implements MotorController {
 	 */
 	@Override
 	public void set(double speed) {
-
-		LogKitten.v("Motor " + getName() + " @ " + speed);
+		// LogKitten.v("Motor " + getName() + " @ " + speed);
 		double newSpeed = speedModifier.modify(speed);
 		lastSpeed = newSpeed;
 		for (MotorController motor : motors) {

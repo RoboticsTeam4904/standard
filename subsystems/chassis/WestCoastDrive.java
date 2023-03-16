@@ -4,16 +4,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
-import org.usfirst.frc4904.standard.custom.motorcontrollers.SmartMotorController;
-import org.usfirst.frc4904.standard.custom.sensors.NavX;
-import org.usfirst.frc4904.standard.subsystems.motor.SmartMotorSubsystem;
+import org.usfirst.frc4904.standard.subsystems.motor.TalonMotorSubsystem;
 
+import com.kauailabs.navx.frc.AHRS;
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.auto.PIDConstants;
 import com.pathplanner.lib.auto.RamseteAutoBuilder;
 
+import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.controller.DifferentialDriveWheelVoltages;
 import edu.wpi.first.math.controller.RamseteController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
@@ -23,17 +23,24 @@ import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
+<<<<<<< HEAD
 public class WestCoastDrive<MotorControllerType extends SmartMotorController> extends SubsystemBase {
     public final SmartMotorSubsystem<MotorControllerType> leftMotors;
     public final SmartMotorSubsystem<MotorControllerType> rightMotors;
+=======
+public class WestCoastDrive extends SubsystemBase {
+    public final TalonMotorSubsystem leftMotors;
+    public final TalonMotorSubsystem rightMotors;
+>>>>>>> 841c1910e5ed1200efb50c6b3a041818ea7fe13d
     protected final PIDConstants pidConsts;
     protected final DifferentialDriveKinematics kinematics;
     protected final DifferentialDriveOdometry odometry;   // OPTIM this can be replaced with a kalman filter?
-    protected final NavX gyro;    // OPTIM this can be replaced by something more general
+    protected final AHRS gyro;    // OPTIM this can be replaced by something more general
     protected final double mps_to_rpm;
     protected final double m_to_motorrots;
 
@@ -49,7 +56,7 @@ public class WestCoastDrive<MotorControllerType extends SmartMotorController> ex
     public WestCoastDrive(
         double trackWidthMeters, double motorToWheelGearRatio, double wheelDiameterMeters,
         double drive_kP, double drive_kI, double drive_kD,
-        NavX navx, SmartMotorSubsystem<MotorControllerType> leftMotorSubsystem, SmartMotorSubsystem<MotorControllerType> rightMotorSubsystem) {
+        AHRS navx, TalonMotorSubsystem leftMotorSubsystem, TalonMotorSubsystem rightMotorSubsystem) {
         leftMotors = leftMotorSubsystem;
         rightMotors = rightMotorSubsystem;
         gyro = navx;
@@ -63,7 +70,6 @@ public class WestCoastDrive<MotorControllerType extends SmartMotorController> ex
          leftMotors.configPIDF(drive_kP, drive_kI, drive_kD, 0, 100, 1, null);
         rightMotors.configPIDF(drive_kP, drive_kI, drive_kD, 0, 100, 1, null);
         zeroEncoders();
-        // TODO: add requirements?
     }
 
     // odometry methods
@@ -108,6 +114,7 @@ public class WestCoastDrive<MotorControllerType extends SmartMotorController> ex
         if (heading != 0) throw new IllegalArgumentException("West Coast Drive cannot move at a non-zero heading!");
         setChassisVelocity(new ChassisSpeeds(speed, 0, turnSpeed));
     }
+
     public void setWheelVelocities(DifferentialDriveWheelSpeeds wheelSpeeds) {
         this.leftMotors .setRPM(wheelSpeeds.leftMetersPerSecond  * mps_to_rpm);
         this.rightMotors.setRPM(wheelSpeeds.rightMetersPerSecond * mps_to_rpm);
@@ -116,6 +123,14 @@ public class WestCoastDrive<MotorControllerType extends SmartMotorController> ex
         final var wheelSpeeds = kinematics.toWheelSpeeds(chassisSpeeds);
         setWheelVelocities(wheelSpeeds);
     }
+
+    public void setChassisVoltage(ChassisSpeeds sketchyVoltages) {
+        final double SKETCHY_CORRECTION = 1;    // TODO: tune? @zbuster05
+        final var wheelVoltages = kinematics.toWheelSpeeds(sketchyVoltages);
+        // we do a little trolling
+        setWheelVoltages(wheelVoltages.leftMetersPerSecond * SKETCHY_CORRECTION, wheelVoltages.rightMetersPerSecond * SKETCHY_CORRECTION);
+    }
+
     public void setWheelVoltages(DifferentialDriveWheelVoltages wheelVoltages) {
         this.setWheelVoltages(wheelVoltages.left, wheelVoltages.right);
     }
@@ -128,7 +143,7 @@ public class WestCoastDrive<MotorControllerType extends SmartMotorController> ex
     /// command factories
     @Deprecated
     public Command c_simpleWPILibSpline(Trajectory trajectory) {
-        // TODO: blocked by code not being pushed from driver station
+        // TODO: doesn't work. see implementation in Chassis2023
         throw new UnsupportedOperationException("need to implement ramsete controller");
     }
     
@@ -176,6 +191,7 @@ public class WestCoastDrive<MotorControllerType extends SmartMotorController> ex
      *                       markers.
      * @return the command to schedule
      */
+    @Deprecated // don't use this, it doesn't really work
     public Command c_buildPathPlannerAuto(
             double ffks, double ffkv, double ffka,
             double ramsete_b, double ramsete_zeta,
@@ -212,6 +228,14 @@ public class WestCoastDrive<MotorControllerType extends SmartMotorController> ex
         cmd.addRequirements(rightMotors);
         return cmd;
     }
+    // TODO sketchy as hell
+    public Command c_controlChassisWithVoltage(Supplier<ChassisSpeeds> chassisSpeedVoltsSupplier) {
+        var cmd = this.run(() -> setChassisVoltage(chassisSpeedVoltsSupplier.get()));    // this.run() runs repeatedly
+        cmd.addRequirements(leftMotors);
+        cmd.addRequirements(rightMotors);
+        return cmd;
+    }
+
     /**
      * A forever command that pulls chassis movement
      * (forward speed and turn * radians/sec) from a * function and
@@ -219,6 +243,17 @@ public class WestCoastDrive<MotorControllerType extends SmartMotorController> ex
      */
     public Command c_controlChassisVelocity(Supplier<ChassisSpeeds> chassisSpeedsSupplier) {
         var cmd = this.run(() -> setChassisVelocity(chassisSpeedsSupplier.get()));    // this.run() runs repeatedly
+        cmd.addRequirements(leftMotors);
+        cmd.addRequirements(rightMotors);
+        return cmd;
+    }
+    /**
+     * A forever command that pulls left and right wheel voltages from a
+     * function.
+     */
+    public Command c_controlChassisSpeedAndTurn(Supplier<Pair<Double, Double>> chasssisSpeedAndTurnSupplier) {
+        Pair<Double, Double> speedAndTurn = chasssisSpeedAndTurnSupplier.get();
+        var cmd = this.run(() -> c_controlChassisWithVoltage(() -> new ChassisSpeeds(speedAndTurn.getFirst()*RobotController.getBatteryVoltage(), 0, speedAndTurn.getSecond())));    // this.run() runs repeatedly
         cmd.addRequirements(leftMotors);
         cmd.addRequirements(rightMotors);
         return cmd;

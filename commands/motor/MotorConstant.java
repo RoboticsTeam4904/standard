@@ -1,6 +1,6 @@
 package org.usfirst.frc4904.standard.commands.motor;
 
-import org.usfirst.frc4904.standard.LogKitten;
+// import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.subsystems.motor.Motor;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
@@ -39,7 +39,7 @@ public class MotorConstant extends CommandBase {
 	@Override
 	public void initialize() {
 		motor.set(motorSpeed);
-		LogKitten.wtf("emacs");
+		// LogKitten.wtf("emacs");
 	}
 
 	@Override

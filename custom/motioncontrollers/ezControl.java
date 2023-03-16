@@ -51,7 +51,7 @@ public class ezControl implements BiFunction<Double, Double, Double> {
     // VERY TEMPTED
     public class ezControlState extends TrapezoidProfile.State {}
 
-    // OK maybe a bit bad but techinically good practice and I'm putting it in here anyways
+    // OK maybe a bit bad but technically good practice and I'm putting it in here anyways
     public class ezControlMethod {
         public final PIDController pid;
         public final ezFeedForward F;

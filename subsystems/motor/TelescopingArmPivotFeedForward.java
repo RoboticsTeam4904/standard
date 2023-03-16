@@ -6,7 +6,7 @@ import edu.wpi.first.math.controller.ArmFeedforward;
  * Computes feed-forward values for an arm rotation motor, with a varying cg.
  * Internally composes a wpilib ArmFeedForward.
  */
-public class TelescopingArmFeedForward {
+public class TelescopingArmPivotFeedForward {
     public final double ks;
     public final double kv;
     public final double ka;
@@ -32,7 +32,7 @@ public class TelescopingArmFeedForward {
      * @param ka    Acceleration gain. Makes little difference, 0 is often an
      * okay default.
      */
-    public TelescopingArmFeedForward(double retracted_kg, double extended_kg, double ks, double kv, double ka) {
+    public TelescopingArmPivotFeedForward(double retracted_kg, double extended_kg, double ks, double kv, double ka) {
         this.ks = ks;
         this.kv = kv;
         this.ka = ka;

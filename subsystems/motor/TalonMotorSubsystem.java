@@ -8,6 +8,7 @@ import org.usfirst.frc4904.standard.subsystems.motor.speedmodifiers.IdentityModi
 import org.usfirst.frc4904.standard.subsystems.motor.speedmodifiers.SpeedModifier;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
 import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
@@ -257,6 +258,15 @@ public class TalonMotorSubsystem extends SmartMotorSubsystem<TalonMotorControlle
   public void setRPM(double rpm) {
     leadMotor.set(ControlMode.Velocity, rpm / 60 / 10 * ENCODER_COUNTS_PER_REV);  // velocity units are in encoder counts per 100ms
   }
+  /**
+   * Consider using .c_controlRPM to stream RPM values to this motor in a command.
+   * 
+   * You must call .configPIDF before using this method.
+   * @param rpm
+   */
+  public void setRPM(double rpm, double feedforwardVolts) {
+    leadMotor.set(ControlMode.Velocity, rpm / 60 / 10 * ENCODER_COUNTS_PER_REV, DemandType.ArbitraryFeedForward, feedforwardVolts/RobotController.getBatteryVoltage());  // velocity units are in encoder counts per 100ms
+  }
 
   /**
    * if using a Ramsete controller, make sure to disable voltage compensation,
@@ -285,6 +295,11 @@ public class TalonMotorSubsystem extends SmartMotorSubsystem<TalonMotorControlle
    */
   @Override @Deprecated
   public Command c_setRPM(double rpm) { return this.runOnce(() -> setRPM(rpm)); }
+  @Override
+  public Command c_controlRPM(DoubleSupplier setpointSupplier, DoubleSupplier feedforwardSupplierVolts) {
+    if (pid_configured == false) throw new IllegalArgumentException(name + " tried to use c_controlRPM without first configPIDF()-ing.");
+    return this.run(() -> setRPM(setpointSupplier.getAsDouble(), feedforwardSupplierVolts.getAsDouble()));
+  }
   /**
    * 
    * @param setpointSupplier  a function that returns a double, rpm
@@ -293,12 +308,12 @@ public class TalonMotorSubsystem extends SmartMotorSubsystem<TalonMotorControlle
    */
   @Override
   public Command c_controlRPM(DoubleSupplier setpointSupplier) {
-    if (pid_configured == false) throw new IllegalArgumentException(name + " tried to use c_controlVelocity without first configPIDF()-ing.");
+    if (pid_configured == false) throw new IllegalArgumentException(name + " tried to use c_controlRPM without first configPIDF()-ing.");
     return this.run(() -> setRPM(setpointSupplier.getAsDouble()));
   }
   @Override
   public Command c_holdRPM(double setpoint) {
-    if (pid_configured == false) throw new IllegalArgumentException(name + " tried to use c_controlVelocity without first configPIDF()-ing.");
+    if (pid_configured == false) throw new IllegalArgumentException(name + " tried to use c_controlRPM without first configPIDF()-ing.");
     return this.runOnce(() -> setRPM(setpoint)).andThen(new CommandBase(){});  
 }
   /**
@@ -312,6 +327,13 @@ public class TalonMotorSubsystem extends SmartMotorSubsystem<TalonMotorControlle
   @Override
   public Command c_setPosition(double setpoint) { return c_setPosition(setpoint, DEFAULT_DMP_SLOT); }
 
+  @Override
+  public Command c_controlPosition(DoubleSupplier setpointSupplier, DoubleSupplier feedforwardSupplierVolts) {
+    return this.run(() -> this.leadMotor.set(
+      ControlMode.Position, setpointSupplier.getAsDouble(),
+      DemandType.ArbitraryFeedForward, feedforwardSupplierVolts.getAsDouble()/RobotController.getBatteryVoltage()
+    ));
+  }
   @Override
   public Command c_controlPosition(DoubleSupplier setpointSupplier) {
     return this.run(() -> this.leadMotor.set(ControlMode.Position, setpointSupplier.getAsDouble()));
@@ -327,9 +349,13 @@ public class TalonMotorSubsystem extends SmartMotorSubsystem<TalonMotorControlle
    
 
   @Override
-  public void zeroSensors() {
-    this.leadMotor.setSelectedSensorPosition(0, DEFAULT_PID_SLOT, configTimeoutMs);
+  public void zeroSensors(double rotations) {
+    this.leadMotor.setSelectedSensorPosition(rotations * ENCODER_COUNTS_PER_REV, DEFAULT_PID_SLOT, configTimeoutMs);
     // should we zero the sensors on follow motors in case they are being used?
+  }
+  @Override
+  public void zeroSensors() {
+    zeroSensors(0);
   }
   @Override
   protected void setDynamicMotionProfileTargetRotations(double rotations) {
