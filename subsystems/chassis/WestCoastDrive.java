@@ -24,6 +24,7 @@ import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -224,7 +225,10 @@ public class WestCoastDrive extends SubsystemBase {
     }
     // TODO sketchy as hell
     public Command c_controlChassisWithVoltage(Supplier<ChassisSpeeds> chassisSpeedVoltsSupplier) {
-        var cmd = this.run(() -> setChassisVoltage(chassisSpeedVoltsSupplier.get()));    // this.run() runs repeatedly
+        var cmd = this.run(() -> {
+            var volts = chassisSpeedVoltsSupplier.get();
+            setChassisVoltage(volts);
+        });    // this.run() runs repeatedly
         cmd.addRequirements(leftMotors);
         cmd.addRequirements(rightMotors);
         return cmd;
@@ -246,10 +250,10 @@ public class WestCoastDrive extends SubsystemBase {
      * function.
      */
     public Command c_controlChassisSpeedAndTurn(Supplier<Pair<Double, Double>> chasssisSpeedAndTurnSupplier) {
-        Pair<Double, Double> speedAndTurn = chasssisSpeedAndTurnSupplier.get();
-        var cmd = this.run(() -> c_controlChassisWithVoltage(() -> new ChassisSpeeds(speedAndTurn.getFirst()*RobotController.getBatteryVoltage(), 0, speedAndTurn.getSecond())));    // this.run() runs repeatedly
-        cmd.addRequirements(leftMotors);
-        cmd.addRequirements(rightMotors);
+        var cmd = c_controlChassisWithVoltage(() -> {
+            Pair<Double, Double> speedAndTurn = chasssisSpeedAndTurnSupplier.get();
+            return new ChassisSpeeds(speedAndTurn.getFirst()*RobotController.getBatteryVoltage(), 0, speedAndTurn.getSecond());
+        });
         return cmd;
     }
     /**
