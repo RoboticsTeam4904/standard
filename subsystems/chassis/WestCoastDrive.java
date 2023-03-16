@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
+import org.usfirst.frc4904.robot.RobotMap;
 import org.usfirst.frc4904.standard.subsystems.motor.TalonMotorSubsystem;
 
 import com.kauailabs.navx.frc.AHRS;
@@ -34,10 +35,16 @@ public class WestCoastDrive extends SubsystemBase {
     public final TalonMotorSubsystem rightMotors;
     protected final PIDConstants pidConsts;
     protected final DifferentialDriveKinematics kinematics;
-    protected final DifferentialDriveOdometry odometry;   // OPTIM this can be replaced with a kalman filter?
+    public final DifferentialDriveOdometry odometry;   // OPTIM this can be replaced with a kalman filter?
     protected final AHRS gyro;    // OPTIM this can be replaced by something more general
     protected final double mps_to_rpm;
     protected final double m_to_motorrots;
+
+    private final SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(
+        RobotMap.PID.Drive.kS, 
+        RobotMap.PID.Drive.kV,
+        RobotMap.PID.Drive.kA
+        );
 
     /**
      * Represents a west coast drive chassis as a subsystem
@@ -108,6 +115,13 @@ public class WestCoastDrive extends SubsystemBase {
     public void movePolar(double speed, double heading, double turnSpeed) {
         if (heading != 0) throw new IllegalArgumentException("West Coast Drive cannot move at a non-zero heading!");
         setChassisVelocity(new ChassisSpeeds(speed, 0, turnSpeed));
+    }
+
+    public void testFeedForward(double speed) {
+        var ff = this.feedforward.calculate(speed);
+        // this.setWheelVoltages(new DifferentialDriveWheelVoltages(ff, ff));
+        this.leftMotors.setVoltage(ff);
+        this.rightMotors.setVoltage(ff);
     }
 
     public void setWheelVelocities(DifferentialDriveWheelSpeeds wheelSpeeds) {
