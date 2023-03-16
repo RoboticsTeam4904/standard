@@ -51,7 +51,7 @@ public class TelescopingArmPivotFeedForward {
     }
     /**
      * @param armExtensionRatio The extension of the arm, relative to it's full extension. Should be between 0 and 1. Used as cg linear interpolation parameter.
-     * @param posRads           Angle setpoint, in radians, measured from horizontal (0 = parallel with floor).
+     * @param posRads           Current angle, in radians, measured from horizontal (0 = parallel with floor).
      * @param velRadPerSec      Velocity setpoint.
      * @param accelRadPerSecSquared Acceleration setpoint.
      * @return  The computed feedforward.
