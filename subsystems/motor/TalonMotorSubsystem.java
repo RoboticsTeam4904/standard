@@ -43,7 +43,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 public class TalonMotorSubsystem extends SmartMotorSubsystem<TalonMotorController> {
   private static final int ENCODER_COUNTS_PER_REV = 2048;
   private static final double RPM_TO_ENCODERCOUNTSPER100MS = ENCODER_COUNTS_PER_REV/60/10;
-  private final int configTimeoutMs = 50;  // milliseconds until the Talon gives up trying to configure
+  private final int configTimeoutMs = 5;  // milliseconds until the Talon gives up trying to configure
   private static final int DEFAULT_PID_SLOT = 0; // TODO: add support for auxillary pid
   private final int follow_motors_remote_filter_id = 0; // DONOT REMOVE, USED IN COMMENTED CODE BELOW; which filter (0 or 1) will be used to configure reading from the integrated encoder on the lead motor
   private final double voltageComp;
@@ -130,6 +130,10 @@ public class TalonMotorSubsystem extends SmartMotorSubsystem<TalonMotorControlle
       }
     }
 
+    // feedback sensor configuration (for PID and general encoder stuff)
+    leadMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, DEFAULT_PID_SLOT, configTimeoutMs);
+    // make sure to update the static final ENCODER_COUNTS_PER_REV if you are using different encoders. Better yet, add a feedbackSensor argument to this method
+
     // other configuration (neutral mode, neutral deadband, voltagecomp)
     for (var motor : motors) {
       motor.setNeutralMode(neutralMode);
@@ -141,7 +145,6 @@ public class TalonMotorSubsystem extends SmartMotorSubsystem<TalonMotorControlle
         motor.enableVoltageCompensation(false);
       }
     }
-    setFollowMode();
 	}
   /**
    * Motor Subsystem for a group of Talon motor controllers (Falcons, 775s).
@@ -179,14 +182,14 @@ public class TalonMotorSubsystem extends SmartMotorSubsystem<TalonMotorControlle
 		this(name, new IdentityModifier(), neutralMode, 0.001, false, voltageCompensation, leadMotor, followMotors);
 	}
 
-  /**
-   * Make all follow motors follow the lead motor.
-   */
-  private void setFollowMode() {
-    for (var motor : this.followMotors) {
-      motor.follow(leadMotor);
-    }
-  }
+  // /**
+  //  * Make all follow motors follow the lead motor.
+  //  */
+  // private void setFollowMode() {
+  //   for (var motor : this.followMotors) {
+  //     motor.follow(leadMotor);
+  //   }
+  // }
 
   // TODO the following methods are not thought out or documented
   /**
@@ -205,10 +208,6 @@ public class TalonMotorSubsystem extends SmartMotorSubsystem<TalonMotorControlle
   @Override
   public void configPIDF(double p, double i, double d, double f, double max_integral_accumulation, double peakOutput, Integer pid_slot) {
     if (pid_slot == null) pid_slot = TalonMotorSubsystem.DEFAULT_PID_SLOT;
-
-    // feedback sensor configuration (for PID)
-    leadMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, pid_slot, configTimeoutMs);
-    // make sure to update the static final ENCODER_COUNTS_PER_REV if you are using different encoders. Better yet, add a feedbackSensor argument to this method
 
     // should follow motors do their own PID? no, right? 
 
@@ -244,11 +243,6 @@ public class TalonMotorSubsystem extends SmartMotorSubsystem<TalonMotorControlle
   
   // don't override disable() or stop() because we *should* indeed use the base implementation of disabling/stopping each motor controller individually. Otherwise the following motors will try to follow a disabled motor, which may cause unexpected behavior (although realistically, it likely just gets set to zero and neutrallized by the deadband).
 
-  @Override
-  public void set(double power) {
-    setFollowMode();  // make sure all motors are following the lead as we expect. Possible OPTIMIZATION: store we set the output type to something else on the follow motors (eg. Neutral), and only re-set follow mode if we did. 
-    leadMotor.set(power);
-  }
   /**
    * Consider using .c_controlRPM to stream RPM values to this motor in a command.
    * 
@@ -256,7 +250,7 @@ public class TalonMotorSubsystem extends SmartMotorSubsystem<TalonMotorControlle
    * @param rpm
    */
   public void setRPM(double rpm) {
-    leadMotor.set(ControlMode.Velocity, rpm / 60 / 10 * ENCODER_COUNTS_PER_REV);  // velocity units are in encoder counts per 100ms
+    for (var m: motors) m.set(ControlMode.Velocity, rpm / 60 / 10 * ENCODER_COUNTS_PER_REV);  // velocity units are in encoder counts per 100ms
   }
   /**
    * Consider using .c_controlRPM to stream RPM values to this motor in a command.
@@ -265,7 +259,7 @@ public class TalonMotorSubsystem extends SmartMotorSubsystem<TalonMotorControlle
    * @param rpm
    */
   public void setRPM(double rpm, double feedforwardVolts) {
-    leadMotor.set(ControlMode.Velocity, rpm / 60 / 10 * ENCODER_COUNTS_PER_REV, DemandType.ArbitraryFeedForward, feedforwardVolts/RobotController.getBatteryVoltage());  // velocity units are in encoder counts per 100ms
+    for (var m : motors) m.set(ControlMode.Velocity, rpm / 60 / 10 * ENCODER_COUNTS_PER_REV, DemandType.ArbitraryFeedForward, feedforwardVolts/RobotController.getBatteryVoltage());  // velocity units are in encoder counts per 100ms
   }
 
   /**
@@ -280,11 +274,10 @@ public class TalonMotorSubsystem extends SmartMotorSubsystem<TalonMotorControlle
    */
   @Override
   public void setVoltage(double voltage) {
-    setFollowMode();  // TODO: is doing this every time too slow?
     if (voltageComp > 0) {
-      leadMotor.setPower(voltage / Math.min(RobotController.getBatteryVoltage(), voltageComp));
+      for (var m : motors) m.setPower(voltage / Math.min(RobotController.getBatteryVoltage(), voltageComp));
     } else {
-      leadMotor.setVoltage(voltage);  // CTRE internal code just divides by RobotController.getBatteryVoltage
+      for (var m : motors) m.setVoltage(voltage);  // CTRE internal code just divides by RobotController.getBatteryVoltage
     }
   }
   /**
