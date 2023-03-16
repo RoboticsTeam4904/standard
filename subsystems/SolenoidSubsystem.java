@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
  * functionality. Allows for easy inversion and setting of default state of
  * solenoids
  */
+// TO DO: extend RequirementsSubsystemBase instead
 public class SolenoidSubsystem extends SubsystemBase {
 	protected DoubleSolenoid[] solenoids;
 	protected SolenoidState state;
