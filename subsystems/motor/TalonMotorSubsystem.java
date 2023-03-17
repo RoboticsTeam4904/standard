@@ -367,17 +367,25 @@ public class TalonMotorSubsystem extends SmartMotorSubsystem<TalonMotorControlle
     return this.leadMotor.getSelectedSensorVelocity(DEFAULT_DMP_SLOT) / ENCODER_COUNTS_PER_REV * 10 * 60;
   }
   @Override
-  public void configSoftwareLimits(double fwdBoundRotations, double revBoundRotations) { 
+  public void configSoftwareLimits(double fwdBoundRotations, double revBoundRotations) {
+    //set each software limits for each follow motor
+    leadMotor.configForwardSoftLimitThreshold((fwdBoundRotations*ENCODER_COUNTS_PER_REV), configTimeoutMs);
+    leadMotor.configReverseSoftLimitThreshold((revBoundRotations*ENCODER_COUNTS_PER_REV), configTimeoutMs);
+    leadMotor.configForwardSoftLimitEnable(true, configTimeoutMs);
+    leadMotor.configReverseSoftLimitEnable(true, configTimeoutMs);
+    leadMotor.overrideSoftLimitsEnable(true);
+    for (var motor : followMotors) {
+      motor.configForwardSoftLimitThreshold((fwdBoundRotations*ENCODER_COUNTS_PER_REV), configTimeoutMs);
+      motor.configReverseSoftLimitThreshold((revBoundRotations*ENCODER_COUNTS_PER_REV), configTimeoutMs);
+      motor.configForwardSoftLimitEnable(true, configTimeoutMs);
+      motor.configReverseSoftLimitEnable(true, configTimeoutMs);
+      motor.overrideSoftLimitsEnable(true);
     // this.leadMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, DEFAULT_PID_SLOT, configTimeoutMs);  // select which sensor to use for soft limits
     // this.leadMotor.setSensorPhase(true);
-    this.leadMotor.configForwardSoftLimitThreshold((fwdBoundRotations*ENCODER_COUNTS_PER_REV), configTimeoutMs);
-    this.leadMotor.configReverseSoftLimitThreshold((revBoundRotations*ENCODER_COUNTS_PER_REV), configTimeoutMs);
-    this.leadMotor.configForwardSoftLimitEnable(true, configTimeoutMs);
-    this.leadMotor.configReverseSoftLimitEnable(true, configTimeoutMs);
-    this.leadMotor.overrideSoftLimitsEnable(true);
-  }
+    }
 
   // no need to override setPower because the base class just uses set
   // don't override setBrakeOnNeutral, setCoastOnNeutral, neutralOutput because we indeed want to set it individually on each motor. Otherwise, the followers might try to follow a disabled/neutral motor which might cause unexpected behavior.
+  }
 }
 
