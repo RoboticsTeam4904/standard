@@ -47,6 +47,7 @@ public class TelescopingArmPivotFeedForward {
         // linear relationship between extension and cg remains the same,
         // because of lever arm mechanics. Prefer measuring/calculating cg for
         // the full range of motion to reduce relative error. 
+        param = Math.min(Math.max(param, -0.5), 1.5);
         return (this.retracted_kg * (1-param)) + (this.extended_kg * param);
     }
     /**
