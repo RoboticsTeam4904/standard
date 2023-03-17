@@ -221,6 +221,7 @@ public abstract class CommandRobotBase extends TimedRobot {
 	 */
 	@Override
 	public void testPeriodic() {
+		CommandScheduler.getInstance().run();
 		testExecute();
 		alwaysExecute();
 	}
