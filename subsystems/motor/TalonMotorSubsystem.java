@@ -3,6 +3,7 @@ package org.usfirst.frc4904.standard.subsystems.motor;
 import java.util.function.DoubleSupplier;
 import java.util.stream.Stream;
 
+import org.usfirst.frc4904.standard.custom.motorcontrollers.CANTalonFX;
 import org.usfirst.frc4904.standard.custom.motorcontrollers.TalonMotorController;
 import org.usfirst.frc4904.standard.subsystems.motor.speedmodifiers.IdentityModifier;
 import org.usfirst.frc4904.standard.subsystems.motor.speedmodifiers.SpeedModifier;
@@ -104,7 +105,7 @@ public class TalonMotorSubsystem extends SmartMotorSubsystem<TalonMotorControlle
    */
   public TalonMotorSubsystem(String name, SpeedModifier speedModifier, NeutralMode neutralMode, double neutralDeadbandPercent,
                              Boolean respectLeadMotorLimitSwitches, double voltageCompensation,
-                             TalonMotorController leadMotor, TalonMotorController... followMotors) {
+                             CANTalonFX leadMotor, TalonMotorController... followMotors) {
 		super(name, speedModifier, Stream.concat(Stream.of(leadMotor), Stream.of(followMotors)).toArray(TalonMotorController[]::new));  // java has no spread operator, so you have to concat. best way i could find is to do it in a stream. please make this not bad if you know how 
 
     this.voltageComp = voltageCompensation;
@@ -132,6 +133,10 @@ public class TalonMotorSubsystem extends SmartMotorSubsystem<TalonMotorControlle
 
     // feedback sensor configuration (for PID and general encoder stuff)
     leadMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, DEFAULT_PID_SLOT, configTimeoutMs);
+    for (var m : followMotors) {
+      m.configRemoteFeedbackFilter(leadMotor, 0, configTimeoutMs);
+      m.configSelectedFeedbackSensor(FeedbackDevice.RemoteSensor0, DEFAULT_PID_SLOT, configTimeoutMs);
+    }
     // make sure to update the static final ENCODER_COUNTS_PER_REV if you are using different encoders. Better yet, add a feedbackSensor argument to this method
 
     // other configuration (neutral mode, neutral deadband, voltagecomp)
@@ -178,7 +183,7 @@ public class TalonMotorSubsystem extends SmartMotorSubsystem<TalonMotorControlle
    * @param followMotors
    */
   public TalonMotorSubsystem(String name, NeutralMode neutralMode, double voltageCompensation,
-                             TalonMotorController leadMotor, TalonMotorController... followMotors) {
+                             CANTalonFX leadMotor, TalonMotorController... followMotors) {
 		this(name, new IdentityModifier(), neutralMode, 0.001, false, voltageCompensation, leadMotor, followMotors);
 	}
 
@@ -362,17 +367,25 @@ public class TalonMotorSubsystem extends SmartMotorSubsystem<TalonMotorControlle
     return this.leadMotor.getSelectedSensorVelocity(DEFAULT_DMP_SLOT) / ENCODER_COUNTS_PER_REV * 10 * 60;
   }
   @Override
-  public void configSoftwareLimits(double fwdBoundRotations, double revBoundRotations) { 
+  public void configSoftwareLimits(double fwdBoundRotations, double revBoundRotations) {
+    //set each software limits for each follow motor
+    leadMotor.configForwardSoftLimitThreshold((fwdBoundRotations*ENCODER_COUNTS_PER_REV), configTimeoutMs);
+    leadMotor.configReverseSoftLimitThreshold((revBoundRotations*ENCODER_COUNTS_PER_REV), configTimeoutMs);
+    leadMotor.configForwardSoftLimitEnable(true, configTimeoutMs);
+    leadMotor.configReverseSoftLimitEnable(true, configTimeoutMs);
+    leadMotor.overrideSoftLimitsEnable(true);
+    for (var motor : followMotors) {
+      motor.configForwardSoftLimitThreshold((fwdBoundRotations*ENCODER_COUNTS_PER_REV), configTimeoutMs);
+      motor.configReverseSoftLimitThreshold((revBoundRotations*ENCODER_COUNTS_PER_REV), configTimeoutMs);
+      motor.configForwardSoftLimitEnable(true, configTimeoutMs);
+      motor.configReverseSoftLimitEnable(true, configTimeoutMs);
+      motor.overrideSoftLimitsEnable(true);
     // this.leadMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, DEFAULT_PID_SLOT, configTimeoutMs);  // select which sensor to use for soft limits
     // this.leadMotor.setSensorPhase(true);
-    this.leadMotor.configForwardSoftLimitThreshold((fwdBoundRotations*ENCODER_COUNTS_PER_REV), configTimeoutMs);
-    this.leadMotor.configReverseSoftLimitThreshold((revBoundRotations*ENCODER_COUNTS_PER_REV), configTimeoutMs);
-    this.leadMotor.configForwardSoftLimitEnable(true, configTimeoutMs);
-    this.leadMotor.configReverseSoftLimitEnable(true, configTimeoutMs);
-    this.leadMotor.overrideSoftLimitsEnable(true);
-  }
+    }
 
   // no need to override setPower because the base class just uses set
   // don't override setBrakeOnNeutral, setCoastOnNeutral, neutralOutput because we indeed want to set it individually on each motor. Otherwise, the followers might try to follow a disabled/neutral motor which might cause unexpected behavior.
+  }
 }
 
