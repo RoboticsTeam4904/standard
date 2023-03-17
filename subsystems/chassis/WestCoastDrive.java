@@ -117,10 +117,11 @@ public class WestCoastDrive extends SubsystemBase {
         setChassisVelocity(new ChassisSpeeds(speed, 0, turnSpeed));
     }
 
+    @Deprecated
     public void testFeedForward(double speed) {
         var ff = this.feedforward.calculate(speed);
         // this.setWheelVoltages(new DifferentialDriveWheelVoltages(ff, ff));
-        // TODO COMP: why does this do one side forward, one side backwards? should be inverted correctly??
+        // COMP: why does this do one side forward, one side backwards? should be inverted correctly??
         this.leftMotors.setVoltage(ff);
         this.rightMotors.setVoltage(ff);
     }
