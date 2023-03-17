@@ -3,6 +3,7 @@ package org.usfirst.frc4904.standard.subsystems.motor;
 import java.util.function.DoubleSupplier;
 import java.util.stream.Stream;
 
+import org.usfirst.frc4904.standard.custom.motorcontrollers.CANTalonFX;
 import org.usfirst.frc4904.standard.custom.motorcontrollers.TalonMotorController;
 import org.usfirst.frc4904.standard.subsystems.motor.speedmodifiers.IdentityModifier;
 import org.usfirst.frc4904.standard.subsystems.motor.speedmodifiers.SpeedModifier;
@@ -104,7 +105,7 @@ public class TalonMotorSubsystem extends SmartMotorSubsystem<TalonMotorControlle
    */
   public TalonMotorSubsystem(String name, SpeedModifier speedModifier, NeutralMode neutralMode, double neutralDeadbandPercent,
                              Boolean respectLeadMotorLimitSwitches, double voltageCompensation,
-                             TalonMotorController leadMotor, TalonMotorController... followMotors) {
+                             CANTalonFX leadMotor, TalonMotorController... followMotors) {
 		super(name, speedModifier, Stream.concat(Stream.of(leadMotor), Stream.of(followMotors)).toArray(TalonMotorController[]::new));  // java has no spread operator, so you have to concat. best way i could find is to do it in a stream. please make this not bad if you know how 
 
     this.voltageComp = voltageCompensation;
@@ -132,6 +133,10 @@ public class TalonMotorSubsystem extends SmartMotorSubsystem<TalonMotorControlle
 
     // feedback sensor configuration (for PID and general encoder stuff)
     leadMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, DEFAULT_PID_SLOT, configTimeoutMs);
+    for (var m : followMotors) {
+      m.configRemoteFeedbackFilter(leadMotor, 0, configTimeoutMs);
+      m.configSelectedFeedbackSensor(FeedbackDevice.RemoteSensor0, DEFAULT_PID_SLOT, configTimeoutMs);
+    }
     // make sure to update the static final ENCODER_COUNTS_PER_REV if you are using different encoders. Better yet, add a feedbackSensor argument to this method
 
     // other configuration (neutral mode, neutral deadband, voltagecomp)
@@ -178,7 +183,7 @@ public class TalonMotorSubsystem extends SmartMotorSubsystem<TalonMotorControlle
    * @param followMotors
    */
   public TalonMotorSubsystem(String name, NeutralMode neutralMode, double voltageCompensation,
-                             TalonMotorController leadMotor, TalonMotorController... followMotors) {
+                             CANTalonFX leadMotor, TalonMotorController... followMotors) {
 		this(name, new IdentityModifier(), neutralMode, 0.001, false, voltageCompensation, leadMotor, followMotors);
 	}
 
