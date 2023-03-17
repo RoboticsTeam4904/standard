@@ -3,12 +3,15 @@ package org.usfirst.frc4904.standard.custom.controllers;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
-public class CustomCommandXbox extends CommandXboxController{
+public class CustomCommandXbox extends CommandXboxController {
     private final double deadZoneSize;
     private final XboxController m_hid;
     public CustomCommandXbox(int port, double deadZoneSize){
         super(port);
         m_hid = new XboxController(port);
+        if (deadZoneSize < 0 || deadZoneSize > 1) {
+          throw new IllegalArgumentException("CustomCommandXBox deadzone must be in [0, 1]");
+        }
         this.deadZoneSize = deadZoneSize;
     }
 
@@ -42,18 +45,20 @@ public class CustomCommandXbox extends CommandXboxController{
       public double getRightY() {
         return applyDeadzone(m_hid.getRightY(),deadZoneSize);
       }
+
+      @Override
+      public double getRightTriggerAxis() {
+        return applyDeadzone(m_hid.getRightTriggerAxis(), deadZoneSize);
+      }
+      @Override
+      public double getLeftTriggerAxis() {
+        return applyDeadzone(m_hid.getLeftTriggerAxis(), deadZoneSize);
+      }
       
-      public double applyDeadzone(double input, double deadZoneSize){
-        final double negative;
-		double deadZoneSizeClamp = deadZoneSize;
-		double adjusted;
-		if (deadZoneSizeClamp < 0 || deadZoneSizeClamp >= 1) {
-			deadZoneSizeClamp = 0; // Prevent any weird errors
-		}
-		negative = input < 0 ? -1 : 1;
-		adjusted = Math.abs(input) - deadZoneSizeClamp; // Subtract the deadzone from the magnitude
-		adjusted = adjusted < 0 ? 0 : adjusted; // if the new input is negative, make it zero
-		adjusted = adjusted / (1 - deadZoneSizeClamp); // Adjust the adjustment so it can max at 1
-		return negative * adjusted;
+      public static double applyDeadzone(double input, double deadZoneSize){
+      if (Math.abs(input) < deadZoneSize) { // return 0 if within the deadzone
+          return 0.0;
+        }
+        return (input - Math.signum(input) * deadZoneSize) / (1 - input); // linear between 0 and 1 in the remaining range
       }
 }

@@ -15,7 +15,7 @@ public class CustomCommandJoystick extends Joystick {
 	public static final int X_AXIS = 0;
 	public static final int Y_AXIS = 1;
 	public static final int SLIDER_AXIS = 3;
-	protected double deadzone;
+	protected final double deadzone;
 	protected final int port;
 	// Buttons
 	public final JoystickButton button1;
@@ -31,8 +31,12 @@ public class CustomCommandJoystick extends Joystick {
 	public final JoystickButton button11;
 	public final JoystickButton button12;
 
-	public CustomCommandJoystick(int port) {
+	public CustomCommandJoystick(int port, double deadzone) {
 		super(port);
+		if (deadzone < 0 || deadzone > 1) {
+			throw new IllegalArgumentException("Joystick deadzone must be in [0, 1]");
+		}
+		this.deadzone = deadzone;
 		this.port = port;
 		deadzone = 0;
 		button1  = new JoystickButton(this, 1);
@@ -86,9 +90,5 @@ public class CustomCommandJoystick extends Joystick {
 		}
 		return (val - Math.signum(val)*deadzone)/(1-deadzone);	// linear between 0 and 1 in the remaining range
 		// return super.getRawAxis(axis);
-	}
-
-	public void setDeadzone(double deadzone) {
-		this.deadzone = deadzone;
 	}
 }
