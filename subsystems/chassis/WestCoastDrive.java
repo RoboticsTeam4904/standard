@@ -143,6 +143,43 @@ public class WestCoastDrive extends SubsystemBase {
     }
 
 
+
+
+
+
+    public void setChassisVoltage(ChassisSpeeds sketchyVoltages) {
+        final double SKETCHY_CORRECTION = 1;    // TODO: tune? @zbuster05
+        final var wheelVoltages = kinematics.toWheelSpeeds(sketchyVoltages);
+        // we do a little trolling
+        setWheelVoltages(wheelVoltages.leftMetersPerSecond * SKETCHY_CORRECTION, wheelVoltages.rightMetersPerSecond * SKETCHY_CORRECTION);
+    }
+    public Command c_controlChassisWithVoltage(Supplier<ChassisSpeeds> chassisSpeedVoltsSupplier) {
+        var cmd = this.run(() -> {
+            var volts = chassisSpeedVoltsSupplier.get();
+            setChassisVoltage(volts);
+        });    // this.run() runs repeatedly
+        cmd.addRequirements(leftMotors);
+        cmd.addRequirements(rightMotors);
+        return cmd;
+    }
+        /**
+     * A forever command that pulls left and right wheel voltages from a
+     * function.
+     */
+    public Command c_controlChassisSpeedAndTurn(Supplier<Pair<Double, Double>> chasssisSpeedAndTurnSupplier) {
+        var cmd = c_controlChassisWithVoltage(() -> {
+            Pair<Double, Double> speedAndTurn = chasssisSpeedAndTurnSupplier.get();
+            return new ChassisSpeeds(speedAndTurn.getFirst()*RobotController.getBatteryVoltage(), 0, speedAndTurn.getSecond());
+        });
+        return cmd;
+    }
+
+
+
+
+
+
+
     /// command factories
     
     /**
