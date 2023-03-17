@@ -4,6 +4,7 @@ import java.util.function.BiFunction;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class ezControl implements BiFunction<Double, Double, Double> {
     private final ezControlMethod controller;
@@ -26,12 +27,12 @@ public class ezControl implements BiFunction<Double, Double, Double> {
     }
 
     public void updateSetpoint(double setpoint, double setpoint_dt) {
-        this.setpoint = setpoint;
-        this.setpoint_dt = setpoint_dt;
         if (setpoint != this.setpoint) {
             // slightly expensive call that clears integral
             this.controller.pid.setSetpoint(this.setpoint);
         }
+        this.setpoint = setpoint;
+        this.setpoint_dt = setpoint_dt;
     }
 
     public void setIntegratorRange(double kIMin, double kIMax) {
@@ -39,7 +40,15 @@ public class ezControl implements BiFunction<Double, Double, Double> {
     }
 
     public double calculate(double measurement, double elapsed) {
-        return this.controller.pid.calculate(measurement) + this.controller.F.calculate(this.setpoint, this.setpoint_dt);
+        // FIXME, revert logging
+        SmartDashboard.putNumber("setpoint", this.setpoint);
+        SmartDashboard.putNumber("setpoint_dt", this.setpoint_dt);
+
+        double pidout = this.controller.pid.calculate(measurement);
+        System.out.println(pidout);
+        SmartDashboard.putNumber("Feedback", measurement);
+        SmartDashboard.putNumber("PID out", pidout);
+        return pidout + this.controller.F.calculate(this.setpoint, this.setpoint_dt);
     }
 
     // very similar to TrapezoidProfile.State
