@@ -53,16 +53,17 @@ public class CustomCommandJoystick extends Joystick {
 	 * Returns true if a given axis is above the move threshold.
 	 *
 	 * @param axis
-	 * @return
+	 * @return	whether the current value of that axis is outside of the deadzone
 	 */
 	public boolean active(int axis) {
-		if (axis == CustomCommandJoystick.X_AXIS) {
-			return Math.abs(super.getX()) > deadzone;
-		} else if (axis == CustomCommandJoystick.Y_AXIS) {
-			return Math.abs(super.getY()) > deadzone;
-		} else {
-			return false;
-		}
+		return Math.abs(getAxis(axis)) > deadzone;
+		// if (axis == CustomCommandJoystick.X_AXIS) {
+		// 	return Math.abs(super.getX()) > deadzone;
+		// } else if (axis == CustomCommandJoystick.Y_AXIS) {
+		// 	return Math.abs(super.getY()) > deadzone;
+		// } else {
+		// 	return false;
+		// }
 	}
 
 	/**
@@ -79,10 +80,12 @@ public class CustomCommandJoystick extends Joystick {
 	 * Returns the value of the given axis.
 	 */
 	public double getAxis(int axis) {
-		if (Math.abs(super.getRawAxis(axis)) < deadzone) {
+		double val = super.getRawAxis(axis);
+		if (Math.abs(val) < deadzone) {
 			return 0.0;
 		}
-		return super.getRawAxis(axis);
+		return (val - Math.signum(val)*deadzone)/(1-deadzone);	// linear between 0 and 1 in the remaining range
+		// return super.getRawAxis(axis);
 	}
 
 	public void setDeadzone(double deadzone) {

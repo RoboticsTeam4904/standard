@@ -41,13 +41,13 @@ public class ezControl implements BiFunction<Double, Double, Double> {
 
     public double calculate(double measurement, double elapsed) {
         // FIXME, revert logging
-        SmartDashboard.putNumber("setpoint", this.setpoint);
-        SmartDashboard.putNumber("setpoint_dt", this.setpoint_dt);
+        // SmartDashboard.putNumber("setpoint", this.setpoint);
+        // SmartDashboard.putNumber("setpoint_dt", this.setpoint_dt);
 
         double pidout = this.controller.pid.calculate(measurement);
-        System.out.println(pidout);
-        SmartDashboard.putNumber("Feedback", measurement);
-        SmartDashboard.putNumber("PID out", pidout);
+        // System.out.println(pidout);
+        // SmartDashboard.putNumber("Feedback", measurement);
+        // SmartDashboard.putNumber("PID out", pidout);
         return pidout + this.controller.F.calculate(this.setpoint, this.setpoint_dt);
     }
 
