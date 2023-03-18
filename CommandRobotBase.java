@@ -48,7 +48,7 @@ public abstract class CommandRobotBase extends TimedRobot {
 		}
 	}
 
-	// HACK TODO, incredibly cursed and potentially bad
+	// HACK FIXME, incredibly cursed and potentially bad
 	public static Driver drivingConfig = new Driver("uhohhh") {
 		@Override
 		public double getX() {
