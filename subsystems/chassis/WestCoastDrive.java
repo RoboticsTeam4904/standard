@@ -139,7 +139,7 @@ public class WestCoastDrive extends SubsystemBase {
         this.setWheelVoltages(wheelVoltages.left, wheelVoltages.right);
     }
     public void setWheelVoltages(double leftV, double rightV) {
-        this.leftMotors.setVoltage(leftV);
+        this.leftMotors.setVoltage(-leftV);
         this.rightMotors.setVoltage(rightV);
     }
 
@@ -281,7 +281,11 @@ public class WestCoastDrive extends SubsystemBase {
      * function.
      */
     public Command c_controlWheelVoltages(Supplier<DifferentialDriveWheelVoltages> wheelVoltageSupplier) {
-        var cmd = this.run(() -> setWheelVoltages(wheelVoltageSupplier.get()));    // this.run() runs repeatedly
+        var cmd = this.run(() -> {
+                setWheelVoltages(wheelVoltageSupplier.get());
+                System.out.println(wheelVoltageSupplier.get());
+            }
+        );    // this.run() runs repeatedly
         cmd.addRequirements(leftMotors);
         cmd.addRequirements(rightMotors);
         return cmd;
