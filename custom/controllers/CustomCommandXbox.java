@@ -1,16 +1,15 @@
 package org.usfirst.frc4904.standard.custom.controllers;
 
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 public class CustomCommandXbox extends CommandXboxController {
   private final double deadZoneSize;
-  private final XboxController m_hid;
+  private final CommandXboxController m_hid;
 
   public CustomCommandXbox(int port, double deadZoneSize) {
     super(port);
-    m_hid = new XboxController(port);
-    if (deadZoneSize < 0 || deadZoneSize > 1) {
+    m_hid = new CommandXboxController(port);
+    if (deadZoneSize < 0 || deadZoneSize >= 1) {
       throw new IllegalArgumentException("CustomCommandXBox deadzone must be in [0, 1]");
     }
     this.deadZoneSize = deadZoneSize;
@@ -61,6 +60,6 @@ public class CustomCommandXbox extends CommandXboxController {
     if (Math.abs(input) < deadZoneSize) { // return 0 if within the deadzone
       return 0.0;
     }
-    return (input - Math.signum(input) * deadZoneSize) / (1 - input); // linear between 0 and 1 in the remaining range
+    return (input - Math.signum(input) * deadZoneSize) / (1 - deadZoneSize); // linear between 0 and 1 in the remaining range
   }
 }
