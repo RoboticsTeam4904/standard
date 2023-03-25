@@ -78,7 +78,7 @@ public class WestCoastDrive extends SubsystemBase {
     public double  getLeftDistance() { return  leftMotors.getSensorPositionRotations()/m_to_motorrots; }
     public double getRightDistance() { return rightMotors.getSensorPositionRotations()/m_to_motorrots; }
     private void zeroEncoders() { leftMotors.zeroSensors(); rightMotors.zeroSensors(); }
-    protected void resetPoseMeters(Pose2d metersPose) {
+    public void resetPoseMeters(Pose2d metersPose) {
         zeroEncoders();
         // doesn't matter what the encoders start at, odometry will use delta of odometry.update() from odometry.reset()
         odometry.resetPosition(gyro.getRotation2d(), getLeftDistance(), getRightDistance(), metersPose);
@@ -284,7 +284,7 @@ public class WestCoastDrive extends SubsystemBase {
     public Command c_controlWheelVoltages(Supplier<DifferentialDriveWheelVoltages> wheelVoltageSupplier) {
         var cmd = this.run(() -> {
                 setWheelVoltages(wheelVoltageSupplier.get());
-                System.out.println(wheelVoltageSupplier.get());
+                //System.out.println(wheelVoltageSupplier.get());
             }
         );    // this.run() runs repeatedly
         cmd.addRequirements(leftMotors);
