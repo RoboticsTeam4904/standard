@@ -52,8 +52,8 @@ public class NavX extends AHRS implements IMU {
      */
     public float getSafeYaw() {
         float yaw = super.getYaw();
-        SmartDashboard.putNumber("navx_yaw", yaw);
-        SmartDashboard.putNumber("navx_last_yaw", lastYaw);
+        // SmartDashboard.putNumber("navx_yaw", yaw);
+        // SmartDashboard.putNumber("navx_last_yaw", lastYaw);
         if ((Math.abs(yaw - lastYaw) > NavX.MAX_DEGREES_PER_TICK)
                 && (Math.abs(Math.abs(yaw - lastYaw) - 360) > NavX.MAX_DEGREES_PER_TICK)) { // Smoothing
             return lastYaw;
