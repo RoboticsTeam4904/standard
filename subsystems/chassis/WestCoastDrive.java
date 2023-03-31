@@ -38,7 +38,7 @@ public class WestCoastDrive extends SubsystemBase {
     public final DifferentialDriveOdometry odometry;   // OPTIM this can be replaced with a kalman filter?
     protected final AHRS gyro;    // OPTIM this can be replaced by something more general
     protected final double mps_to_rpm;
-    protected final double m_to_motorrots;
+    protected final double motorrots_to_m;
 
     private final SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(
         RobotMap.PID.Drive.kS, 
@@ -63,7 +63,7 @@ public class WestCoastDrive extends SubsystemBase {
         rightMotors = rightMotorSubsystem;
         gyro = navx;
         mps_to_rpm = (Math.PI * wheelDiameterMeters) * motorToWheelGearRatio * 60;
-        m_to_motorrots = 1/wheelDiameterMeters*motorToWheelGearRatio;
+        motorrots_to_m = Math.PI * wheelDiameterMeters/motorToWheelGearRatio;
         pidConsts = new PIDConstants(drive_kP, drive_kI, drive_kD);
         kinematics = new DifferentialDriveKinematics(trackWidthMeters);  // 2023 robot has track width ~19.5 inches, 5 in wheel diameter
         odometry = new DifferentialDriveOdometry(gyro.getRotation2d(), getLeftDistance(), getRightDistance());
@@ -75,8 +75,8 @@ public class WestCoastDrive extends SubsystemBase {
     }
 
     // odometry methods
-    public double  getLeftDistance() { return  leftMotors.getSensorPositionRotations()/m_to_motorrots; }
-    public double getRightDistance() { return rightMotors.getSensorPositionRotations()/m_to_motorrots; }
+    public double  getLeftDistance() { return  leftMotors.getSensorPositionRotations()*motorrots_to_m; }
+    public double getRightDistance() { return rightMotors.getSensorPositionRotations()*motorrots_to_m; }
     private void zeroEncoders() { leftMotors.zeroSensors(); rightMotors.zeroSensors(); }
     public void resetPoseMeters(Pose2d metersPose) {
         zeroEncoders();
@@ -85,8 +85,8 @@ public class WestCoastDrive extends SubsystemBase {
     }
     public DifferentialDriveWheelSpeeds getWheelSpeeds() {
         return new DifferentialDriveWheelSpeeds(
-             leftMotors.getSensorVelocityRPM()/m_to_motorrots/60,
-            rightMotors.getSensorVelocityRPM()/m_to_motorrots/60
+             leftMotors.getSensorVelocityRPM()*motorrots_to_m/60,
+            rightMotors.getSensorVelocityRPM()*motorrots_to_m/60
         );
     }
     public Pose2d getPoseMeters() {
@@ -94,6 +94,11 @@ public class WestCoastDrive extends SubsystemBase {
     }
     @Override
     public void periodic() {
+        SmartDashboard.putNumber("random", Math.random());
+        SmartDashboard.putNumber("wcd left dist", getLeftDistance());
+        SmartDashboard.putNumber("wcd right dist", getRightDistance());
+
+
         odometry.update(gyro.getRotation2d(), getLeftDistance(), getRightDistance());
     }
     
@@ -325,7 +330,7 @@ public class WestCoastDrive extends SubsystemBase {
                 (
                     (this.leftMotors.getSensorPositionRotations()  -  left_motor_initial)/2
                   + (this.rightMotors.getSensorPositionRotations() - right_motor_initial)/2
-                ) > Math.abs(distance_meters * m_to_motorrots) ))
+                ) > Math.abs(distance_meters / motorrots_to_m) ))
             .andThen(() -> this.c_idle());
     }
 
@@ -337,7 +342,7 @@ public class WestCoastDrive extends SubsystemBase {
                 (
                     Math.abs(this.leftMotors .getSensorPositionRotations()- left_motor_initial)
                    +Math.abs(this.rightMotors.getSensorPositionRotations()-right_motor_initial)
-                ) > Math.abs(Math.PI * kinematics.trackWidthMeters * angle_degrees / 180 * m_to_motorrots)
+                ) > Math.abs(Math.PI * kinematics.trackWidthMeters * angle_degrees / 180 * motorrots_to_m)
             )) // when we turn, the wheels trace out a circle with trackwidth as a diameter. this checks that the wheels have traveled the right distance aroun the circle for our angle
             .andThen(() -> this.c_idle());
     }
