@@ -3,6 +3,7 @@ package org.usfirst.frc4904.standard.custom.motioncontrollers;
 import java.util.function.DoubleConsumer;
 import java.util.function.DoubleFunction;
 import java.util.function.DoubleSupplier;
+import java.util.function.Supplier;
 
 import org.opencv.core.Mat.Tuple2;
 
@@ -15,14 +16,15 @@ public class ezMotion extends CommandBase {
     public DoubleConsumer processVariable;
     public Double initialTimestamp;
     public DoubleSupplier feedback;
-    public DoubleFunction<Tuple2<Double>> setpointProvider;
+    public Supplier<DoubleFunction<Tuple2<Double>>> setpointDealerDealer;
+    public DoubleFunction<Tuple2<Double>> setpointDealer = null;
 
-    public ezMotion(ezControl control, DoubleSupplier feedback, DoubleConsumer processVariable, DoubleFunction<Tuple2<Double>> setpoint, Subsystem... requirements) {
+    public ezMotion(ezControl control, DoubleSupplier feedback, DoubleConsumer processVariable, Supplier<DoubleFunction<Tuple2<Double>>> setpointDealerDealer, Subsystem... requirements) {  // FIXME: use Pair<Double, Double>
         addRequirements(requirements);
         this.control = control;
         this.processVariable = processVariable;
         this.feedback = feedback;
-        this.setpointProvider = setpoint;
+        this.setpointDealerDealer = setpointDealerDealer;
     }
 
     public double getElapsedTime() {
@@ -35,12 +37,13 @@ public class ezMotion extends CommandBase {
 
     @Override
     public void initialize() {
+        this.setpointDealer = setpointDealerDealer.get();
         this.initialTimestamp = Timer.getFPGATimestamp();
     }
 
     @Override
     public void execute() {
-        Tuple2<Double> setpoints = this.setpointProvider.apply(getElapsedTime());
+        Tuple2<Double> setpoints = this.setpointDealer.apply(getElapsedTime());
         double setpoint = setpoints.get_0();
         double setpoint_dt = setpoints.get_1();
 
