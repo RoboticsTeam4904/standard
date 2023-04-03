@@ -11,6 +11,7 @@ public class TriggerCommandFactory extends CommandBase {
     private Command currentActiveCommand = null;
     private final String name;
     
+    // basically a Commands.runOnce(commandDealer.get().schedule()) and it's named
     public TriggerCommandFactory(String name, Supplier<Command> commandDealer) {
         this.commandDealer = commandDealer;
         this.name = name;
@@ -39,14 +40,8 @@ public class TriggerCommandFactory extends CommandBase {
     }
     @Override
     public boolean isFinished() {
-        if (currentActiveCommand != null) return currentActiveCommand.isFinished();
         return true;
     }
     public void end(boolean wasInturrupted) {
-        if (currentActiveCommand != null && wasInturrupted) {
-            currentActiveCommand.cancel();
-            // no need to worry about calling .end() on currentActiveCommand, as if the ending was caused by isFinished() -> true, then the scheduler will deal with calling .end() on the active command.
-        }
-        currentActiveCommand = null;
     }
 }
