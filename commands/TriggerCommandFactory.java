@@ -4,6 +4,7 @@ import java.util.function.Supplier;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Subsystem;
 
 public class TriggerCommandFactory extends CommandBase {
     private final Supplier<Command> commandDealer;
@@ -18,6 +19,8 @@ public class TriggerCommandFactory extends CommandBase {
      */
     public TriggerCommandFactory(Supplier<Command> commandDealer) {
         this.commandDealer = commandDealer;
+        // TODO: do we need to add requirements?
+        // var reqs = this.commandDealer.get().getRequirements(); addRequirements(reqs.toArray(new Subsystem[reqs.size()]));
     }
     @Override
     public void initialize() {

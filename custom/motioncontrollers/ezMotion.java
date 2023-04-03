@@ -27,6 +27,10 @@ public class ezMotion extends CommandBase {
         this.setpointDealerDealer = setpointDealerDealer;
     }
 
+    public ezMotion(ezControl control, DoubleSupplier feedback, DoubleConsumer processVariable, DoubleFunction<Tuple2<Double>> setpointDealer, Subsystem... requirements) {
+        this(control, feedback, processVariable, () -> setpointDealer, requirements);
+    }
+
     public double getElapsedTime() {
         return Timer.getFPGATimestamp() - initialTimestamp;
     }
