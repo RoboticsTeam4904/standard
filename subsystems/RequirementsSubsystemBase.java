@@ -12,6 +12,8 @@ import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 // TO DO: extend RequirementsSubsystemBase instead
+// TO DO: custom trigger that takes a command factory
+// TO DO: parallel command group that doesn't require it's own subsystems
 public class RequirementsSubsystemBase extends SubsystemBase {
     public final RequirementsSubsystemBase[] atomicComponents;
 
