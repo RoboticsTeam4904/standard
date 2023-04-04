@@ -7,12 +7,13 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 
 public class TriggerCommandFactory extends CommandBase {
-    private final Supplier<Command> commandDealer;
-    private Command currentActiveCommand = null;
+    private final Supplier<Command>[] commandDealers;
+    private Command[] currentActiveCommands = null;
     private final String name;
     
-    public TriggerCommandFactory(String name, Supplier<Command> commandDealer) {
-        this.commandDealer = commandDealer;
+    public TriggerCommandFactory(String name, Supplier<Command>... commandDealers) {
+        this.commandDealers = commandDealers;
+        this.currentActiveCommands = new Command[commandDealers.length];
         this.name = name;
         setName(name);
         // TODO: do we need to add requirements?
@@ -25,13 +26,15 @@ public class TriggerCommandFactory extends CommandBase {
      * 
      * @param commandDealer The Command factory
      */
-    public TriggerCommandFactory(Supplier<Command> commandDealer) {
-        this("Unnamed TriggerCommandFactory", commandDealer);
+    public TriggerCommandFactory(Supplier<Command>... commandDealers) {
+        this("Unnamed TriggerCommandFactory", commandDealers);
     }
     @Override
     public void initialize() {
-        currentActiveCommand = commandDealer.get();
-        currentActiveCommand.schedule();
+        for (int i=0; i<commandDealers.length; i++) {
+            currentActiveCommands[i] = commandDealers[i].get();
+            currentActiveCommands[i].schedule();
+        }
     }
     @Override
     public void execute() {
@@ -39,14 +42,13 @@ public class TriggerCommandFactory extends CommandBase {
     }
     @Override
     public boolean isFinished() {
-        if (currentActiveCommand != null) return currentActiveCommand.isFinished();
         return true;
     }
     public void end(boolean wasInturrupted) {
-        if (currentActiveCommand != null && wasInturrupted) {
-            currentActiveCommand.cancel();
-            // no need to worry about calling .end() on currentActiveCommand, as if the ending was caused by isFinished() -> true, then the scheduler will deal with calling .end() on the active command.
+        if (wasInturrupted) {
+            for (int i=0; i<commandDealers.length; i++) {
+                if (currentActiveCommands[i] != null) currentActiveCommands[i].cancel();
+            }
         }
-        currentActiveCommand = null;
     }
 }
