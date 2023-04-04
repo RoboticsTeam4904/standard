@@ -11,6 +11,7 @@ public class TriggerCommandFactory extends CommandBase {
     private Command[] currentActiveCommands = null;
     private final String name;
     
+    public TriggerCommandFactory(String name, Supplier<Command> commandDealer) { this(name, commandDealer, null); }
     public TriggerCommandFactory(String name, Supplier<Command>... commandDealers) {
         this.commandDealers = commandDealers;
         this.currentActiveCommands = new Command[commandDealers.length];
@@ -29,9 +30,12 @@ public class TriggerCommandFactory extends CommandBase {
     public TriggerCommandFactory(Supplier<Command>... commandDealers) {
         this("Unnamed TriggerCommandFactory", commandDealers);
     }
+    public TriggerCommandFactory(Supplier<Command> commandDealer) { this("Unnamed TriggerCommandFactory", commandDealer); }
+
     @Override
     public void initialize() {
         for (int i=0; i<commandDealers.length; i++) {
+            if (commandDealers[i] == null) continue;
             currentActiveCommands[i] = commandDealers[i].get();
             currentActiveCommands[i].schedule();
         }
@@ -47,7 +51,8 @@ public class TriggerCommandFactory extends CommandBase {
     public void end(boolean wasInturrupted) {
         if (wasInturrupted) {
             for (int i=0; i<commandDealers.length; i++) {
-                if (currentActiveCommands[i] != null) currentActiveCommands[i].cancel();
+                if (currentActiveCommands[i] == null) continue;
+                currentActiveCommands[i].cancel();
             }
         }
     }
