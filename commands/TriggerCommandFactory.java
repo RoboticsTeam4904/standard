@@ -7,13 +7,14 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 
 public class TriggerCommandFactory extends CommandBase {
-    private final Supplier<Command> commandDealer;
-    private Command currentActiveCommand = null;
+    private final Supplier<Command>[] commandDealers;
+    private Command[] currentActiveCommands = null;
     private final String name;
     
-    // basically a Commands.runOnce(commandDealer.get().schedule()) and it's named
-    public TriggerCommandFactory(String name, Supplier<Command> commandDealer) {
-        this.commandDealer = commandDealer;
+    public TriggerCommandFactory(String name, Supplier<Command> commandDealer) { this(name, commandDealer, null); }
+    public TriggerCommandFactory(String name, Supplier<Command>... commandDealers) {
+        this.commandDealers = commandDealers;
+        this.currentActiveCommands = new Command[commandDealers.length];
         this.name = name;
         setName(name);
         // TODO: do we need to add requirements?
@@ -26,13 +27,18 @@ public class TriggerCommandFactory extends CommandBase {
      * 
      * @param commandDealer The Command factory
      */
-    public TriggerCommandFactory(Supplier<Command> commandDealer) {
-        this("Unnamed TriggerCommandFactory", commandDealer);
+    public TriggerCommandFactory(Supplier<Command>... commandDealers) {
+        this("Unnamed TriggerCommandFactory", commandDealers);
     }
+    public TriggerCommandFactory(Supplier<Command> commandDealer) { this("Unnamed TriggerCommandFactory", commandDealer); }
+
     @Override
     public void initialize() {
-        currentActiveCommand = commandDealer.get();
-        currentActiveCommand.schedule();
+        for (int i=0; i<commandDealers.length; i++) {
+            if (commandDealers[i] == null) continue;
+            currentActiveCommands[i] = commandDealers[i].get();
+            currentActiveCommands[i].schedule();
+        }
     }
     @Override
     public void execute() {
@@ -43,5 +49,11 @@ public class TriggerCommandFactory extends CommandBase {
         return true;
     }
     public void end(boolean wasInturrupted) {
+        if (wasInturrupted) {
+            for (int i=0; i<commandDealers.length; i++) {
+                if (currentActiveCommands[i] == null) continue;
+                currentActiveCommands[i].cancel();
+            }
+        }
     }
 }
