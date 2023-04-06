@@ -32,6 +32,7 @@ public class TriggerCommandFactory extends CommandBase {
     public void initialize() {
         currentActiveCommand = commandDealer.get();
         currentActiveCommand.schedule();
+        setName("trigger: " + currentActiveCommand.getName());
     }
     @Override
     public void execute() {
