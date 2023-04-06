@@ -40,7 +40,6 @@ public class TriggerCommandFactory extends CommandBase {
     }
     @Override
     public boolean isFinished() {
-        if (currentActiveCommand != null) return currentActiveCommand.isFinished();
         return true;
     }
     public void end(boolean wasInturrupted) {
