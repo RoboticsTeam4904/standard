@@ -1,5 +1,7 @@
 package org.usfirst.frc4904.standard;
 
+import java.util.concurrent.TimeUnit;
+
 import edu.wpi.first.hal.util.BoundaryException;
 
 /**
@@ -11,7 +13,7 @@ public class Util {
 	 * for floating point numbers, whose arithmetic operations tend to introduce
 	 * small errors.
 	 *
-
+	 *
 	 * @param value   The floating point number to be compared
 	 * @param epsilon The maximum magnitude of var such that it can be considered
 	 *                zero
@@ -20,7 +22,6 @@ public class Util {
 	public static boolean isZero(double value, double epsilon) {
 		return Math.abs(value) < epsilon;
 	}
-
 
 	/**
 	 * Returns true if {@code value} is less than {@code epsilon}. This is useful
@@ -85,6 +86,27 @@ public class Util {
 		 */
 		public double limitValue(double value) {
 			return Math.max(Math.min(value, max), min);
+		}
+	}
+
+	/**
+	 * Computes the conversion factor between the first and second {@link TimeUnit}
+	 * given.
+	 *
+	 * @param from the source unit
+	 * @param to   the target unit
+	 * @return the conversion factor
+	 */
+	public static double timeConversionFactor(TimeUnit from, TimeUnit to) {
+		// TimeUnit.convert returns a long.
+		// If from >= to (in terms of units), we can simply use normal conversion, as it
+		// will scale up.
+		// Otherwise, invert the conversion and take the reciprocal.
+
+		if (from.compareTo(to) >= 0) {
+			return (double) to.convert(1, from);
+		} else {
+			return 1.0 / from.convert(1, to);
 		}
 	}
 }

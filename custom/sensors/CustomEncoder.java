@@ -1,3 +1,5 @@
+// WAS PID SOURCE
+
 package org.usfirst.frc4904.standard.custom.sensors;
 
 /**
@@ -5,20 +7,18 @@ package org.usfirst.frc4904.standard.custom.sensors;
  * CAN encoder.
  *
  */
-public interface CustomEncoder extends PIDSensor, NativeDerivativeSensor {
+public interface CustomEncoder extends NativeDerivativeSensor {
 	/**
+<<<<<<< HEAD
+=======
 	 * Gets current count
 	 *
 	 * @warning does not indicate sensor errors
 	 */
-	int get();
+	// int get();
 
 	/**
-	 * Gets current count
-	 */
-	int getSafely() throws InvalidSensorException;
-
-	/**
+>>>>>>> 3cd05009846892b079be825789d18e63437b3f73
 	 * Gets current distance
 	 *
 	 * @warning does not indicate sensor errors

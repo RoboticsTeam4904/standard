@@ -1,8 +1,5 @@
-// THIS FILE IS TESTED post wpilibj2
-
+// WAS PID SOURCE
 package org.usfirst.frc4904.standard.custom.sensors;
-
-import org.usfirst.frc4904.standard.custom.CustomPIDSourceType;
 
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.I2C;
@@ -13,10 +10,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * Local NavX interface.
  *
  */
-public class NavX extends AHRS implements IMU, PIDSensor {
-	
-    private CustomPIDSourceType pidSource;
-    protected float lastYaw;
+public class NavX extends AHRS implements IMU {
+	protected float lastYaw;
     protected float lastPitch;
     protected float lastRoll;
     protected double lastYawRate;
@@ -43,15 +38,6 @@ public class NavX extends AHRS implements IMU, PIDSensor {
     }
 
     @Override
-    public double pidGet() {
-        if (getCustomPIDSourceType() == CustomPIDSourceType.kRate) {
-            return getRate();
-        } else {
-            return getYaw();
-        }
-    }
-
-    @Override
     public double getRate() {
         double rate = super.getRate();
         if (Math.abs(rate - lastYawRate) > NavX.MAX_DEGREES_PER_SECOND_PER_TICK) {
@@ -66,8 +52,8 @@ public class NavX extends AHRS implements IMU, PIDSensor {
      */
     public float getSafeYaw() {
         float yaw = super.getYaw();
-        SmartDashboard.putNumber("navx_yaw", yaw);
-        SmartDashboard.putNumber("navx_last_yaw", lastYaw);
+        // SmartDashboard.putNumber("navx_yaw", yaw);
+        // SmartDashboard.putNumber("navx_last_yaw", lastYaw);
         if ((Math.abs(yaw - lastYaw) > NavX.MAX_DEGREES_PER_TICK)
                 && (Math.abs(Math.abs(yaw - lastYaw) - 360) > NavX.MAX_DEGREES_PER_TICK)) { // Smoothing
             return lastYaw;
@@ -123,24 +109,5 @@ public class NavX extends AHRS implements IMU, PIDSensor {
         super.zeroYaw();
         lastYaw = 0;
     }
-
-    @Override
-    public double pidGetSafely() throws InvalidSensorException {
-        if (getCustomPIDSourceType() == CustomPIDSourceType.kRate) {
-            return getRate();
-        } else {
-            return getYaw();
-        }
-    }
-
-    @Override
-    public void setCustomPIDSourceType(CustomPIDSourceType sourceType) {
-        this.pidSource = sourceType;
-    }
-
-	@Override
-	public CustomPIDSourceType getCustomPIDSourceType() {
-		return this.pidSource;
-	}
 }
 

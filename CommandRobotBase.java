@@ -1,11 +1,13 @@
 package org.usfirst.frc4904.standard;
 
+import java.io.Console;
+
 import org.usfirst.frc4904.standard.custom.CommandSendableChooser;
 import org.usfirst.frc4904.standard.custom.TypedNamedSendableChooser;
 import org.usfirst.frc4904.standard.humaninput.Driver;
 import org.usfirst.frc4904.standard.humaninput.Operator;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -15,8 +17,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * CommandRobotBase class. Robot should extend this instead of iterative robot.
  */
 public abstract class CommandRobotBase extends TimedRobot {
-	private CommandBase autonomousCommand;
-	protected CommandBase teleopCommand;
+
+	private Command autonomousCommand;
+	protected Command teleopCommand;
 	protected CommandSendableChooser autoChooser;
 	protected TypedNamedSendableChooser<Driver> driverChooser;
 	protected TypedNamedSendableChooser<Operator> operatorChooser;
@@ -45,6 +48,24 @@ public abstract class CommandRobotBase extends TimedRobot {
 		}
 	}
 
+	// HACK FIXME, incredibly cursed and potentially bad
+	public static Driver drivingConfig = new Driver("uhohhh") {
+		@Override
+		public double getX() {
+			for (int i=0; i<1000000; i++) System.err.println("DRIVER NOT CONFIGED");
+			return 0;
+		}
+
+		@Override
+		public double getY() {return 0;}
+
+		@Override
+		public double getTurnSpeed() {return 0;}
+
+		@Override
+		public void bindCommands() {}
+	};
+	
 	/**
 	 * This initializes the entire robot. It is called by WPILib on robot code
 	 * launch. Year-specific code should be written in the initialize function.
@@ -76,11 +97,12 @@ public abstract class CommandRobotBase extends TimedRobot {
 	public final void teleopInit() {
 		cleanup();
 		if (driverChooser.getSelected() != null) {
-			LogKitten.d("Loading driver " + driverChooser.getSelected().getName());
+			// LogKitten.d("Loading driver " + driverChooser.getSelected().getName());
+			CommandRobotBase.drivingConfig = driverChooser.getSelected();
 			driverChooser.getSelected().bindCommands();
 		}
 		if (operatorChooser.getSelected() != null) {
-			LogKitten.d("Loading operator " + operatorChooser.getSelected().getName());
+			// LogKitten.d("Loading operator " + operatorChooser.getSelected().getName());
 			operatorChooser.getSelected().bindCommands();
 		}
 		teleopInitialize();
@@ -199,6 +221,7 @@ public abstract class CommandRobotBase extends TimedRobot {
 	 */
 	@Override
 	public void testPeriodic() {
+		CommandScheduler.getInstance().run();
 		testExecute();
 		alwaysExecute();
 	}

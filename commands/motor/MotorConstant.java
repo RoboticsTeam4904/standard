@@ -1,11 +1,15 @@
 package org.usfirst.frc4904.standard.commands.motor;
 
+// import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.subsystems.motor.Motor;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /**
+ * DEPRECATED: use MotorSubsystem.c_setPowerHold()
+ * 
  * Runs a motor at a constant speed until interrupted.
  */
+@Deprecated
 public class MotorConstant extends CommandBase {
 	protected final double motorSpeed;
 	protected final Motor motor;
@@ -35,6 +39,7 @@ public class MotorConstant extends CommandBase {
 	@Override
 	public void initialize() {
 		motor.set(motorSpeed);
+		// LogKitten.wtf("emacs");
 	}
 
 	@Override

@@ -1,7 +1,5 @@
 package org.usfirst.frc4904.standard.custom;
 
-import org.usfirst.frc4904.standard.LogKitten;
-
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 
@@ -26,7 +24,6 @@ public class PCMPort {
 	}
 
 	public DoubleSolenoid buildDoubleSolenoid() {
-		LogKitten.wtf("built the Double Solenoid");
 		return new DoubleSolenoid(pcmID, pcmType, forward, reverse);
 	}
 }

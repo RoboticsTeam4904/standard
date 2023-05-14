@@ -1,10 +1,7 @@
-// THIS FILE IS TESTED post wpilibj2
-
 package org.usfirst.frc4904.standard.custom.sensors;
 
-import org.usfirst.frc4904.standard.LogKitten;
+// import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.Util;
-import org.usfirst.frc4904.standard.custom.CustomPIDSourceType;
 
 /**
  * Amalgamates the data of several encoders for the purpose of controlling a
@@ -16,8 +13,7 @@ import org.usfirst.frc4904.standard.custom.CustomPIDSourceType;
  */
 public class EncoderPair implements CustomEncoder {
 	private final CustomEncoder[] encoders;
-	private final int[] offset; // Do not reset encoders, just store an offset value
-	private CustomPIDSourceType pidSource;
+	private final double[] offset; // Do not reset encoders, just store an offset value
 	private boolean reverseDirection;
 	private double distancePerPulse;
 	private final double distanceTolerance;
@@ -41,10 +37,9 @@ public class EncoderPair implements CustomEncoder {
 	 */
 	public EncoderPair(CustomEncoder encoder1, CustomEncoder encoder2, double distanceTolerance, double rateTolerance) {
 		encoders = new CustomEncoder[] { encoder1, encoder2 };
-		offset = new int[] { 0, 0 };
+		offset = new double[] { 0.0, 0.0 };
 		this.distanceTolerance = distanceTolerance;
 		this.rateTolerance = rateTolerance;
-		pidSource = CustomPIDSourceType.kDisplacement;
 		reverseDirection = false;
 	}
 
@@ -63,51 +58,6 @@ public class EncoderPair implements CustomEncoder {
 	}
 
 	@Override
-	public CustomPIDSourceType getCustomPIDSourceType() {
-		return pidSource;
-	}
-
-	@Override
-	public double pidGet() {
-		if (pidSource == CustomPIDSourceType.kDisplacement) {
-			return getDistance();
-		}
-		return getRate();
-	}
-
-	@Override
-	public double pidGetSafely() throws InvalidSensorException {
-		if (pidSource == CustomPIDSourceType.kDisplacement) {
-			return getDistanceSafely();
-		}
-		return getRateSafely();
-	}
-
-	@Override
-	public void setCustomPIDSourceType(CustomPIDSourceType pidSource) {
-		if (pidSource != null) {
-			this.pidSource = pidSource;
-		}
-	}
-
-	@Override
-	public int getSafely() throws InvalidSensorException {
-		return (int) Math
-				.round(((double) (encoders[0].getSafely() - offset[0]) + (double) (encoders[1].getSafely() - offset[1]))
-						/ 2.0);
-	}
-
-	@Override
-	public int get() {
-		try {
-			return getSafely();
-		} catch (InvalidSensorException e) {
-			LogKitten.ex(e);
-			return 0;
-		}
-	}
-
-	@Override
 	public double getDistanceSafely() throws InvalidSensorException {
 		return ((encoders[0].getDistanceSafely() - offset[0] * encoders[0].getDistancePerPulse())
 				+ (encoders[1].getDistanceSafely() - offset[1] * encoders[1].getDistancePerPulse())) / 2.0;
@@ -118,7 +68,8 @@ public class EncoderPair implements CustomEncoder {
 		try {
 			return getDistanceSafely();
 		} catch (InvalidSensorException e) {
-			LogKitten.ex(e);
+			e.printStackTrace();
+			// LogKitten.ex(e);
 			return 0;
 		}
 	}
@@ -153,7 +104,8 @@ public class EncoderPair implements CustomEncoder {
 		try {
 			return getRateSafely();
 		} catch (InvalidSensorException e) {
-			LogKitten.ex(e);
+			e.printStackTrace();
+			// LogKitten.ex(e);
 			return 0;
 		}
 	}
@@ -198,16 +150,17 @@ public class EncoderPair implements CustomEncoder {
 
 	@Override
 	public void reset() {
-		offset[0] = encoders[0].get();
-		offset[1] = encoders[1].get();
+		offset[0] = encoders[0].getDistance();
+		offset[1] = encoders[1].getDistance();
 	}
 
 	public double getDifference() {
 		try {
 			return getDifferenceSafely();
 		} catch (InvalidSensorException e) {
-			LogKitten.ex(e);
-			return 0.0; // TODO: is this a reasonable default
+			e.printStackTrace();
+			// LogKitten.ex(e);
+			return 0.0; // TO DO: is this a reasonable default
 		}
 	}
 
@@ -220,8 +173,9 @@ public class EncoderPair implements CustomEncoder {
 		try {
 			return getRateDifferenceSafely();
 		} catch (InvalidSensorException e) {
-			LogKitten.ex(e);
-			return 0.0; // TODO: is this a reasonable default
+			e.printStackTrace();
+			// LogKitten.ex(e);
+			return 0.0; // TO DO: is this a reasonable default
 		}
 	}
 
@@ -233,7 +187,8 @@ public class EncoderPair implements CustomEncoder {
 		try {
 			return isInSyncSafely();
 		} catch (InvalidSensorException e) {
-			LogKitten.ex(e);
+			e.printStackTrace();
+			// LogKitten.ex(e);
 			return false; // If a sensor is broken, it is not in sync.
 		}
 	}
@@ -242,40 +197,5 @@ public class EncoderPair implements CustomEncoder {
 		return Math.abs(getDifferenceSafely()) < distanceTolerance
 				&& Math.abs(getRateDifferenceSafely()) < rateTolerance;
 	}
-
-	public class EncoderDifference implements PIDSensor {
-		private CustomPIDSourceType pidSource; // Needs to be seperate in case of multiple threads changing source type
-
-		public EncoderDifference() {
-			pidSource = CustomPIDSourceType.kDisplacement;
-		}
-
-		@Override
-		public void setCustomPIDSourceType(CustomPIDSourceType pidSource) {
-			this.pidSource = pidSource;
-		}
-
-		@Override
-		public CustomPIDSourceType getCustomPIDSourceType() {
-			return pidSource;
-		}
-
-		@Override
-		public double pidGet() {
-			try {
-				return pidGetSafely();
-			} catch (InvalidSensorException e) {
-				LogKitten.ex(e);
-				return 0.0;
-			}
-		}
-
-		@Override
-		public double pidGetSafely() throws InvalidSensorException {
-			if (pidSource == CustomPIDSourceType.kDisplacement) {
-				return getDifferenceSafely();
-			}
-			return getRateDifferenceSafely();
-		}
-	}
+// WAS PID SOURCE EncoderDifference class here
 }

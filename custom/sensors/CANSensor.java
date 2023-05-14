@@ -3,7 +3,7 @@ package org.usfirst.frc4904.standard.custom.sensors;
 import java.nio.ByteBuffer;
 import java.util.LinkedHashMap;
 import java.util.Map.Entry;
-import org.usfirst.frc4904.standard.LogKitten;
+// import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.custom.CANMessageUnavailableException;
 import org.usfirst.frc4904.standard.custom.CustomCAN;
 
@@ -74,7 +74,7 @@ public class CANSensor extends CustomCAN {
 			throw new InvalidSensorException(
 					"CAN data oudated For CAN sensor " + getName() + " with ID 0x" + Integer.toHexString(messageID));
 		}
-		LogKitten.v("Cached Sensor Value Used\n");
+		// LogKitten.v("Cached Sensor Value Used\n");
 		return values;
 	}
 }

@@ -1,16 +1,13 @@
-// THIS FILE IS TESTED post wpilibj2
-
+// WAS PID SOURCE
 package org.usfirst.frc4904.standard.custom.sensors;
 
-import org.usfirst.frc4904.robot.Robot;
 import org.usfirst.frc4904.standard.Util;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.VelocityMeasPeriod;
 import com.ctre.phoenix.motorcontrol.can.BaseTalon;
-import org.usfirst.frc4904.standard.custom.CustomPIDSourceType;
 
 /**
- * Encoder class for the Built-in Encoders on Talon Motor Controllers 
+ * Encoder class for the Built-in Encoders on Talon Motor Controllers
  * Works for both Falcons (CANTalonFX) and SRXs (CANTalonSRX)
  */
 public class CANTalonEncoder implements CustomEncoder {
@@ -21,36 +18,27 @@ public class CANTalonEncoder implements CustomEncoder {
 	protected static final double DECI_SECONDS_TO_SECONDS = 10.0; // getSpeed must be converted from ticks per 100ms to
 																	// ticks per second, so *10.
 	protected static final int PID_IDX = 1;
-	protected static final CustomPIDSourceType DEFAULT_CUSTOM_PID_SOURCE_TYPE = CustomPIDSourceType.kDisplacement;
 	protected static final FeedbackDevice DEFAULT_FEEDBACK_DEVICE = FeedbackDevice.IntegratedSensor;
 	protected final BaseTalon talon;
-	protected CustomPIDSourceType pidSource;
 	protected double distancePerPulse;
 	protected boolean reverseDirection;
 
-	public CANTalonEncoder(String name, BaseTalon talon, boolean reverseDirection, double distancePerPulse,
-			CustomPIDSourceType sensorType, FeedbackDevice feedbackDevice, double period) {
+	public CANTalonEncoder(String name, BaseTalon talon, boolean reverseDirection, double distancePerPulse, FeedbackDevice feedbackDevice, double period) {
 		this.talon = talon;
 		setReverseDirection(reverseDirection);
 		setDistancePerPulse(distancePerPulse);
-		setCustomPIDSourceType(sensorType);
 		setFeedbackDevice(feedbackDevice);
 		this.talon.configVelocityMeasurementPeriod(VelocityMeasPeriod.valueOf(period));
 	}
 
 	public CANTalonEncoder(String name, BaseTalon talon, boolean reverseDirection, double distancePerPulse,
-			CustomPIDSourceType sensorType, FeedbackDevice feedbackDevice) {
-		this(name, talon, reverseDirection, distancePerPulse, sensorType, feedbackDevice, DEFAULT_PERIOD);
-	}
-
-	public CANTalonEncoder(String name, BaseTalon talon, boolean reverseDirection, double distancePerPulse,
-			CustomPIDSourceType sensorType) {
-		this(name, talon, reverseDirection, distancePerPulse, DEFAULT_CUSTOM_PID_SOURCE_TYPE, DEFAULT_FEEDBACK_DEVICE);
-
+			FeedbackDevice feedbackDevice) {
+		this(name, talon, reverseDirection, distancePerPulse, feedbackDevice, DEFAULT_PERIOD);
 	}
 
 	public CANTalonEncoder(String name, BaseTalon talon, boolean reverseDirection, double distancePerPulse) {
-		this(name, talon, reverseDirection, distancePerPulse, DEFAULT_CUSTOM_PID_SOURCE_TYPE);
+		this(name, talon, reverseDirection, distancePerPulse, DEFAULT_FEEDBACK_DEVICE);
+
 	}
 
 	public CANTalonEncoder(String name, BaseTalon talon, boolean reverseDirection) {
@@ -82,29 +70,6 @@ public class CANTalonEncoder implements CustomEncoder {
 	}
 
 	@Override
-	public void setCustomPIDSourceType(CustomPIDSourceType pidSource) {
-		this.pidSource = pidSource;
-	}
-
-	@Override
-	public CustomPIDSourceType getCustomPIDSourceType() {
-		return pidSource;
-	}
-
-	@Override
-	public double pidGet() {
-		if (pidSource == CustomPIDSourceType.kDisplacement) {
-			return getDistance();
-		}
-		return getRate();
-	}
-
-	@Override
-	public int get() {
-		return (int) talon.getSelectedSensorPosition(PID_IDX);
-	}
-
-	@Override
 	public double getDistance() {
 		if (reverseDirection) {
 			return distancePerPulse * talon.getSelectedSensorPosition(PID_IDX) * -1.0;
@@ -123,13 +88,14 @@ public class CANTalonEncoder implements CustomEncoder {
 		return Util.isZero(getRate());
 	}
 
-	public int getRevLimitSwitchClosed() {
-		return talon.isRevLimitSwitchClosed();
+	public boolean isRevLimitSwitchClosed() {
+		return talon.isRevLimitSwitchClosed() == 1;
 	}
-	public int getFwdLimitSwitchClosed() {
-		return talon.isFwdLimitSwitchClosed();
+
+	public boolean isFwdLimitSwitchClosed() {
+		return talon.isFwdLimitSwitchClosed() == 1;
 	}
-	
+
 	@Override
 	public double getRate() {
 		if (reverseDirection) {
@@ -162,16 +128,6 @@ public class CANTalonEncoder implements CustomEncoder {
 	@Override
 	public void reset() {
 		talon.setSelectedSensorPosition(0);
-	}
-
-	@Override
-	public double pidGetSafely() {
-		return pidGet();
-	}
-
-	@Override
-	public int getSafely() {
-		return get();
 	}
 
 	@Override

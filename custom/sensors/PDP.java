@@ -1,8 +1,6 @@
-// THIS FILE IS TESTED post wpilibj2
-
 package org.usfirst.frc4904.standard.custom.sensors;
 
-import org.usfirst.frc4904.standard.LogKitten;
+// import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.custom.CANMessageUnavailableException;
 import org.usfirst.frc4904.standard.custom.CustomCAN;
 import edu.wpi.first.wpilibj.RobotController;
@@ -75,7 +73,8 @@ public class PDP {
 				rawArray = status3.readSafely();
 				numberCurrents = 4;
 			} else {
-				LogKitten.w("Trying to read PDP status " + status + ", which does not exist!");
+				System.err.println("Trying to read PDP status " + status + ", which does not exist!");
+				// LogKitten.w("Trying to read PDP status " + status + ", which does not exist!");
 				return;
 			}
 		} catch (CANMessageUnavailableException e) {
@@ -135,7 +134,8 @@ public class PDP {
 		try {
 			return getVoltageSafely();
 		} catch (InvalidSensorException e) {
-			LogKitten.ex(e);
+			e.printStackTrace();
+			// LogKitten.ex(e);
 			return RobotController.getBatteryVoltage();
 		}
 	}
@@ -156,7 +156,8 @@ public class PDP {
 		try {
 			return getBatteryResistanceSafely();
 		} catch (InvalidSensorException e) {
-			LogKitten.ex(e);
+			e.printStackTrace();
+			// LogKitten.ex(e);
 			return cachedResistance;
 		}
 	}
@@ -170,7 +171,8 @@ public class PDP {
 		try {
 			return getTotalCurrentSafely();
 		} catch (InvalidSensorException e) {
-			LogKitten.ex(e);
+			e.printStackTrace();
+			// LogKitten.ex(e);
 			return cachedCurrent;
 		}
 	}
@@ -196,7 +198,8 @@ public class PDP {
 		try {
 			return getTotalPowerSafely();
 		} catch (InvalidSensorException e) {
-			LogKitten.ex(e);
+			e.printStackTrace();
+			// LogKitten.ex(e);
 			return cachedPower;
 		}
 	}
@@ -223,7 +226,8 @@ public class PDP {
 		try {
 			return getTotalEnergySafely();
 		} catch (InvalidSensorException e) {
-			LogKitten.ex(e);
+			e.printStackTrace();
+			// LogKitten.ex(e);
 			return cachedEnergy;
 		}
 	}
@@ -258,7 +262,8 @@ public class PDP {
 		} else if (channel <= 15) {
 			readStatus(3);
 		} else {
-			LogKitten.w("Trying to read PDP channel " + channel + ", which does not exist!");
+			System.err.println("Trying to read PDP channel " + channel + ", which does not exist!");
+			// LogKitten.w("Trying to read PDP channel " + channel + ", which does not exist!");
 			return 0.0;
 		}
 		return cachedChannelCurrents[channel];
@@ -274,7 +279,8 @@ public class PDP {
 		try {
 			return getCurrentSafely(channel);
 		} catch (InvalidSensorException e) {
-			LogKitten.ex(e);
+			e.printStackTrace();
+			// LogKitten.ex(e);
 			return cachedChannelCurrents[channel];
 		}
 	}

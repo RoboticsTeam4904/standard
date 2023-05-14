@@ -1,7 +1,5 @@
 package org.usfirst.frc4904.standard.custom.sensors;
 
-import org.usfirst.frc4904.standard.custom.CustomPIDSourceType;
-
 public interface IMU {
 	/**
 	 * Resets the IMU.
@@ -27,7 +25,5 @@ public interface IMU {
 	 * @return Current roll value
 	 */
 	public float getRoll();
-
-	public void setCustomPIDSourceType(CustomPIDSourceType kdisplacement);
 
 }

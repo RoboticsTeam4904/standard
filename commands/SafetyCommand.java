@@ -1,6 +1,6 @@
 package org.usfirst.frc4904.standard.commands;
 
-import org.usfirst.frc4904.standard.LogKitten;
+// import org.usfirst.frc4904.standard.LogKitten;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /**
@@ -40,7 +40,8 @@ public abstract class SafetyCommand extends CommandBase {
 		if (reasonUnsafe == null) {
 			reasonUnsafe = "the required safety conditions haven't been met";
 		}
-		LogKitten.e("SafetyCommand " + getName() + " cannot run because " + reasonUnsafe + ". Cancelling...");
+		System.err.println("SafetyCommand " + getName() + " cannot run because " + reasonUnsafe + ". Cancelling...");
+		// LogKitten.e("SafetyCommand " + getName() + " cannot run because " + reasonUnsafe + ". Cancelling...");
 	}
 
 	protected void setUnsafeReason(String reasonUnsafe) {
