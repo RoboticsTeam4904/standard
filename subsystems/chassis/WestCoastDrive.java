@@ -69,7 +69,7 @@ public class WestCoastDrive extends SubsystemBase {
         odometry = new DifferentialDriveOdometry(gyro.getRotation2d(), getLeftDistance(), getRightDistance());
 
         // OPTIM should probably allow specification of f, max_accumulation, and peakOutput in constructor
-         leftMotors.configPIDF(drive_kP, drive_kI, drive_kD, 0, 100, 1, null);
+        leftMotors. configPIDF(drive_kP, drive_kI, drive_kD, 0, 100, 1, null);
         rightMotors.configPIDF(drive_kP, drive_kI, drive_kD, 0, 100, 1, null);
         zeroEncoders();
     }
