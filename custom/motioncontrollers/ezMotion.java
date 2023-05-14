@@ -4,7 +4,7 @@ import java.util.function.DoubleConsumer;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
-import org.usfirst.frc4904.standard.custom.motioncontrollers.ezMotion.SetpointProvider.EndSignal;
+import org.usfirst.frc4904.standard.custom.motioncontrollers.ezMotion.SetpointSupplier.EndSignal;
 
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.wpilibj.Timer;
@@ -22,12 +22,18 @@ public class ezMotion extends CommandBase {
     private double setpoint;
     private double setpoint_dt;
 
-    public Supplier<SetpointProvider<Pair<Double, Double>>> setpointDealerDealer;
-    public SetpointProvider<Pair<Double, Double>> setpointDealer = null;
+    public Supplier<SetpointSupplier<Pair<Double, Double>>> setpointDealerDealer;
+    public SetpointSupplier<Pair<Double, Double>> setpointDealer = null;
 
     public Command onArrival;
     
-    public ezMotion(ezControl control, DoubleSupplier feedback, DoubleConsumer processVariable, Supplier<SetpointProvider<Pair<Double, Double>>> setpointDealerDealer, Command onArrival, Subsystem... requirements) {
+    public ezMotion(ezControl control, 
+                    DoubleSupplier feedback, 
+                    DoubleConsumer processVariable, 
+                    Supplier<SetpointSupplier<Pair<Double, Double>>> setpointDealerDealer, 
+                    Command onArrival, 
+                    Subsystem... requirements) {
+
         addRequirements(requirements);
         this.control = control;
         this.processVariable = processVariable;
@@ -36,17 +42,26 @@ public class ezMotion extends CommandBase {
         this.onArrival = onArrival != null? (onArrival) : (new InstantCommand(() -> {}));
     }
 
-    public ezMotion(ezControl control, DoubleSupplier feedback, DoubleConsumer processVariable, Supplier<SetpointProvider<Pair<Double, Double>>> setpointDealerDealer, Subsystem... requirements) {
-        this(control, feedback, processVariable, setpointDealerDealer, new InstantCommand(() -> {}), requirements);
-    }
+    public ezMotion(ezControl control, 
+                    DoubleSupplier feedback, DoubleConsumer processVariable, 
+                    Supplier<SetpointSupplier<Pair<Double, Double>>> setpointDealerDealer, 
+                    Subsystem... requirements) 
+    { this(control, feedback, processVariable, setpointDealerDealer, new InstantCommand(() -> {}), requirements); }
 
-    public ezMotion(ezControl control, DoubleSupplier feedback, DoubleConsumer processVariable, SetpointProvider<Pair<Double, Double>> setpointDealer, Command onArrival, Subsystem... requirements) {
-        this(control, feedback, processVariable, () -> setpointDealer, onArrival, requirements);
-    }
+    public ezMotion(ezControl control, 
+                    DoubleSupplier feedback, 
+                    DoubleConsumer processVariable, 
+                    SetpointSupplier<Pair<Double, Double>> setpointDealer, 
+                    Command onArrival, 
+                    Subsystem... requirements) 
+    { this(control, feedback, processVariable, () -> setpointDealer, onArrival, requirements); }
 
-    public ezMotion(ezControl control, DoubleSupplier feedback, DoubleConsumer processVariable, SetpointProvider<Pair<Double, Double>> setpointDealer, Subsystem... requirements) {
-        this(control, feedback, processVariable, () -> setpointDealer, requirements);
-    }
+    public ezMotion(ezControl control, 
+                    DoubleSupplier feedback, 
+                    DoubleConsumer processVariable, 
+                    SetpointSupplier<Pair<Double, Double>> setpointDealer, 
+                    Subsystem... requirements) 
+    { this(control, feedback, processVariable, () -> setpointDealer, requirements); }
 
     public double getElapsedTime() {
         return Timer.getFPGATimestamp() - initialTimestamp;
@@ -83,10 +98,9 @@ public class ezMotion extends CommandBase {
     public boolean isFinished() { return false; }
 
     @FunctionalInterface
-    public interface SetpointProvider<R> {
+    public interface SetpointSupplier<R> {
         public class EndSignal extends Throwable {}
         
         public R apply(double num) throws EndSignal;
     }
-    
 }
