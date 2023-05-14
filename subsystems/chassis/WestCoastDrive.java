@@ -27,6 +27,7 @@ import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -317,28 +318,52 @@ public class WestCoastDrive extends SubsystemBase {
      * 
      * Replaces ChassisMinimumDrive in pre-2023 standard.
      */
+    @Deprecated // this is bad and only exists for feature parity with pre-2023 standard. use splines instead
     public Command c_chassisMinimumDistance(double distance_meters, double speed_mps) {
-        var left_motor_initial = this.leftMotors.getSensorPositionRotations();
-        var right_motor_initial = this.rightMotors.getSensorPositionRotations();
-        return this.run(() -> setChassisVelocity(new ChassisSpeeds(speed_mps, 0, 0)))
-            .until(() -> (
-                (
-                    (this.leftMotors.getSensorPositionRotations()  -  left_motor_initial)/2
-                  + (this.rightMotors.getSensorPositionRotations() - right_motor_initial)/2
-                ) > Math.abs(distance_meters * m_to_motorrots) ))
-            .andThen(() -> this.c_idle());
+        return new CommandBase() {
+            double left_motor_initial;
+            double right_motor_initial;
+            @Override
+            public void initialize() {
+                this.left_motor_initial =  leftMotors .getSensorPositionRotations();
+                this.right_motor_initial = rightMotors.getSensorPositionRotations();
+            }
+            @Override
+            public void execute() {
+                setChassisVelocity(new ChassisSpeeds(speed_mps, 0, 0));
+            }
+            @Override
+            public boolean isFinished() {
+                return (
+                    (leftMotors.getSensorPositionRotations()  -  this.left_motor_initial)/2
+                  + (rightMotors.getSensorPositionRotations() - this.right_motor_initial)/2
+                ) > Math.abs(distance_meters * m_to_motorrots);
+            }
+        }.andThen(this.c_idle());
     }
 
+    @Deprecated // this is bad and only exists for feature parity with pre-2023 standard. use splines instead
     public Command c_chassisTurn(double angle_degrees, double max_turnspeed) {
-        var left_motor_initial = this.leftMotors.getSensorPositionRotations();
-        var right_motor_initial = this.rightMotors.getSensorPositionRotations();        
-        return this.run(() -> setChassisVelocity(new ChassisSpeeds(0, 0, max_turnspeed*Math.signum(angle_degrees))))
-            .until(() -> (
-                (
-                    Math.abs(this.leftMotors .getSensorPositionRotations()- left_motor_initial)
-                   +Math.abs(this.rightMotors.getSensorPositionRotations()-right_motor_initial)
-                ) > Math.abs(Math.PI * kinematics.trackWidthMeters * angle_degrees / 180 * m_to_motorrots)
-            )) // when we turn, the wheels trace out a circle with trackwidth as a diameter. this checks that the wheels have traveled the right distance aroun the circle for our angle
-            .andThen(() -> this.c_idle());
+        return new CommandBase() {
+            double left_motor_initial;
+            double right_motor_initial;
+            @Override
+            public void initialize() {
+                this.left_motor_initial  = leftMotors.getSensorPositionRotations();
+                this.right_motor_initial = rightMotors.getSensorPositionRotations();        
+            }
+            @Override
+            public void execute() {
+                setChassisVelocity(new ChassisSpeeds(0, 0, max_turnspeed*Math.signum(angle_degrees)));
+            }
+            @Override
+            public boolean isFinished() {
+                // when we turn, the wheels trace out a circle with trackwidth as a diameter. this checks that the wheels have traveled the right distance aroun the circle for our angle
+                return (
+                    Math.abs(leftMotors .getSensorPositionRotations()-this. left_motor_initial)
+                   +Math.abs(rightMotors.getSensorPositionRotations()-this.right_motor_initial)
+                ) > Math.abs(Math.PI * kinematics.trackWidthMeters * angle_degrees / 180 * m_to_motorrots);
+            }
+        }.andThen(() -> this.c_idle());
     }
 }

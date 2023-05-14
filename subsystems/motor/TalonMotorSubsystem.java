@@ -210,7 +210,7 @@ public class TalonMotorSubsystem extends SmartMotorSubsystem<TalonMotorControlle
    * @param peakOutput in units of percent output, [-1, 1]
    * @param pid_slot range [0, 3], pass null for default of zero.
    */
-  @Override
+  @Override @Deprecated
   public void configPIDF(double p, double i, double d, double f, double max_integral_accumulation, double peakOutput, Integer pid_slot) {
     if (pid_slot == null) pid_slot = TalonMotorSubsystem.DEFAULT_PID_SLOT;
 
@@ -229,10 +229,10 @@ public class TalonMotorSubsystem extends SmartMotorSubsystem<TalonMotorControlle
     pid_configured = true;
     // other things in the example: motionmagic config and statusframeperiod (for updating sensor status to the aux motor?)
   }
-  @Override
   /**
    * Assumes that PID and DMP slots correspond (eg. use PID slot 0 for DMP slot 0)
    */
+  @Override @Deprecated
   public void configDMP(double minRPM, double cruiseRPM, double accl_RPMps, double maxError_encoderTicks,
       Integer dmp_slot) {
     if (dmp_slot == null) dmp_slot = DEFAULT_DMP_SLOT;
@@ -319,7 +319,7 @@ public class TalonMotorSubsystem extends SmartMotorSubsystem<TalonMotorControlle
    */
   public Command c_setPosition(double setpoint, int dmp_slot) {
     this.leadMotor.selectProfileSlot(dmp_slot, dmp_slot);
-    //return this.runOnce(() -> setDynamicMotionProfileTargetRotations(setpoint)).andThen(new CommandBase(){});
+    //return this.runOnce(() -> setDynamicMotionProfileTargetRotations(setpoint)).andThen(new CommandBase(){}); // this would go forever
     return new HardwareDMPUntilArrival(this, setpoint);
   }
   @Override
@@ -329,7 +329,7 @@ public class TalonMotorSubsystem extends SmartMotorSubsystem<TalonMotorControlle
   public Command c_controlPosition(DoubleSupplier setpointSupplier, DoubleSupplier feedforwardSupplierVolts) {
     return this.run(() -> this.leadMotor.set(
       ControlMode.Position, setpointSupplier.getAsDouble(),
-      DemandType.ArbitraryFeedForward, feedforwardSupplierVolts.getAsDouble()/RobotController.getBatteryVoltage()
+      DemandType.ArbitraryFeedForward, feedforwardSupplierVolts.getAsDouble()/RobotController.getBatteryVoltage() // hack because WPI_CANTalonFX only takes feedforward in units of %output
     ));
   }
   @Override
