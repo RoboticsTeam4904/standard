@@ -4,6 +4,7 @@ import org.usfirst.frc4904.standard.commands.Idle;
 import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
+// TO DO: extend RequirementsSubsystemBase instead
 public class ServoSubsystem extends SubsystemBase {
 	protected final Servo[] servos;
 	protected boolean isInverted;

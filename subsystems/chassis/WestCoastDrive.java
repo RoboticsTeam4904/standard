@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.function.Supplier;
 
 import org.usfirst.frc4904.robot.RobotMap;
+import org.usfirst.frc4904.standard.subsystems.RequirementsSubsystemBase;
 import org.usfirst.frc4904.standard.subsystems.motor.TalonMotorSubsystem;
 
 import com.kauailabs.navx.frc.AHRS;
@@ -29,9 +30,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class WestCoastDrive extends SubsystemBase {
+public class WestCoastDrive extends RequirementsSubsystemBase {
     public final TalonMotorSubsystem leftMotors;
     public final TalonMotorSubsystem rightMotors;
     protected final PIDConstants pidConsts;

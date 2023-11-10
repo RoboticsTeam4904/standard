@@ -10,12 +10,12 @@ import org.msgpack.core.MessagePack;
 import org.msgpack.core.MessageUnpacker;
 import org.msgpack.core.buffer.ByteBufferInput;
 import org.msgpack.core.buffer.MessageBuffer;
+import org.usfirst.frc4904.standard.subsystems.RequirementsSubsystemBase;
 // import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.subsystems.net.message.Packable;
 
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public abstract class UDPSocket extends SubsystemBase {
+public abstract class UDPSocket extends RequirementsSubsystemBase {
     private static final int RECV_BUFFER_SIZE = 1024;
 
     private DatagramChannel channel;

@@ -3,16 +3,16 @@ package org.usfirst.frc4904.standard.subsystems.motor;
 import java.util.function.DoubleSupplier;
 
 import org.usfirst.frc4904.standard.custom.motorcontrollers.SmartMotorController;
+import org.usfirst.frc4904.standard.subsystems.RequirementsSubsystemBase;
 import org.usfirst.frc4904.standard.subsystems.motor.speedmodifiers.IdentityModifier;
 import org.usfirst.frc4904.standard.subsystems.motor.speedmodifiers.SpeedModifier;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 
-public abstract class SmartMotorSubsystem<MotorControllerType extends SmartMotorController> extends SubsystemBase {    // generic to allow inherited class (eg. TalonMotorSubsystem) to directly use TalonMotorController APIs on super.motors (not possible if this.motors here was BrakeableMotorController)
+public abstract class SmartMotorSubsystem<MotorControllerType extends SmartMotorController> extends RequirementsSubsystemBase {    // generic to allow inherited class (eg. TalonMotorSubsystem) to directly use TalonMotorController APIs on super.motors (not possible if this.motors here was BrakeableMotorController)
     public static final int DEFAULT_PID_SLOT = 0;   // default slot for pid constants
     public static final int DEFAULT_DMP_SLOT = 0;   // default slot for dynamic motion profile (motionmagic or smartmotion) configuration
 
