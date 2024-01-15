@@ -96,10 +96,10 @@ public class SparkMaxMotorSubsystem extends SmartMotorSubsystem<CustomCANSparkMa
    * @param leadMotor
    * @param followMotors
    */
-  public SparkMaxMotorSubsystem(String name, SpeedModifier speedModifier, IdleMode idleMode, double neutralDeadbandPercent,
+  public SparkMaxMotorSubsystem(String name, IdleMode idleMode, double neutralDeadbandPercent,
                                 Boolean respectLeadMotorLimitSwitches, double voltageCompensation,
                                 CustomCANSparkMax leadMotor, CustomCANSparkMax... followMotors) {
-		super(name, speedModifier, Stream.concat(Stream.of(leadMotor), Stream.of(followMotors)).toArray(CustomCANSparkMax[]::new));  // java has no spread operator, so you have to concat. best way i could find is to do it in a stream. please make this not bad if you know how 
+		super(name, Stream.concat(Stream.of(leadMotor), Stream.of(followMotors)).toArray(CustomCANSparkMax[]::new));  // java has no spread operator, so you have to concat. best way i could find is to do it in a stream. please make this not bad if you know how 
 
     this.leadMotor = leadMotor;
     this.followMotors = followMotors;
@@ -161,7 +161,7 @@ public class SparkMaxMotorSubsystem extends SmartMotorSubsystem<CustomCANSparkMa
    */
   public SparkMaxMotorSubsystem(String name, IdleMode idleMode, double voltageCompensation,
                                 CustomCANSparkMax leadMotor, CustomCANSparkMax... followMotors) {
-		this(name, new IdentityModifier(), idleMode, 0.001, false, voltageCompensation, leadMotor, followMotors);
+		this(name, idleMode, 0.001, false, voltageCompensation, leadMotor, followMotors);
 	}
 
   /**

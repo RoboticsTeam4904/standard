@@ -10,6 +10,8 @@ import org.usfirst.frc4904.robot.RobotMap.PID.Turn;
 import org.usfirst.frc4904.standard.custom.motioncontrollers.ezControl;
 import org.usfirst.frc4904.standard.custom.motioncontrollers.ezMotion;
 import org.usfirst.frc4904.standard.custom.motorcontrollers.CANTalonFX;
+import org.usfirst.frc4904.standard.custom.motorcontrollers.CustomCANSparkMax;
+import org.usfirst.frc4904.standard.subsystems.motor.SparkMaxMotorSubsystem;
 import org.usfirst.frc4904.standard.subsystems.motor.TalonMotorSubsystem;
 
 import edu.wpi.first.math.Pair;
@@ -21,17 +23,20 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.CAN;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkBase.IdleMode;
 
 public class SwerveModule extends SubsystemBase{
     public final CANTalonFX driveMotor;
     public final TalonMotorSubsystem driveSubsystem;
-    public final CANTalonFX turnMotor;
-    public final TalonMotorSubsystem turnSubsystem;
+    public final CustomCANSparkMax turnMotor;
+    public final SparkMaxMotorSubsystem turnSubsystem;
     public final DutyCycleEncoder encoder;
     public final SimpleMotorFeedforward driveFeedforward;
     public final SimpleMotorFeedforward turnFeedforward;
@@ -39,14 +44,14 @@ public class SwerveModule extends SubsystemBase{
 
     public SwerveModule(
         CANTalonFX driveMotor,
-        CANTalonFX turnMotor,
+        CustomCANSparkMax turnMotor,
         DutyCycleEncoder encoder,
         Translation2d modulePosition
     ) {
         this.driveMotor = driveMotor; //default is coast for drive, brake for turn. no voltage compensation
         this.driveSubsystem = new TalonMotorSubsystem("drive-subsystem", NeutralModeValue.Coast, 0, driveMotor);
         this.turnMotor = turnMotor;
-        this.turnSubsystem = new TalonMotorSubsystem("turn-subsystem", NeutralModeValue.Brake, 0, turnMotor);
+        this.turnSubsystem = new SparkMaxMotorSubsystem("turn-subsystem", IdleMode.kBrake, 0, true, 0, turnMotor);
         this.encoder = encoder;
         this.driveFeedforward = new SimpleMotorFeedforward(0, RobotMap.PID.Drive.kV, RobotMap.PID.Drive.kA);
         this.turnFeedforward = new SimpleMotorFeedforward(0, RobotMap.PID.Turn.kV, RobotMap.PID.Turn.kA);
