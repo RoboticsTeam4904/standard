@@ -25,7 +25,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 
 public class SwerveModule extends SubsystemBase{
     public final CANTalonFX driveMotor;
@@ -44,9 +44,9 @@ public class SwerveModule extends SubsystemBase{
         Translation2d modulePosition
     ) {
         this.driveMotor = driveMotor; //default is coast for drive, brake for turn. no voltage compensation
-        this.driveSubsystem = new TalonMotorSubsystem("drive-subsystem", NeutralMode.Coast, 0, driveMotor);
+        this.driveSubsystem = new TalonMotorSubsystem("drive-subsystem", NeutralModeValue.Coast, 0, driveMotor);
         this.turnMotor = turnMotor;
-        this.turnSubsystem = new TalonMotorSubsystem("turn-subsystem", NeutralMode.Brake, 0, turnMotor);
+        this.turnSubsystem = new TalonMotorSubsystem("turn-subsystem", NeutralModeValue.Brake, 0, turnMotor);
         this.encoder = encoder;
         this.driveFeedforward = new SimpleMotorFeedforward(0, RobotMap.PID.Drive.kV, RobotMap.PID.Drive.kA);
         this.turnFeedforward = new SimpleMotorFeedforward(0, RobotMap.PID.Turn.kV, RobotMap.PID.Turn.kA);
@@ -54,7 +54,7 @@ public class SwerveModule extends SubsystemBase{
     }
     
     public SwerveModulePosition getPosition(){
-        return new SwerveModulePosition(driveMotor.getSelectedSensorPosition()*RobotMap.Metrics.Chassis.WHEEL_DIAMETER_METERS/RobotMap.Metrics.Chassis.EncoderTicksPerRevolution/RobotMap.Metrics.Chassis.GEAR_RATIO,
+        return new SwerveModulePosition(driveMotor.getRotorPosition().getValue()*RobotMap.Metrics.Chassis.WHEEL_DIAMETER_METERS/RobotMap.Metrics.Chassis.GEAR_RATIO,
         new Rotation2d(getAbsoluteAngle()));
     }
         

@@ -243,20 +243,20 @@ public class SparkMaxMotorSubsystem extends SmartMotorSubsystem<CustomCANSparkMa
     controller.setSmartMotionAllowedClosedLoopError(maxAccl_RPMps, dmp_slot);
     dmp_configured = true;
   }
-  @Override
-  public void setDynamicMotionProfileTargetRotations(double targetRotations) {
-    // this fn should be called infrequently--only when we start a motion profile
-    if (!dmp_configured || !pid_configured) throw new IllegalCallerException("You must configure PIDF and DMP first!");
-    controller.setReference(targetRotations, CANSparkMax.ControlType.kSmartMotion);
-  }
-  @Override
-  public double getSensorPositionRotations() {
-    return encoder.getPosition();
-  }
-  @Override
-  public double getSensorVelocityRPM() {
-    return encoder.getVelocity();
-  }
+  // @Override
+  // public void setDynamicMotionProfileTargetRotations(double targetRotations) {
+  //   // this fn should be called infrequently--only when we start a motion profile
+  //   if (!dmp_configured || !pid_configured) throw new IllegalCallerException("You must configure PIDF and DMP first!");
+  //   controller.setReference(targetRotations, CANSparkMax.ControlType.kSmartMotion);
+  // }
+  // @Override
+  // public double getSensorPositionRotations() {
+  //   return encoder.getPosition();
+  // }
+  // @Override
+  // public double getSensorVelocityRPM() {
+  //   return encoder.getVelocity();
+  // }
   /**
    * 
    * @param setpointSupplier  a function that returns a double, units = RPM
@@ -271,28 +271,28 @@ public class SparkMaxMotorSubsystem extends SmartMotorSubsystem<CustomCANSparkMa
     if (!pid_configured) throw new IllegalArgumentException(name + " tried to use c_controlRPM without first configPIDF()-ing.");
     return this.run(() -> setRPM(setpointSupplier.getAsDouble(), feedforwardSupplierVolts.getAsDouble()));
   }
-  @Override @Deprecated
-  public Command c_setRPM(double setpoint) {
-    return this.runOnce(() -> setRPM(setpoint));
-  }
+  // @Override @Deprecated
+  // public Command c_setRPM(double setpoint) {
+  //   return this.runOnce(() -> setRPM(setpoint));
+  // }
   
-  @Override
+  // @Override
   public Command c_holdRPM(double setpoint) {
     if (!pid_configured) throw new IllegalArgumentException(name + " tried to use c_holdRPM without first configPIDF()-ing.");
     return this.run(() -> setRPM(setpoint));
   }
   // TO DO: these should probably use a diff pid slot from RPM
-  @Override
-  public Command c_setPosition(double setpoint) {
-    if (!pid_configured) throw new IllegalArgumentException(name + " tried to use c_setPosition without first configPIDF()-ing");
-    return new HardwareDMPUntilArrival(this, setpoint);
-  }
-  @Override
+  // @Override
+  // public Command c_setPosition(double setpoint) {
+  //   if (!pid_configured) throw new IllegalArgumentException(name + " tried to use c_setPosition without first configPIDF()-ing");
+  //   return new HardwareDMPUntilArrival(this, setpoint);
+  // }
+  // @Override
   public Command c_controlPosition(DoubleSupplier setpointSupplier) {
     if (!pid_configured) throw new IllegalArgumentException(name + " tried to use c_controlPosition without first configPIDF()-ing");
     return this.run(() -> controller.setReference(setpointSupplier.getAsDouble(), ControlType.kPosition));
   }
-  @Override
+  // @Override
   public Command c_controlPosition(DoubleSupplier setpointSupplier, DoubleSupplier feedforwardSupplierVolts) {
     if (!pid_configured) throw new IllegalArgumentException(name + " tried to use c_controlPosition without first configPIDF()-ing");
     return this.run(() -> controller.setReference(
@@ -301,11 +301,11 @@ public class SparkMaxMotorSubsystem extends SmartMotorSubsystem<CustomCANSparkMa
       feedforwardSupplierVolts.getAsDouble()
     ));
   }
-  @Override
-  public Command c_holdPosition(double setpoint) {
-    if (!pid_configured) throw new IllegalArgumentException(name + " tried to use c_controlPosition without first configPIDF()-ing");
-    return this.runOnce(() -> setDynamicMotionProfileTargetRotations(setpoint)).andThen(new Command(){} /* noop forever command, blame @zbuster05 */);
-  }
+  // // @Override
+  // public Command c_holdPosition(double setpoint) {
+  //   if (!pid_configured) throw new IllegalArgumentException(name + " tried to use c_controlPosition without first configPIDF()-ing");
+  //   return this.runOnce(() -> setDynamicMotionProfileTargetRotations(setpoint)).andThen(new Command(){} /* noop forever command, blame @zbuster05 */);
+  // }
   
   // don't override disable() or stop() because we *should* indeed use the base implementation of disabling/stopping each motor controller individually. Otherwise the following motors will try to follow a disabled motor, which may cause unexpected behavior (although realistically, it likely just gets set to zero and neutrallized by the deadband).
 

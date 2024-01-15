@@ -254,10 +254,10 @@ public abstract class SmartMotorSubsystem<MotorControllerType extends SmartMotor
      * 
      * TO DO: replace with ezControl
      */
-    public abstract void setRPM(double voltage);
-    public abstract void setRPM(double voltage, double feedforwardVolts);
-    public abstract void zeroSensors(double rotations); // you must zero the sensors before using position closed loop
-    public abstract void zeroSensors(); // you must zero the sensors before using position closed loop
+    // public abstract void setRPM(double voltage);
+    // public abstract void setRPM(double voltage, double feedforwardVolts);
+    // public abstract void zeroSensors(double rotations); // you must zero the sensors before using position closed loop
+    // public abstract void zeroSensors(); // you must zero the sensors before using position closed loop
     /**
      * Configure the PIDF constants, and also configure encoder inversion to be
      * positive when the lead motor is sent a positive power.
@@ -268,15 +268,15 @@ public abstract class SmartMotorSubsystem<MotorControllerType extends SmartMotor
      * @param f units = voltage
      * @param pid_slot
      */
-    public abstract void configPIDF(double p, double i, double d, double f, double max_accumulation, double peakOutput, Integer pid_slot);
-    public abstract void configDMP(double minRPM, double maxRPM, double maxAccl_RPMps, double maxError_encoderTicks, Integer dmp_slot);   // you must configure dynamic motion profiles (motionmagic or smartmotion) before using setPosition 
-    public abstract void configSoftwareLimits(double fwdBoundRotations, double revBoundRotations);
-    public abstract Command c_controlRPM(DoubleSupplier setpointSupplier, DoubleSupplier feedforwardSupplierVolts);
-    public abstract Command c_controlRPM(DoubleSupplier setpointSupplier);
-    public abstract Command c_holdRPM(double setpoint);
-    public abstract Command c_controlPosition(DoubleSupplier setpointSupplier, DoubleSupplier feedforwardSupplierVolts);
-    public abstract Command c_controlPosition(DoubleSupplier setpointSupplier);
-    public abstract Command c_holdPosition(double setpoint);
+    // public abstract void configPIDF(double p, double i, double d, double f, double max_accumulation, double peakOutput, Integer pid_slot);
+    // public abstract void configDMP(double minRPM, double maxRPM, double maxAccl_RPMps, double maxError_encoderTicks, Integer dmp_slot);   // you must configure dynamic motion profiles (motionmagic or smartmotion) before using setPosition 
+    // public abstract void configSoftwareLimits(double fwdBoundRotations, double revBoundRotations);
+    // public abstract Command c_controlRPM(DoubleSupplier setpointSupplier, DoubleSupplier feedforwardSupplierVolts);
+    // public abstract Command c_controlRPM(DoubleSupplier setpointSupplier);
+    // public abstract Command c_holdRPM(double setpoint);
+    // public abstract Command c_controlPosition(DoubleSupplier setpointSupplier, DoubleSupplier feedforwardSupplierVolts);
+    // public abstract Command c_controlPosition(DoubleSupplier setpointSupplier);
+    // public abstract Command c_holdPosition(double setpoint);
 
     /*
      * Plumbing/unified interface for using dynamic motion profiling features
@@ -288,15 +288,15 @@ public abstract class SmartMotorSubsystem<MotorControllerType extends SmartMotor
      * Make sure to convert units from motor shaft rotations (passed from here)
      * to whatever the internal method uses.
      */
-    protected abstract void setDynamicMotionProfileTargetRotations(double rotations);
+    // protected abstract void setDynamicMotionProfileTargetRotations(double rotations);
     /**
      * Should be a thin wrapper around the encoder position getter.
      *
      * @return the encoder offset from sensor zero, zeroed with .zeroSensors, in
      *         motor shaft rotations.
      */
-    public abstract double getSensorPositionRotations();
-    public abstract double getSensorVelocityRPM();
+    // public abstract double getSensorPositionRotations();
+    // public abstract double getSensorVelocityRPM();
 
     /**
      * A command that uses dynamic motion profiling (motionmagic/smartmotion) to
@@ -321,16 +321,16 @@ public abstract class SmartMotorSubsystem<MotorControllerType extends SmartMotor
             this(smartMotorSubsystem, targetPosRotations, 1/90, 100);
         }
 
-        @Override
-        public void initialize() {
-            this.motorSubsys.setDynamicMotionProfileTargetRotations(DEFAULT_DMP_SLOT);
-        }
-        @Override
-        public void execute() {
-            if (Math.abs(this.motorSubsys.getSensorPositionRotations() - target) < errorRangeRotations) {
-                recentOffPositionTime = Timer.getFPGATimestamp();
-            }
-        }
+        // @Override
+        // public void initialize() {
+        //     this.motorSubsys.setDynamicMotionProfileTargetRotations(DEFAULT_DMP_SLOT);
+        // }
+        // @Override
+        // public void execute() {
+        //     if (Math.abs(this.motorSubsys.getSensorPositionRotations() - target) < errorRangeRotations) {
+        //         recentOffPositionTime = Timer.getFPGATimestamp();
+        //     }
+        // }
         @Override
         public boolean isFinished() {
             return Timer.getFPGATimestamp() - recentOffPositionTime > holdTimeCondition;    // finished = whether (the last time we were off position) was long enough ago
@@ -338,6 +338,6 @@ public abstract class SmartMotorSubsystem<MotorControllerType extends SmartMotor
     }
 
     // deprecate the set-and-forget commands, because commands should not end before the motor is in a "stop" state
-    @Deprecated public abstract Command c_setRPM(double setpoint);
-    @Deprecated public abstract Command c_setPosition(double setpoint);
+    // @Deprecated public abstract Command c_setRPM(double setpoint);
+    // @Deprecated public abstract Command c_setPosition(double setpoint);
 }
