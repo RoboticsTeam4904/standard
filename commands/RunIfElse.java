@@ -1,17 +1,16 @@
 package org.usfirst.frc4904.standard.commands;
 
 import java.util.function.BooleanSupplier;
-import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.Subsystem;
+import edu.wpi.first.wpilibj2.command.Command;
 
-public class RunIfElse extends CommandBase {
-	protected final CommandBase ifCommand;
-	protected final CommandBase elseCommand;
-	protected CommandBase runningCommand;
+public class RunIfElse extends Command {
+	protected final Command ifCommand;
+	protected final Command elseCommand;
+	protected Command runningCommand;
 	protected final BooleanSupplier[] booleanSuppliers;
 	protected boolean hasRunOnce;
 
-	public RunIfElse(String name, CommandBase ifCommand, CommandBase elseCommand,
+	public RunIfElse(String name, Command ifCommand, Command elseCommand,
 			BooleanSupplier... booleanSuppliers) {
 		super();
 		setName(name);
@@ -20,7 +19,7 @@ public class RunIfElse extends CommandBase {
 		this.booleanSuppliers = booleanSuppliers;
 	}
 
-	public RunIfElse(CommandBase ifCommand, CommandBase elseCommand, BooleanSupplier... booleanSuppliers) {
+	public RunIfElse(Command ifCommand, Command elseCommand, BooleanSupplier... booleanSuppliers) {
 		this("RunIfElse", ifCommand, elseCommand, booleanSuppliers);
 	}
 

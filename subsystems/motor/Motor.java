@@ -1,10 +1,12 @@
+//TODO: fix
 package org.usfirst.frc4904.standard.subsystems.motor;
 
 import org.usfirst.frc4904.standard.commands.motor.MotorIdle;
 import org.usfirst.frc4904.standard.subsystems.motor.speedmodifiers.IdentityModifier;
 import org.usfirst.frc4904.standard.subsystems.motor.speedmodifiers.SpeedModifier;
 import edu.wpi.first.wpilibj.motorcontrol.MotorController;
-import com.ctre.phoenix.motorcontrol.IMotorController;
+// TODO: what is IMotorController now???
+// import com.ctre.phoenix6.motorcontrol.IMotorController;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 /**
@@ -45,11 +47,11 @@ public class Motor extends SubsystemBase implements MotorController {
 		this.speedModifier = speedModifier;
 		this.motors = motors;
 		lastSpeed = 0;
-		for (MotorController motor : motors) {
-			if (motor instanceof IMotorController)
-				((IMotorController) motor).enableVoltageCompensation(true);
-			motor.set(0); // Start all motors with 0 speed.
-		}
+		// for (MotorController motor : motors) {
+		// 	if (motor instanceof IMotorController)
+		// 		((IMotorController) motor).enableVoltageCompensation(true);
+		// 	motor.set(0); // Start all motors with 0 speed.
+		// }
 		setInverted(isInverted);
 		setDefaultCommand(new MotorIdle(this));
 	}

@@ -1,8 +1,8 @@
 package org.usfirst.frc4904.standard.commands;
 
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Command;
 
-public class SingleOp extends CommandBase {
+public class SingleOp extends Command {
 	protected Runnable op;
 
 	public SingleOp(String name, Runnable op) {

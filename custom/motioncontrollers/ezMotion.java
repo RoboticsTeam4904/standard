@@ -9,11 +9,10 @@ import org.usfirst.frc4904.standard.custom.motioncontrollers.ezMotion.SetpointSu
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 
-public class ezMotion extends CommandBase {
+public class ezMotion extends Command {
     public ezControl control;
     public DoubleConsumer processVariable;
     public Double initialTimestamp;

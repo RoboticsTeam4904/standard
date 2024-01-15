@@ -6,9 +6,9 @@
 // import org.usfirst.frc4904.standard.custom.sensors.InvalidSensorException;
 // import org.usfirst.frc4904.standard.subsystems.chassis.Chassis;
 // import edu.wpi.first.wpilibj2.command.Command;
-// import edu.wpi.first.wpilibj2.command.CommandBase;
+// import edu.wpi.first.wpilibj2.command.Command;
 
-// public class ChassisMoveDistance extends CommandBase implements ChassisController {
+// public class ChassisMoveDistance extends Command implements ChassisController {
 // 	protected final ChassisMove chassisMove;
 // 	protected final MotionController motionController;
 // 	protected final Command fallbackCommand;

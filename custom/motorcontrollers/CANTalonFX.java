@@ -1,12 +1,12 @@
 package org.usfirst.frc4904.standard.custom.motorcontrollers;
 
-import com.ctre.phoenix.motorcontrol.InvertType;
-import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+import com.ctre.phoenix6.signals.ForwardLimitValue;
+import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.ctre.phoenix6.signals.ReverseLimitValue;
+import com.ctre.phoenix6.hardware.TalonFX;
 
-public class CANTalonFX extends WPI_TalonFX implements TalonMotorController {
-	protected static final NeutralMode DEFAULT_NEUTRAL_MODE 	= NeutralMode.Coast;
-	protected static final InvertType  DEFAULT_INVERT_TYPE  	= InvertType.FollowMaster;
+public class CANTalonFX extends TalonFX {
+	protected static final NeutralModeValue DEFAULT_NEUTRAL_MODE 	= NeutralModeValue.Coast;
 	protected static final double	   DEFAULT_NEUTRAL_DEADBAND = 0.001;	// 0.1%, the minimum possible value 
 
 	/**
@@ -22,10 +22,8 @@ public class CANTalonFX extends WPI_TalonFX implements TalonMotorController {
 	 *                                  inverting the lead motor. Use None or
 	 *                                  InvertMotorOutput for the lead motor.
 	 */
-	public CANTalonFX(int deviceNumber, InvertType inverted) {
+	public CANTalonFX(int deviceNumber) {
 		super(deviceNumber);
-		configFactoryDefault();	// use default settings to prevent unexpected behavior, reccommended in examples
-		setInverted(inverted);
 	}
 
     /**
@@ -42,8 +40,8 @@ public class CANTalonFX extends WPI_TalonFX implements TalonMotorController {
 	 * This does not brake the motor. Use .neutralOutput() instead, after
 	 * setBrakeOnNeutral.
 	 */
-	public TalonMotorController setBrakeOnNeutral() {
-		setNeutralMode(NeutralMode.Brake);
+	public CANTalonFX setBrakeOnNeutral() {
+		setNeutralMode(NeutralModeValue.Brake);
 		return this;
 	}
 	/**
@@ -54,19 +52,16 @@ public class CANTalonFX extends WPI_TalonFX implements TalonMotorController {
 	 * This does not coast the motor. Use .neutralOutput() instead, after
 	 * setCoastOnNeutral.
 	 */
-	public TalonMotorController setCoastOnNeutral() {
-		setNeutralMode(NeutralMode.Coast);
+	public CANTalonFX setCoastOnNeutral() {
+		setNeutralMode(NeutralModeValue.Coast);
 		return this;
 	}
-
-	@Override
-	public boolean isFwdLimitSwitchPressed() throws IllegalAccessException {
+	public ForwardLimitValue isFwdLimitSwitchPressed() throws IllegalAccessException {
 		// OPTIM: this should probably support normally closed limit switches too... right now only supports normally open
-		return getSensorCollection().isFwdLimitSwitchClosed() > 0;
+		return getForwardLimit().getValue();
 	}
-	@Override
-	public boolean isRevLimitSwitchPressed() throws IllegalAccessException {
+	public ReverseLimitValue isRevLimitSwitchPressed() throws IllegalAccessException {
 		// OPTIM: this should probably support normally closed limit switches too... right now only supports normally open
-		return getSensorCollection().isRevLimitSwitchClosed() > 0;
+		return getReverseLimit().getValue();
 	}
 }

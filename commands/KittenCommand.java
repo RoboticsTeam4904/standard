@@ -1,12 +1,12 @@
 // package org.usfirst.frc4904.standard.commands;
 
 // import org.usfirst.frc4904.standard.LogKitten;
-// import edu.wpi.first.wpilibj2.command.CommandBase;
+// import edu.wpi.first.wpilibj2.command.Command;
 
 // /**
 //  *
 //  */
-// public class KittenCommand extends CommandBase {
+// public class KittenCommand extends Command {
 // 	protected final String message;
 // 	protected final LogKitten.KittenLevel level;
 

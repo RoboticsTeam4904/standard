@@ -1,17 +1,17 @@
 package org.usfirst.frc4904.standard.commands;
 
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Command;
 
-public abstract class InjectedCommand extends CommandBase {
-	private final CommandBase previous;
+public abstract class InjectedCommand extends Command {
+	private final Command previous;
 
-	public InjectedCommand(String name, CommandBase previous) {
+	public InjectedCommand(String name, Command previous) {
 		super();
 		setName(name);
 		this.previous = previous;
 	}
 
-	public InjectedCommand(CommandBase previous) {
+	public InjectedCommand(Command previous) {
 		this("Injected(" + previous.getName() + ")", previous);
 	}
 

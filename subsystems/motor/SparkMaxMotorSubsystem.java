@@ -10,15 +10,13 @@ import org.usfirst.frc4904.standard.subsystems.motor.speedmodifiers.SpeedModifie
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.REVLibError;
 import com.revrobotics.RelativeEncoder;
-import com.revrobotics.SparkMaxLimitSwitch;
-import com.revrobotics.SparkMaxPIDController;
-import com.revrobotics.CANSparkMax.ControlType;
-import com.revrobotics.CANSparkMax.IdleMode;
-import com.revrobotics.CANSparkMax.SoftLimitDirection;
-import com.revrobotics.SparkMaxPIDController.ArbFFUnits;
+import com.revrobotics.SparkLimitSwitch;
+import com.revrobotics.SparkPIDController;
+import com.revrobotics.CANSparkBase.ControlType;
+import com.revrobotics.CANSparkBase.IdleMode;
+import com.revrobotics.CANSparkBase.SoftLimitDirection;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /**
  * A group of SparkMax motor controllers the modern motor controller features. 
@@ -45,7 +43,7 @@ public class SparkMaxMotorSubsystem extends SmartMotorSubsystem<CustomCANSparkMa
   public static final int DEFAULT_DMP_SLOT = 0;  // spark max has 4 smart-motion (dynamic motion profile) slots, [0, 3]
   private boolean pid_configured = false; // flags to remember whether pid and dmp were configured, for error checking
   private boolean dmp_configured = false; // when multiple pid/dmp slots, these will have to become slot-wise 
-  private SparkMaxPIDController controller = null;
+  private SparkPIDController controller = null;
   private RelativeEncoder encoder = null;
   public final CustomCANSparkMax leadMotor;
   public final CustomCANSparkMax[] followMotors;
@@ -111,8 +109,8 @@ public class SparkMaxMotorSubsystem extends SmartMotorSubsystem<CustomCANSparkMa
       // when extending to SparkMAX: you have to sparkmax.getForward/ReverseLimitSwitch.enable() or something. may need custom polling/plugin logic. https://codedocs.revrobotics.com/java/com/revrobotics/cansparkmax#getReverseLimitSwitch(com.revrobotics.SparkMaxLimitSwitch.Type)
 
       // TO DO: spark max limit switches are untested
-      var fwdLimit = leadMotor.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
-      var revLimit = leadMotor.getReverseLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
+      var fwdLimit = leadMotor.getForwardLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen);
+      var revLimit = leadMotor.getReverseLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen);
       REVLibThrowable.guard(fwdLimit.enableLimitSwitch(true));  // REVLibThrowable.guard will throw a runtime exception if the configuration fails.
       REVLibThrowable.guard(revLimit.enableLimitSwitch(true));
       // TO DO: do following spark maxes need to be configured to use remote limit switch? or can they just auto-brake w/ a neutral-deadband equivalent? 
@@ -306,7 +304,7 @@ public class SparkMaxMotorSubsystem extends SmartMotorSubsystem<CustomCANSparkMa
   @Override
   public Command c_holdPosition(double setpoint) {
     if (!pid_configured) throw new IllegalArgumentException(name + " tried to use c_controlPosition without first configPIDF()-ing");
-    return this.runOnce(() -> setDynamicMotionProfileTargetRotations(setpoint)).andThen(new CommandBase(){} /* noop forever command, blame @zbuster05 */);
+    return this.runOnce(() -> setDynamicMotionProfileTargetRotations(setpoint)).andThen(new Command(){} /* noop forever command, blame @zbuster05 */);
   }
   
   // don't override disable() or stop() because we *should* indeed use the base implementation of disabling/stopping each motor controller individually. Otherwise the following motors will try to follow a disabled motor, which may cause unexpected behavior (although realistically, it likely just gets set to zero and neutrallized by the deadband).

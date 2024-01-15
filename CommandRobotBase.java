@@ -1,6 +1,5 @@
 package org.usfirst.frc4904.standard;
 
-import java.io.Console;
 
 import org.usfirst.frc4904.standard.custom.CommandSendableChooser;
 import org.usfirst.frc4904.standard.custom.TypedNamedSendableChooser;

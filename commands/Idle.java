@@ -2,13 +2,13 @@ package org.usfirst.frc4904.standard.commands;
 
 // import org.usfirst.frc4904.standard.LogKitten;
 
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 
 /**
  * Requires subsystems so no other code can interact with them.
  */
-public class Idle extends CommandBase {
+public class Idle extends Command {
 	boolean verbose;
 
 	public Idle(String name, boolean verbose, Subsystem... subsystems) {

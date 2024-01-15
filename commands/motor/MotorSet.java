@@ -4,7 +4,7 @@ package org.usfirst.frc4904.standard.commands.motor;
 import org.usfirst.frc4904.standard.subsystems.motor.Motor;
 
 import edu.wpi.first.wpilibj.motorcontrol.MotorController;
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Command;
 
 /**
  * Sets a motor to a speed. The speed can change through use of the set command.
@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
  *
  */
 @Deprecated
-public class MotorSet extends CommandBase {
+public class MotorSet extends Command {
 	protected final MotorController motor;
 	protected double speed;
 

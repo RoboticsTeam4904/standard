@@ -4,7 +4,6 @@ import java.util.function.BiFunction;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class ezControl implements BiFunction<Double, Double, Double> {
     private final ezControlMethod controller;

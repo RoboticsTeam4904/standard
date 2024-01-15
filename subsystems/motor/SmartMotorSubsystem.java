@@ -8,7 +8,6 @@ import org.usfirst.frc4904.standard.subsystems.motor.speedmodifiers.SpeedModifie
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 
@@ -33,6 +32,8 @@ public abstract class SmartMotorSubsystem<MotorControllerType extends SmartMotor
      * @param motors        The MotorControllers in this subsystem. Can be a single
      *                      MotorController or multiple MotorControllers.
      */
+
+    @SafeVarargs
 	public SmartMotorSubsystem(String name, SpeedModifier speedModifier, MotorControllerType... motors) {
 		super();
 		setName(name);
@@ -54,7 +55,8 @@ public abstract class SmartMotorSubsystem<MotorControllerType extends SmartMotor
 	 * @param motors     The MotorControllers in this subsystem. Can be a single
 	 *                   MotorController or multiple MotorControllers.
 	 */
-	public SmartMotorSubsystem(String name, MotorControllerType... motors) {
+	@SafeVarargs
+     public SmartMotorSubsystem(String name, MotorControllerType... motors) {
 		this(name, new IdentityModifier(), motors);
 	}
 
@@ -70,7 +72,8 @@ public abstract class SmartMotorSubsystem<MotorControllerType extends SmartMotor
 	 * @param motors        The MotorControllers in this subsystem. Can be a single
 	 *                      MotorController or multiple MotorControllers.
 	 */
-    public SmartMotorSubsystem(SpeedModifier speedModifier, MotorControllerType... motors) {
+    @SafeVarargs
+     public SmartMotorSubsystem(SpeedModifier speedModifier, MotorControllerType... motors) {
         this("Motor", speedModifier, motors);
     }
 
@@ -83,7 +86,8 @@ public abstract class SmartMotorSubsystem<MotorControllerType extends SmartMotor
 	 * @param motors The MotorControllers in this subsystem. Can be a single
 	 *               MotorController or multiple MotorControllers.
 	 */
-	public SmartMotorSubsystem(MotorControllerType... motors) {
+	@SafeVarargs
+     public SmartMotorSubsystem(MotorControllerType... motors) {
 		this("Motor Subsystem", motors);
 	} 
     
@@ -300,7 +304,7 @@ public abstract class SmartMotorSubsystem<MotorControllerType extends SmartMotor
      * we arrive (when we have been within errorRange (rotations) for
      * holdTimeCondition (ms)).
      */
-    public class HardwareDMPUntilArrival extends CommandBase {
+    public class HardwareDMPUntilArrival extends Command {
         private SmartMotorSubsystem<MotorControllerType> motorSubsys;
         private double target;
         private double errorRangeRotations;

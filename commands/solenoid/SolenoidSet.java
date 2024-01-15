@@ -4,14 +4,14 @@ import java.util.function.BooleanSupplier;
 
 import org.usfirst.frc4904.standard.subsystems.SolenoidSubsystem;
 import org.usfirst.frc4904.standard.subsystems.SolenoidSubsystem.SolenoidState;
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Command;
 
 /**
  * Command to set the state of a SolenoidSubsystem
  * TO DO: rewrite using inline commands on SolenoidSubsystem
  */
 
-public class SolenoidSet extends CommandBase {
+public class SolenoidSet extends Command {
 	protected final SolenoidSubsystem system;
 	protected final SolenoidState state;
 	protected final BooleanSupplier[] booleanSuppliers;

@@ -1,7 +1,7 @@
 package org.usfirst.frc4904.standard.custom.motorcontrollers;
 
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.SparkMaxLimitSwitch.Type;
+import com.revrobotics.SparkLimitSwitch.Type;
 
 
 public class CustomCANSparkMax extends CANSparkMax implements SmartMotorController {
