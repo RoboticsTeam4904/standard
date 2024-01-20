@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
  * smart dashboard.
  *
  */
-// public class CommandSendableChooser extends SendableChooser<CommandBase> {	// OPTIM: A LOT of stuff in standard takes in CommandBase when it should probably take in Command (unintuitively, CommandBase is actually less basic than Command)
+// public class CommandSendableChooser extends SendableChooser<Command> {	// OPTIM: A LOT of stuff in standard takes in Command when it should probably take in Command (unintuitively, Command is actually less basic than Command)
 public class CommandSendableChooser extends SendableChooser<Command> {
 	/**
 	 * Adds the command object to the smart dashboard.

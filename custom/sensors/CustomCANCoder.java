@@ -1,23 +1,25 @@
 package org.usfirst.frc4904.standard.custom.sensors;
 
-import com.ctre.phoenix.sensors.CANCoder;
-import com.ctre.phoenix.sensors.CANCoderConfiguration;
-import com.ctre.phoenix.sensors.SensorTimeBase;
+import com.ctre.phoenix6.hardware.CANcoder;
+import com.ctre.phoenix6.configs.CANcoderConfiguration;
+// import com.ctre.phoenix.sensors.SensorTimeBase;
+// TODO: what is sensor time base why is it gone
 
 // import org.usfirst.frc4904.standard.LogKitten;
 import org.usfirst.frc4904.standard.Util;
 
-public class CustomCANCoder extends CANCoder implements CustomEncoder {
+public class CustomCANCoder extends CANcoder implements CustomEncoder {
     protected static final boolean DEFAULT_REVERSE_DIRECTION = false;
     protected double distancePerPulse;
     protected boolean reverseDirection;
-    protected CANCoderConfiguration config;
+    protected CANcoderConfiguration config;
 
     public CustomCANCoder(int deviceNum, double distancePerPulse,
             boolean reverseDirection) {
         super(deviceNum);
-        config = new CANCoderConfiguration();
-        super.configAllSettings(config);
+        config = new CANcoderConfiguration();
+       // TODO: this also doesn't exist anymore
+        // super.configAllSettings(config);
         setDistancePerPulse(distancePerPulse);
         setReverseDirection(reverseDirection);
         reset();
@@ -27,14 +29,14 @@ public class CustomCANCoder extends CANCoder implements CustomEncoder {
         this(deviceNum, distancePerPulse, DEFAULT_REVERSE_DIRECTION);
     }
 
-    public void setDistancePerPulse(double pulse, SensorTimeBase collectionPeriod) {
-        this.distancePerPulse = pulse;
-        super.configFeedbackCoefficient(pulse, "meters", collectionPeriod);
-    }
+    // public void setDistancePerPulse(double pulse, SensorTimeBase collectionPeriod) {
+    //     this.distancePerPulse = pulse;
+    //     super.configFeedbackCoefficient(pulse, "meters", collectionPeriod);
+    // }
 
-    public void setDistancePerPulse(double pulse) {
-        setDistancePerPulse(pulse, SensorTimeBase.PerSecond);
-    }
+    // public void setDistancePerPulse(double pulse) {
+    //     setDistancePerPulse(pulse, SensorTimeBase.PerSecond);
+    // }
 
     @Override
     public double getRate() {
@@ -49,7 +51,7 @@ public class CustomCANCoder extends CANCoder implements CustomEncoder {
 
     @Override
     public double getRateSafely() throws InvalidSensorException {
-        return getVelocity();
+        return getVelocity().getValue();
 
     }
 
@@ -66,7 +68,7 @@ public class CustomCANCoder extends CANCoder implements CustomEncoder {
 
     @Override
     public double getDistanceSafely() throws InvalidSensorException {
-        return getPosition();
+        return getPosition().getValue();
     }
 
     @Override
@@ -82,7 +84,8 @@ public class CustomCANCoder extends CANCoder implements CustomEncoder {
 
     @Override
     public boolean getDirectionSafely() throws InvalidSensorException {
-        return !reverseDirection == (getPosition() >= 0);
+        // getPosition() returns status signal, can't use >= on status signal
+        return !reverseDirection == (getPosition().getValue() >= 0);
     }
 
     @Override
@@ -107,6 +110,11 @@ public class CustomCANCoder extends CANCoder implements CustomEncoder {
     }
 
     @Override
+    public void setDistancePerPulse(double distancePerPulse) {
+        this.distancePerPulse = distancePerPulse;
+    }
+
+    @Override
     public boolean getReverseDirection() {
         return reverseDirection;
     }
@@ -114,7 +122,8 @@ public class CustomCANCoder extends CANCoder implements CustomEncoder {
     @Override
     public void setReverseDirection(boolean reverseDirection) {
         this.reverseDirection = reverseDirection;
-        super.configSensorDirection(!reverseDirection);
+        // TODO: configSensorDirection isn't a thing anymore
+        // super.configSensorDirection(!reverseDirection);
 
     }
 

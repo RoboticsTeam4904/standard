@@ -1,7 +1,7 @@
 package org.usfirst.frc4904.standard.commands;
 
 import java.util.function.BooleanSupplier;
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Command;
 
 public class RunIf extends RunIfElse {
 	/**
@@ -13,7 +13,7 @@ public class RunIf extends RunIfElse {
 	 * @param booleanSuppliers A variable number of condition functions (ANDed)
 	 *                         using Java 8's colon syntax
 	 */
-	public RunIf(CommandBase command, BooleanSupplier... booleanSuppliers) {
+	public RunIf(Command command, BooleanSupplier... booleanSuppliers) {
 		super(command, new Noop(), booleanSuppliers);
 	}
 }

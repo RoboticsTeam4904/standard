@@ -1,14 +1,14 @@
 package org.usfirst.frc4904.standard.commands;
 
 // import org.usfirst.frc4904.standard.LogKitten;
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Command;
 
 /**
  * A command that will only run if the isSafe() method returns safe. To use,
  * implement an isSafe() method, and use executeIfSafe() in place of the
  * execute() method
  */
-public abstract class SafetyCommand extends CommandBase {
+public abstract class SafetyCommand extends Command {
 	protected String reasonUnsafe;
 
 	public SafetyCommand(String name, double timeout) {

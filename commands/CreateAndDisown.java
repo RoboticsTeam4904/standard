@@ -3,10 +3,9 @@ package org.usfirst.frc4904.standard.commands;
 import java.util.function.Supplier;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandBase;
 
-// to be replaced by CommandBased
-public class CreateAndDisown extends CommandBase {
+// to be replaced by Commandd
+public class CreateAndDisown extends Command {
     private final Supplier<Command> commandDealer;
     private Command currentActiveCommand = null;
     

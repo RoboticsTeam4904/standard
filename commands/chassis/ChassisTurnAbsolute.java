@@ -3,7 +3,7 @@
 // import org.usfirst.frc4904.standard.custom.motioncontrollers.MotionController;
 // import org.usfirst.frc4904.standard.custom.sensors.IMU;
 // import org.usfirst.frc4904.standard.subsystems.chassis.Chassis;
-// import edu.wpi.first.wpilibj2.command.CommandBase;
+// import edu.wpi.first.wpilibj2.command.Command;
 
 // public class ChassisTurnAbsolute extends ChassisTurn {
 // 	/**
@@ -31,7 +31,7 @@
 // 	 *                         start
 // 	 * @param motionController
 // 	 */
-// 	public ChassisTurnAbsolute(Chassis chassis, double finalAngle, IMU imu, CommandBase fallbackCommand,
+// 	public ChassisTurnAbsolute(Chassis chassis, double finalAngle, IMU imu, Command fallbackCommand,
 // 			MotionController motionController) {
 // 		super("Chassis Turn Absolute", chassis, finalAngle, imu, fallbackCommand, motionController);
 // 	}
@@ -64,7 +64,7 @@
 // 	 *                         start
 // 	 * @param motionController
 // 	 */
-// 	public ChassisTurnAbsolute(String name, Chassis chassis, double finalAngle, IMU imu, CommandBase fallbackCommand,
+// 	public ChassisTurnAbsolute(String name, Chassis chassis, double finalAngle, IMU imu, Command fallbackCommand,
 // 			MotionController motionController) {
 // 		super(name, chassis, finalAngle, imu, fallbackCommand, motionController);
 // 	}

@@ -5,14 +5,14 @@
 // import org.usfirst.frc4904.standard.custom.sensors.IMU;
 // import org.usfirst.frc4904.standard.custom.sensors.InvalidSensorException;
 // import org.usfirst.frc4904.standard.subsystems.chassis.Chassis;
-// import edu.wpi.first.wpilibj2.command.CommandBase;
+// import edu.wpi.first.wpilibj2.command.Command;
 
-// public class ChassisTurn extends CommandBase implements ChassisController {
+// public class ChassisTurn extends Command implements ChassisController {
 // 	protected final ChassisMove move;
 // 	protected double initialAngle;
 // 	protected final double finalAngle;
 // 	protected final MotionController motionController;
-// 	protected final CommandBase fallbackCommand;
+// 	protected final Command fallbackCommand;
 // 	protected final IMU imu;
 // 	protected boolean runOnce;
 
@@ -31,7 +31,7 @@
 // 	 * @param motionController
 // 	 */
 // 	public ChassisTurn(String name, final Chassis chassis, final double finalAngle, final IMU imu,
-// 			final CommandBase fallbackCommand, MotionController motionController) {
+// 			final Command fallbackCommand, MotionController motionController) {
 // 		move = new ChassisMove(chassis, this);
 // 		this.finalAngle = -((finalAngle + 360) % 360 - 180);
 // 		this.imu = imu;
@@ -82,7 +82,7 @@
 // 	 *                         start
 // 	 * @param motionController
 // 	 */
-// 	public ChassisTurn(Chassis chassis, double finalAngle, IMU imu, CommandBase fallbackCommand,
+// 	public ChassisTurn(Chassis chassis, double finalAngle, IMU imu, Command fallbackCommand,
 // 			MotionController motionController) {
 // 		this("Chassis Turn", chassis, finalAngle, imu, fallbackCommand, motionController);
 // 	}

@@ -1,15 +1,14 @@
 package org.usfirst.frc4904.standard.commands;
 
 import java.util.function.Supplier;
-import edu.wpi.first.wpilibj2.command.Subsystem;
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Command;
 
-public class RunUntil extends CommandBase {
-	protected final CommandBase command;
+public class RunUntil extends Command {
+	protected final Command command;
 	protected final Supplier<Boolean> stopCondition;
 	protected final boolean cancelOnEnd;
 
-	public RunUntil(String name, CommandBase command, Supplier<Boolean> stopCondition, boolean cancelOnEnd) {
+	public RunUntil(String name, Command command, Supplier<Boolean> stopCondition, boolean cancelOnEnd) {
 		super();
 		setName(name);
 		this.command = command;
@@ -17,7 +16,7 @@ public class RunUntil extends CommandBase {
 		this.cancelOnEnd = cancelOnEnd;
 	}
 
-	public RunUntil(CommandBase command, Supplier<Boolean> stopCondition) {
+	public RunUntil(Command command, Supplier<Boolean> stopCondition) {
 		this("RunUntil", command, stopCondition, true);
 	}
 

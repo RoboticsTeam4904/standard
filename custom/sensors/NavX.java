@@ -4,7 +4,6 @@ package org.usfirst.frc4904.standard.custom.sensors;
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.SerialPort;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * Local NavX interface.
