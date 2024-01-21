@@ -118,9 +118,7 @@ public class SwerveModule extends SubsystemBase{
             RobotMap.PID.Turn.kI,
             RobotMap.PID.Turn.kD,
             (position, velocityDeg) -> {
-                double output =  turnFeedforward.calculate(
-                    turnMotor.get()*RobotMap.Metrics.Chassis.MAX_TURN_SPEED,
-                    velocityDeg, 0);
+                double output =  turnFeedforward.calculate(velocityDeg);
                 return output;
             }
         );
