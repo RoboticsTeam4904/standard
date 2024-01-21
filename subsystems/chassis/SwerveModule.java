@@ -57,6 +57,7 @@ public class SwerveModule extends SubsystemBase{
         this.turnMotor = turnMotor;
         this.turnSubsystem = new SparkMaxMotorSubsystem("turn-subsystem", IdleMode.kBrake, 0, true, 0, turnMotor);
         this.encoder = encoder;
+        encoder.setDistancePerRotation(2*Math.PI/RobotMap.Metrics.Chassis.GEAR_RATIO_TURN);
         this.driveFeedforward = new SimpleMotorFeedforward(0, RobotMap.PID.Drive.kV, RobotMap.PID.Drive.kA);
         this.turnFeedforward = new SimpleMotorFeedforward(0, RobotMap.PID.Turn.kV, RobotMap.PID.Turn.kA);
         this.modulePosition = modulePosition;
@@ -140,9 +141,15 @@ public class SwerveModule extends SubsystemBase{
     }
     //TODO: make sure this outputs correctly, as there are a few possible bad outputs it could give (i.e. getabsolutePosition() is in wrong units is in radians or rotations rather than degrees)
     public double getAbsoluteAngle(){
-        if(encoder.getAbsolutePosition()>0){
-            return encoder.getAbsolutePosition()/Metrics.Chassis.GEAR_RATIO_TURN % 360;} //TODO: not sure if units are correct, needs to be right or swerve wont work
-        else{
-            return (encoder.getAbsolutePosition()/Metrics.Chassis.GEAR_RATIO_TURN % 360) + 360;}
+        
+        if(encoder.getDistance()>0){ return encoder.getDistance()%360;}
+        else{return (encoder.getDistance()%360) + 360;}   
+
+        //not sure this works
+        //if(encoder.getAbsolutePosition()>0){
+        //    return encoder.getAbsolutePosition()/Metrics.Chassis.GEAR_RATIO_TURN % 360;} //TODO: not sure if units are correct, needs to be right or swerve wont work
+        //else{
+        //    return (encoder.getAbsolutePosition()/Metrics.Chassis.GEAR_RATIO_TURN % 360) + 360;}
+
     }   
 }
