@@ -15,6 +15,7 @@ import org.usfirst.frc4904.standard.custom.motorcontrollers.CustomCANSparkMax;
 import org.usfirst.frc4904.standard.subsystems.motor.SparkMaxMotorSubsystem;
 import org.usfirst.frc4904.standard.subsystems.motor.TalonMotorSubsystem;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -57,9 +58,9 @@ public class SwerveModule extends SubsystemBase{
         this.turnMotor = turnMotor;
         this.turnSubsystem = new SparkMaxMotorSubsystem("turn-subsystem", IdleMode.kBrake, 0, true, 0, turnMotor);
         this.encoder = encoder;
-        encoder.setDistancePerRotation(2*Math.PI/RobotMap.Metrics.Chassis.GEAR_RATIO_TURN);
-        this.driveFeedforward = new SimpleMotorFeedforward(0, RobotMap.PID.Drive.kV, RobotMap.PID.Drive.kA);
-        this.turnFeedforward = new SimpleMotorFeedforward(0, RobotMap.PID.Turn.kV, RobotMap.PID.Turn.kA);
+        encoder.setDistancePerRotation(360/RobotMap.Metrics.Chassis.GEAR_RATIO_TURN);
+        this.driveFeedforward = new SimpleMotorFeedforward(RobotMap.PID.Drive.kS, RobotMap.PID.Drive.kV, RobotMap.PID.Drive.kA);
+        this.turnFeedforward = new SimpleMotorFeedforward(RobotMap.PID.Drive.kS, RobotMap.PID.Turn.kV, RobotMap.PID.Turn.kA);
         this.modulePosition = modulePosition;
         this.setName(name);
     }
@@ -80,8 +81,8 @@ public class SwerveModule extends SubsystemBase{
             Command cmdDrive = c_controlWheelSpeed(() -> target.get().speedMetersPerSecond);        
             cmd.addCommands(cmdDrive);
         }
-        if (getAbsoluteAngle() != target.get().angle.getDegrees()) { //angle is always closed loop
-            Command cmdTurn = c_holdWheelAngle(target.get().angle.getDegrees());
+        if (getAbsoluteAngle() != MathUtil.inputModulus(target.get().angle.getDegrees(),-180,180)) { //angle is always closed loop
+            Command cmdTurn = c_holdWheelAngle(MathUtil.inputModulus(target.get().angle.getDegrees(),-180,180));
             cmd.addCommands(cmdTurn);
         }
         return cmd;
@@ -105,8 +106,8 @@ public class SwerveModule extends SubsystemBase{
     }
     //takes in angle in degrees and returns a command that will hold the wheel at that angle
     //CLOSED-LOOP CONTROL
-    public Command c_holdWheelAngle(double angle){
-        TrapezoidProfile Turnprofile = new TrapezoidProfile(
+    public Command c_holdWheelAngle(double angle){ //TODO: max turn speed and acceleration are in degrees per second and degrees per second squared, might be bad
+        TrapezoidProfile Turnprofile = new TrapezoidProfile( 
             new TrapezoidProfile.Constraints(RobotMap.Metrics.Chassis.MAX_TURN_SPEED, RobotMap.Metrics.Chassis.MAX_TURN_ACCELERATION),
             new TrapezoidProfile.State(angle,0),
             new TrapezoidProfile.State(getAbsoluteAngle(), turnMotor.get()*RobotMap.Metrics.Chassis.MAX_TURN_SPEED)
@@ -141,10 +142,18 @@ public class SwerveModule extends SubsystemBase{
     }
     //TODO: make sure this outputs correctly, as there are a few possible bad outputs it could give (i.e. getabsolutePosition() is in wrong units is in radians or rotations rather than degrees)
     public double getAbsoluteAngle(){
+        //should output from 180 to negative 180
+        double raw;
+        if(encoder.getDistance()>0){ 
+            raw = encoder.getDistance()%360;}
+        else{
+            raw = (encoder.getDistance()%360) + 360;}   
+        //raw is now from 0 to 360
+        if(raw>180){
+            return raw - 360;}
+        else{
+            return raw;}
         
-        if(encoder.getDistance()>0){ return encoder.getDistance()%360;}
-        else{return (encoder.getDistance()%360) + 360;}   
-
         //not sure this works
         //if(encoder.getAbsolutePosition()>0){
         //    return encoder.getAbsolutePosition()/Metrics.Chassis.GEAR_RATIO_TURN % 360;} //TODO: not sure if units are correct, needs to be right or swerve wont work
