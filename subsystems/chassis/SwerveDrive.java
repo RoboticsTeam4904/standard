@@ -39,7 +39,7 @@ public class SwerveDrive extends SubsystemBase {
         this.modules = modules;
         this.centerMassOffset = centerMassOffset;
         this.modulePositions = new SwerveModulePosition[modules.length];
-        for (Integer i = 0; i < modules.length; i++) {
+        for (int i = 0; i < modules.length; i++) {
             modulePositions[i]=modules[i].getPosition();
         }
         this.odometry = new SwerveDriveOdometry(kinematics, gyro.getRotation2d(), modulePositions, initialPose); //TODO: initial pose dependds on starting position
@@ -81,8 +81,8 @@ public class SwerveDrive extends SubsystemBase {
         //set target states for each module
         for (int i = 0; i < modules.length; i++) {
             SwerveModuleState state = stateListSupplier.get()[i];
-            Supplier<SwerveModuleState> stateSupplier = () -> {return state;};
-            cmd.addCommands(modules[i].setTargetState(stateSupplier, openloop));
+            Supplier<SwerveModuleState> stateSupplier = () -> state;
+            cmd.addCommands(modules[i].setTargetState((stateSupplier), openloop));
         }
         return cmd;
 }

@@ -5,6 +5,7 @@ import java.util.function.Supplier;
 
 import org.usfirst.frc4904.robot.Robot;
 import org.usfirst.frc4904.robot.RobotMap;
+import org.usfirst.frc4904.robot.RobotMap.Metrics;
 import org.usfirst.frc4904.robot.RobotMap.PID.Drive;
 import org.usfirst.frc4904.robot.RobotMap.PID.Turn;
 import org.usfirst.frc4904.standard.custom.motioncontrollers.ezControl;
@@ -21,9 +22,11 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.CAN;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.motorcontrol.Spark;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
@@ -46,7 +49,8 @@ public class SwerveModule extends SubsystemBase{
         CANTalonFX driveMotor,
         CustomCANSparkMax turnMotor,
         DutyCycleEncoder encoder,
-        Translation2d modulePosition
+        Translation2d modulePosition,
+        String name
     ) {
         this.driveMotor = driveMotor; //default is coast for drive, brake for turn. no voltage compensation
         this.driveSubsystem = new TalonMotorSubsystem("drive-subsystem", NeutralModeValue.Coast, 0, driveMotor);
@@ -56,10 +60,11 @@ public class SwerveModule extends SubsystemBase{
         this.driveFeedforward = new SimpleMotorFeedforward(0, RobotMap.PID.Drive.kV, RobotMap.PID.Drive.kA);
         this.turnFeedforward = new SimpleMotorFeedforward(0, RobotMap.PID.Turn.kV, RobotMap.PID.Turn.kA);
         this.modulePosition = modulePosition;
+        this.setName(name);
     }
     
     public SwerveModulePosition getPosition(){
-        return new SwerveModulePosition(driveMotor.getRotorPosition().getValue()*RobotMap.Metrics.Chassis.WHEEL_DIAMETER_METERS/RobotMap.Metrics.Chassis.GEAR_RATIO,
+        return new SwerveModulePosition(driveMotor.getRotorPosition().getValue()*RobotMap.Metrics.Chassis.WHEEL_DIAMETER_METERS/RobotMap.Metrics.Chassis.GEAR_RATIO_DRIVE,
         new Rotation2d(getAbsoluteAngle()));
     }
         
@@ -68,10 +73,10 @@ public class SwerveModule extends SubsystemBase{
     public Command setTargetState(Supplier<SwerveModuleState> target, boolean openloop){ //does NOT take in onarrival command dealer, should dealt with when writing autons
         var cmd = new ParallelCommandGroup();
         if(openloop){
-            Command cmdDrive = new InstantCommand(() -> {driveMotor.setVoltage(target.get().speedMetersPerSecond/RobotMap.Metrics.Chassis.MAX_SPEED);}, driveSubsystem);
+            Command cmdDrive = new InstantCommand(() -> {driveMotor.setVoltage(driveFeedforward.calculate(target.get().speedMetersPerSecond));}, driveSubsystem);
             cmd.addCommands(cmdDrive);
         }else if(driveMotor.get()*RobotMap.Metrics.Chassis.MAX_SPEED != target.get().speedMetersPerSecond){ //if the drive motor is not at the target speed, run the drive motor
-            Command cmdDrive = c_controlWheelSpeed(target.get().speedMetersPerSecond);        
+            Command cmdDrive = c_controlWheelSpeed(() -> target.get().speedMetersPerSecond);        
             cmd.addCommands(cmdDrive);
         }
         if (getAbsoluteAngle() != target.get().angle.getDegrees()) { //angle is always closed loop
@@ -83,15 +88,19 @@ public class SwerveModule extends SubsystemBase{
 
     //CLOSED-LOOP CONTROL
     //takes in a target speed and maintains it
-    public Command c_controlWheelSpeed(double targetSpeed){ //DOES NOT CURRENTLY DO ANYTHING!!!
-        TrapezoidProfile Driveprofile = new TrapezoidProfile(
-            new TrapezoidProfile.Constraints(RobotMap.Metrics.Chassis.MAX_SPEED, RobotMap.Metrics.Chassis.MAX_ACCELERATION),
-            new TrapezoidProfile.State(driveMotor.get()*RobotMap.Metrics.Chassis.MAX_SPEED,0),
-            new TrapezoidProfile.State(targetSpeed, driveMotor.get()*RobotMap.Metrics.Chassis.MAX_SPEED)
-        );
-        var cmd = new ParallelCommandGroup();
+    public Command c_controlWheelSpeed(Supplier<Double> targetSpeed){ //untested, prob doesn't work (less likely than hold wheel angle)
+        var cmd = this.run(() -> {
+            var feedfoward = this.driveFeedforward.calculate(
+                driveMotor.get()*Metrics.Chassis.MAX_SPEED,
+                targetSpeed.get(),
+                0
+            );
+            SmartDashboard.putNumber("feedforward", feedfoward);
+            driveMotor.setVoltage(feedfoward);
+        });
+        cmd.addRequirements(driveSubsystem);
+        cmd.setName( this.getName() + "- c_controlWheelSpeed");
         return cmd;
-
     }
     //takes in angle in degrees and returns a command that will hold the wheel at that angle
     //CLOSED-LOOP CONTROL
@@ -121,15 +130,19 @@ public class SwerveModule extends SubsystemBase{
             return new Pair<Double, Double>(Turnprofile.calculate(t).position, Turnprofile.calculate(t).velocity);
         },
         turnSubsystem);
-
+        
+        cmd.setName( this.getName() + "- c_controlTurnSpeed");
         return cmd; //is exclusively used in parallel command group, so there should NOT be an on arrival command dealer
     }
 
     public SwerveModuleState getState(){
         return new SwerveModuleState(driveMotor.get(), Rotation2d.fromDegrees(getAbsoluteAngle()));
     }
-
+    //TODO: make sure this outputs correctly, as there are a few possible bad outputs it could give (i.e. getabsolutePosition() is in wrong units is in radians or rotations rather than degrees)
     public double getAbsoluteAngle(){
-        return encoder.getAbsolutePosition() % 360; //TODO: not sure if units are correct, needs to be right or swerve wont work
-    }
+        if(encoder.getAbsolutePosition()>0){
+            return encoder.getAbsolutePosition()/Metrics.Chassis.GEAR_RATIO_TURN % 360;} //TODO: not sure if units are correct, needs to be right or swerve wont work
+        else{
+            return (encoder.getAbsolutePosition()/Metrics.Chassis.GEAR_RATIO_TURN % 360) + 360;}
+    }   
 }
