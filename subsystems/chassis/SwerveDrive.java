@@ -84,6 +84,7 @@ public class SwerveDrive extends SubsystemBase {
             Supplier<SwerveModuleState> stateSupplier = () -> state;
             cmd.addCommands(modules[i].setTargetState((stateSupplier), openloop));
         }
+        cmd.addRequirements(this);
         return cmd;
 }
 }

@@ -55,7 +55,7 @@ public class SwerveModule extends SubsystemBase{
         this.driveMotor = driveMotor; //default is coast for drive, brake for turn. no voltage compensation
         this.driveSubsystem = new TalonMotorSubsystem("drive-subsystem", NeutralModeValue.Coast, 0, driveMotor);
         this.turnMotor = turnMotor;
-        this.turnSubsystem = new SparkMaxMotorSubsystem("turn-subsystem", IdleMode.kBrake, 0, true, 0, turnMotor);
+        this.turnSubsystem = new SparkMaxMotorSubsystem("turn-subsystem", IdleMode.kBrake, 0, false, 0, turnMotor);
         this.encoder = encoder;
         encoder.setDistancePerRotation(2*Math.PI/RobotMap.Metrics.Chassis.GEAR_RATIO_TURN);
         this.driveFeedforward = new SimpleMotorFeedforward(0, RobotMap.PID.Drive.kV, RobotMap.PID.Drive.kA);

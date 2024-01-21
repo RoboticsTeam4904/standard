@@ -104,8 +104,8 @@ public class TalonMotorSubsystem extends SmartMotorSubsystem<TalonMotorControlle
   public TalonMotorSubsystem(String name, SpeedModifier speedModifier, NeutralModeValue neutralMode, double neutralDeadbandPercent,
                              Boolean respectLeadMotorLimitSwitches, double voltageCompensation,
                              CANTalonFX leadMotor, TalonMotorController... followMotors) {
-		super(name, speedModifier, Stream.concat(Stream.of(leadMotor), Stream.of(followMotors)).toArray(TalonMotorController[]::new));  // java has no spread operator, so you have to concat. best way i could find is to do it in a stream. please make this not bad if you know how 
-
+		super(name, speedModifier);//, Stream.concat(Stream.of(leadMotor), Stream.of(followMotors)).toArray(TalonMotorController[]::new));  // java has no spread operator, so you have to concat. best way i could find is to do it in a stream. please make this not bad if you know how 
+                              //stream concat part breaks, not sure why, but we don't use it
     this.voltageComp = voltageCompensation;
     this.leadMotor = leadMotor;
     this.followMotors = followMotors;
