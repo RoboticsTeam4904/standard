@@ -64,6 +64,7 @@ public class SwerveDrive extends SubsystemBase {
         return c_drive(() -> {return new ChassisSpeeds(xy.get().getX(), xy.get().getY(), rotation.get());}, openloop);
     }
     //takes in a chassis speed and converts it to a target state for each module
+    //TODO: spinning wheel in opposite direction > unnecessarily rotating module
     public Command c_drive(Supplier<ChassisSpeeds> target, boolean openloop){//always field relative
         var cmd = new ParallelCommandGroup();
 
@@ -72,8 +73,9 @@ public class SwerveDrive extends SubsystemBase {
         
         Supplier<SwerveModuleState[]> stateListSupplier = () -> {
             SwerveModuleState[] states = kinematics.toSwerveModuleStates(target.get(), centerMassOffset);
-            kinematics.desaturateWheelSpeeds(states, getSpeed(), RobotMap.Metrics.Chassis.MAX_SPEED, RobotMap.Metrics.Chassis.MAX_TRANSLATION_SPEED, RobotMap.Metrics.Chassis.MAX_TURN_SPEED);
+            SwerveDriveKinematics.desaturateWheelSpeeds(states, getSpeed(), RobotMap.Metrics.Chassis.MAX_SPEED, RobotMap.Metrics.Chassis.MAX_TRANSLATION_SPEED, RobotMap.Metrics.Chassis.MAX_TURN_SPEED);            
             return states;
+
         }; //offset should be basically zero
         
         

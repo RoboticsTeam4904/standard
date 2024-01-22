@@ -67,7 +67,7 @@ public class SwerveModule extends SubsystemBase{
     
     public SwerveModulePosition getPosition(){
         return new SwerveModulePosition(driveMotor.getRotorPosition().getValue()*RobotMap.Metrics.Chassis.WHEEL_DIAMETER_METERS/RobotMap.Metrics.Chassis.GEAR_RATIO_DRIVE,
-        new Rotation2d(getAbsoluteAngle()));
+        new Rotation2d(getAbsoluteAngle())); //TODO: use circumference of wheel instead?
     }
         
     //CAN BE EITHER OPEN OR CLOSED-LOOP CONTROL
@@ -77,7 +77,7 @@ public class SwerveModule extends SubsystemBase{
         if(openloop){
             Command cmdDrive = new InstantCommand(() -> {driveMotor.setVoltage(driveFeedforward.calculate(target.get().speedMetersPerSecond));}, driveSubsystem);
             cmd.addCommands(cmdDrive);
-        }else if(driveMotor.get()*RobotMap.Metrics.Chassis.MAX_SPEED != target.get().speedMetersPerSecond){ //if the drive motor is not at the target speed, run the drive motor
+        }else if(driveMotor.get()*RobotMap.Metrics.Chassis.MAX_SPEED != target.get().speedMetersPerSecond){ //TODO: Probably add a small tolerence? if the drive motor is not at the target speed, run the drive motor
             Command cmdDrive = c_controlWheelSpeed(() -> target.get().speedMetersPerSecond);        
             cmd.addCommands(cmdDrive);
         }
