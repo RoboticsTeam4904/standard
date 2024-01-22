@@ -26,7 +26,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class SwerveDrive extends SubsystemBase {
     
     public final SwerveModule[] modules;
-    protected final SwerveDriveKinematics kinematics; //module positions are contained here
+    public final SwerveDriveKinematics kinematics; //module positions are contained here
     public final SwerveDriveOdometry odometry;
     protected final AHRS gyro;   
     public final Translation2d centerMassOffset; //TODO: add center of mass offset if necessary
