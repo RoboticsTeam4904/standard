@@ -77,12 +77,12 @@ public class SwerveModule extends SubsystemBase{
         if(openloop){
             Command cmdDrive = new InstantCommand(() -> {driveMotor.setVoltage(driveFeedforward.calculate(target.get().speedMetersPerSecond));}, driveSubsystem);
             cmd.addCommands(cmdDrive);
-        }else if(driveMotor.get()*RobotMap.Metrics.Chassis.MAX_SPEED != target.get().speedMetersPerSecond){ //TODO: Probably add a small tolerence? if the drive motor is not at the target speed, run the drive motor
+        }else if(Math.abs(driveMotor.get()*RobotMap.Metrics.Chassis.MAX_SPEED - target.get().speedMetersPerSecond)<.1){ //TODO: tune this tolerance
             Command cmdDrive = c_controlWheelSpeed(() -> target.get().speedMetersPerSecond);        
             cmd.addCommands(cmdDrive);
         }
-        if (getAbsoluteAngle() != MathUtil.inputModulus(target.get().angle.getDegrees(),-180,180)) { //angle is always closed loop
-            Command cmdTurn = c_holdWheelAngle(MathUtil.inputModulus(target.get().angle.getDegrees(),-180,180));
+        if (Math.abs(getAbsoluteAngle() - MathUtil.inputModulus(target.get().angle.getDegrees(),-180,180))<.5) { //TODO:tune this tolerence
+            Command cmdTurn = c_holdWheelAngle(MathUtil.inputModulus(target.get().angle.getDegrees(),-180,180));//angle is always closed loop
             cmd.addCommands(cmdTurn);
         }
         return cmd;
