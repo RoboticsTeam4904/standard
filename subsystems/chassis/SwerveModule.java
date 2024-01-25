@@ -58,7 +58,7 @@ public class SwerveModule extends SubsystemBase{
         this.turnMotor = turnMotor;
         this.turnSubsystem = new SparkMaxMotorSubsystem("turn-subsystem", IdleMode.kBrake, 0, false, 0, turnMotor);
         this.encoder = encoder;
-        encoder.setDistancePerRotation(360/RobotMap.Metrics.Chassis.GEAR_RATIO_TURN);
+        encoder.setDistancePerRotation(360);
         this.driveFeedforward = new SimpleMotorFeedforward(RobotMap.PID.Drive.kS, RobotMap.PID.Drive.kV, RobotMap.PID.Drive.kA);
         this.turnFeedforward = new SimpleMotorFeedforward(RobotMap.PID.Drive.kS, RobotMap.PID.Turn.kV, RobotMap.PID.Turn.kA);
         this.modulePosition = modulePosition;
@@ -143,15 +143,23 @@ public class SwerveModule extends SubsystemBase{
     public double getAbsoluteAngle(){
         //should output from 180 to negative 180
         double raw;
-        if(encoder.getDistance()>0){ 
-            raw = encoder.getDistance()%360;}
+        if(encoder.getAbsolutePosition()>.5){
+            raw = ((encoder.getAbsolutePosition()-.5)*-360);
+        }
         else{
-            raw = (encoder.getDistance()%360) + 360;}   
-        //raw is now from 0 to 360
-        if(raw>180){
-            return -raw + 360;}
-        else{
-            return -raw;}
+            raw = encoder.getAbsolutePosition()*360;
+        }
+        return raw;
+        // double raw;
+        // if(encoder.getDistance()>0){ 
+        //     raw = encoder.getDistance()%360;}
+        // else{
+        //     raw = (encoder.getDistance()%360) + 360;}   
+        // //raw is now from 0 to 360
+        // if(raw>180){
+        //     return -raw + 360;}
+        // else{
+        //     return -raw;}
         
         //not sure this works
         //if(encoder.getAbsolutePosition()>0){
