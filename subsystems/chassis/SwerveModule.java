@@ -82,7 +82,7 @@ public class SwerveModule extends SubsystemBase{
             cmd.addCommands(cmdDrive);
         } 
         if (Math.abs(driveMotor.get())>.03) { //TODO:tune this tolerence
-            Command cmdTurn = c_holdWheelAngle(MathUtil.inputModulus(target.get().angle.getDegrees(),-180,180));//angle is always closed loop
+            Command cmdTurn = c_holdWheelAngle(()->MathUtil.inputModulus(target.get().angle.getDegrees(),-180,180));//angle is always closed loop
             SmartDashboard.putBoolean(this.getName()+"turning", true);
             cmd.addCommands(cmdTurn);
         } else{SmartDashboard.putBoolean(this.getName()+"turning", false);}
@@ -107,10 +107,10 @@ public class SwerveModule extends SubsystemBase{
     }
     //takes in angle in degrees and returns a command that will hold the wheel at that angle
     //CLOSED-LOOP CONTROL
-    public Command c_holdWheelAngle(double angle){ //TODO: max turn speed and acceleration are in degrees per second and degrees per second squared, might be bad
+    public Command c_holdWheelAngle(Supplier<Double> angle){ //TODO: max turn speed and acceleration are in degrees per second and degrees per second squared, might be bad
         TrapezoidProfile Turnprofile = new TrapezoidProfile( 
             new TrapezoidProfile.Constraints(RobotMap.Metrics.Chassis.MAX_TURN_SPEED, RobotMap.Metrics.Chassis.MAX_TURN_ACCELERATION),
-            new TrapezoidProfile.State(angle,0),
+            new TrapezoidProfile.State(angle.get(),0),
             new TrapezoidProfile.State(getAbsoluteAngle(), turnMotor.get()*RobotMap.Metrics.Chassis.MAX_TURN_SPEED)
         );
 
