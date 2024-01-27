@@ -80,12 +80,12 @@ public class SwerveModule extends SubsystemBase{
         }else if(Math.abs(driveMotor.get()*RobotMap.Metrics.Chassis.MAX_SPEED - target.get().speedMetersPerSecond)>.1){ //TODO: tune this tolerance
             Command cmdDrive = c_controlWheelSpeed(() -> target.get().speedMetersPerSecond);        
             cmd.addCommands(cmdDrive);
-        }
-        if (Math.abs(getAbsoluteAngle() - MathUtil.inputModulus(target.get().angle.getDegrees(),-180,180))>.5) { //TODO:tune this tolerence
+        } 
+        if (Math.abs(driveMotor.get())>.03) { //TODO:tune this tolerence
             Command cmdTurn = c_holdWheelAngle(MathUtil.inputModulus(target.get().angle.getDegrees(),-180,180));//angle is always closed loop
-            SmartDashboard.putBoolean("turning", true);
+            SmartDashboard.putBoolean(this.getName()+"turning", true);
             cmd.addCommands(cmdTurn);
-        } else{SmartDashboard.putBoolean("turning", false);}
+        } else{SmartDashboard.putBoolean(this.getName()+"turning", false);}
         return cmd;
     }
 
@@ -141,31 +141,9 @@ public class SwerveModule extends SubsystemBase{
     }
     //TODO: make sure this outputs correctly, as there are a few possible bad outputs it could give (i.e. getabsolutePosition() is in wrong units is in radians or rotations rather than degrees)
     public double getAbsoluteAngle(){
-        //should output from 180 to negative 180
-        double raw;
-        if(encoder.getAbsolutePosition()>.5){
-            raw = ((encoder.getAbsolutePosition()-.5)*-360);
-        }
-        else{
-            raw = encoder.getAbsolutePosition()*360;
-        }
-        return raw;
-        // double raw;
-        // if(encoder.getDistance()>0){ 
-        //     raw = encoder.getDistance()%360;}
-        // else{
-        //     raw = (encoder.getDistance()%360) + 360;}   
-        // //raw is now from 0 to 360
-        // if(raw>180){
-        //     return -raw + 360;}
-        // else{
-        //     return -raw;}
-        
-        //not sure this works
-        //if(encoder.getAbsolutePosition()>0){
-        //    return encoder.getAbsolutePosition()/Metrics.Chassis.GEAR_RATIO_TURN % 360;} //TODO: not sure if units are correct, needs to be right or swerve wont work
-        //else{
-        //    return (encoder.getAbsolutePosition()/Metrics.Chassis.GEAR_RATIO_TURN % 360) + 360;}
-
+        //should output from 0 to 360
+        var pos = encoder.getAbsolutePosition()-(encoder.getPositionOffset());
+        if(pos<0){pos=1+pos;}
+        return pos*360;
     }   
 }

@@ -68,14 +68,11 @@ public class SwerveDrive extends SubsystemBase {
     //TODO: spinning wheel in opposite direction > unnecessarily rotating module
     public Command c_drive(Supplier<ChassisSpeeds> target, boolean openloop){//always field relative
         var cmd = new ParallelCommandGroup();
-
+        SmartDashboard.putNumber("module 1 target turn angel from cdrive", target.get().omegaRadiansPerSecond);
         //convert chassis speeds to module states
-
-        
         Supplier<SwerveModuleState[]> stateListSupplier = () -> {
             SwerveModuleState[] states = kinematics.toSwerveModuleStates(target.get(), centerMassOffset);
             SwerveDriveKinematics.desaturateWheelSpeeds(states, getSpeed(), RobotMap.Metrics.Chassis.MAX_SPEED, RobotMap.Metrics.Chassis.MAX_TRANSLATION_SPEED, RobotMap.Metrics.Chassis.MAX_TURN_SPEED);
-            SmartDashboard.putNumber("motor1goalangle", states[0].angle.getDegrees()) ;          
             return states;
 
         }; //offset should be basically zero
