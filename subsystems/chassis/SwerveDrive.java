@@ -66,26 +66,28 @@ public class SwerveDrive extends SubsystemBase {
     }
     //takes in a chassis speed and converts it to a target state for each module
     //TODO: spinning wheel in opposite direction > unnecessarily rotating module
-    public Command c_drive(Supplier<ChassisSpeeds> target, boolean openloop){//always field relative
+    public Command c_drive(Supplier<ChassisSpeeds> target, boolean openloop){
         var cmd = new ParallelCommandGroup();
         SmartDashboard.putNumber("module 1 target turn angel from cdrive", target.get().omegaRadiansPerSecond);
         //convert chassis speeds to module states
         Supplier<SwerveModuleState[]> stateListSupplier = () -> {
             SwerveModuleState[] states = kinematics.toSwerveModuleStates(target.get(), centerMassOffset);
+            // Log the SwerveModuleState values
+            for (int i = 0; i < states.length; i++) {
+                SmartDashboard.putNumber("SwerveModuleState " + i + " speed", states[i].speedMetersPerSecond);
+                SmartDashboard.putNumber("SwerveModuleState " + i + " angle", states[i].angle.getDegrees());
+            }
             SwerveDriveKinematics.desaturateWheelSpeeds(states, getSpeed(), RobotMap.Metrics.Chassis.MAX_SPEED, RobotMap.Metrics.Chassis.MAX_TRANSLATION_SPEED, RobotMap.Metrics.Chassis.MAX_TURN_SPEED);
             return states;
-
-        }; //offset should be basically zero
-        
-        
-
+        };
+    
         //set target states for each module
         for (int i = 0; i < modules.length; i++) {
-            SwerveModuleState state = stateListSupplier.get()[i];
-            Supplier<SwerveModuleState> stateSupplier = () -> state;
-            cmd.addCommands(modules[i].setTargetState((stateSupplier), openloop));
+            final int finalI = i;
+            Supplier<SwerveModuleState> stateSupplier = () -> stateListSupplier.get()[finalI];
+            cmd.addCommands(modules[finalI].setTargetState(stateSupplier, openloop));
         }
         cmd.addRequirements(this);
         return cmd;
-}
+    }
 }
