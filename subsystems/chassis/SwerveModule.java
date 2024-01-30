@@ -34,6 +34,8 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.MotorFeedbackSensor;
+import com.revrobotics.SparkPIDController;
 import com.revrobotics.CANSparkBase.IdleMode;
 
 public class SwerveModule extends SubsystemBase{
@@ -45,6 +47,7 @@ public class SwerveModule extends SubsystemBase{
     public final SimpleMotorFeedforward driveFeedforward;
     public final SimpleMotorFeedforward turnFeedforward;
     public final Translation2d modulePosition;
+    public final SparkPIDController turningPIDcontroller;
 
     public SwerveModule(
         CANTalonFX driveMotor,
@@ -63,6 +66,16 @@ public class SwerveModule extends SubsystemBase{
         this.turnFeedforward = new SimpleMotorFeedforward(RobotMap.PID.Drive.kS, RobotMap.PID.Turn.kV, RobotMap.PID.Turn.kA);
         this.modulePosition = modulePosition;
         this.setName(name);
+        this.turningPIDcontroller = turnMotor.getPIDController();
+        turningPIDcontroller.setPositionPIDWrappingEnabled(true); //loop at 360 degrees
+        turningPIDcontroller.setPositionPIDWrappingMaxInput(360);
+        turningPIDcontroller.setPositionPIDWrappingMinInput(0);
+        turningPIDcontroller.setFeedbackDevice((MotorFeedbackSensor) encoder);
+        turningPIDcontroller.setP(RobotMap.PID.Turn.kP); //TODO: tune turning PID
+        turningPIDcontroller.setI(RobotMap.PID.Turn.kI);
+        turningPIDcontroller.setD(RobotMap.PID.Turn.kD);
+        //FIXME: set ff?
+        turningPIDcontroller.setOutputRange(-1,1);
     }
     
     public SwerveModulePosition getPosition(){
@@ -72,70 +85,17 @@ public class SwerveModule extends SubsystemBase{
         
     //CAN BE EITHER OPEN OR CLOSED-LOOP CONTROL
     //takes in target velocities and angles and returns a command that will move the module to that state
-    public Command setTargetState(Supplier<SwerveModuleState> target, boolean openloop){ //does NOT take in onarrival command dealer, should dealt with when writing autons
-        var cmd = new ParallelCommandGroup();
+    public void setTargetState(SwerveModuleState target, boolean openloop){ //does NOT take in onarrival command dealer, should dealt with when writing autons
+        SwerveModuleState optimizedTarget= SwerveModuleState.optimize(target, getAbsoluteRotation());
+
         if(openloop){
-            Command cmdDrive = new InstantCommand(() -> {driveMotor.setVoltage(driveFeedforward.calculate(target.get().speedMetersPerSecond));}, driveSubsystem);
-            cmd.addCommands(cmdDrive);
-        }else if(Math.abs(driveMotor.get()*RobotMap.Metrics.Chassis.MAX_SPEED - target.get().speedMetersPerSecond)>.1){ //TODO: tune this tolerance
-            Command cmdDrive = c_controlWheelSpeed(() -> target.get().speedMetersPerSecond);        
-            cmd.addCommands(cmdDrive);
-        } 
-        if (Math.abs(driveMotor.get())>.03) { //TODO:tune this tolerence
-            Command cmdTurn = c_holdWheelAngle(()->MathUtil.inputModulus(target.get().angle.getDegrees(),-180,180));//angle is always closed loop
-            SmartDashboard.putBoolean(this.getName()+"turning", true);
-            cmd.addCommands(cmdTurn);
-        } else{SmartDashboard.putBoolean(this.getName()+"turning", false);}
-        return cmd;
-    }
+            driveMotor.setVoltage(driveFeedforward.calculate(optimizedTarget.speedMetersPerSecond));
+        }else{
+            driveMotor.setVoltage(0); //TODO: add feedback control for drive wheels
+        }
+        turningPIDcontroller.setReference(optimizedTarget.angle.getRadians(), CANSparkMax.ControlType.kPosition);
 
-    //CLOSED-LOOP CONTROL
-    //takes in a target speed and maintains it
-    public Command c_controlWheelSpeed(Supplier<Double> targetSpeed){ //untested, prob doesn't work (less likely than hold wheel angle)
-        var cmd = this.run(() -> {
-            var feedfoward = this.driveFeedforward.calculate(
-                driveMotor.get()*Metrics.Chassis.MAX_SPEED,
-                targetSpeed.get(),
-                0
-            );
-            SmartDashboard.putNumber("feedforward", feedfoward);
-            driveMotor.setVoltage(feedfoward);
-        });
-        cmd.addRequirements(driveSubsystem);
-        cmd.setName( this.getName() + "- c_controlWheelSpeed");
-        return cmd;
     }
-    //takes in angle in degrees and returns a command that will hold the wheel at that angle
-    //CLOSED-LOOP CONTROL
-    public Command c_holdWheelAngle(Supplier<Double> angle){ //TODO: max turn speed and acceleration are in degrees per second and degrees per second squared, might be bad
-        TrapezoidProfile Turnprofile = new TrapezoidProfile( 
-            new TrapezoidProfile.Constraints(RobotMap.Metrics.Chassis.MAX_TURN_SPEED, RobotMap.Metrics.Chassis.MAX_TURN_ACCELERATION),
-            new TrapezoidProfile.State(angle.get(),0),
-            new TrapezoidProfile.State(getAbsoluteAngle(), turnMotor.get()*RobotMap.Metrics.Chassis.MAX_TURN_SPEED)
-        );
-
-        ezControl controller = new ezControl(
-            RobotMap.PID.Turn.kP,
-            RobotMap.PID.Turn.kI,
-            RobotMap.PID.Turn.kD,
-            (position, velocityDeg) -> {
-                double output =  turnFeedforward.calculate(velocityDeg);
-                return output;
-            }
-        );
-        
-        var cmd = new ezMotion(controller, 
-        () -> this.getAbsoluteAngle(), 
-        (double volts) -> {turnMotor.setVoltage(volts);}, 
-        (double t) ->  {
-            return new Pair<Double, Double>(Turnprofile.calculate(t).position, Turnprofile.calculate(t).velocity);
-        },
-        turnSubsystem);
-        
-        cmd.setName( this.getName() + "- c_controlTurnSpeed");
-        return cmd; //is exclusively used in parallel command group, so there should NOT be an on arrival command dealer
-    }
-
     public SwerveModuleState getState(){
         return new SwerveModuleState(driveMotor.get(), Rotation2d.fromDegrees(getAbsoluteAngle()));
     }
@@ -145,5 +105,8 @@ public class SwerveModule extends SubsystemBase{
         var pos = encoder.getAbsolutePosition()-(encoder.getPositionOffset());
         if(pos<0){pos=1+pos;}
         return pos*360;
+    }
+    public Rotation2d getAbsoluteRotation(){
+        return Rotation2d.fromDegrees(getAbsoluteAngle());
     }   
 }

@@ -21,6 +21,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -47,6 +48,12 @@ public class SwerveDrive extends SubsystemBase {
         this.gyro = gyro;
     }
 
+    @Override
+    public void periodic(){
+        odometry.update(gyro.getRotation2d(), modulePositions);
+    }
+
+
     public ChassisSpeeds getSpeed(){
         return kinematics.toChassisSpeeds(getModuleStates());
     }
@@ -62,32 +69,22 @@ public class SwerveDrive extends SubsystemBase {
 
     //this takes in a x and y speed and a rotation speed and converts it to a target state for each module
     public Command c_drive(Supplier<Translation2d> xy, Supplier<Double> rotation, boolean openloop){
-        return c_drive(() -> {return new ChassisSpeeds(xy.get().getX(), xy.get().getY(), rotation.get());}, openloop);
+        return c_drive(()->new ChassisSpeeds(xy.get().getX(), xy.get().getY(), rotation.get()), openloop);
     }
     //takes in a chassis speed and converts it to a target state for each module
     //TODO: spinning wheel in opposite direction > unnecessarily rotating module
     public Command c_drive(Supplier<ChassisSpeeds> target, boolean openloop){
-        var cmd = new ParallelCommandGroup();
         SmartDashboard.putNumber("module 1 target turn angel from cdrive", target.get().omegaRadiansPerSecond);
         //convert chassis speeds to module states
-        Supplier<SwerveModuleState[]> stateListSupplier = () -> {
-            SwerveModuleState[] states = kinematics.toSwerveModuleStates(target.get(), centerMassOffset);
-            // Log the SwerveModuleState values
-            for (int i = 0; i < states.length; i++) {
-                SmartDashboard.putNumber("SwerveModuleState " + i + " speed", states[i].speedMetersPerSecond);
-                SmartDashboard.putNumber("SwerveModuleState " + i + " angle", states[i].angle.getDegrees());
-            }
-            SwerveDriveKinematics.desaturateWheelSpeeds(states, getSpeed(), RobotMap.Metrics.Chassis.MAX_SPEED, RobotMap.Metrics.Chassis.MAX_TRANSLATION_SPEED, RobotMap.Metrics.Chassis.MAX_TURN_SPEED);
-            return states;
-        };
+        SwerveModuleState[] states = kinematics.toSwerveModuleStates(target.get(), centerMassOffset);
+        SwerveDriveKinematics.desaturateWheelSpeeds(states, getSpeed(), RobotMap.Metrics.Chassis.MAX_SPEED, RobotMap.Metrics.Chassis.MAX_TRANSLATION_SPEED, RobotMap.Metrics.Chassis.MAX_TURN_SPEED);
+
     
         //set target states for each module
+        return new InstantCommand(()->{
         for (int i = 0; i < modules.length; i++) {
-            final int finalI = i;
-            Supplier<SwerveModuleState> stateSupplier = () -> stateListSupplier.get()[finalI];
-            cmd.addCommands(modules[finalI].setTargetState(stateSupplier, openloop));
-        }
-        cmd.addRequirements(this);
-        return cmd;
+            var state = states[i];
+            modules[i].setTargetState(state, openloop);
+        }});
     }
 }
