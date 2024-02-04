@@ -33,8 +33,10 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.MotorFeedbackSensor;
+import com.revrobotics.SparkAbsoluteEncoder;
 import com.revrobotics.SparkPIDController;
 import com.revrobotics.CANSparkBase.IdleMode;
 
@@ -43,7 +45,7 @@ public class SwerveModule extends SubsystemBase{
     public final TalonMotorSubsystem driveSubsystem;
     public final CustomCANSparkMax turnMotor;
     public final SparkMaxMotorSubsystem turnSubsystem;
-    public final DutyCycleEncoder encoder;
+    public final SparkAbsoluteEncoder encoder;
     public final SimpleMotorFeedforward driveFeedforward;
     public final SimpleMotorFeedforward turnFeedforward;
     public final Translation2d modulePosition;
@@ -52,7 +54,7 @@ public class SwerveModule extends SubsystemBase{
     public SwerveModule(
         CANTalonFX driveMotor,
         CustomCANSparkMax turnMotor,
-        DutyCycleEncoder encoder,
+        SparkAbsoluteEncoder encoder,
         Translation2d modulePosition,
         String name
     ) {
@@ -61,7 +63,7 @@ public class SwerveModule extends SubsystemBase{
         this.turnMotor = turnMotor;
         this.turnSubsystem = new SparkMaxMotorSubsystem("turn-subsystem", IdleMode.kBrake, 0, false, 0, turnMotor);
         this.encoder = encoder;
-        encoder.setDistancePerRotation(360);
+        encoder.setPositionConversionFactor(360);
         this.driveFeedforward = new SimpleMotorFeedforward(RobotMap.PID.Drive.kS, RobotMap.PID.Drive.kV, RobotMap.PID.Drive.kA);
         this.turnFeedforward = new SimpleMotorFeedforward(RobotMap.PID.Drive.kS, RobotMap.PID.Turn.kV, RobotMap.PID.Turn.kA);
         this.modulePosition = modulePosition;
@@ -70,14 +72,13 @@ public class SwerveModule extends SubsystemBase{
         turningPIDcontroller.setPositionPIDWrappingEnabled(true); //loop at 360 degrees
         turningPIDcontroller.setPositionPIDWrappingMaxInput(360);
         turningPIDcontroller.setPositionPIDWrappingMinInput(0);
-        turningPIDcontroller.setFeedbackDevice((MotorFeedbackSensor) encoder);
+        turningPIDcontroller.setFeedbackDevice((AbsoluteEncoder) encoder);
         turningPIDcontroller.setP(RobotMap.PID.Turn.kP); //TODO: tune turning PID
         turningPIDcontroller.setI(RobotMap.PID.Turn.kI);
         turningPIDcontroller.setD(RobotMap.PID.Turn.kD);
         //FIXME: set ff?
         turningPIDcontroller.setOutputRange(-1,1);
     }
-    
     public SwerveModulePosition getPosition(){
         return new SwerveModulePosition(driveMotor.getRotorPosition().getValue()*RobotMap.Metrics.Chassis.WHEEL_DIAMETER_METERS/RobotMap.Metrics.Chassis.GEAR_RATIO_DRIVE,
         new Rotation2d(getAbsoluteAngle())); //TODO: use circumference of wheel instead?
@@ -102,9 +103,8 @@ public class SwerveModule extends SubsystemBase{
     //TODO: make sure this outputs correctly, as there are a few possible bad outputs it could give (i.e. getabsolutePosition() is in wrong units is in radians or rotations rather than degrees)
     public double getAbsoluteAngle(){
         //should output from 0 to 360
-        var pos = encoder.getAbsolutePosition()-(encoder.getPositionOffset());
-        if(pos<0){pos=1+pos;}
-        return pos*360;
+        var pos = encoder.getPosition();
+        return pos; //TODO: make sure this in degrees and from 0-360
     }
     public Rotation2d getAbsoluteRotation(){
         return Rotation2d.fromDegrees(getAbsoluteAngle());

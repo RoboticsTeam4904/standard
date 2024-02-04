@@ -81,10 +81,12 @@ public class SwerveDrive extends SubsystemBase {
 
     
         //set target states for each module
-        return new InstantCommand(()->{
+        var cmd = new InstantCommand(()->{
         for (int i = 0; i < modules.length; i++) {
             var state = states[i];
             modules[i].setTargetState(state, openloop);
         }});
+        cmd.addRequirements(this);
+        return cmd;
     }
 }
