@@ -47,7 +47,6 @@ public class SwerveModule extends SubsystemBase{
     public final SparkMaxMotorSubsystem turnSubsystem;
     public final SparkAbsoluteEncoder encoder;
     public final SimpleMotorFeedforward driveFeedforward;
-    public final SimpleMotorFeedforward turnFeedforward;
     public final Translation2d modulePosition;
     public final SparkPIDController turningPIDcontroller;
 
@@ -61,11 +60,11 @@ public class SwerveModule extends SubsystemBase{
         this.driveMotor = driveMotor; //default is coast for drive, brake for turn. no voltage compensation
         this.driveSubsystem = new TalonMotorSubsystem("drive-subsystem", NeutralModeValue.Coast, 0, driveMotor);
         this.turnMotor = turnMotor;
+        this.turnMotor.setSmartCurrentLimit(20);
         this.turnSubsystem = new SparkMaxMotorSubsystem("turn-subsystem", IdleMode.kBrake, 0, false, 0, turnMotor);
         this.encoder = encoder;
         encoder.setPositionConversionFactor(360);
         this.driveFeedforward = new SimpleMotorFeedforward(RobotMap.PID.Drive.kS, RobotMap.PID.Drive.kV, RobotMap.PID.Drive.kA);
-        this.turnFeedforward = new SimpleMotorFeedforward(RobotMap.PID.Drive.kS, RobotMap.PID.Turn.kV, RobotMap.PID.Turn.kA);
         this.modulePosition = modulePosition;
         this.setName(name);
         this.turningPIDcontroller = turnMotor.getPIDController();
@@ -87,14 +86,14 @@ public class SwerveModule extends SubsystemBase{
     //CAN BE EITHER OPEN OR CLOSED-LOOP CONTROL
     //takes in target velocities and angles and returns a command that will move the module to that state
     public void setTargetState(SwerveModuleState target, boolean openloop){ //does NOT take in onarrival command dealer, should dealt with when writing autons
-        SwerveModuleState optimizedTarget= SwerveModuleState.optimize(target, getAbsoluteRotation());
+        SwerveModuleState optimizedTarget = SwerveModuleState.optimize(target, getAbsoluteRotation());
 
         if(openloop){
             driveMotor.setVoltage(driveFeedforward.calculate(optimizedTarget.speedMetersPerSecond));
         }else{
             driveMotor.setVoltage(0); //TODO: add feedback control for drive wheels
         }
-        turningPIDcontroller.setReference(optimizedTarget.angle.getRadians(), CANSparkMax.ControlType.kPosition);
+        turningPIDcontroller.setReference(optimizedTarget.angle.getDegrees(), CANSparkMax.ControlType.kPosition);
 
     }
     public SwerveModuleState getState(){
