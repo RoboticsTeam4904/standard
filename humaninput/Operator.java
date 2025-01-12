@@ -7,7 +7,8 @@ import org.usfirst.frc4904.standard.custom.Nameable;
  *
  */
 public abstract class Operator extends HumanInput implements Nameable {
-	public Operator(String name) {
-		super(name);
-	}
+
+    public Operator(String name) {
+        super(name);
+    }
 }

@@ -9,28 +9,29 @@ import org.usfirst.frc4904.standard.custom.Nameable;
  *
  */
 public abstract class Driver extends HumanInput implements Nameable, ChassisController {
-	public Driver(String name) {
-		super(name);
-	}
 
-	/**
-	 *
-	 * @return X value that the Driver wants
-	 */
-	@Override
-	public abstract double getX();
+    public Driver(String name) {
+        super(name);
+    }
 
-	/**
-	 *
-	 * @return Y value that the Driver wants
-	 */
-	@Override
-	public abstract double getY();
+    /**
+     *
+     * @return X value that the Driver wants
+     */
+    @Override
+    public abstract double getX();
 
-	/**
-	 *
-	 * @return Turn speed that the Driver wants
-	 */
-	@Override
-	public abstract double getTurnSpeed();
+    /**
+     *
+     * @return Y value that the Driver wants
+     */
+    @Override
+    public abstract double getY();
+
+    /**
+     *
+     * @return Turn speed that the Driver wants
+     */
+    @Override
+    public abstract double getTurnSpeed();
 }
