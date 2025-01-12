@@ -8,20 +8,21 @@ import org.usfirst.frc4904.standard.custom.Nameable;
  *
  */
 public abstract class HumanInput implements Nameable {
-	protected final String name;
 
-	public HumanInput(String name) {
-		this.name = name;
-	}
+    protected final String name;
 
-	@Override
-	public String getName() {
-		return name;
-	}
+    public HumanInput(String name) {
+        this.name = name;
+    }
 
-	/**
-	 * A function where the driver's and operator's controls are bound to commands
-	 * Can't be done in the constructor because constructors are called too early
-	 */
-	public abstract void bindCommands();
+    @Override
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * A function where the driver's and operator's controls are bound to commands
+     * Can't be done in the constructor because constructors are called too early
+     */
+    public abstract void bindCommands();
 }

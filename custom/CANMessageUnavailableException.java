@@ -6,21 +6,22 @@ package org.usfirst.frc4904.standard.custom;
  * due to not noticing the runtime exception being thrown.
  */
 public class CANMessageUnavailableException extends Exception {
-	private static final long serialVersionUID = 8066629002370614378L;
 
-	public CANMessageUnavailableException() {
-		super();
-	}
+    private static final long serialVersionUID = 8066629002370614378L;
 
-	public CANMessageUnavailableException(Throwable cause) {
-		super(cause);
-	}
+    public CANMessageUnavailableException() {
+        super();
+    }
 
-	public CANMessageUnavailableException(String msg, Throwable cause) {
-		super(msg, cause);
-	}
+    public CANMessageUnavailableException(Throwable cause) {
+        super(cause);
+    }
 
-	public CANMessageUnavailableException(String msg) {
-		super(msg);
-	}
+    public CANMessageUnavailableException(String msg, Throwable cause) {
+        super(msg, cause);
+    }
+
+    public CANMessageUnavailableException(String msg) {
+        super(msg);
+    }
 }

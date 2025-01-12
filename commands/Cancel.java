@@ -7,20 +7,21 @@ import edu.wpi.first.wpilibj2.command.Command;
  * This class cancels a command
  */
 public class Cancel extends Command {
-	protected final Command command;
 
-	public Cancel(Command command) {
-		super();
-		setName("Cancel " + command.getName());
-		this.command = command;
-	}
+    protected final Command command;
 
-	public void initialize() {
-		// LogKitten.v("Initializing " + getName());
-		command.cancel();
-	}
+    public Cancel(Command command) {
+        super();
+        setName("Cancel " + command.getName());
+        this.command = command;
+    }
 
-	public boolean isFinished() {
-		return true;
-	}
+    public void initialize() {
+        // LogKitten.v("Initializing " + getName());
+        command.cancel();
+    }
+
+    public boolean isFinished() {
+        return true;
+    }
 }

@@ -5,7 +5,8 @@ package org.usfirst.frc4904.standard.humaninput;
  *
  */
 public abstract class Operator extends HumanInput {
-	public Operator(String name) {
-		super(name);
-	}
+
+    public Operator(String name) {
+        super(name);
+    }
 }
