@@ -1,7 +1,7 @@
 // WAS PID SOURCE
 package org.usfirst.frc4904.standard.custom.sensors;
 
-import com.kauailabs.navx.frc.AHRS;
+import com.studica.frc.AHRS;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.SerialPort;
 
@@ -18,16 +18,7 @@ public class NavX extends AHRS implements IMU {
     protected static final double MAX_DEGREES_PER_TICK = 90.0;
     protected static final double MAX_DEGREES_PER_SECOND_PER_TICK = 180;
 
-    public NavX(SerialPort.Port port) {
-        super(port);
-        super.zeroYaw();
-        lastYaw = 0.0f;
-        lastPitch = 0.0f;
-        lastRoll = 0.0f;
-        getYawCalls = 0;
-    }
-
-    public NavX(I2C.Port port) {
+    public NavX(NavXComType port) {
         super(port);
         super.zeroYaw();
         lastYaw = 0.0f;
