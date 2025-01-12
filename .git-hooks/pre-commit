@@ -1,0 +1,59 @@
+#!/bin/zsh
+
+# format files
+function format_files {
+  action 'running formatter'
+
+  echo "$files" | xargs npx prettier --ignore-unknown --write
+
+  if [[ $status == 0 ]]; then
+    info 'formatter succeeded'
+
+    # stage formatted files
+    echo "$files" | xargs git add
+  else
+    return 1
+  fi
+}
+
+# run `npm install`
+function npm_install {
+  action 'installing node packages'
+
+  npm install
+
+  if [[ $status == 0 ]]; then
+    info 'installing succeeded'
+    format_files
+  else
+    error 'installing failed'
+    info 'try running `npm install` manually'
+  fi
+}
+
+# logging
+function action { print -P "%B%F{yellow}action%f%b: $1" }
+function info   { print -P "%B%F{blue}info%f%b: $1" }
+function error  { print -P "%B%F{red}error%f%b: $1" }
+
+# staged java files
+local files="$(git diff --cached --name-only --diff-filter=ACMR | grep -E '\.java$')"
+
+if [[ -z "$files" ]]; then
+  # no staged files
+  exit 0
+fi
+
+format_files "$files"
+
+if [[ $status != 0 ]]; then
+  error 'formatter failed'
+
+  if which npx &> /dev/null; then
+    # try `npm install`
+    npm_install
+  else
+    error '`npx` is not accessible'
+    info 'install npm and verify it is in $PATH'
+  fi
+fi

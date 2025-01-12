@@ -1,22 +1,23 @@
 package org.usfirst.frc4904.standard.udp;
 
-import java.nio.charset.StandardCharsets;
-
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.IOException;
+import java.math.BigInteger;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.nio.charset.StandardCharsets;
+import java.time.Instant;
 import java.util.Arrays;
 import java.util.HashMap;
-
-import java.io.IOException;
-
-
+import org.msgpack.core.MessageBufferPacker;
+import org.msgpack.core.MessageFormat;
 import org.msgpack.core.MessagePack;
 import org.msgpack.core.MessagePack.PackerConfig;
 import org.msgpack.core.MessagePack.UnpackerConfig;
-import org.msgpack.core.MessageBufferPacker;
-import org.msgpack.core.MessageFormat;
 import org.msgpack.core.MessagePacker;
 import org.msgpack.core.MessageUnpacker;
 import org.msgpack.value.ArrayValue;
@@ -27,16 +28,11 @@ import org.msgpack.value.TimestampValue;
 import org.msgpack.value.Value;
 import org.usfirst.frc4904.standard.LogKitten;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.math.BigInteger;
-import java.time.Instant;
-
 //import com.fasterxml.jackson.core.JsonProcessingException;
 //import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class Client {
+
     private DatagramSocket socket;
     private InetAddress address;
     private byte[] header;
@@ -74,7 +70,9 @@ public class Client {
         byte[] convertedMap;
         convertedMap = map.toByteArray();
 
-        System.out.println("Sending Echo: " + "'" + new String(convertedMap, StandardCharsets.US_ASCII) + "'.");
+        System.out.println(
+            "Sending Echo: " + "'" + new String(convertedMap, StandardCharsets.US_ASCII) + "'."
+        );
         DatagramPacket packet = null;
         try {
             byte[] buf = convertedMap;
@@ -86,7 +84,6 @@ public class Client {
             e.printStackTrace();
         }
     }
-    
 
     public String receiveData() {
         DatagramPacket packet = new DatagramPacket(new byte[256], 256);
