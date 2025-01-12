@@ -1,23 +1,24 @@
 package org.usfirst.frc4904.standard.commands;
 
-import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 
-public class SpawnCommand extends Command {
-	private final Command childCommand;
+public class SpawnCommand extends CommandBase {
 
-	public SpawnCommand(Command childCommand) {
-		super();
-		setName("SpawnCommand[" + childCommand.getName() + "]");
-		this.childCommand = childCommand;
-	}
+    private final CommandBase childCommand;
 
-	@Override
-	public void initialize() {
-		childCommand.schedule();
-	}
+    public SpawnCommand(CommandBase childCommand) {
+        super();
+        setName("SpawnCommand[" + childCommand.getName() + "]");
+        this.childCommand = childCommand;
+    }
 
-	@Override
-	public boolean isFinished() {
-		return true;
-	}
+    @Override
+    public void initialize() {
+        childCommand.schedule();
+    }
+
+    @Override
+    public boolean isFinished() {
+        return true;
+    }
 }
