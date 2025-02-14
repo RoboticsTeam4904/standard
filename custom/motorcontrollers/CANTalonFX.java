@@ -3,11 +3,18 @@ package org.usfirst.frc4904.standard.custom.motorcontrollers;
 import com.ctre.phoenix6.signals.ForwardLimitValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.ReverseLimitValue;
+
 import com.ctre.phoenix6.hardware.TalonFX;
 
-public class CANTalonFX extends TalonFX {
+// TODO: directly extend TalonFX once they remove the deprecated setInverted() function
+// the problem right now is that it returns a StatusCode which is not compatible with MotorController
+// so we have to do this awful solution thanks
+
+public class CANTalonFX implements SmartMotorController {
 	protected static final NeutralModeValue DEFAULT_NEUTRAL_MODE 	= NeutralModeValue.Coast;
 	protected static final double	   DEFAULT_NEUTRAL_DEADBAND = 0.001;	// 0.1%, the minimum possible value 
+
+	public TalonFX motor;
 
 	/**
 	 * Represents a Falcon motor in code. You probably want NeutralMode.Brake,
@@ -23,14 +30,14 @@ public class CANTalonFX extends TalonFX {
 	 *                                  InvertMotorOutput for the lead motor.
 	 */
 	public CANTalonFX(int deviceNumber) {
-		super(deviceNumber);
+		motor = new TalonFX(deviceNumber);
 	}
 
-    /**
-     * Alias for .set() on power
-     * @param power
-     */
-    public void setPower(double power) { set(power); }
+	/**
+	 * Alias for .set() on power
+	 * @param power
+	 */
+	public void setPower(double power) { set(power); }
 
 	/**
 	 * Setting to enable brake mode on neutral (when .neutralOutput(),
@@ -41,7 +48,7 @@ public class CANTalonFX extends TalonFX {
 	 * setBrakeOnNeutral.
 	 */
 	public CANTalonFX setBrakeOnNeutral() {
-		setNeutralMode(NeutralModeValue.Brake);
+		motor.setNeutralMode(NeutralModeValue.Brake);
 		return this;
 	}
 	/**
@@ -53,15 +60,54 @@ public class CANTalonFX extends TalonFX {
 	 * setCoastOnNeutral.
 	 */
 	public CANTalonFX setCoastOnNeutral() {
-		setNeutralMode(NeutralModeValue.Coast);
+		motor.setNeutralMode(NeutralModeValue.Coast);
 		return this;
 	}
-	public ForwardLimitValue isFwdLimitSwitchPressed() throws IllegalAccessException {
+
+	public boolean isFwdLimitSwitchPressed() throws IllegalAccessException {
 		// OPTIM: this should probably support normally closed limit switches too... right now only supports normally open
-		return getForwardLimit().getValue();
+		return motor.getForwardLimit().getValue() == ForwardLimitValue.ClosedToGround;
 	}
-	public ReverseLimitValue isRevLimitSwitchPressed() throws IllegalAccessException {
+	public boolean isRevLimitSwitchPressed() throws IllegalAccessException {
+		// TODO: this boolean might be reversed
 		// OPTIM: this should probably support normally closed limit switches too... right now only supports normally open
-		return getReverseLimit().getValue();
+		return motor.getReverseLimit().getValue() == ReverseLimitValue.ClosedToGround;
+	}
+
+	@Override
+	public void set(double speed) {
+		motor.set(speed);
+	}
+
+	@Override
+	public double get() {
+		return motor.get();
+	}
+
+	@Override
+	@Deprecated
+	public void setInverted(boolean isInverted) {
+		motor.setInverted(isInverted);
+	}
+
+	@Override
+	@Deprecated
+	public boolean getInverted() {
+		return motor.getInverted();
+	}
+
+	@Override
+	public void disable() {
+		motor.disable();
+	}
+
+	@Override
+	public void stopMotor() {
+		motor.stopMotor();
+	}
+
+	@Override
+	public void neutralOutput() {
+		motor.stopMotor();
 	}
 }
